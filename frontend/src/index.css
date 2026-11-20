@@ -1,0 +1,165 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Farben sind als semantische Variablen angelegt (Fläche, Linie, Text …) und wechseln mit dem
+ * Farbschema. Komponenten verwenden nur diese Namen – ein zweiter Satz "dark:"-Klassen entfällt.
+ */
+:root {
+  --page: oklch(0.985 0.003 265);
+  --surface: oklch(1 0 0);
+  --raised: oklch(0.972 0.005 265);
+  --line: oklch(0.915 0.008 265);
+  --line-strong: oklch(0.85 0.012 265);
+  --ink: oklch(0.24 0.025 265);
+  --muted: oklch(0.47 0.022 265);
+  --subtle: oklch(0.62 0.018 265);
+  --brand: oklch(0.52 0.21 272);
+  --brand-hover: oklch(0.46 0.21 272);
+  --brand-soft: oklch(0.955 0.03 272);
+  --brand-ink: oklch(0.42 0.19 272);
+  --mark: oklch(0.92 0.13 95);
+  --mark-ink: oklch(0.3 0.06 80);
+  --ok: oklch(0.55 0.14 155);
+  --ok-soft: oklch(0.95 0.045 155);
+  --warn: oklch(0.6 0.14 70);
+  --warn-soft: oklch(0.96 0.05 85);
+  --danger: oklch(0.55 0.2 25);
+  --danger-soft: oklch(0.96 0.03 25);
+  --shadow: 0 1px 2px oklch(0.2 0.02 265 / 0.05), 0 4px 16px oklch(0.2 0.02 265 / 0.05);
+  --shadow-lg: 0 8px 20px oklch(0.2 0.02 265 / 0.08), 0 24px 60px oklch(0.2 0.02 265 / 0.14);
+}
+
+.dark {
+  --page: oklch(0.17 0.012 265);
+  --surface: oklch(0.21 0.014 265);
+  --raised: oklch(0.25 0.016 265);
+  --line: oklch(0.3 0.016 265);
+  --line-strong: oklch(0.38 0.02 265);
+  --ink: oklch(0.95 0.006 265);
+  --muted: oklch(0.74 0.016 265);
+  --subtle: oklch(0.6 0.018 265);
+  --brand: oklch(0.66 0.18 272);
+  --brand-hover: oklch(0.72 0.16 272);
+  --brand-soft: oklch(0.3 0.07 272);
+  --brand-ink: oklch(0.84 0.1 272);
+  --mark: oklch(0.5 0.11 90);
+  --mark-ink: oklch(0.98 0.03 95);
+  --ok: oklch(0.74 0.15 155);
+  --ok-soft: oklch(0.3 0.05 155);
+  --warn: oklch(0.8 0.14 80);
+  --warn-soft: oklch(0.32 0.05 80);
+  --danger: oklch(0.72 0.17 25);
+  --danger-soft: oklch(0.3 0.07 25);
+  --shadow: 0 1px 2px oklch(0 0 0 / 0.3), 0 4px 16px oklch(0 0 0 / 0.25);
+  --shadow-lg: 0 8px 20px oklch(0 0 0 / 0.35), 0 24px 60px oklch(0 0 0 / 0.5);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+  --color-mark: var(--mark);
+  --color-mark-ink: var(--mark-ink);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --shadow-card: var(--shadow);
+  --shadow-pop: var(--shadow-lg);
+  --animate-rise: rise 0.18s ease-out;
+  --animate-fade: fade 0.15s ease-out;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv11', 'ss03';
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    min-height: 100dvh;
+  }
+  ::selection {
+    background: var(--brand-soft);
+  }
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+  button:not(:disabled),
+  [role='button'],
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+  mark {
+    background: var(--mark);
+    color: var(--mark-ink);
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+  dialog {
+    color: inherit;
+  }
+  dialog::backdrop {
+    background: oklch(0.15 0.02 265 / 0.45);
+    backdrop-filter: blur(3px);
+  }
+}
+
+/* Platzhalter, solange Inhalte laden */
+.skeleton {
+  background: linear-gradient(90deg, var(--raised) 25%, var(--line) 50%, var(--raised) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

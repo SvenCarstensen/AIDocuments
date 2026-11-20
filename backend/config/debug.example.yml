@@ -1,0 +1,6 @@
+# Vorlage: nach debug.yml kopieren und anpassen. debug.yml wird beim lokalen Start automatisch geladen.
+app:
+  ai:
+    base-url: http://<llm-server>:8000
+    api-key: <api-schlüssel>
+    model: <modell-id>

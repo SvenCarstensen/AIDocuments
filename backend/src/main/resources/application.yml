@@ -1,0 +1,64 @@
+server:
+  # Standard: nur lokal erreichbar. Im Docker-Image wird 0.0.0.0 gesetzt (SERVER_ADDRESS).
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${SERVER_PORT:8080}
+  servlet:
+    session:
+      timeout: 12h
+      cookie:
+        same-site: lax
+        http-only: true
+
+spring:
+  application:
+    name: aidocuments
+  config:
+    # Lokale Entwicklungs-Konfiguration (nicht im Git, nicht im Docker-Image) – z. B. der LLM-Server
+    # für die Debug-Version. Beide Pfade, damit es aus dem Projekt- und dem backend-Ordner funktioniert.
+    import:
+      - optional:file:./config/debug.yml
+      - optional:file:./backend/config/debug.yml
+  mongodb:
+    # Extern betriebene MongoDB: MONGODB_URI setzen, z. B. mongodb://user:pass@host:27017/aidocuments?authSource=admin
+    uri: ${MONGODB_URI:mongodb://localhost:27017/aidocuments}
+  data:
+    mongodb:
+      auto-index-creation: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 250MB
+  mvc:
+    problemdetails:
+      enabled: true
+
+app:
+  # Ablageort für PDF-Dateien, Vorschaubilder, Suchindex und Schlüsseldatei
+  data-dir: ${AIDOCS_DATA_DIR:./data}
+  ai:
+    # Vorgaben für die KI-Anbindung. Alles hiervon lässt sich in der Oberfläche unter
+    # Einstellungen → KI überschreiben; die dort gespeicherten Werte haben Vorrang.
+    base-url: ${ANTHROPIC_BASE_URL:}
+    api-key: ${ANTHROPIC_API_KEY:}
+    model: ${AIDOCS_AI_MODEL:claude-opus-5-5}
+    # low | medium | high – höher = gründlicher, aber langsamer und teurer
+    effort: medium
+    output-language: Deutsch
+    # Gescannte PDFs ohne Textebene von der KI transkribieren lassen (Volltextsuche in Scans)
+    ocr: true
+    # Kompatibilitätsmodus für Server, die zwar die Anthropic-Messages-API sprechen, aber keine PDF-Eingabe
+    # und keine strukturierten Ausgaben kennen (lokale Modelle). Ohne Angabe: automatisch je nach Server.
+    # compatibility-mode: true
+    # Anzahl parallel analysierter Dokumente
+    concurrency: 2
+  import:
+    # Wie oft Postfächer und Eingangsordner auf neue PDFs geprüft werden
+    # (in der Oberfläche unter Einstellungen → Abruf änderbar)
+    interval: ${AIDOCS_IMPORT_INTERVAL:5m}
+    # Überwachter Eingangsordner; leer = aus. Im Docker-Image ist /import vorbelegt.
+    directory: ${AIDOCS_IMPORT_DIR:}
+
+logging:
+  level:
+    org.apache.pdfbox: ERROR
+    org.apache.fontbox: ERROR

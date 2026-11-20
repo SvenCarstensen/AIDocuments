@@ -1,0 +1,172 @@
+package de.aidocuments.importer;
+
+import de.aidocuments.document.DocumentService;
+import de.aidocuments.document.DocumentService.IngestResult;
+import de.aidocuments.document.DocumentService.Outcome;
+import de.aidocuments.document.DocumentSource;
+import de.aidocuments.importer.ImportSettings.FolderMode;
+import de.aidocuments.importer.ImportSettingsService.Effective;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
+
+/**
+ * Übernimmt neue PDF-Dateien aus dem überwachten Eingangsordner (einschließlich Unterordnern) –
+ * z. B. das Zielverzeichnis eines Netzwerkscanners.
+ */
+@Service
+public class FolderImportService {
+
+    private static final Logger log = LoggerFactory.getLogger(FolderImportService.class);
+
+    /** Unterordner für übernommene Dateien (Modus MOVE); wird selbst nie durchsucht. */
+    static final String IMPORTED_DIR = "importiert";
+    /** Dateien, die gerade noch geschrieben werden (Scanner, Kopiervorgang), erst im nächsten Lauf anfassen. */
+    private static final long SETTLE_MILLIS = 10_000;
+    private static final int MAX_DEPTH = 8;
+
+    public record Status(Instant lastScanAt, boolean ok, String message, boolean running) {
+    }
+
+    private final ImportSettingsService settings;
+    private final DocumentService documentService;
+    private final MongoTemplate mongo;
+    private final ReentrantLock lock = new ReentrantLock();
+    private volatile Status status = new Status(null, true, null, false);
+
+    public FolderImportService(ImportSettingsService settings, DocumentService documentService,
+                               MongoTemplate mongo) {
+        this.settings = settings;
+        this.documentService = documentService;
+        this.mongo = mongo;
+    }
+
+    public Status status() {
+        Status current = status;
+        return new Status(current.lastScanAt(), current.ok(), current.message(), lock.isLocked());
+    }
+
+    /** Durchsucht den Eingangsordner. Läuft bereits ein Durchlauf, passiert nichts. */
+    public void scan() {
+        Effective config = settings.current();
+        if (!config.folderEnabled() || !lock.tryLock()) {
+            return;
+        }
+        try {
+            status = run(config);
+        } catch (RuntimeException e) {
+            log.warn("Eingangsordner konnte nicht geprüft werden", e);
+            status = new Status(Instant.now(), false, "Unerwarteter Fehler: " + e.getMessage(), false);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private Status run(Effective config) {
+        Path root = Path.of(config.folderPath());
+        if (!Files.isDirectory(root)) {
+            return new Status(Instant.now(), false, "Der Ordner „" + root + "“ ist nicht erreichbar.", false);
+        }
+        List<Path> candidates;
+        try (Stream<Path> walk = Files.walk(root, MAX_DEPTH)) {
+            candidates = walk.filter(path -> isCandidate(root, path)).sorted().toList();
+        } catch (IOException | RuntimeException e) {
+            return new Status(Instant.now(), false, "Der Ordner konnte nicht gelesen werden: " + e.getMessage(),
+                    false);
+        }
+
+        int imported = 0;
+        int duplicates = 0;
+        int rejected = 0;
+        int failed = 0;
+        for (Path file : candidates) {
+            try {
+                BasicFileAttributes attributes = Files.readAttributes(file, BasicFileAttributes.class);
+                long modified = attributes.lastModifiedTime().toMillis();
+                if (System.currentTimeMillis() - modified < SETTLE_MILLIS) {
+                    continue;
+                }
+                String key = file.toAbsolutePath().toString();
+                ImportedFile known = mongo.findById(key, ImportedFile.class);
+                if (known != null && known.size() == attributes.size() && known.modifiedAt() == modified) {
+                    continue;
+                }
+                IngestResult result;
+                try (InputStream in = Files.newInputStream(file)) {
+                    result = documentService.ingest(in, file.getFileName().toString(), DocumentSource.FOLDER, null);
+                }
+                switch (result.outcome()) {
+                    case CREATED -> imported++;
+                    case DUPLICATE -> duplicates++;
+                    case REJECTED -> rejected++;
+                }
+                if (config.folderMode() == FolderMode.MOVE && result.outcome() != Outcome.REJECTED) {
+                    moveAside(root, file);
+                } else {
+                    mongo.save(new ImportedFile(key, attributes.size(), modified, result.outcome().name(),
+                            Instant.now()));
+                }
+            } catch (IOException | RuntimeException e) {
+                failed++;
+                log.warn("Datei {} konnte nicht übernommen werden: {}", file, e.toString());
+            }
+        }
+
+        List<String> parts = new ArrayList<>();
+        parts.add(imported + (imported == 1 ? " neues PDF übernommen" : " neue PDFs übernommen"));
+        if (duplicates > 0) {
+            parts.add(duplicates + " bereits vorhanden");
+        }
+        if (rejected > 0) {
+            parts.add(rejected + " kein gültiges PDF");
+        }
+        if (failed > 0) {
+            parts.add(failed + " nicht lesbar");
+        }
+        String message = imported + duplicates + rejected + failed == 0
+                ? "Keine neuen Dateien."
+                : String.join(", ", parts) + ".";
+        if (imported > 0) {
+            log.info("Eingangsordner {}: {}", root, message);
+        }
+        return new Status(Instant.now(), failed == 0, message, false);
+    }
+
+    private static boolean isCandidate(Path root, Path path) {
+        String name = path.getFileName().toString();
+        if (name.startsWith(".") || !name.toLowerCase(Locale.ROOT).endsWith(".pdf") || !Files.isRegularFile(path)) {
+            return false;
+        }
+        Path relative = root.relativize(path);
+        return relative.getNameCount() == 1 || !relative.getName(0).toString().equals(IMPORTED_DIR);
+    }
+
+    /** Verschiebt eine übernommene Datei nach "importiert/…"; bei Namensgleichheit wird durchnummeriert. */
+    private static void moveAside(Path root, Path file) throws IOException {
+        Path target = root.resolve(IMPORTED_DIR).resolve(root.relativize(file));
+        Files.createDirectories(target.getParent());
+        String name = target.getFileName().toString();
+        String base = name.substring(0, name.length() - 4);
+        for (int counter = 1; ; counter++) {
+            try {
+                Files.move(file, target);
+                return;
+            } catch (FileAlreadyExistsException e) {
+                target = target.resolveSibling(base + " (" + counter + ").pdf");
+            }
+        }
+    }
+}

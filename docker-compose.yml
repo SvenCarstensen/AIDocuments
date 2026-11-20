@@ -1,0 +1,26 @@
+# Produktion, Variante A: alles in einem Container – die MongoDB läuft im Container mit.
+#
+#   docker compose up -d --build
+#
+# Danach http://<server>:8080 öffnen und das Administratorkonto anlegen.
+services:
+  aidocuments:
+    build: .
+    image: aidocuments:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      TZ: Europe/Berlin
+      # Optional – lässt sich alles auch in der Oberfläche unter Einstellungen → KI eintragen:
+      # ANTHROPIC_API_KEY: sk-ant-...
+      # ANTHROPIC_BASE_URL: http://192.168.1.10:8000
+      # AIDOCS_AI_MODEL: claude-opus-5-5
+    volumes:
+      # PDFs, Suchindex, Schlüsseldatei und die eingebaute MongoDB (Unterordner mongo/)
+      - aidocuments-data:/aidocuments
+      # Überwachter Eingangsordner, z. B. das Ziel des Netzwerkscanners:
+      # - /pfad/zum/scan-ordner:/import
+
+volumes:
+  aidocuments-data:

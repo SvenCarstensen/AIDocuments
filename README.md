@@ -1,0 +1,181 @@
+# AIDocuments
+
+Dokumentenverwaltung für PDFs: Die Anwendung holt PDF-Dateien aus IMAP-Postfächern, einem überwachten
+Eingangsordner oder per Upload, lässt sie von einer KI erschließen (Titel, Zusammenfassung, Dokumentart,
+Absender, Datum, Schlagworte, Kerndaten – bei Scans auch den Volltext) und macht sie durchsuchbar.
+
+- **Backend:** Spring Boot 4 (Java 21), MongoDB, Apache Lucene (Volltextsuche), PDFBox, Anthropic Java SDK
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS 4, TanStack Query
+
+## Funktionen
+
+| Bereich | Was die Anwendung tut |
+|---|---|
+| Eingang | PDF-Anhänge aus IMAP-Postfächern (nur lesend – E-Mails bleiben unverändert und ungelesen), neue Dateien aus einem überwachten Ordner, Upload per Schaltfläche oder Drag & Drop (mehrere Dateien auf einmal). Inhaltsgleiche Dateien werden erkannt und nicht doppelt abgelegt. |
+| KI | Zusammenfassung, Dokumentart, Absender, Dokumentdatum, Schlagworte und Kerndaten (Beträge, Fristen, Nummern …). Vorhandene Schlagworte und Absender werden wiederverwendet. Scans ohne Textebene werden transkribiert und damit im Volltext durchsuchbar. |
+| Suche | Volltext über Inhalt, Titel, Schlagworte, Absender und Kerndaten – mit deutscher Stammformbildung, Treffern schon beim Tippen und Teiltextsuche mitten im Wort. Filter nach Dokumentart, Schlagworten, Absender und Zeitraum. |
+| Ansicht | Kachel- und Listenansicht mit Vorschaubildern, Detailseite mit PDF-Betrachter, Metadaten von Hand bearbeitbar, helles und dunkles Design. |
+| Benutzer | Ersteinrichtung mit Administratorkonto, weitere Konten mit den Rollen **Admin** und **Benutzer**. |
+| Einstellungen | Postfächer, Abrufintervall und Eingangsordner, KI-/LLM-Server, Benutzer – alles in der Oberfläche. |
+
+### Rollen
+
+| | Benutzer | Admin |
+|---|:-:|:-:|
+| Dokumente ansehen, suchen, hochladen, Metadaten bearbeiten | ✓ | ✓ |
+| Dokumente löschen, neu analysieren | | ✓ |
+| Einstellungen (Postfächer, Abruf, KI), Benutzerverwaltung | | ✓ |
+
+### Suche
+
+| Eingabe | findet |
+|---|---|
+| `rechnung strom` | Dokumente, in denen beide Wörter vorkommen (auch „Rechnungen“, „Stromrechnung“) |
+| `versicherung` | auch „Haftpflichtversicherung“ – Wortteile zählen mit |
+| `"zahlbar bis"` | genau diese Wortfolge |
+| `miete -kaution` | „Miete“, aber nicht „Kaution“ |
+| `strom \| gas` | eines von beiden |
+
+## Entwicklung
+
+Voraussetzungen: Java 21, Node.js 22+, Docker (für die MongoDB).
+
+```bash
+# 1. MongoDB starten (localhost:27017)
+docker compose -f docker-compose.dev.yml up -d
+
+# 2. Backend starten (http://127.0.0.1:8080)
+cd backend && ./mvnw spring-boot:run
+
+# 3. Frontend starten (http://127.0.0.1:5173, leitet /api an das Backend weiter)
+cd frontend && npm install && npm run dev
+```
+
+Beim ersten Aufruf von <http://127.0.0.1:5173> fragt die Anwendung nach Name und Passwort für das
+Administratorkonto.
+
+**LLM-Server der Debug-Version:** Liegt `backend/config/debug.yml` vor, wird sie beim lokalen Start
+automatisch geladen (Vorlage: `backend/config/debug.example.yml`). Die Datei steht nicht im Git und landet
+nicht im Docker-Image – der richtige Ort für Server-Adresse und API-Schlüssel der Entwicklungsumgebung.
+
+Tests (brauchen ein laufendes Docker für Testcontainers):
+
+```bash
+cd backend && ./mvnw test
+```
+
+Der Integrationstest durchläuft Ersteinrichtung, Rollen, Upload, Suche, IMAP-Abruf (gegen einen
+eingebetteten Test-Mailserver) und Eingangsordner gegen eine echte MongoDB.
+
+## Produktion mit Docker
+
+Ein Image enthält Oberfläche, Backend und – wahlweise – die MongoDB.
+
+### Variante A: MongoDB im Container
+
+```bash
+docker compose up -d --build
+```
+
+Ohne `MONGODB_URI` startet im Container eine eingebaute MongoDB. Alles Bleibende liegt im Volume
+`/aidocuments`:
+
+```
+/aidocuments
+├── mongo/        Datenbank (nur bei eingebauter MongoDB)
+├── files/        die PDF-Dateien
+├── thumbnails/   Vorschaubilder
+├── index/        Suchindex (wird bei Bedarf aus der Datenbank neu aufgebaut)
+└── secret.key    Schlüssel für gespeicherte Postfach-Passwörter und API-Schlüssel
+```
+
+### Variante B: externe MongoDB
+
+```bash
+docker compose -f docker-compose.external-mongo.yml up -d --build
+```
+
+Mit gesetzter `MONGODB_URI` läuft im Container nur die Anwendung. Das Volume `/aidocuments` bleibt nötig
+(PDFs, Suchindex, Schlüsseldatei).
+
+```bash
+docker run -d -p 8080:8080 \
+  -e MONGODB_URI='mongodb://benutzer:passwort@db.example.com:27017/aidocuments?authSource=admin' \
+  -v aidocuments-data:/aidocuments \
+  aidocuments
+```
+
+### Eingangsordner
+
+Den Ordner des Scanners als `/import` einbinden (`-v /pfad/zum/scan-ordner:/import`) – er ist im Image als
+Eingangsordner vorbelegt. Abschalten oder ändern unter *Einstellungen → Abruf & Eingangsordner*.
+
+### Sicherung
+
+`/aidocuments` sichern – bei externer MongoDB zusätzlich die Datenbank. Die Datei `secret.key` gehört zur
+Sicherung: Ohne sie lassen sich gespeicherte Postfach-Passwörter und API-Schlüssel nicht mehr entschlüsseln.
+
+### Hinter einem Reverse-Proxy (HTTPS)
+
+Die Anwendung selbst spricht HTTP. Für den Betrieb im Netz einen Reverse-Proxy mit TLS davorsetzen und
+`SERVER_FORWARD_HEADERS_STRATEGY=framework` sowie `SERVER_SERVLET_SESSION_COOKIE_SECURE=true` setzen.
+
+### Hinweis zur MongoDB-Version
+
+Die eingebaute MongoDB ist Version 7.0. MongoDB 8.0 und neuer starten auf Hosts mit Linux-Kernel 6.19 bis
+7.0.13 nicht ([SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)) – das betrifft unter anderem
+aktuelle Docker-Desktop-Versionen. Wer nicht betroffen ist, kann mit
+`docker build --build-arg MONGO_VERSION=8.0 -t aidocuments .` eine neuere Version einbauen.
+
+## Konfiguration
+
+Fast alles lässt sich in der Oberfläche einstellen. Die Umgebungsvariablen sind Vorgaben für den Start;
+in der Oberfläche gespeicherte Werte haben Vorrang.
+
+| Variable | Bedeutung | Standard |
+|---|---|---|
+| `MONGODB_URI` | Verbindung zur MongoDB | `mongodb://localhost:27017/aidocuments` (im Image: eingebaute MongoDB) |
+| `AIDOCS_DATA_DIR` | Ablage für PDFs, Suchindex, Schlüsseldatei | `./data` (im Image: `/aidocuments`) |
+| `AIDOCS_IMPORT_DIR` | überwachter Eingangsordner | leer = aus (im Image: `/import`) |
+| `AIDOCS_IMPORT_INTERVAL` | Abrufintervall, z. B. `5m` | `5m` |
+| `ANTHROPIC_API_KEY` | API-Schlüssel des LLM-Servers | leer = KI aus |
+| `ANTHROPIC_BASE_URL` | Adresse des LLM-Servers | Claude API von Anthropic |
+| `AIDOCS_AI_MODEL` | Modell-ID | `claude-opus-5-5` |
+| `SERVER_ADDRESS` / `SERVER_PORT` | Bindeadresse und Port | `127.0.0.1` / `8080` (im Image: `0.0.0.0`) |
+
+## KI-Anbindung
+
+Die Anwendung spricht die Anthropic-Messages-API und kennt zwei Wege:
+
+- **Claude API** (Standard): Das PDF geht als Ganzes an das Modell – Layout, Tabellen und Scans inklusive –,
+  das Ergebnis kommt als strukturierte Ausgabe zurück.
+- **Kompatibilitätsmodus** für Server, die zwar die Messages-API sprechen, aber keine PDF-Eingabe und keine
+  strukturierten Ausgaben kennen (lokale Modelle): Das Dokument geht als ausgelesener Text bzw. – bei
+  Scans – als Seitenbilder an das Modell, das Ergebnis kommt als Werkzeugaufruf zurück. Das Modell muss
+  dafür Werkzeugaufrufe (Tool Use) und für Scans Bildeingabe beherrschen. Grenzen dieses Modus: Von sehr
+  langen Texten wertet die KI nur den Anfang aus, von Scans die ersten 8 Seiten; die Anwendung vermerkt das
+  am Dokument. Die Volltextsuche umfasst bei Textdokumenten trotzdem den gesamten Text.
+
+Der Kompatibilitätsmodus schaltet sich automatisch ein, sobald eine andere Server-Adresse als die Claude API
+eingetragen ist, und lässt sich unter *Einstellungen → KI* umstellen.
+
+Ohne KI-Zugang funktioniert die Anwendung weiter: PDFs werden gespeichert und sind über ihre Textebene
+durchsuchbar, nur Zusammenfassung und Schlagworte fehlen. Nachträglich analysieren: *Einstellungen → KI →
+„Jetzt analysieren“*.
+
+## Projektstruktur
+
+```
+backend/     Spring-Boot-Anwendung
+  src/main/java/de/aidocuments/
+    document/   Dokumente, Verarbeitungs-Pipeline, REST-API
+    ai/         KI-Analyse (Claude API und Kompatibilitätsmodus)
+    search/     Lucene-Volltextindex
+    mail/       IMAP-Postfächer und Abruf
+    importer/   Eingangsordner und Abrufintervall
+    user/       Benutzer, Rollen, Anmeldung
+    settings/   KI- und Abruf-Einstellungen
+    security/   Zugriffsschutz, Verschlüsselung gespeicherter Geheimnisse
+frontend/    React-Oberfläche
+docker/      Startskript des Containers
+```
