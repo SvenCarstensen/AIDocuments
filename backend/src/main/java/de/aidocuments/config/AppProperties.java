@@ -1,5 +1,6 @@
 package de.aidocuments.config;
 
+import de.aidocuments.settings.LlmProvider;
 import java.nio.file.Path;
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +19,7 @@ public record AppProperties(
 
     /** Vorgaben für die KI; in der Oberfläche gespeicherte Einstellungen haben Vorrang. */
     public record Ai(
+            @DefaultValue("anthropic") LlmProvider provider,
             @DefaultValue("") String baseUrl,
             @DefaultValue("") String apiKey,
             @DefaultValue("claude-opus-5-5") String model,
@@ -25,8 +27,7 @@ public record AppProperties(
             @DefaultValue("Deutsch") String outputLanguage,
             @DefaultValue("true") boolean ocr,
             /* null = automatisch: an bei jedem Server außer api.anthropic.com */
-            Boolean compatibilityMode,
-            @DefaultValue("2") int concurrency) {
+            Boolean compatibilityMode) {
     }
 
     /** Vorgaben für den automatischen Abruf; in der Oberfläche gespeicherte Einstellungen haben Vorrang. */

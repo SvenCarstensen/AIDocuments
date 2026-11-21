@@ -51,6 +51,9 @@ import org.apache.lucene.search.uhighlight.LengthGoalBreakIterator;
 import org.apache.lucene.search.uhighlight.UnifiedHighlighter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.LockObtainFailedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -110,6 +113,8 @@ public class SearchIndex {
             F_MAIL, 1f,
             F_CONTENT, 1f);
 
+    private static final Logger log = LoggerFactory.getLogger(SearchIndex.class);
+    private static final int LOCK_WAIT_SECONDS = 30;
     private static final int SNIPPET_LENGTH = 220;
     private static final int MAX_HIGHLIGHT_CHARS = 2_000_000;
 
@@ -127,11 +132,37 @@ public class SearchIndex {
             Path path = properties.dataRoot().resolve("index");
             Files.createDirectories(path);
             this.directory = FSDirectory.open(path);
-            this.writer = new IndexWriter(directory, new IndexWriterConfig(analyzer));
+            this.writer = openWriter();
             this.writer.commit();
             this.searcherManager = new SearcherManager(writer, null);
         } catch (IOException e) {
             throw new UncheckedIOException("Suchindex kann nicht geöffnet werden", e);
+        }
+    }
+
+    /**
+     * Öffnet den Index zum Schreiben. Nach einem Neustart hält der vorige Prozess die Sperre manchmal noch
+     * einige Sekunden, während er sich beendet – darauf wird kurz gewartet, statt den Start abzubrechen.
+     */
+    private IndexWriter openWriter() throws IOException {
+        for (int attempt = 1; ; attempt++) {
+            try {
+                return new IndexWriter(directory, new IndexWriterConfig(analyzer));
+            } catch (LockObtainFailedException e) {
+                if (attempt >= LOCK_WAIT_SECONDS) {
+                    throw e;
+                }
+                if (attempt == 1) {
+                    log.info("Suchindex ist noch gesperrt (läuft eine zweite Instanz oder endet die vorige gerade?) "
+                            + "– warte bis zu {} Sekunden", LOCK_WAIT_SECONDS);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException interrupted) {
+                    Thread.currentThread().interrupt();
+                    throw e;
+                }
+            }
         }
     }
 

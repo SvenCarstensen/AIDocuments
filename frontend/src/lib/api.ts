@@ -183,17 +183,32 @@ export interface TestResult {
   message: string
 }
 
+export type LlmProvider = 'ANTHROPIC' | 'OPENAI' | 'MOONSHOT' | 'LM_STUDIO' | 'OPENAI_COMPATIBLE'
+export interface LlmProviderInfo {
+  id: LlmProvider
+  label: string
+  protocol: 'ANTHROPIC' | 'OPENAI'
+  defaultBaseUrl: string
+  requiresApiKey: boolean
+  /** Dienst im Internet: Dokumentinhalte verlassen bei der Analyse den eigenen Rechner. */
+  cloud: boolean
+}
 export interface AiSettings {
+  provider: LlmProvider
   baseUrl: string
   model: string
   effort: string
   outputLanguage: string
   ocr: boolean
   compatibilityMode: boolean
+  /** Alles Nötige ist beisammen – neue Dokumente werden analysiert. */
+  enabled: boolean
   apiKeySet: boolean
   apiKeySource: 'SETTINGS' | 'ENVIRONMENT' | 'NONE'
+  providers: LlmProviderInfo[]
 }
 export interface AiSettingsInput {
+  provider: LlmProvider
   baseUrl: string
   apiKey: string | null
   model: string
@@ -220,7 +235,8 @@ export interface ImportSettingsInput {
 
 // ---------- Aufrufe ----------
 
-export const PAGE_SIZE = 30
+/** Mehr als so viele Dokumente liefert der Server nicht in einer Antwort. */
+export const MAX_PAGE_SIZE = 100
 
 export const api = {
   authStatus: () => request<AuthStatus>('/api/auth/status'),
@@ -234,7 +250,7 @@ export const api = {
 
   system: () => request<SystemInfo>('/api/system'),
 
-  documents: (query: DocumentQuery, page: number) => {
+  documents: (query: DocumentQuery, page: number, size: number) => {
     const params = new URLSearchParams()
     if (query.q) params.set('q', query.q)
     if (query.category) params.set('category', query.category)
@@ -245,7 +261,7 @@ export const api = {
     if (query.to) params.set('to', query.to)
     params.set('sort', query.sort)
     params.set('page', String(page))
-    params.set('size', String(PAGE_SIZE))
+    params.set('size', String(size))
     return request<Page<Doc>>(`/api/documents?${params}`)
   },
   facets: () => request<Facets>('/api/documents/facets'),

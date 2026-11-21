@@ -1,14 +1,28 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { FileSearch, FolderOpen, LayoutGrid, List, SlidersHorizontal, Sparkles, X } from 'lucide-react'
-import { type ReactNode, useMemo, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { isBusy, metaLine, Snippet, StatusBadge, TagChip, Thumbnail } from '../components/documents'
 import { Alert, Badge, Button, EmptyState, IconButton, Input, Modal, Select, Spinner } from '../components/ui'
-import { api, type Doc, type DocumentQuery, errorMessage, type Facets, type SortOrder } from '../lib/api'
+import { api, type Doc, type DocumentQuery, errorMessage, type Facets, MAX_PAGE_SIZE, type SortOrder } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { cx, plural } from '../lib/format'
 
 type View = 'grid' | 'list'
+
+/** Wie viele Dokumente auf einmal sichtbar sind; "all" lädt alles nach. */
+const PAGE_SIZES = ['10', '20', '50', '100', 'all'] as const
+type PageSize = (typeof PAGE_SIZES)[number]
+
+function storedPageSize(): PageSize {
+  try {
+    const stored = localStorage.getItem('pageSize') as PageSize | null
+    if (stored && PAGE_SIZES.includes(stored)) return stored
+  } catch {
+    /* privater Modus – dann gilt die Vorgabe */
+  }
+  return '20'
+}
 
 /** Filter und Suchbegriff leben in der Adresse – so bleiben sie beim Neuladen, Teilen und Zurückgehen erhalten. */
 function useDocumentFilters() {
@@ -57,21 +71,35 @@ export function DocumentsPage() {
   const { filters, set, toggleTag, clearFilters, activeCount } = useDocumentFilters()
   const [view, setView] = useState<View>(() => (localStorage.getItem('view') === 'list' ? 'list' : 'grid'))
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [pageSize, setPageSize] = useState<PageSize>(storedPageSize)
+  const showAll = pageSize === 'all'
+  // "Alle" holt die Dokumente in den größten Paketen, die der Server liefert, und lädt selbsttätig nach.
+  const requestSize = showAll ? MAX_PAGE_SIZE : Number(pageSize)
 
   // Die Kennzahlen verraten, ob im Hintergrund gerade etwas verarbeitet wird (z. B. neue Post).
   const system = useQuery({ queryKey: ['system'], queryFn: api.system, refetchInterval: 10_000 })
   const working = (system.data?.processing ?? 0) > 0
 
   const documents = useInfiniteQuery({
-    queryKey: ['documents', filters],
-    queryFn: ({ pageParam }) => api.documents(filters, pageParam),
+    queryKey: ['documents', filters, requestSize],
+    queryFn: ({ pageParam }) => api.documents(filters, pageParam, requestSize),
     initialPageParam: 0,
     getNextPageParam: (last) => ((last.page + 1) * last.size < last.total ? last.page + 1 : undefined),
     placeholderData: keepPreviousData,
     // Solange etwas verarbeitet wird, eng nachfragen; sonst gelegentlich nach neuen Eingängen sehen.
+    // Bei "Alle" hängen viele Pakete an jeder Nachfrage – deshalb dort etwas seltener.
     refetchInterval: (query) =>
-      working || query.state.data?.pages.some((page) => page.items.some(isBusy)) ? 2500 : 30_000,
+      working || query.state.data?.pages.some((page) => page.items.some(isBusy))
+        ? showAll
+          ? 8000
+          : 2500
+        : 30_000,
   })
+
+  const { hasNextPage, isFetching, fetchNextPage } = documents
+  useEffect(() => {
+    if (showAll && hasNextPage && !isFetching) void fetchNextPage()
+  }, [showAll, hasNextPage, isFetching, fetchNextPage])
   const facets = useQuery({ queryKey: ['documents', 'facets'], queryFn: api.facets, refetchInterval: 30_000 })
 
   const items = documents.data?.pages.flatMap((page) => page.items) ?? []
@@ -82,6 +110,14 @@ export function DocumentsPage() {
   function changeView(next: View) {
     setView(next)
     localStorage.setItem('view', next)
+  }
+  function changePageSize(next: PageSize) {
+    setPageSize(next)
+    try {
+      localStorage.setItem('pageSize', next)
+    } catch {
+      /* privater Modus – die Auswahl gilt dann nur bis zum Neuladen */
+    }
   }
 
   const filterPanel = (
@@ -162,6 +198,19 @@ export function DocumentsPage() {
               <List className="size-4" />
             </IconButton>
           </div>
+          <Select
+            aria-label="Anzahl sichtbarer Dokumente"
+            title="Anzahl sichtbarer Dokumente"
+            value={pageSize}
+            onChange={(event) => changePageSize(event.target.value as PageSize)}
+            className="!h-8 !w-auto !text-[13px]"
+          >
+            {PAGE_SIZES.map((size) => (
+              <option key={size} value={size}>
+                {size === 'all' ? 'Alle' : size}
+              </option>
+            ))}
+          </Select>
         </div>
 
         {activeCount > 0 && (
@@ -217,13 +266,19 @@ export function DocumentsPage() {
           </div>
         )}
 
-        {documents.hasNextPage && (
-          <div className="mt-6 flex justify-center">
-            <Button onClick={() => documents.fetchNextPage()} loading={documents.isFetchingNextPage}>
-              Weitere laden ({(total - items.length).toLocaleString('de-DE')})
-            </Button>
-          </div>
-        )}
+        {documents.hasNextPage &&
+          (showAll ? (
+            <p className="mt-6 flex items-center justify-center gap-2 text-sm text-muted">
+              <Spinner className="size-4" />
+              {items.length.toLocaleString('de-DE')} von {total.toLocaleString('de-DE')} Dokumenten geladen …
+            </p>
+          ) : (
+            <div className="mt-6 flex justify-center">
+              <Button onClick={() => documents.fetchNextPage()} loading={documents.isFetchingNextPage}>
+                Weitere laden ({(total - items.length).toLocaleString('de-DE')})
+              </Button>
+            </div>
+          ))}
       </div>
 
       <Modal open={filtersOpen} onClose={() => setFiltersOpen(false)} title="Filter" footer={<Button variant="primary" onClick={() => setFiltersOpen(false)}>Anzeigen</Button>}>

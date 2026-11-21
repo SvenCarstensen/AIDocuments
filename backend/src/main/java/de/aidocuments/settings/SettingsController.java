@@ -63,13 +63,11 @@ public class SettingsController {
         return aiSettings.update(request);
     }
 
-    /** Prüft die gespeicherten Zugangsdaten mit einer minimalen Anfrage an den KI-Server. */
+    /** Prüft Adresse, Schlüssel und Modell der gespeicherten KI-Einstellungen; antwortet in jedem Fall zügig. */
     @PostMapping("/ai/test")
     public TestResultDto testAi() {
         try {
-            aiService.testConnection();
-            return new TestResultDto(true, "Verbindung erfolgreich – das Modell „"
-                    + aiSettings.current().model() + "“ antwortet.");
+            return new TestResultDto(true, aiService.testConnection());
         } catch (AiException e) {
             return new TestResultDto(false, e.getMessage());
         }

@@ -38,8 +38,11 @@ app:
   ai:
     # Vorgaben für die KI-Anbindung. Alles hiervon lässt sich in der Oberfläche unter
     # Einstellungen → KI überschreiben; die dort gespeicherten Werte haben Vorrang.
-    base-url: ${ANTHROPIC_BASE_URL:}
-    api-key: ${ANTHROPIC_API_KEY:}
+    # anthropic | openai | moonshot | lm-studio | openai-compatible
+    provider: ${AIDOCS_AI_PROVIDER:anthropic}
+    # leer = Standardadresse des Anbieters
+    base-url: ${AIDOCS_AI_BASE_URL:${ANTHROPIC_BASE_URL:}}
+    api-key: ${AIDOCS_AI_API_KEY:${ANTHROPIC_API_KEY:}}
     model: ${AIDOCS_AI_MODEL:claude-opus-5-5}
     # low | medium | high – höher = gründlicher, aber langsamer und teurer
     effort: medium
@@ -49,8 +52,6 @@ app:
     # Kompatibilitätsmodus für Server, die zwar die Anthropic-Messages-API sprechen, aber keine PDF-Eingabe
     # und keine strukturierten Ausgaben kennen (lokale Modelle). Ohne Angabe: automatisch je nach Server.
     # compatibility-mode: true
-    # Anzahl parallel analysierter Dokumente
-    concurrency: 2
   import:
     # Wie oft Postfächer und Eingangsordner auf neue PDFs geprüft werden
     # (in der Oberfläche unter Einstellungen → Abruf änderbar)

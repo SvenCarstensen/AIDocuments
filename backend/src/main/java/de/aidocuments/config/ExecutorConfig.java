@@ -7,13 +7,15 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class ExecutorConfig {
 
-    /** Arbeitet die Dokument-Pipeline ab (PDF lesen, KI-Analyse, Indizierung). */
+    /**
+     * Arbeitet die Dokument-Pipeline ab (PDF lesen, KI-Analyse, Indizierung) – mit genau einem Thread:
+     * Die Dokumente gehen strikt nacheinander an das Sprachmodell, nie zwei gleichzeitig.
+     */
     @Bean
-    public ThreadPoolTaskExecutor documentExecutor(AppProperties properties) {
-        int threads = Math.max(1, properties.ai().concurrency());
+    public ThreadPoolTaskExecutor documentExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(threads);
-        executor.setMaxPoolSize(threads);
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(1);
         executor.setThreadNamePrefix("doc-");
         executor.setWaitForTasksToCompleteOnShutdown(false);
         return executor;

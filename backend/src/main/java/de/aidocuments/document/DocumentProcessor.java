@@ -7,8 +7,6 @@ import de.aidocuments.document.PdfExtractor.PdfContent;
 import de.aidocuments.document.PdfExtractor.PdfReadException;
 import de.aidocuments.search.SearchIndex;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -122,7 +120,7 @@ public class DocumentProcessor {
             doc.setSummary(clip(blankToNull(analysis.summary()), 4000));
             doc.setCategory(clip(blankToNull(analysis.category()), 100));
             doc.setCorrespondent(clip(blankToNull(analysis.correspondent()), 255));
-            doc.setDocumentDate(parseDate(analysis.documentDate()));
+            doc.setDocumentDate(DocumentAnalysis.parseDate(analysis.documentDate()));
             doc.setLanguage(clip(blankToNull(analysis.language()), 32));
             doc.replaceTags(normalizeTags(analysis.tags()));
             doc.replaceKeyFacts(normalizeFacts(analysis.keyFacts()));
@@ -182,17 +180,6 @@ public class DocumentProcessor {
                 .limit(12)
                 .map(f -> new KeyFact(clip(f.label().strip(), 200), clip(f.value().strip(), 1000)))
                 .toList();
-    }
-
-    private static LocalDate parseDate(String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-        try {
-            return LocalDate.parse(value.strip());
-        } catch (DateTimeParseException e) {
-            return null;
-        }
     }
 
     static String titleFromFilename(String filename) {

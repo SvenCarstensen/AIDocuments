@@ -1,6 +1,8 @@
 # Vorlage: nach debug.yml kopieren und anpassen. debug.yml wird beim lokalen Start automatisch geladen.
 app:
   ai:
-    base-url: http://<llm-server>:8000
-    api-key: <api-schlüssel>
+    # anthropic | openai | moonshot | lm-studio | openai-compatible
+    provider: openai-compatible
+    base-url: http://<llm-server>:8000/v1
+    api-key: <api-schlüssel, falls der Server einen verlangt>
     model: <modell-id>

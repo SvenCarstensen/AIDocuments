@@ -11,6 +11,7 @@ public class AiSettings {
 
     @Id
     private String id = ID;
+    private LlmProvider provider;
     private String baseUrl;
     private String apiKeyEncrypted;
     private String model;
@@ -18,6 +19,14 @@ public class AiSettings {
     private String outputLanguage;
     private Boolean ocr;
     private Boolean compatibilityMode;
+
+    public LlmProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(LlmProvider provider) {
+        this.provider = provider;
+    }
 
     public String getBaseUrl() {
         return baseUrl;

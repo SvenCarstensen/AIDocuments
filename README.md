@@ -4,7 +4,8 @@ Dokumentenverwaltung für PDFs: Die Anwendung holt PDF-Dateien aus IMAP-Postfäc
 Eingangsordner oder per Upload, lässt sie von einer KI erschließen (Titel, Zusammenfassung, Dokumentart,
 Absender, Datum, Schlagworte, Kerndaten – bei Scans auch den Volltext) und macht sie durchsuchbar.
 
-- **Backend:** Spring Boot 4 (Java 21), MongoDB, Apache Lucene (Volltextsuche), PDFBox, Anthropic Java SDK
+- **Backend:** Spring Boot 4 (Java 21), MongoDB, Apache Lucene (Volltextsuche), PDFBox, Anthropic Java SDK,
+  eigene Anbindung für OpenAI-kompatible Server
 - **Frontend:** React 19, TypeScript, Vite, Tailwind CSS 4, TanStack Query
 
 ## Funktionen
@@ -138,26 +139,42 @@ in der Oberfläche gespeicherte Werte haben Vorrang.
 | `AIDOCS_DATA_DIR` | Ablage für PDFs, Suchindex, Schlüsseldatei | `./data` (im Image: `/aidocuments`) |
 | `AIDOCS_IMPORT_DIR` | überwachter Eingangsordner | leer = aus (im Image: `/import`) |
 | `AIDOCS_IMPORT_INTERVAL` | Abrufintervall, z. B. `5m` | `5m` |
-| `ANTHROPIC_API_KEY` | API-Schlüssel des LLM-Servers | leer = KI aus |
-| `ANTHROPIC_BASE_URL` | Adresse des LLM-Servers | Claude API von Anthropic |
+| `AIDOCS_AI_PROVIDER` | LLM-Anbieter: `anthropic`, `openai`, `moonshot`, `lm-studio`, `openai-compatible` | `anthropic` |
+| `AIDOCS_AI_BASE_URL` | Adresse des LLM-Servers | Standardadresse des Anbieters |
+| `AIDOCS_AI_API_KEY` | API-Schlüssel des LLM-Servers (`ANTHROPIC_API_KEY` wird ebenfalls gelesen) | leer |
 | `AIDOCS_AI_MODEL` | Modell-ID | `claude-opus-5-5` |
 | `SERVER_ADDRESS` / `SERVER_PORT` | Bindeadresse und Port | `127.0.0.1` / `8080` (im Image: `0.0.0.0`) |
 
 ## KI-Anbindung
 
-Die Anwendung spricht die Anthropic-Messages-API und kennt zwei Wege:
+Der Anbieter wird unter *Einstellungen → KI* gewählt:
 
-- **Claude API** (Standard): Das PDF geht als Ganzes an das Modell – Layout, Tabellen und Scans inklusive –,
-  das Ergebnis kommt als strukturierte Ausgabe zurück.
-- **Kompatibilitätsmodus** für Server, die zwar die Messages-API sprechen, aber keine PDF-Eingabe und keine
-  strukturierten Ausgaben kennen (lokale Modelle): Das Dokument geht als ausgelesener Text bzw. – bei
-  Scans – als Seitenbilder an das Modell, das Ergebnis kommt als Werkzeugaufruf zurück. Das Modell muss
-  dafür Werkzeugaufrufe (Tool Use) und für Scans Bildeingabe beherrschen. Grenzen dieses Modus: Von sehr
-  langen Texten wertet die KI nur den Anfang aus, von Scans die ersten 8 Seiten; die Anwendung vermerkt das
-  am Dokument. Die Volltextsuche umfasst bei Textdokumenten trotzdem den gesamten Text.
+| Anbieter | Schnittstelle | Standardadresse | Inhalte verlassen den Rechner |
+|---|---|---|:-:|
+| Anthropic | Anthropic Messages API | `https://api.anthropic.com` | ja |
+| OpenAI | OpenAI Chat Completions | `https://api.openai.com/v1` | ja |
+| Moonshot | OpenAI Chat Completions | `https://api.moonshot.ai/v1` | ja |
+| LM Studio | OpenAI Chat Completions | `http://localhost:1234/v1` | nein |
+| OpenAI Kompatibel | OpenAI Chat Completions | frei wählbar | je nach Server |
 
-Der Kompatibilitätsmodus schaltet sich automatisch ein, sobald eine andere Server-Adresse als die Claude API
-eingetragen ist, und lässt sich unter *Einstellungen → KI* umstellen.
+Bei Anthropic, OpenAI und Moonshot weist die Oberfläche darauf hin, dass die Dokumentinhalte zur Analyse an
+Server im Internet übertragen werden, und empfiehlt eine lokale KI. Ein gespeicherter API-Schlüssel gehört
+immer zu genau einem Anbieter: Beim Wechsel wird er verworfen und nie an den neuen Anbieter geschickt.
+
+Wie das Dokument beim Modell ankommt:
+
+- **Claude API** (Anthropic mit der Standardadresse): Das PDF geht als Ganzes an das Modell – Layout,
+  Tabellen und Scans inklusive –, das Ergebnis kommt als strukturierte Ausgabe zurück.
+- **Alle anderen** (OpenAI-Schnittstelle sowie Anthropic-Schnittstelle im *Kompatibilitätsmodus* für eigene
+  Server): Das Dokument geht als ausgelesener Text bzw. – bei Scans – als Seitenbilder an das Modell, das
+  Ergebnis kommt als Werkzeugaufruf zurück. Das Modell muss dafür Werkzeugaufrufe (Tool Use / Function
+  Calling) und für Scans Bildeingabe beherrschen. Grenzen: Von sehr langen Texten wertet die KI nur den Anfang
+  aus, von Scans die ersten 8 Seiten; die Anwendung vermerkt das am Dokument. Die Volltextsuche umfasst bei
+  Textdokumenten trotzdem den gesamten Text.
+
+Jede Antwort wird geprüft (Titel, Zusammenfassung, Dokumentart, Schlagworte, Datum, bei Scans der Volltext).
+Ist sie nicht verarbeitbar, fragt die Anwendung genau einmal nach und nennt dem Modell, was gefehlt hat.
+Dokumente gehen strikt nacheinander an das Modell, nie mehrere gleichzeitig.
 
 Ohne KI-Zugang funktioniert die Anwendung weiter: PDFs werden gespeichert und sind über ihre Textebene
 durchsuchbar, nur Zusammenfassung und Schlagworte fehlen. Nachträglich analysieren: *Einstellungen → KI →
@@ -169,7 +186,7 @@ durchsuchbar, nur Zusammenfassung und Schlagworte fehlen. Nachträglich analysie
 backend/     Spring-Boot-Anwendung
   src/main/java/de/aidocuments/
     document/   Dokumente, Verarbeitungs-Pipeline, REST-API
-    ai/         KI-Analyse (Claude API und Kompatibilitätsmodus)
+    ai/         KI-Analyse (Anthropic- und OpenAI-Schnittstelle)
     search/     Lucene-Volltextindex
     mail/       IMAP-Postfächer und Abruf
     importer/   Eingangsordner und Abrufintervall

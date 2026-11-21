@@ -91,7 +91,11 @@ class ApplicationFlowTest {
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
         registry.add("app.data-dir", dataDir::toString);
+        // unabhängig von einer lokalen config/debug.yml: Auslieferungszustand ohne KI-Zugang
+        registry.add("app.ai.provider", () -> "anthropic");
+        registry.add("app.ai.base-url", () -> "");
         registry.add("app.ai.api-key", () -> "");
+        registry.add("app.ai.model", () -> "claude-opus-5-5");
     }
 
     @Autowired
@@ -401,6 +405,54 @@ class ApplicationFlowTest {
                         .content("{\"role\":\"USER\",\"enabled\":false}"))
                 .andExpect(status().isOk());
         mvc.perform(get("/api/documents").session(userSession)).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @Order(8)
+    void llmProviderIsSelectableAndKeysNeverMoveToAnotherProvider() throws Exception {
+        mvc.perform(get("/api/settings/ai").session(adminSession))
+                .andExpect(jsonPath("$.provider").value("ANTHROPIC"))
+                .andExpect(jsonPath("$.baseUrl").value("https://api.anthropic.com"))
+                .andExpect(jsonPath("$.enabled").value(false))
+                .andExpect(jsonPath("$.providers", hasSize(5)))
+                .andExpect(jsonPath("$.providers[?(@.id == 'OPENAI')].cloud").value(true))
+                .andExpect(jsonPath("$.providers[?(@.id == 'LM_STUDIO')].cloud").value(false))
+                .andExpect(jsonPath("$.providers[?(@.id == 'LM_STUDIO')].defaultBaseUrl").value("http://localhost:1234/v1"));
+
+        String rest = "\"effort\":\"medium\",\"outputLanguage\":\"Deutsch\",\"ocr\":true}";
+        mvc.perform(put("/api/settings/ai").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"provider\":\"OPENAI\",\"baseUrl\":\"\",\"apiKey\":\"sk-test-nur-fuer-den-test\","
+                                + "\"model\":\"modell-x\"," + rest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.provider").value("OPENAI"))
+                .andExpect(jsonPath("$.baseUrl").value("https://api.openai.com/v1"))
+                .andExpect(jsonPath("$.apiKeySet").value(true))
+                .andExpect(jsonPath("$.enabled").value(true))
+                .andExpect(jsonPath("$.apiKey").doesNotExist());
+
+        // Anbieterwechsel ohne neuen Schlüssel: der OpenAI-Schlüssel darf nicht zu Moonshot wandern
+        mvc.perform(put("/api/settings/ai").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"provider\":\"MOONSHOT\",\"baseUrl\":\"\",\"model\":\"modell-y\"," + rest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.baseUrl").value("https://api.moonshot.ai/v1"))
+                .andExpect(jsonPath("$.apiKeySet").value(false))
+                .andExpect(jsonPath("$.enabled").value(false));
+
+        // lokale Anbieter brauchen keinen Schlüssel; eine Adresse ohne Pfad bekommt /v1
+        mvc.perform(put("/api/settings/ai").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"provider\":\"OPENAI_COMPATIBLE\",\"baseUrl\":\"\",\"model\":\"m\"," + rest))
+                .andExpect(status().isBadRequest());
+        mvc.perform(put("/api/settings/ai").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"provider\":\"OPENAI_COMPATIBLE\",\"baseUrl\":\"http://127.0.0.1:9/\",\"model\":\"m\","
+                                + rest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.baseUrl").value("http://127.0.0.1:9/v1"))
+                .andExpect(jsonPath("$.enabled").value(true));
+        mvc.perform(post("/api/settings/ai/test").with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$.ok").value(false))
+                .andExpect(jsonPath("$.message", containsString("nicht erreichbar")));
+        mvc.perform(get("/api/settings/ai/models").session(adminSession))
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 
     // --- Hilfen ---

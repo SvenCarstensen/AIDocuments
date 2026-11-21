@@ -1,6 +1,9 @@
 package de.aidocuments.ai;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -43,6 +46,25 @@ public record DocumentAnalysis(
         @JsonPropertyDescription("Nur befüllen, wenn die Aufgabe eine Transkription verlangt: der vollständige "
                 + "Text des Dokuments in Lesereihenfolge, Seiten durch eine Leerzeile getrennt. Sonst leerer String.")
         String fullText) {
+
+    private static final DateTimeFormatter GERMAN_DATE = DateTimeFormatter.ofPattern("d.M.uuuu");
+
+    /** Liest ein Datum im verlangten Format JJJJ-MM-TT, ersatzweise TT.MM.JJJJ; sonst {@code null}. */
+    public static LocalDate parseDate(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        String text = value.strip();
+        try {
+            return LocalDate.parse(text);
+        } catch (DateTimeParseException notIso) {
+            try {
+                return LocalDate.parse(text, GERMAN_DATE);
+            } catch (DateTimeParseException notGerman) {
+                return null;
+            }
+        }
+    }
 
     public record Fact(
             @JsonPropertyDescription("Bezeichnung, z. B. 'Rechnungsbetrag'") String label,

@@ -13,9 +13,10 @@ services:
     environment:
       TZ: Europe/Berlin
       # Optional – lässt sich alles auch in der Oberfläche unter Einstellungen → KI eintragen:
-      # ANTHROPIC_API_KEY: sk-ant-...
-      # ANTHROPIC_BASE_URL: http://192.168.1.10:8000
-      # AIDOCS_AI_MODEL: claude-opus-5-5
+      # AIDOCS_AI_PROVIDER: openai-compatible   # anthropic | openai | moonshot | lm-studio | openai-compatible
+      # AIDOCS_AI_BASE_URL: http://192.168.1.10:8000/v1
+      # AIDOCS_AI_API_KEY: ...
+      # AIDOCS_AI_MODEL: modell-id
     volumes:
       # PDFs, Suchindex, Schlüsseldatei und die eingebaute MongoDB (Unterordner mongo/)
       - aidocuments-data:/aidocuments

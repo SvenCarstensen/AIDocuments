@@ -43,7 +43,14 @@ public class DocumentStartup implements ApplicationRunner {
                 List.of(DocumentStatus.PENDING, DocumentStatus.PROCESSING));
         if (!unfinished.isEmpty()) {
             log.info("{} unterbrochene Verarbeitung(en) werden fortgesetzt", unfinished.size());
-            unfinished.forEach(doc -> processor.enqueue(doc.getId()));
+            for (Document doc : unfinished) {
+                // Was beim Beenden mitten in der Analyse steckte, wartet jetzt wieder – und soll auch so aussehen.
+                if (doc.getStatus() == DocumentStatus.PROCESSING) {
+                    doc.setStatus(DocumentStatus.PENDING);
+                    documents.save(doc);
+                }
+                processor.enqueue(doc.getId());
+            }
         }
     }
 }
