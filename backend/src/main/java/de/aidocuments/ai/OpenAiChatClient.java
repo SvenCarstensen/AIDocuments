@@ -36,8 +36,16 @@ final class OpenAiChatClient {
         }
     }
 
-    /** Antwort des Modells: die Argumente des Werkzeugaufrufs (JSON) und/oder freier Text. */
-    record Reply(String toolArguments, String text, boolean truncated, String refusal) {
+    /**
+     * Antwort des Modells: die Argumente des Werkzeugaufrufs (JSON) und/oder freier Text.
+     *
+     * @param truncated        der Server hat die Antwort am Token-Limit abgeschnitten
+     * @param completionTokens erzeugte Token laut Server, {@code -1} ohne Angabe. Bei Modellen, die vor dem
+     *                         Antworten „nachdenken“, zählt das Nachdenken mit – und gegen das Limit.
+     * @param reasoningChars   Länge des mitgelieferten Nachdenkens in Zeichen (0, wenn der Server keines liefert)
+     */
+    record Reply(String toolArguments, String text, boolean truncated, String refusal, long completionTokens,
+                 int reasoningChars) {
     }
 
     /** Der Server hat mit einem Fehlerstatus geantwortet. */
@@ -150,7 +158,15 @@ final class OpenAiChatClient {
                 arguments,
                 textOf(message.path("content")),
                 "length".equals(choice.path("finish_reason").asText()),
-                message.hasNonNull("refusal") ? message.get("refusal").asText() : null);
+                message.hasNonNull("refusal") ? message.get("refusal").asText() : null,
+                body.path("usage").path("completion_tokens").asLong(-1),
+                reasoningOf(message).length());
+    }
+
+    /** Das Nachdenken heißt je nach Server "reasoning_content" (llama.cpp, vLLM, DeepSeek) oder "reasoning". */
+    private static String reasoningOf(JsonNode message) {
+        String reasoning = textOf(message.path("reasoning_content"));
+        return reasoning.isEmpty() ? textOf(message.path("reasoning")) : reasoning;
     }
 
     /** "content" ist meist ein Text, bei manchen Servern eine Liste von Textbausteinen. */

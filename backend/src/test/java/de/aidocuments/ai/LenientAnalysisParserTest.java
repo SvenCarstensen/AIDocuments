@@ -89,4 +89,31 @@ class LenientAnalysisParserTest {
 
         assertThat(params.rawParams()._body().toString()).contains("keyFacts").contains("documentDate");
     }
+
+    @Test
+    void closesJsonThatWasCutOffBehindTheLastCompleteValue() {
+        // mitten in einem Textwert: der angefangene Wert entfällt
+        assertThat(LenientAnalysisParser.closeTruncated("{\"title\":\"A\",\"summary\":\"Der Abs"))
+                .isEqualTo("{\"title\":\"A\"}");
+        // nach einem Schlüssel, in einer Liste, in einem verschachtelten Objekt
+        assertThat(LenientAnalysisParser.closeTruncated("{\"title\":\"A\",\"summary\":")).isEqualTo("{\"title\":\"A\"}");
+        assertThat(LenientAnalysisParser.closeTruncated("{\"tags\":[\"a\",\"b")).isEqualTo("{\"tags\":[\"a\"]}");
+        assertThat(LenientAnalysisParser.closeTruncated("{\"keyFacts\":[{\"label\":\"x\",\"value\":\"1\"},{\"label\":\"y"))
+                .isEqualTo("{\"keyFacts\":[{\"label\":\"x\",\"value\":\"1\"},{}]}");
+        // Anführungszeichen und Klammern in Texten zählen nicht mit; eine angefangene Zahl entfällt
+        assertThat(LenientAnalysisParser.closeTruncated("{\"a\":\"x \\\" } ]\",\"n\":12")).isEqualTo("{\"a\":\"x \\\" } ]\"}");
+        // Vollständiges bleibt, wie es ist – samt Text davor und danach
+        assertThat(LenientAnalysisParser.closeTruncated("Hier: {\"a\":[1,2]} Ende")).isEqualTo("{\"a\":[1,2]}");
+        assertThat(LenientAnalysisParser.closeTruncated("kein JSON")).isNull();
+    }
+
+    @Test
+    void readsACutOffAnswerUpToTheBreak() throws Exception {
+        DocumentAnalysis analysis = LenientAnalysisParser.parseTruncated(
+                "{\"title\":\"Stromrechnung\",\"tags\":[\"strom\"],\"keyFacts\":[{\"label\":\"Betrag\",\"value\":\"48");
+
+        assertThat(analysis.title()).isEqualTo("Stromrechnung");
+        assertThat(analysis.tags()).containsExactly("strom");
+        assertThat(analysis.keyFacts()).isEmpty();
+    }
 }

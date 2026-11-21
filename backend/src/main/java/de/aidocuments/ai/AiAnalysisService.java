@@ -11,6 +11,7 @@ import com.anthropic.errors.NotFoundException;
 import com.anthropic.errors.PermissionDeniedException;
 import com.anthropic.errors.RateLimitException;
 import com.anthropic.errors.UnauthorizedException;
+import com.anthropic.errors.UnprocessableEntityException;
 import com.anthropic.helpers.BetaMessageAccumulator;
 import com.anthropic.helpers.MessageAccumulator;
 import com.anthropic.models.beta.messages.BetaContentBlockParam;
@@ -30,6 +31,8 @@ import com.anthropic.models.messages.StopReason;
 import com.anthropic.models.messages.Tool;
 import com.anthropic.models.messages.ToolChoiceAuto;
 import com.anthropic.models.messages.ToolUseBlock;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.aidocuments.document.PdfExtractor;
 import de.aidocuments.i18n.Msg;
 import de.aidocuments.settings.AiSettingsService;
@@ -42,9 +45,11 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,8 +88,14 @@ public class AiAnalysisService {
     private static final List<String> RESULT_FIELDS = List.of("title", "summary", "category", "correspondent",
             "documentDate", "language", "tags", "keyFacts", "fullText");
     private static final Duration TEST_TIMEOUT = Duration.ofSeconds(20);
-    /** Lokale Modelle brauchen für einen mehrseitigen Scan mit Texterkennung durchaus einige Minuten. */
-    private static final Duration ANALYSIS_TIMEOUT = Duration.ofMinutes(15);
+    /**
+     * Lokale Modelle brauchen für einen mehrseitigen Scan mit Texterkennung durchaus einige Minuten – erst recht,
+     * wenn sie vor der Antwort lange nachdenken.
+     */
+    private static final Duration ANALYSIS_TIMEOUT = Duration.ofMinutes(20);
+    /** Reißt eine Antwort das Token-Limit, folgt ein zweiter Anlauf mit so viel mehr Platz. */
+    private static final int MORE_ROOM_FACTOR = 2;
+    private static final ObjectMapper JSON = new ObjectMapper();
 
     public static final List<String> CATEGORIES = List.of(
             "Rechnung", "Angebot", "Bestellung", "Lieferschein", "Mahnung", "Vertrag", "Kündigung",
@@ -382,11 +393,37 @@ public class AiAnalysisService {
     // Weg 2: Kompatibilitätsmodus – Text oder Seitenbilder, Ergebnis als Werkzeugaufruf
     // ------------------------------------------------------------------------------------------------
 
-    /** Stellt eine Anfrage über die jeweilige Schnittstelle und liefert die geprüfte Antwort. */
+    /** Stellt eine Anfrage über die jeweilige Schnittstelle und liefert die Antwort des Modells, noch ungeprüft. */
     @FunctionalInterface
     private interface Transport {
-        Attempt request(Effective config, List<OpenAiChatClient.Part> document, String task, boolean transcribe)
-                throws AiException, TruncatedResponseException;
+        ModelReply request(Effective config, List<OpenAiChatClient.Part> document, String task, long maxTokens)
+                throws AiException;
+    }
+
+    /**
+     * Was das Modell geliefert hat.
+     *
+     * @param toolJson       Argumente des Werkzeugaufrufs als JSON-Text, sonst {@code null}
+     * @param truncated      am Token-Limit abgeschnitten – {@code toolJson} bzw. {@code text} brechen dann mittendrin ab
+     * @param outputTokens   erzeugte Token laut Server ({@code -1} ohne Angabe), das Nachdenken eingeschlossen
+     * @param reasoningChars Länge des Nachdenkens in Zeichen, soweit der Server es mitliefert
+     */
+    private record ModelReply(String toolJson, String text, boolean truncated, long outputTokens,
+                              int reasoningChars) {
+
+        /** Das eigentliche Ergebnis: die Argumente des Werkzeugaufrufs, sonst der Text. */
+        String answer() {
+            return toolJson != null && !toolJson.isBlank() ? toolJson : text == null ? "" : text;
+        }
+
+        String sizeForLog() {
+            return (outputTokens >= 0 ? "erzeugt " + outputTokens + " Token; " : "") + "Nachdenken " + reasoningChars
+                    + " Zeichen, Ergebnis " + answer().length() + " Zeichen";
+        }
+    }
+
+    /** Ergebnis eines Anlaufs; {@code cutOff}: aus einer abgeschnittenen Antwort gerettet, ohne Volltext. */
+    private record Outcome(DocumentAnalysis analysis, boolean cutOff) {
     }
 
     private Result analyzeCompatible(Effective config, Request request, Transport transport) throws AiException {
@@ -425,8 +462,12 @@ public class AiAnalysisService {
         }
 
         try {
-            return new Result(callCompatible(config, request, document, hint, transcribe, transport), transcribe,
-                    List.copyOf(notes));
+            Outcome outcome = callCompatible(config, request, document, hint, transcribe, true, transport);
+            if (transcribe && outcome.cutOff()) {
+                // Die Erschließung steht, nur die Transkription hat nicht mehr hineingepasst.
+                notes.add(Msg.of("ai.note.scanTooLarge"));
+            }
+            return new Result(outcome.analysis(), transcribe && !outcome.cutOff(), List.copyOf(notes));
         } catch (TruncatedResponseException e) {
             if (!transcribe) {
                 throw new AiException(Msg.of("ai.error.truncated"));
@@ -434,8 +475,8 @@ public class AiAnalysisService {
             log.info("Transkription von {} zu lang, analysiere ohne Volltext", request.filename());
             try {
                 notes.add(Msg.of("ai.note.scanTooLarge"));
-                return new Result(callCompatible(config, request, document, hint, false, transport), false,
-                        List.copyOf(notes));
+                return new Result(callCompatible(config, request, document, hint, false, false, transport).analysis(),
+                        false, List.copyOf(notes));
             } catch (TruncatedResponseException again) {
                 throw new AiException(Msg.of("ai.error.truncated"));
             }
@@ -445,28 +486,131 @@ public class AiAnalysisService {
     /**
      * Fragt das Modell und prüft, ob die Antwort verarbeitbar ist. Ist sie es nicht, wird genau einmal
      * nachgefasst – mit der Angabe, was gefehlt hat. Danach gilt die brauchbarere der beiden Antworten.
+     *
+     * @param mayGrow ob einer abgeschnittenen Antwort ein Anlauf mit mehr Platz folgen darf
      */
-    private DocumentAnalysis callCompatible(Effective config, Request request,
-                                            List<OpenAiChatClient.Part> document, String hint, boolean transcribe,
-                                            Transport transport)
+    private Outcome callCompatible(Effective config, Request request,
+                                   List<OpenAiChatClient.Part> document, String hint, boolean transcribe,
+                                   boolean mayGrow, Transport transport)
             throws AiException, TruncatedResponseException {
         String task = taskDescription(config, request, hint, transcribe) + "\n\n" + OUTPUT_CONTRACT;
-        Attempt first = transport.request(config, document, task, transcribe);
+        Attempt first = ask(transport, config, request, document, task, transcribe, mayGrow);
         if (first.problems().isEmpty()) {
-            return first.analysis();
+            return first.outcome();
         }
         log.info("Antwort zu {} nicht sauber verarbeitbar ({}) – frage einmal nach", request.filename(),
                 first.problemsForModel());
-        Attempt second = transport.request(config, document, task
-                + "\n\nDein erster Versuch ließ sich nicht verarbeiten: " + first.problemsForModel()
-                + " Liefere das Ergebnis jetzt genau in der beschriebenen Form.", transcribe);
+        Attempt second;
+        try {
+            second = ask(transport, config, request, document, task
+                    + "\n\nDein erster Versuch ließ sich nicht verarbeiten: " + first.problemsForModel()
+                    + " Liefere das Ergebnis jetzt genau in der beschriebenen Form.", transcribe, mayGrow);
+        } catch (TruncatedResponseException e) {
+            if (first.analysis() == null) {
+                throw e;
+            }
+            second = first; // die Nachfrage hat nichts gebracht – dann gilt der erste, unvollkommene Anlauf
+        }
 
         Attempt best = second.isBetterThan(first) ? second : first;
         if (best.analysis() == null) {
             throw new AiException(Msg.of("ai.error.unprocessable",
                     second.problems().stream().map(Problem::forUser).toList()));
         }
-        return best.analysis();
+        return best.outcome();
+    }
+
+    /**
+     * Eine Anfrage an das Modell – mit dem Umgang für Antworten, die länger geraten als das Token-Limit. Das trifft
+     * vor allem Modelle, die vor der Antwort „nachdenken“: Das Nachdenken zählt gegen dasselbe Limit und ist oft
+     * um ein Vielfaches länger als das Ergebnis. Dann folgt ein zweiter Anlauf mit mehr Platz. Reicht auch der
+     * nicht (oder lässt der Server ihn nicht zu), wird aus dem Abgeschnittenen übernommen, was vollständig ankam:
+     * Die Felder kommen in fester Reihenfolge, der Abbruch trifft daher meist nur Kerndaten oder Volltext.
+     */
+    private Attempt ask(Transport transport, Effective config, Request request, List<OpenAiChatClient.Part> document,
+                        String task, boolean transcribe, boolean mayGrow)
+            throws AiException, TruncatedResponseException {
+        long limit = maxTokens(transcribe);
+        ModelReply reply = transport.request(config, document, task, limit);
+        if (!reply.truncated()) {
+            return attemptOf(reply, transcribe);
+        }
+        List<ModelReply> cutOff = new ArrayList<>(List.of(reply));
+        if (mayGrow) {
+            long more = limit * MORE_ROOM_FACTOR;
+            log.info("Antwort zu {} am Limit von {} Token abgeschnitten ({}) – neuer Anlauf mit {} Token",
+                    request.filename(), limit, reply.sizeForLog(), more);
+            ModelReply larger = requestWithMoreRoom(transport, config, request, document, task, more);
+            if (larger != null && !larger.truncated()) {
+                return attemptOf(larger, transcribe);
+            }
+            if (larger != null) {
+                log.info("Antwort zu {} auch am Limit von {} Token abgeschnitten ({})", request.filename(), more,
+                        larger.sizeForLog());
+                cutOff.add(0, larger); // enthält in aller Regel mehr vom Ergebnis
+            }
+        } else {
+            log.info("Antwort zu {} am Limit von {} Token abgeschnitten ({})", request.filename(), limit,
+                    reply.sizeForLog());
+        }
+        for (ModelReply candidate : cutOff) {
+            DocumentAnalysis rescued = rescue(candidate);
+            if (rescued != null) {
+                log.info("Abgeschnittene Antwort zu {} übernommen: Titel, Zusammenfassung, Dokumentart und "
+                        + "Schlagworte sind vollständig angekommen", request.filename());
+                return new Attempt(rescued, List.of(), true);
+            }
+        }
+        throw new TruncatedResponseException();
+    }
+
+    /**
+     * Der zweite Anlauf mit höherem Limit. Nicht jeder Server lässt ihn zu (das Limit kann über dem liegen, was das
+     * Modell ausgeben darf) oder schafft ihn rechtzeitig – dann bleibt es bei der ersten, abgeschnittenen Antwort.
+     *
+     * @return die Antwort oder {@code null}, wenn der Anlauf nicht zustande kam
+     */
+    private static ModelReply requestWithMoreRoom(Transport transport, Effective config, Request request,
+                                                  List<OpenAiChatClient.Part> document, String task, long maxTokens)
+            throws AiException {
+        try {
+            return transport.request(config, document, task, maxTokens);
+        } catch (OpenAiChatClient.StatusException e) {
+            if (e.status() != 400 && e.status() != 413 && e.status() != 422) {
+                throw e;
+            }
+            log.info("Server lehnt das höhere Limit für {} ab: {}", request.filename(), e.getMessage());
+        } catch (BadRequestException | UnprocessableEntityException e) {
+            log.info("Server lehnt das höhere Limit für {} ab: {}", request.filename(), e.getMessage());
+        } catch (OpenAiChatClient.ConnectionException e) {
+            if (!e.timeout()) {
+                throw e;
+            }
+            log.info("Anlauf mit höherem Limit für {} lief in die Zeitgrenze", request.filename());
+        }
+        return null;
+    }
+
+    /**
+     * Holt aus einer abgeschnittenen Antwort die Erschließung, sofern ihr Kern vollständig ankam: Titel,
+     * Zusammenfassung, Dokumentart und Schlagworte. Ein angefangener Volltext entfällt – er wäre nur ein Bruchstück.
+     */
+    static DocumentAnalysis rescue(String cutOffAnswer) {
+        DocumentAnalysis parsed;
+        try {
+            parsed = withCanonicalCategory(LenientAnalysisParser.parseTruncated(cutOffAnswer));
+        } catch (JsonProcessingException | RuntimeException e) {
+            return null;
+        }
+        boolean dateUsable = DocumentAnalysis.parseDate(parsed.documentDate()) != null;
+        DocumentAnalysis core = new DocumentAnalysis(parsed.title(), parsed.summary(), parsed.category(),
+                parsed.correspondent(), dateUsable ? parsed.documentDate() : "", parsed.language(), parsed.tags(),
+                parsed.keyFacts(), "");
+        return problems(core, false).isEmpty() ? core : null;
+    }
+
+    private static DocumentAnalysis rescue(ModelReply reply) {
+        return rescue(reply.answer());
     }
 
     /**
@@ -477,8 +621,12 @@ public class AiAnalysisService {
     record Problem(String forModel, Msg forUser) {
     }
 
-    /** Eine Antwort des Modells samt dem, was an ihr nicht verarbeitbar war (leer = einwandfrei). */
-    private record Attempt(DocumentAnalysis analysis, List<Problem> problems) {
+    /**
+     * Eine Antwort des Modells samt dem, was an ihr nicht verarbeitbar war (leer = einwandfrei).
+     *
+     * @param cutOff aus einer abgeschnittenen Antwort gerettet
+     */
+    private record Attempt(DocumentAnalysis analysis, List<Problem> problems, boolean cutOff) {
 
         String problemsForModel() {
             return problems.stream().map(Problem::forModel).collect(Collectors.joining(" "));
@@ -490,11 +638,47 @@ public class AiAnalysisService {
             }
             return problems.size() <= other.problems.size();
         }
+
+        Outcome outcome() {
+            return new Outcome(analysis, cutOff);
+        }
+    }
+
+    /** Liest beim Streamen mit, was das Modell liefert – auch dann verwertbar, wenn die Antwort mittendrin abbricht. */
+    private static final class StreamedAnswer {
+        private final Set<Long> resultBlocks = new HashSet<>();
+        private final StringBuilder toolJson = new StringBuilder();
+        private final StringBuilder text = new StringBuilder();
+        private StopReason stopReason;
+        private long outputTokens = -1;
+        private int reasoningChars;
+
+        void accept(RawMessageStreamEvent event) {
+            event.contentBlockStart().ifPresent(start -> start.contentBlock().toolUse()
+                    .filter(tool -> RESULT_TOOL.equals(tool.name()))
+                    .ifPresent(tool -> resultBlocks.add(start.index())));
+            event.contentBlockDelta().ifPresent(delta -> {
+                delta.delta().text().ifPresent(part -> text.append(part.text()));
+                delta.delta().thinking().ifPresent(part -> reasoningChars += part.thinking().length());
+                if (resultBlocks.contains(delta.index())) {
+                    delta.delta().inputJson().ifPresent(part -> toolJson.append(part.partialJson()));
+                }
+            });
+            event.messageDelta().ifPresent(delta -> {
+                delta.delta().stopReason().ifPresent(reason -> stopReason = reason);
+                outputTokens = delta.usage().outputTokens();
+            });
+        }
+
+        ModelReply reply(boolean truncated) {
+            return new ModelReply(toolJson.isEmpty() ? null : toolJson.toString(), text.toString(), truncated,
+                    outputTokens, reasoningChars);
+        }
     }
 
     /** Anthropic Messages API ohne strukturierte Ausgabe: Ergebnis als Werkzeugaufruf, gestreamt. */
-    private Attempt requestAnthropicTool(Effective config, List<OpenAiChatClient.Part> document, String task,
-                                         boolean transcribe) throws AiException, TruncatedResponseException {
+    private ModelReply requestAnthropicTool(Effective config, List<OpenAiChatClient.Part> document, String task,
+                                            long maxTokens) throws AiException {
         List<ContentBlockParam> content = new ArrayList<>();
         for (OpenAiChatClient.Part part : document) {
             content.add(part.jpeg() != null
@@ -508,47 +692,66 @@ public class AiAnalysisService {
 
         MessageCreateParams params = MessageCreateParams.builder()
                 .model(config.model())
-                .maxTokens(maxTokens(transcribe))
+                .maxTokens(maxTokens)
                 .system(SYSTEM_PROMPT)
                 .addUserMessageOfContentBlockParams(content)
                 .addTool(resultTool())
                 .toolChoice(ToolChoiceAuto.builder().build())
                 .build();
 
+        // Zweimal mitgelesen: Der Sammler des SDK baut die fertige Nachricht, kann an einem mittendrin abgebrochenen
+        // Werkzeugaufruf aber scheitern. Die eigene Mitschrift behält auch dann, was bis dahin ankam.
         MessageAccumulator accumulator = MessageAccumulator.create();
+        StreamedAnswer streamed = new StreamedAnswer();
+        RuntimeException[] accumulatorFailure = new RuntimeException[1];
         try (StreamResponse<RawMessageStreamEvent> stream = clientFor(config).messages().createStreaming(params)) {
-            stream.stream().forEach(accumulator::accumulate);
+            stream.stream().forEach(event -> {
+                streamed.accept(event);
+                if (accumulatorFailure[0] == null) {
+                    try {
+                        accumulator.accumulate(event);
+                    } catch (RuntimeException e) {
+                        accumulatorFailure[0] = e;
+                    }
+                }
+            });
+        }
+        if (StopReason.MAX_TOKENS.equals(streamed.stopReason)) {
+            return streamed.reply(true);
+        }
+        if (accumulatorFailure[0] != null) {
+            throw accumulatorFailure[0];
         }
         Message message = accumulator.message();
         StopReason stopReason = message.stopReason().orElse(null);
         if (StopReason.MAX_TOKENS.equals(stopReason)) {
-            throw new TruncatedResponseException();
+            return streamed.reply(true);
         }
         if (StopReason.REFUSAL.equals(stopReason)) {
             throw new AiException(Msg.of("ai.error.refused"));
         }
 
+        ModelReply reply = streamed.reply(false);
         Optional<ToolUseBlock> toolCall = message.content().stream()
                 .flatMap(block -> block.toolUse().stream())
                 .filter(block -> RESULT_TOOL.equals(block.name()))
                 .findFirst();
-        if (toolCall.isPresent()) {
+        if (reply.toolJson() == null && toolCall.isPresent()) {
+            // Server, der die Argumente nicht stückweise streamt, sondern gleich mit dem Block liefert
+            String input;
             try {
-                return checked(LenientAnalysisParser.parse(toolCall.get()._input().convert(Object.class)), transcribe);
-            } catch (IllegalArgumentException e) {
-                return new Attempt(null, List.of(NOT_JSON));
+                input = JSON.writeValueAsString(toolCall.get()._input().convert(Object.class));
+            } catch (JsonProcessingException | IllegalArgumentException e) {
+                input = "";
             }
+            return new ModelReply(input, reply.text(), false, reply.outputTokens(), reply.reasoningChars());
         }
-        String text = message.content().stream()
-                .flatMap(block -> block.text().stream())
-                .map(block -> block.text())
-                .reduce("", String::concat);
-        return fromText(text, transcribe);
+        return reply;
     }
 
     /** OpenAI Chat Completions: Ergebnis als Funktionsaufruf. */
-    private Attempt requestOpenAi(Effective config, List<OpenAiChatClient.Part> document, String task,
-                                  boolean transcribe) throws AiException, TruncatedResponseException {
+    private ModelReply requestOpenAi(Effective config, List<OpenAiChatClient.Part> document, String task,
+                                     long maxTokens) throws AiException {
         List<OpenAiChatClient.Part> content = new ArrayList<>(document);
         content.add(OpenAiChatClient.Part.text(task));
         // OpenAI selbst nimmt bei seinen aktuellen Modellen nur noch "max_completion_tokens" an,
@@ -557,20 +760,23 @@ public class AiAnalysisService {
 
         OpenAiChatClient.Reply reply = new OpenAiChatClient(config.baseUrl(), config.apiKey()).complete(
                 config.model(), SYSTEM_PROMPT, content, RESULT_TOOL, RESULT_TOOL_DESCRIPTION, resultSchema(),
-                maxTokens(transcribe), limitField, ANALYSIS_TIMEOUT);
+                maxTokens, limitField, ANALYSIS_TIMEOUT);
         if (reply.refusal() != null && !reply.refusal().isBlank()) {
             throw new AiException(Msg.of("ai.error.refusedWithReason", reply.refusal()));
         }
-        if (reply.truncated()) {
-            throw new TruncatedResponseException();
-        }
-        if (reply.toolArguments() != null) {
+        return new ModelReply(reply.toolArguments(), reply.text(), reply.truncated(), reply.completionTokens(),
+                reply.reasoningChars());
+    }
+
+    /** Prüft eine vollständig angekommene Antwort. */
+    private static Attempt attemptOf(ModelReply reply, boolean transcribe) {
+        if (reply.toolJson() != null) {
             try {
-                return checked(LenientAnalysisParser.parseText(reply.toolArguments()), transcribe);
+                return checked(LenientAnalysisParser.parseText(reply.toolJson()), transcribe);
             } catch (IOException e) {
                 return new Attempt(null, List.of(new Problem(
                         "Die Argumente des Werkzeugaufrufs waren kein gültiges JSON.",
-                        Msg.of("ai.problem.argumentsNotJson"))));
+                        Msg.of("ai.problem.argumentsNotJson"))), false);
             }
         }
         return fromText(reply.text(), transcribe);
@@ -581,22 +787,26 @@ public class AiAnalysisService {
         if (text == null || !text.contains("{")) {
             return new Attempt(null, List.of(new Problem(
                     "Es kam kein Aufruf des Werkzeugs " + RESULT_TOOL + " an, nur Text.",
-                    Msg.of("ai.problem.noToolCall", RESULT_TOOL))));
+                    Msg.of("ai.problem.noToolCall", RESULT_TOOL))), false);
         }
         try {
             return checked(LenientAnalysisParser.parseText(text), transcribe);
         } catch (IOException e) {
-            return new Attempt(null, List.of(NOT_JSON));
+            return new Attempt(null, List.of(NOT_JSON), false);
         }
     }
 
     private static Attempt checked(DocumentAnalysis parsed, boolean transcribe) {
         DocumentAnalysis analysis = withCanonicalCategory(parsed);
-        return new Attempt(analysis, problems(analysis, transcribe));
+        return new Attempt(analysis, problems(analysis, transcribe), false);
     }
 
+    /**
+     * Platz für die Antwort im ersten Anlauf. Das Ergebnis selbst ist kurz (ohne Transkription rund tausend Token),
+     * aber Modelle, die vorher nachdenken, verbrauchen dafür leicht das Fünffache – und das zählt mit.
+     */
     private static long maxTokens(boolean transcribe) {
-        return transcribe ? 20000L : 8000L;
+        return transcribe ? 24000L : 16000L;
     }
 
     private static final Problem NOT_JSON =

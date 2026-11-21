@@ -3,7 +3,9 @@ package de.aidocuments.ai;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -28,6 +30,94 @@ final class LenientAnalysisParser {
             };
         }
         return parse(JSON.readTree(text.substring(start, end + 1)));
+    }
+
+    /**
+     * Liest eine Antwort, die mittendrin abgeschnitten wurde: Übernommen wird alles bis zum letzten vollständigen
+     * Wert, der angefangene Rest entfällt. Eine vollständige Antwort wird gelesen wie von {@link #parseText}.
+     */
+    static DocumentAnalysis parseTruncated(String text) throws JsonProcessingException {
+        String json = closeTruncated(text);
+        if (json == null) {
+            throw new JsonProcessingException("kein JSON-Objekt in der Antwort") {
+            };
+        }
+        return parse(JSON.readTree(json));
+    }
+
+    /**
+     * Macht aus abgeschnittenem JSON wieder gültiges: Der Text wird hinter dem letzten vollständigen Wert gekappt,
+     * und die noch offenen Listen und Objekte werden geschlossen. {@code null}, wenn kein Objekt beginnt.
+     */
+    static String closeTruncated(String text) {
+        int start = text.indexOf('{');
+        if (start < 0) {
+            return null;
+        }
+        Deque<Character> open = new ArrayDeque<>();
+        boolean inString = false;
+        boolean escaped = false;
+        boolean stringIsKey = false;
+        boolean keyExpected = false;
+        int safeEnd = -1;
+        String safeClosers = "";
+        for (int i = start; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (inString) {
+                if (escaped) {
+                    escaped = false;
+                } else if (c == '\\') {
+                    escaped = true;
+                } else if (c == '"') {
+                    inString = false;
+                    if (!stringIsKey) {
+                        safeEnd = i + 1;
+                        safeClosers = closers(open);
+                    }
+                }
+                continue;
+            }
+            switch (c) {
+                case '"' -> {
+                    inString = true;
+                    stringIsKey = keyExpected;
+                }
+                case '{', '[' -> {
+                    open.push(c);
+                    keyExpected = c == '{';
+                    safeEnd = i + 1;
+                    safeClosers = closers(open);
+                }
+                case '}', ']' -> {
+                    if (open.isEmpty()) {
+                        return null;
+                    }
+                    open.pop();
+                    if (open.isEmpty()) {
+                        return text.substring(start, i + 1); // vollständig – was danach kommt, ist Beiwerk
+                    }
+                    keyExpected = false;
+                    safeEnd = i + 1;
+                    safeClosers = closers(open);
+                }
+                case ',' -> {
+                    // was vor dem Komma steht, ist vollständig – auch eine Zahl, die sonst kein Ende erkennen lässt
+                    safeEnd = i;
+                    safeClosers = closers(open);
+                    keyExpected = !open.isEmpty() && open.peek() == '{';
+                }
+                case ':' -> keyExpected = false;
+                default -> {
+                }
+            }
+        }
+        return safeEnd < 0 ? null : text.substring(start, safeEnd) + safeClosers;
+    }
+
+    private static String closers(Deque<Character> open) {
+        StringBuilder closers = new StringBuilder();
+        open.forEach(bracket -> closers.append(bracket == '{' ? '}' : ']'));
+        return closers.toString();
     }
 
     static DocumentAnalysis parse(Object value) {
