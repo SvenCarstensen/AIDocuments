@@ -45,6 +45,17 @@ public class Document {
     @Indexed
     private Instant createdAt;
     private Instant processedAt;
+    /** Kopie der Datei, wie sie ankam – angelegt, sobald jemand das PDF ändert; null = nie geändert. */
+    private String originalStoragePath;
+    /** Wann das PDF zuletzt geändert wurde; null = es ist noch das Original. */
+    private Instant modifiedAt;
+    /** Fingerabdruck des Inhalts für die Duplikaterkennung; null = (noch) keiner oder zu wenig Text. */
+    private ContentFingerprint fingerprint;
+    /** Das frühere Dokument, dem dieses inhaltlich gleicht; null = kein Duplikat bekannt. */
+    @Indexed(sparse = true)
+    private String duplicateOf;
+    /** Dokumente, von denen der Anwender bestätigt hat, dass dieses kein Duplikat ist. */
+    private Set<String> notDuplicateOf = new LinkedHashSet<>();
     private Set<String> tags = new LinkedHashSet<>();
     private List<KeyFact> keyFacts = new ArrayList<>();
 
@@ -209,6 +220,49 @@ public class Document {
 
     public void setProcessedAt(Instant processedAt) {
         this.processedAt = processedAt;
+    }
+
+    public String getOriginalStoragePath() {
+        return originalStoragePath;
+    }
+
+    public void setOriginalStoragePath(String originalStoragePath) {
+        this.originalStoragePath = originalStoragePath;
+    }
+
+    public Instant getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(Instant modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    public ContentFingerprint getFingerprint() {
+        return fingerprint;
+    }
+
+    public void setFingerprint(ContentFingerprint fingerprint) {
+        this.fingerprint = fingerprint;
+    }
+
+    public String getDuplicateOf() {
+        return duplicateOf;
+    }
+
+    public void setDuplicateOf(String duplicateOf) {
+        this.duplicateOf = duplicateOf;
+    }
+
+    public Set<String> getNotDuplicateOf() {
+        if (notDuplicateOf == null) {
+            notDuplicateOf = new LinkedHashSet<>();
+        }
+        return notDuplicateOf;
+    }
+
+    public void setSizeBytes(long sizeBytes) {
+        this.sizeBytes = sizeBytes;
     }
 
     public Set<String> getTags() {

@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Søg i dokumenter, tags, indhold …",
+      "placeholderAi": "Søg efter dokumenter med dine egne ord – f.eks. »fakturaer fra Kia fra 2024«",
       "label": "Søg i dokumenter",
-      "clear": "Ryd søgning"
+      "clear": "Ryd søgning",
+      "modeAi": "AI-søgning – skift til søgning efter nøgleord",
+      "modeKeywords": "Søgning efter nøgleord – skift til AI-søgning",
+      "askFailed": "Der søges efter nøgleord."
     },
     "userMenu": {
       "label": "Brugermenu ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Tekstgenkendelse",
     "aiNotice": {
       "text": "AI’en er ikke sat op endnu. Nye dokumenter kan søges frem via deres tekst, men de bliver ikke opsummeret eller tagget.",
+      "builtinOcr": "Scanninger uden tekstlag læses af den indbyggede tekstgenkendelse, så de også kan gennemsøges.",
       "action": "Sæt op nu"
     },
     "searchResults_one": "<count>{{count, number}} resultat</count> <query>for ”{{query}}”</query>",
@@ -148,6 +153,7 @@
       "dateTo": "til",
       "status": "Status",
       "failed": "Mislykket",
+      "duplicates": "Mulige dubletter",
       "showAll": "Vis alle",
       "showLess": "Vis færre",
       "activeFrom": "fra {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} af {{count, number}} dokument indlæst …",
     "loadingAll_other": "{{loaded, number}} af {{count, number}} dokumenter indlæst …",
-    "loadMore": "Indlæs flere ({{remaining, number}})"
+    "loadMore": "Indlæs flere ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "AI-søgning: »{{question}}«. Filtrene viser, hvordan spørgsmålet blev forstået."
+    }
   },
   "document": {
     "backToList": "Tilbage til oversigten",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Dokumentet bliver analyseret igen.",
     "deleted": "Dokument slettet",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Ikke-gemte ændringer i dokumentet",
+      "discard": "Kassér",
+      "save": "Gem ændringer",
+      "saved": "Ændringer gemt – originalen bevares.",
+      "modified": "Ændret {{when}} – originalen er bevaret.",
+      "downloadOriginal": "Download original",
+      "restoreOriginal": "Gendan original",
+      "restoreTitle": "Gendan originalen?",
+      "restoreText": "Den ændrede version kasseres. Dokumentet er derefter præcis som da det kom ind.",
+      "restored": "Original gendannet"
+    },
+    "duplicate": {
+      "notice": "Muligvis en dublet: Dette dokument svarer indholdsmæssigt til »{{title}}«.",
+      "open": "Gå til det andet dokument",
+      "dismiss": "Ikke en dublet",
+      "dismissed": "Noteret: ikke en dublet"
+    },
     "openInNewTab": "Åbn i ny fane",
     "processingNotice": "Dokumentet bliver behandlet. Resuméet og tags vises her, så snart analysen er færdig.",
     "textOnlyNotice": "Indekseret uden AI: Dokumentet kan søges frem via sin tekst, men det har intet resumé og ingen automatiske tags.",
     "tabs": {
       "overview": "Oversigt",
-      "text": "Fuldtekst"
+      "text": "Fuldtekst",
+      "chat": "Spørg"
     },
     "fields": {
       "title": "Titel",
@@ -227,6 +255,19 @@
       "title": "Slet dokument?",
       "text": "”{{title}}” bliver slettet sammen med PDF-filen, fuldteksten og tags. Dette kan ikke fortrydes.",
       "confirm": "Slet permanent"
+    },
+    "chat": {
+      "intro": "Stil et spørgsmål om dette dokument – AI svarer ud fra indholdet.",
+      "placeholder": "Spørg om noget i dette dokument …",
+      "send": "Send",
+      "thinking": "AI læser dokumentet …",
+      "notConfigured": "For at stille spørgsmål til dokumentet skal der være opsat en AI.",
+      "restart": "Start forfra",
+      "suggestions": {
+        "summary": "Hvad handler dette dokument om?",
+        "deadlines": "Er der frister eller datoer?",
+        "amounts": "Hvilke beløb nævnes?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Resultaternes sprog",
         "outputLanguageHint": "AI’en skriver titel, resumé og tags på dette sprog.",
         "ocr": "Tekstgenkendelse til scanninger",
-        "ocrHint": "Programmet lader AI’en transskribere scannede PDF’er uden tekstlag – først da kan de findes med fuldtekstsøgning. Hver scanning tager længere tid og koster mere."
+        "ocrHint": "Programmet lader AI’en transskribere scannede PDF’er uden tekstlag – først da kan de findes med fuldtekstsøgning. Hver scanning tager længere tid og koster mere.",
+        "quickOcrFirst": "Først hurtig tekstgenkendelse, derefter forfining med AI",
+        "quickOcrFirstHint": "Nye scanninger læses først af den indbyggede tekstgenkendelse (Tesseract) – efter få sekunder kan de gennemsøges. Derefter tilføjer AI titel, resumé og nøgleord ud fra denne tekst."
       },
       "unanalyzed_one": "{{count, number}} dokument er endnu ikke analyseret af AI’en.",
       "unanalyzed_other": "{{count, number}} dokumenter er endnu ikke analyseret af AI’en.",

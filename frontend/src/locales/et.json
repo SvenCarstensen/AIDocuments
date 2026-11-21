@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Otsi dokumente, märksõnu, sisu…",
+      "placeholderAi": "Otsi dokumente oma sõnadega – nt „Kia arved aastast 2024“",
       "label": "Otsi dokumente",
-      "clear": "Tühjenda otsing"
+      "clear": "Tühjenda otsing",
+      "modeAi": "Tehisintellekti otsing – lülitu märksõnaotsingule",
+      "modeKeywords": "Märksõnaotsing – lülitu tehisintellekti otsingule",
+      "askFailed": "Otsitakse märksõnade järgi."
     },
     "userMenu": {
       "label": "Kasutajamenüü ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Tekstituvastus",
     "aiNotice": {
       "text": "TI ei ole veel seadistatud. Uusi dokumente saab otsida teksti järgi, kuid neist ei tehta kokkuvõtet ja neile ei lisata märksõnu.",
+      "builtinOcr": "Tekstikihita skaneeringud loeb sisseehitatud tekstituvastus, nii et ka neist saab otsida.",
       "action": "Seadista kohe"
     },
     "searchResults_one": "<count>{{count, number}} tulemus</count> <query>otsingule „{{query}}“</query>",
@@ -148,6 +153,7 @@
       "dateTo": "kuni",
       "status": "Olek",
       "failed": "Ebaõnnestunud",
+      "duplicates": "Võimalikud duplikaadid",
       "showAll": "Näita kõiki",
       "showLess": "Näita vähem",
       "activeFrom": "alates {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{count, number}} dokumendist on laaditud {{loaded, number}}…",
     "loadingAll_other": "{{count, number}} dokumendist on laaditud {{loaded, number}}…",
-    "loadMore": "Laadi veel ({{remaining, number}})"
+    "loadMore": "Laadi veel ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Tehisintellekti otsing: „{{question}}“. Filtrid näitavad, kuidas küsimust mõisteti."
+    }
   },
   "document": {
     "backToList": "Tagasi ülevaatesse",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Dokumenti analüüsitakse uuesti.",
     "deleted": "Dokument kustutatud",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Salvestamata muudatused dokumendis",
+      "discard": "Loobu",
+      "save": "Salvesta muudatused",
+      "saved": "Muudatused salvestatud – originaal jääb alles.",
+      "modified": "Muudetud {{when}} – originaal on alles.",
+      "downloadOriginal": "Laadi alla originaal",
+      "restoreOriginal": "Taasta originaal",
+      "restoreTitle": "Kas taastada originaal?",
+      "restoreText": "Muudetud versioon visatakse ära. Dokument on seejärel täpselt selline, nagu see saabus.",
+      "restored": "Originaal taastatud"
+    },
+    "duplicate": {
+      "notice": "Võimalik duplikaat: selle dokumendi sisu vastab dokumendile „{{title}}“.",
+      "open": "Ava teine dokument",
+      "dismiss": "Pole duplikaat",
+      "dismissed": "Märgitud: pole duplikaat"
+    },
     "openInNewTab": "Ava uuel vahekaardil",
     "processingNotice": "Dokumenti töödeldakse. Kokkuvõte ja märksõnad ilmuvad siia kohe, kui analüüs on valmis.",
     "textOnlyNotice": "Indekseeritud ilma TI-ta: dokumenti saab otsida teksti järgi, kuid sellel pole kokkuvõtet ega automaatseid märksõnu.",
     "tabs": {
       "overview": "Ülevaade",
-      "text": "Täistekst"
+      "text": "Täistekst",
+      "chat": "Küsi"
     },
     "fields": {
       "title": "Pealkiri",
@@ -227,6 +255,19 @@
       "title": "Kas kustutada dokument?",
       "text": "„{{title}}“ kustutatakse koos PDF-faili, täisteksti ja märksõnadega. Seda ei saa tagasi võtta.",
       "confirm": "Kustuta jäädavalt"
+    },
+    "chat": {
+      "intro": "Esita küsimus selle dokumendi kohta – tehisintellekt vastab selle sisu põhjal.",
+      "placeholder": "Küsi selle dokumendi kohta …",
+      "send": "Saada",
+      "thinking": "Tehisintellekt loeb dokumenti …",
+      "notConfigured": "Dokumendi kohta küsimiseks peab olema seadistatud tehisintellekt.",
+      "restart": "Alusta uuesti",
+      "suggestions": {
+        "summary": "Millest see dokument räägib?",
+        "deadlines": "Kas on tähtaegu või kuupäevi?",
+        "amounts": "Milliseid summasid mainitakse?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Tulemuste keel",
         "outputLanguageHint": "Selles keeles kirjutab TI pealkirja, kokkuvõtte ja märksõnad.",
         "ocr": "Skannide tekstituvastus",
-        "ocrHint": "Rakendus laseb TI-l tekstikihita skannitud PDF-id transkribeerida – alles siis leiab neid täistekstiotsinguga. Iga skann võtab rohkem aega ja maksab rohkem."
+        "ocrHint": "Rakendus laseb TI-l tekstikihita skannitud PDF-id transkribeerida – alles siis leiab neid täistekstiotsinguga. Iga skann võtab rohkem aega ja maksab rohkem.",
+        "quickOcrFirst": "Esmalt kiire tekstituvastus, seejärel täpsustamine tehisintellektiga",
+        "quickOcrFirstHint": "Uued skaneeringud loeb esmalt sisseehitatud tekstituvastus (Tesseract) – mõne sekundi pärast saab neist otsida. Seejärel lisab tehisintellekt selle teksti põhjal pealkirja, kokkuvõtte ja märksõnad."
       },
       "unanalyzed_one": "{{count, number}} dokument on TI-ga veel analüüsimata.",
       "unanalyzed_other": "{{count, number}} dokumenti on TI-ga veel analüüsimata.",

@@ -12,7 +12,8 @@ import org.springframework.boot.context.properties.bind.Name;
 public record AppProperties(
         @DefaultValue("./data") Path dataDir,
         @DefaultValue Ai ai,
-        @Name("import") @DefaultValue Import importer) {
+        @Name("import") @DefaultValue Import importer,
+        @DefaultValue Ocr ocr) {
 
     public Path dataRoot() {
         return dataDir.toAbsolutePath().normalize();
@@ -58,6 +59,27 @@ public record AppProperties(
             @DefaultValue("") String model) {
 
         static final Preset NONE = new Preset("", "", "");
+    }
+
+    /**
+     * Eingebaute Texterkennung mit Tesseract. Sie liest Scans ohne Textebene, solange keine externe KI eingerichtet
+     * ist – damit sind auch sie im Volltext durchsuchbar. Im Docker-Image ist Tesseract enthalten; anderswo genügt
+     * es, Tesseract zu installieren.
+     *
+     * @param enabled     aus = nie; an = sobald Tesseract gefunden wird
+     * @param command     Aufruf von Tesseract (Name im Suchpfad oder vollständiger Pfad)
+     * @param languages   Sprachen der Dokumente als Tesseract-Kürzel, mit „+“ verbunden, z. B. deu+eng
+     * @param maxPages    höchstens so viele Seiten je Dokument; der Rest bleibt ungelesen (vermerkt am Dokument)
+     * @param dpi         Auflösung, mit der eine Seite gerendert wird – Tesseract arbeitet am besten mit 300 dpi
+     * @param pageTimeout Zeitgrenze je Seite
+     */
+    public record Ocr(
+            @DefaultValue("true") boolean enabled,
+            @DefaultValue("tesseract") String command,
+            @DefaultValue("deu+eng") String languages,
+            @DefaultValue("50") int maxPages,
+            @DefaultValue("300") int dpi,
+            @DefaultValue("5m") Duration pageTimeout) {
     }
 
     /** Vorgaben für den automatischen Abruf; in der Oberfläche gespeicherte Einstellungen haben Vorrang. */

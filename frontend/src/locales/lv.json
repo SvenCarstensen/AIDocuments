@@ -68,8 +68,12 @@
     },
     "search": {
       "placeholder": "Meklēt dokumentus, atslēgvārdus, saturu…",
+      "placeholderAi": "Meklē dokumentus saviem vārdiem – piem., “Kia rēķini no 2024. gada”",
       "label": "Meklēt dokumentus",
-      "clear": "Notīrīt meklēšanu"
+      "clear": "Notīrīt meklēšanu",
+      "modeAi": "MI meklēšana – pārslēgties uz atslēgvārdu meklēšanu",
+      "modeKeywords": "Atslēgvārdu meklēšana – pārslēgties uz MI meklēšanu",
+      "askFailed": "Tiek meklēts pēc atslēgvārdiem."
     },
     "userMenu": {
       "label": "Lietotāja izvēlne ({{name}})",
@@ -120,6 +124,7 @@
     "ocrBadge": "Teksta atpazīšana",
     "aiNotice": {
       "text": "MI vēl nav iestatīts. Jaunos dokumentus var meklēt pēc to teksta, taču tiem netiek veidots kopsavilkums un netiek piešķirti atslēgvārdi.",
+      "builtinOcr": "Skenējumus bez teksta slāņa nolasa iebūvētā teksta atpazīšana, tāpēc arī tajos var meklēt.",
       "action": "Iestatīt tūlīt"
     },
     "searchResults_zero": "<count>{{count, number}} rezultātu</count> <query>vaicājumam „{{query}}”</query>",
@@ -155,6 +160,7 @@
       "dateTo": "līdz",
       "status": "Statuss",
       "failed": "Neizdevās",
+      "duplicates": "Iespējamie dublikāti",
       "showAll": "Rādīt visus",
       "showLess": "Rādīt mazāk",
       "activeFrom": "no {{date}}",
@@ -174,7 +180,10 @@
     "loadingAll_zero": "Ielādēts: {{loaded, number}} no {{count, number}} dokumentiem…",
     "loadingAll_one": "Ielādēts: {{loaded, number}} no {{count, number}} dokumenta…",
     "loadingAll_other": "Ielādēts: {{loaded, number}} no {{count, number}} dokumentiem…",
-    "loadMore": "Ielādēt vēl ({{remaining, number}})"
+    "loadMore": "Ielādēt vēl ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "MI meklēšana: “{{question}}”. Filtri rāda, kā jautājums tika saprasts."
+    }
   },
   "document": {
     "backToList": "Atpakaļ uz pārskatu",
@@ -184,12 +193,31 @@
     "reprocessStarted": "Dokuments tiek analizēts vēlreiz.",
     "deleted": "Dokuments izdzēsts",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Dokumentā ir nesaglabātas izmaiņas",
+      "discard": "Atmest",
+      "save": "Saglabāt izmaiņas",
+      "saved": "Izmaiņas saglabātas – oriģināls tiek saglabāts.",
+      "modified": "Mainīts {{when}} – oriģināls ir saglabāts.",
+      "downloadOriginal": "Lejupielādēt oriģinālu",
+      "restoreOriginal": "Atjaunot oriģinālu",
+      "restoreTitle": "Atjaunot oriģinālu?",
+      "restoreText": "Mainītā versija tiks atmesta. Pēc tam dokuments būs tieši tāds, kāds tas tika saņemts.",
+      "restored": "Oriģināls atjaunots"
+    },
+    "duplicate": {
+      "notice": "Iespējams dublikāts: šī dokumenta saturs atbilst “{{title}}”.",
+      "open": "Uz otru dokumentu",
+      "dismiss": "Nav dublikāts",
+      "dismissed": "Atzīmēts: nav dublikāts"
+    },
     "openInNewTab": "Atvērt jaunā cilnē",
     "processingNotice": "Dokuments tiek apstrādāts. Kopsavilkums un atslēgvārdi parādīsies šeit, tiklīdz analīze būs pabeigta.",
     "textOnlyNotice": "Indeksēts bez MI: dokumentu var meklēt pēc tā teksta, taču tam nav kopsavilkuma un automātisko atslēgvārdu.",
     "tabs": {
       "overview": "Pārskats",
-      "text": "Pilns teksts"
+      "text": "Pilns teksts",
+      "chat": "Jautāt"
     },
     "fields": {
       "title": "Nosaukums",
@@ -236,6 +264,19 @@
       "title": "Vai dzēst dokumentu?",
       "text": "„{{title}}” tiks izdzēsts kopā ar PDF failu, pilno tekstu un atslēgvārdiem. Šo darbību nevar atsaukt.",
       "confirm": "Dzēst neatgriezeniski"
+    },
+    "chat": {
+      "intro": "Uzdod jautājumu par šo dokumentu – MI atbild, balstoties uz tā saturu.",
+      "placeholder": "Pajautā kaut ko par šo dokumentu …",
+      "send": "Sūtīt",
+      "thinking": "MI lasa dokumentu …",
+      "notConfigured": "Lai uzdotu jautājumus par dokumentu, jābūt iestatītam MI.",
+      "restart": "Sākt no jauna",
+      "suggestions": {
+        "summary": "Par ko ir šis dokuments?",
+        "deadlines": "Vai ir termiņi vai datumi?",
+        "amounts": "Kādas summas ir minētas?"
+      }
     }
   },
   "settings": {
@@ -380,7 +421,9 @@
         "outputLanguage": "Rezultātu valoda",
         "outputLanguageHint": "Šajā valodā MI raksta nosaukumu, kopsavilkumu un atslēgvārdus.",
         "ocr": "Teksta atpazīšana skenējumiem",
-        "ocrHint": "Lietotne liek MI transkribēt skenētus PDF failus bez teksta slāņa – tikai tad tos var atrast pilnteksta meklēšanā. Katrs skenējums prasa vairāk laika un izmaksā vairāk."
+        "ocrHint": "Lietotne liek MI transkribēt skenētus PDF failus bez teksta slāņa – tikai tad tos var atrast pilnteksta meklēšanā. Katrs skenējums prasa vairāk laika un izmaksā vairāk.",
+        "quickOcrFirst": "Vispirms ātra teksta atpazīšana, pēc tam precizēšana ar MI",
+        "quickOcrFirstHint": "Jaunos skenējumus vispirms nolasa iebūvētā teksta atpazīšana (Tesseract) – pēc dažām sekundēm tajos var meklēt. Pēc tam MI, balstoties uz šo tekstu, pievieno nosaukumu, kopsavilkumu un atslēgvārdus."
       },
       "unanalyzed_zero": "MI vēl nav analizējis {{count, number}} dokumentu.",
       "unanalyzed_one": "MI vēl nav analizējis {{count, number}} dokumentu.",

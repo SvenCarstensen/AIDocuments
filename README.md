@@ -17,6 +17,9 @@ for scans the full text as well) and makes them searchable.
   AI server keeps the contents of your documents inside your network.
 - **No telemetry** – no analytics, no tracking, no usage statistics, no fonts or scripts loaded from third
   parties. The application connects only to the mailboxes and to the AI server you have configured.
+- **Text recognition included** – the Docker image ships Tesseract, which reads scanned PDFs, so they are
+  full-text searchable from the first start, without any AI service and without your documents leaving the
+  machine.
 
 ## Technology
 
@@ -28,10 +31,12 @@ for scans the full text as well) and makes them searchable.
 
 | Area | What the application does |
 |---|---|
-| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread), new files from a watched folder, upload by button or drag & drop (several files at once). Files with identical content are recognised and not stored twice. |
-| AI | Summary, document type, correspondent, document date, tags and key facts (amounts, deadlines, numbers …). Existing tags and correspondents are reused. Scans without a text layer are transcribed and thus become full-text searchable. |
-| Search | Full text across content, title, tags, correspondent and key facts – with German stemming, results while typing and partial matches in the middle of a word. Filters for document type, tags, correspondent and period. |
+| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread), new files from a watched folder, upload by button or drag & drop (several files at once). Files with identical content are recognised and not stored twice; the same letter scanned twice is marked as a possible duplicate (see [Duplicates](#duplicates)). |
+| AI | Summary, document type, correspondent, document date, tags and key facts (amounts, deadlines, numbers …). Existing tags and correspondents are reused. Scans without a text layer are transcribed and thus become full-text searchable – by the built-in text recognition as long as no AI is set up. |
+| Search | Full text across content, title, tags, correspondent and key facts – with German stemming, results while typing and partial matches in the middle of a word. Filters for document type, tags, correspondent and period (collapsible). With an AI set up, the search box also understands questions in natural language – see [AI search](#ai-search). |
 | View | Grid and list view with thumbnails, detail page with PDF viewer, light and dark theme. Metadata can be edited by hand; tags can be removed and added directly on the document. |
+| Edit | Highlight, add text, draw, insert images or sign directly in the PDF viewer and save the changes. The original is always kept and can be downloaded or restored at any time. |
+| Ask | With an AI set up, ask questions about an open document (“When is the payment due?”) – answered from its content. |
 | Users | Initial setup with an administrator account, further accounts with the roles **Admin** and **User**. |
 | Settings | Mailboxes, check interval and import folder, AI/LLM server, users – all in the user interface. |
 | Languages | User interface and server messages in 36 European languages. The first start uses the system language, English if there is no matching translation; switchable in the user menu. See [Languages](#languages). |
@@ -41,6 +46,7 @@ for scans the full text as well) and makes them searchable.
 | | User | Admin |
 |---|:-:|:-:|
 | View, search and upload documents, edit metadata | ✓ | ✓ |
+| Annotate PDFs and restore originals, ask questions, mark “not a duplicate” | ✓ | ✓ |
 | Delete documents, analyze them again | | ✓ |
 | Settings (mailboxes, schedule, AI), user management | | ✓ |
 
@@ -53,6 +59,20 @@ for scans the full text as well) and makes them searchable.
 | `"zahlbar bis"` | exactly this sequence of words |
 | `miete -kaution` | “Miete”, but not “Kaution” |
 | `strom \| gas` | either of the two |
+
+### AI search
+
+If an AI is set up, the search box works in two modes; the icon on its left switches between them, and the browser
+remembers the choice:
+
+- **AI search** (sparkle icon, the default): type a question such as *“invoices from Kia from 2024”* and press
+  Enter. The AI translates it into the regular filters – keywords, document type, correspondent, tags, period – and
+  the list shows the result. The filter chips show how the question was understood and can be adjusted by hand.
+  Document types, correspondents and tags are only used if they exist in your library; anything else becomes a
+  search term, so a misunderstanding never hides documents.
+- **Keyword search** (magnifier icon): the full-text search above, with results while typing.
+
+Without an AI the search box is always a keyword search.
 
 ## Development
 
@@ -87,7 +107,8 @@ test mail server) and the import folder against a real MongoDB.
 
 ## Production with Docker
 
-One image contains the user interface, the backend and – optionally – MongoDB.
+One image contains the user interface, the backend, the built-in text recognition (Tesseract) and – optionally –
+MongoDB.
 
 ### Option A: MongoDB inside the container
 
@@ -160,6 +181,7 @@ values saved in the user interface take precedence.
 | `AIDOCS_AI_BASE_URL` | Address of the LLM server | the provider's default address |
 | `AIDOCS_AI_API_KEY` | API key of the LLM server (`ANTHROPIC_API_KEY` is read as well) | empty |
 | `AIDOCS_AI_MODEL` | Model ID | `claude-opus-5-5` |
+| `AIDOCS_OCR` / `AIDOCS_OCR_LANGUAGES` | Built-in text recognition – see [below](#built-in-text-recognition) | `on` / `deu+eng` |
 | `SERVER_ADDRESS` / `SERVER_PORT` | Bind address and port | `127.0.0.1` / `8080` (in the image: `0.0.0.0`) |
 
 ## AI integration
@@ -203,6 +225,59 @@ tokens were generated and how much of that was thinking.
 
 Without AI access the application keeps working: PDFs are stored and searchable through their text layer, only
 summary and tags are missing. To analyze them later: *Settings → AI → “Analyze now”*.
+
+### Asking questions about a document
+
+The tab *Ask* on a document page answers questions about that document. The AI receives the document's details and
+its full text (the beginning of very long documents) and answers only from them; it says so if the answer is not in
+the document. The conversation stays in the browser and is not stored.
+
+### Built-in text recognition
+
+The Docker image contains [Tesseract](https://github.com/tesseract-ocr/tesseract) (Apache 2.0). As long as no AI
+is set up, it reads every PDF that consists of images only (scans without a text layer), so these documents are
+full-text searchable as well. It only provides the text – title, summary and tags still need an AI. As soon as
+an AI is set up, that AI takes over text recognition.
+
+Pages are rendered at 300 dpi and read one after another – a few seconds per page. At most the first 50 pages of
+a document are read; the application notes on the document if there are more.
+
+| Variable | Meaning | Default |
+|---|---|---|
+| `AIDOCS_OCR` | `off` switches the built-in text recognition off | `on` |
+| `AIDOCS_OCR_LANGUAGES` | Languages of your documents as Tesseract codes joined with `+` | `deu+eng` |
+
+The image contains the languages German, English, French, Italian, Spanish and Dutch (`deu eng fra ita spa nld`).
+For others, build your own image with e.g. `docker build --build-arg OCR_LANGUAGES="deu eng pol" -t aidocuments .`
+and set `AIDOCS_OCR_LANGUAGES` accordingly. Outside the Docker image the built-in text recognition is used as
+soon as Tesseract is installed (e.g. `brew install tesseract tesseract-lang`).
+
+**Quick result first:** With an AI set up, *Settings → AI → “Quick text recognition first, then refine with the
+AI”* lets Tesseract read new scans first, so they are searchable within seconds; the AI then adds title, summary and
+tags based on that text. Independently of this setting, reading PDFs, thumbnails and text recognition run in their
+own queue, so new documents never wait behind long AI analyses.
+
+## Duplicates
+
+Files with identical content are recognised on import and not stored twice. Beyond that, the application recognises
+the same letter arriving twice as different files – scanned twice, or once by e-mail and once from the scanner. It
+compares the text (tolerant of recognition errors) **and** all dates and amounts: series of similar letters such as
+monthly invoices or account statements differ in exactly those and are not reported. The later of two documents is
+marked as a possible duplicate; the overview offers the filter *Possible duplicates*, and the document page links to
+the other document. *Not a duplicate* removes the mark for good. Existing documents are checked once in the
+background on start-up.
+
+## Editing PDFs and keeping the original
+
+The PDF viewer on the document page ([PDF.js](https://mozilla.github.io/pdf.js/), Apache 2.0, served by the
+application itself) can highlight, add text, draw, insert images and sign. As soon as the document has changed, a
+bar offers *Save changes* or *Discard*. On the first save the original file is kept next to it
+(`files/…/<id>.original.pdf`); further saves never touch it. The document page offers to download or restore the
+original. Title, tags and other details stay as they are; the full text follows the saved version unless it came
+from text recognition. The viewer's toolbar adapts to the available width so that it is always completely visible.
+
+PDF.js is fetched in a fixed version with checksum by `frontend/scripts/fetch-pdfjs.mjs` (runs automatically before
+`npm run dev` and `npm run build`) into `frontend/public/pdfjs/`, which is not in Git.
 
 ## Languages
 

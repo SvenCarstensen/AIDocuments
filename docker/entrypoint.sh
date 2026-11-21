@@ -5,6 +5,8 @@
 #   MONGODB_URI nicht gesetzt → eine eingebaute MongoDB startet mit; ihre Daten liegen im
 #                               Datenverzeichnis ($AIDOCS_DATA_DIR/mongo) und damit im selben Volume
 #                               wie PDFs, Suchindex und Schlüsseldatei.
+#
+# Die eingebaute Texterkennung (Tesseract) startet die Anwendung selbst, je Seite; dafür läuft hier nichts.
 set -euo pipefail
 
 DATA_DIR="${AIDOCS_DATA_DIR:-/aidocuments}"

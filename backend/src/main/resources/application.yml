@@ -2,6 +2,11 @@ server:
   # Standard: nur lokal erreichbar. Im Docker-Image wird 0.0.0.0 gesetzt (SERVER_ADDRESS).
   address: ${SERVER_ADDRESS:127.0.0.1}
   port: ${SERVER_PORT:8080}
+  # Der eingebettete PDF-Betrachter (PDF.js) lädt JavaScript-Module, Übersetzungen und WebAssembly
+  mime-mappings:
+    mjs: text/javascript
+    ftl: text/plain
+    wasm: application/wasm
   servlet:
     session:
       timeout: 12h
@@ -60,6 +65,13 @@ app:
     # Kompatibilitätsmodus für Server, die zwar die Anthropic-Messages-API sprechen, aber keine PDF-Eingabe
     # und keine strukturierten Ausgaben kennen (lokale Modelle). Ohne Angabe: automatisch je nach Server.
     # compatibility-mode: true
+  ocr:
+    # Eingebaute Texterkennung (Tesseract) für Scans ohne Textebene. Sie springt ein, solange keine externe KI
+    # eingerichtet ist – ist eine eingerichtet, übernimmt die die Texterkennung. An, sobald Tesseract gefunden wird
+    # (im Docker-Image enthalten); AIDOCS_OCR=off schaltet sie ab.
+    enabled: ${AIDOCS_OCR:true}
+    # Sprachen der Dokumente als Tesseract-Kürzel, mit „+“ verbunden (deu, eng, fra, ita, spa, nld …)
+    languages: ${AIDOCS_OCR_LANGUAGES:deu+eng}
   import:
     # Wie oft Postfächer und Eingangsordner auf neue PDFs geprüft werden
     # (in der Oberfläche unter Einstellungen → Abruf änderbar)

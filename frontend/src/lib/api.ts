@@ -104,6 +104,12 @@ export interface Doc {
   mailReceivedAt: string | null
   createdAt: string
   processedAt: string | null
+  /** Wann das PDF zuletzt geändert wurde; null = es ist noch das Original. */
+  modifiedAt: string | null
+  /** Ob eine Kopie des Originals aufbewahrt ist (nur nach einer Änderung). */
+  hasOriginal: boolean
+  /** Das frühere Dokument, dem dieses inhaltlich gleicht; null = kein Duplikat bekannt. */
+  duplicateOf: string | null
   snippet: string | null
 }
 export interface Page<T> {
@@ -122,12 +128,28 @@ export interface Facets {
   tags: FacetCount[]
 }
 export type SortOrder = 'relevance' | 'newest' | 'date'
+export interface ChatMessage {
+  fromUser: boolean
+  text: string
+}
+/** Wie die KI eine Suchfrage verstanden hat – leere Felder filtern nicht. */
+export interface AskResult {
+  question: string
+  text: string
+  category: string | null
+  correspondent: string | null
+  tags: string[]
+  from: string | null
+  to: string | null
+}
 export interface DocumentQuery {
   q: string
   category: string
   correspondent: string
   tags: string[]
   status: string
+  /** nur Dokumente, die als mögliches Duplikat eines anderen vermerkt sind */
+  duplicates: boolean
   from: string
   to: string
   sort: SortOrder
@@ -148,11 +170,17 @@ export interface UploadResult {
 }
 export interface SystemInfo {
   aiEnabled: boolean
+  /** Scans liest die eingebaute Texterkennung (es gibt sie, und keine externe KI ist eingerichtet). */
+  builtinOcr: boolean
+  /** Die eingebaute Texterkennung (Tesseract) steht bereit – unabhängig davon, ob eine KI eingerichtet ist. */
+  ocrAvailable: boolean
   aiModel: string
   documents: number
   processing: number
   failed: number
   unanalyzed: number
+  /** Dokumente, die als mögliches Duplikat eines anderen vermerkt sind */
+  duplicates: number
   /** Geschätzte Sekunden, bis alle Dokumente bearbeitet sind; null = (noch) keine Schätzung. */
   estimatedSecondsRemaining: number | null
 }
@@ -212,6 +240,8 @@ export interface AiSettings {
   effort: string
   outputLanguage: string
   ocr: boolean
+  /** Scans erst mit der eingebauten Texterkennung lesen, dann von der KI verfeinern lassen. */
+  quickOcrFirst: boolean
   compatibilityMode: boolean
   /** Alles Nötige ist beisammen – neue Dokumente werden analysiert. */
   enabled: boolean
@@ -227,6 +257,7 @@ export interface AiSettingsInput {
   effort: string
   outputLanguage: string
   ocr: boolean
+  quickOcrFirst: boolean
   compatibilityMode: boolean | null
 }
 export type FolderMode = 'KEEP' | 'MOVE'
@@ -269,6 +300,7 @@ export const api = {
     if (query.correspondent) params.set('correspondent', query.correspondent)
     query.tags.forEach((tag) => params.append('tag', tag))
     if (query.status) params.set('status', query.status)
+    if (query.duplicates) params.set('duplicates', 'true')
     if (query.from) params.set('from', query.from)
     if (query.to) params.set('to', query.to)
     params.set('sort', query.sort)
@@ -282,6 +314,13 @@ export const api = {
   updateDocument: (id: string, body: DocumentUpdate) => request<Doc>(`/api/documents/${id}`, json('PUT', body)),
   deleteDocument: (id: string) => request<void>(`/api/documents/${id}`, { method: 'DELETE' }),
   reprocess: (id: string) => request<Doc>(`/api/documents/${id}/reprocess`, { method: 'POST' }),
+  /** Fragen an ein Dokument; die Antwort kommt von der eingerichteten KI. */
+  chat: (id: string, messages: ChatMessage[]) =>
+    request<{ answer: string }>(`/api/documents/${id}/chat`, json('POST', { messages })),
+  /** KI-Suche: übersetzt eine Frage in natürlicher Sprache in Filter. */
+  askSearch: (question: string) => request<AskResult>('/api/documents/ask', json('POST', { question })),
+  /** Der Anwender bestätigt: kein Duplikat. */
+  notDuplicate: (id: string) => request<Doc>(`/api/documents/${id}/not-duplicate`, { method: 'POST' }),
   reprocessUnanalyzed: () => request<{ count: number }>('/api/documents/reprocess-unanalyzed', { method: 'POST' }),
   upload: (files: File[]) => {
     const body = new FormData()
@@ -307,6 +346,15 @@ export const api = {
     request<ImportSettings>('/api/settings/import', json('PUT', body)),
   scanFolder: () => request<void>('/api/settings/import/scan', { method: 'POST' }),
 
+  /** Speichert eine geänderte Fassung des PDFs; das Original bewahrt der Server auf. */
+  replaceFile: (id: string, pdf: Uint8Array) =>
+    request<Doc>(`/api/documents/${id}/file`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/pdf' },
+      body: new Blob([pdf as BlobPart], { type: 'application/pdf' }),
+    }),
+  restoreOriginal: (id: string) => request<Doc>(`/api/documents/${id}/restore-original`, { method: 'POST' }),
+
   users: () => request<User[]>('/api/users'),
   createUser: (body: { username: string; password: string; role: Role }) =>
     request<User>('/api/users', json('POST', body)),
@@ -316,8 +364,9 @@ export const api = {
 }
 
 export const fileUrl = (id: string, download = false) => `/api/documents/${id}/file${download ? '?download=true' : ''}`
-export const thumbnailUrl = (doc: Pick<Doc, 'id' | 'processedAt'>) =>
-  `/api/documents/${doc.id}/thumbnail?v=${encodeURIComponent(doc.processedAt ?? '')}`
+export const originalUrl = (id: string) => `/api/documents/${id}/original`
+export const thumbnailUrl = (doc: Pick<Doc, 'id' | 'processedAt' | 'modifiedAt'>) =>
+  `/api/documents/${doc.id}/thumbnail?v=${encodeURIComponent(`${doc.processedAt ?? ''}${doc.modifiedAt ?? ''}`)}`
 
 export function errorMessage(error: unknown): string {
   if (error instanceof ApiError) return error.message

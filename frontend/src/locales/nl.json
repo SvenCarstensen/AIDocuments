@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Zoek in documenten, tags, inhoud …",
+      "placeholderAi": "Zoek documenten in je eigen woorden – bijv. ‘facturen van Kia uit 2024’",
       "label": "Documenten doorzoeken",
-      "clear": "Zoekopdracht wissen"
+      "clear": "Zoekopdracht wissen",
+      "modeAi": "AI-zoeken – overschakelen naar zoeken op trefwoorden",
+      "modeKeywords": "Zoeken op trefwoorden – overschakelen naar AI-zoeken",
+      "askFailed": "Er wordt op trefwoorden gezocht."
     },
     "userMenu": {
       "label": "Gebruikersmenu ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Tekstherkenning",
     "aiNotice": {
       "text": "De AI is nog niet ingesteld. Nieuwe documenten zijn doorzoekbaar op hun tekst, maar worden niet samengevat en krijgen geen tags.",
+      "builtinOcr": "Scans zonder tekstlaag worden gelezen door de ingebouwde tekstherkenning, zodat ook die doorzoekbaar zijn.",
       "action": "Nu instellen"
     },
     "searchResults_one": "<count>{{count, number}} resultaat</count> <query>voor “{{query}}”</query>",
@@ -148,6 +153,7 @@
       "dateTo": "t/m",
       "status": "Status",
       "failed": "Mislukt",
+      "duplicates": "Mogelijke duplicaten",
       "showAll": "Alles tonen",
       "showLess": "Minder tonen",
       "activeFrom": "vanaf {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} van {{count, number}} document geladen …",
     "loadingAll_other": "{{loaded, number}} van {{count, number}} documenten geladen …",
-    "loadMore": "Meer laden ({{remaining, number}})"
+    "loadMore": "Meer laden ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "AI-zoeken: ‘{{question}}’. De filters tonen hoe de vraag is begrepen."
+    }
   },
   "document": {
     "backToList": "Terug naar overzicht",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Het document wordt opnieuw geanalyseerd.",
     "deleted": "Document verwijderd",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Niet-opgeslagen wijzigingen in het document",
+      "discard": "Verwerpen",
+      "save": "Wijzigingen opslaan",
+      "saved": "Wijzigingen opgeslagen – het origineel blijft bewaard.",
+      "modified": "Gewijzigd op {{when}} – het origineel is bewaard.",
+      "downloadOriginal": "Origineel downloaden",
+      "restoreOriginal": "Origineel herstellen",
+      "restoreTitle": "Origineel herstellen?",
+      "restoreText": "De gewijzigde versie wordt verworpen. Het document is daarna weer precies zoals het binnenkwam.",
+      "restored": "Origineel hersteld"
+    },
+    "duplicate": {
+      "notice": "Mogelijk een duplicaat: dit document komt inhoudelijk overeen met ‘{{title}}’.",
+      "open": "Naar het andere document",
+      "dismiss": "Geen duplicaat",
+      "dismissed": "Genoteerd: geen duplicaat"
+    },
     "openInNewTab": "Openen in nieuw tabblad",
     "processingNotice": "Het document wordt verwerkt. De samenvatting en de tags verschijnen hier zodra de analyse klaar is.",
     "textOnlyNotice": "Geïndexeerd zonder AI: het document is doorzoekbaar op zijn tekst, maar heeft geen samenvatting en geen automatische tags.",
     "tabs": {
       "overview": "Overzicht",
-      "text": "Volledige tekst"
+      "text": "Volledige tekst",
+      "chat": "Vragen"
     },
     "fields": {
       "title": "Titel",
@@ -227,6 +255,19 @@
       "title": "Document verwijderen?",
       "text": "“{{title}}” wordt verwijderd, samen met het PDF-bestand, de volledige tekst en de tags. Dit kan niet ongedaan worden gemaakt.",
       "confirm": "Definitief verwijderen"
+    },
+    "chat": {
+      "intro": "Stel een vraag over dit document – de AI antwoordt op basis van de inhoud.",
+      "placeholder": "Vraag iets over dit document …",
+      "send": "Verzenden",
+      "thinking": "De AI leest het document …",
+      "notConfigured": "Voor vragen over het document moet een AI zijn ingesteld.",
+      "restart": "Opnieuw beginnen",
+      "suggestions": {
+        "summary": "Waar gaat dit document over?",
+        "deadlines": "Zijn er termijnen of data?",
+        "amounts": "Welke bedragen worden genoemd?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Taal van de resultaten",
         "outputLanguageHint": "In deze taal schrijft de AI de titel, de samenvatting en de tags.",
         "ocr": "Tekstherkenning voor scans",
-        "ocrHint": "De toepassing laat gescande PDF’s zonder tekstlaag door de AI transcriberen – pas dan zijn ze te vinden via zoeken in de volledige tekst. Elke scan kost meer tijd en geld."
+        "ocrHint": "De toepassing laat gescande PDF’s zonder tekstlaag door de AI transcriberen – pas dan zijn ze te vinden via zoeken in de volledige tekst. Elke scan kost meer tijd en geld.",
+        "quickOcrFirst": "Eerst snelle tekstherkenning, daarna verfijnen met de AI",
+        "quickOcrFirstHint": "Nieuwe scans worden eerst gelezen door de ingebouwde tekstherkenning (Tesseract) – binnen enkele seconden zijn ze doorzoekbaar. Daarna voegt de AI titel, samenvatting en trefwoorden toe op basis van deze tekst."
       },
       "unanalyzed_one": "{{count, number}} document is nog niet door de AI geanalyseerd.",
       "unanalyzed_other": "{{count, number}} documenten zijn nog niet door de AI geanalyseerd.",

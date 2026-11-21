@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Dokumente, Schlagworte, Inhalte durchsuchen …",
+      "placeholderAi": "Frag nach Dokumenten – z. B. „Rechnungen von Kia aus 2024“",
       "label": "Dokumente durchsuchen",
-      "clear": "Suche leeren"
+      "clear": "Suche leeren",
+      "modeAi": "KI-Suche – zur Stichwortsuche wechseln",
+      "modeKeywords": "Stichwortsuche – zur KI-Suche wechseln",
+      "askFailed": "Es wird nach Stichworten gesucht."
     },
     "userMenu": {
       "label": "Benutzermenü ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Texterkennung",
     "aiNotice": {
       "text": "Die KI ist noch nicht eingerichtet. Neue Dokumente sind über ihren Text durchsuchbar, werden aber nicht zusammengefasst und verschlagwortet.",
+      "builtinOcr": "Scans ohne Textebene liest die eingebaute Texterkennung – so sind auch sie durchsuchbar.",
       "action": "Jetzt einrichten"
     },
     "searchResults_one": "<count>{{count, number}} Treffer</count> <query>für „{{query}}“</query>",
@@ -148,6 +153,7 @@
       "dateTo": "bis",
       "status": "Status",
       "failed": "Fehlgeschlagen",
+      "duplicates": "Mögliche Duplikate",
       "showAll": "Alle anzeigen",
       "showLess": "Weniger anzeigen",
       "activeFrom": "ab {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} von {{count, number}} Dokument geladen …",
     "loadingAll_other": "{{loaded, number}} von {{count, number}} Dokumenten geladen …",
-    "loadMore": "Weitere laden ({{remaining, number}})"
+    "loadMore": "Weitere laden ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "KI-Suche: „{{question}}“. Die Filter zeigen, wie die Frage verstanden wurde."
+    }
   },
   "document": {
     "backToList": "Zur Übersicht",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Das Dokument wird neu analysiert.",
     "deleted": "Dokument gelöscht",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Ungespeicherte Änderungen am Dokument",
+      "discard": "Verwerfen",
+      "save": "Änderungen speichern",
+      "saved": "Änderungen gespeichert – das Original bleibt erhalten.",
+      "modified": "Geändert am {{when}} – das Original ist aufbewahrt.",
+      "downloadOriginal": "Original herunterladen",
+      "restoreOriginal": "Original wiederherstellen",
+      "restoreTitle": "Original wiederherstellen?",
+      "restoreText": "Die geänderte Fassung wird verworfen. Das Dokument ist danach wieder genau so wie beim Eingang.",
+      "restored": "Original wiederhergestellt"
+    },
+    "duplicate": {
+      "notice": "Möglicherweise doppelt: Dieses Dokument gleicht inhaltlich „{{title}}“.",
+      "open": "Zum anderen Dokument",
+      "dismiss": "Kein Duplikat",
+      "dismissed": "Vermerkt: kein Duplikat"
+    },
     "openInNewTab": "In neuem Tab öffnen",
     "processingNotice": "Das Dokument wird gerade verarbeitet. Zusammenfassung und Schlagworte erscheinen hier, sobald die Analyse fertig ist.",
     "textOnlyNotice": "Ohne KI erschlossen: Das Dokument ist über seinen Text durchsuchbar, hat aber keine Zusammenfassung und keine automatischen Schlagworte.",
     "tabs": {
       "overview": "Übersicht",
-      "text": "Volltext"
+      "text": "Volltext",
+      "chat": "Fragen"
     },
     "fields": {
       "title": "Titel",
@@ -227,6 +255,19 @@
       "title": "Dokument löschen?",
       "text": "„{{title}}“ wird mitsamt PDF-Datei, Volltext und Schlagworten gelöscht. Das lässt sich nicht rückgängig machen.",
       "confirm": "Endgültig löschen"
+    },
+    "chat": {
+      "intro": "Stell eine Frage zu diesem Dokument – die KI antwortet anhand seines Inhalts.",
+      "placeholder": "Frag etwas zu diesem Dokument …",
+      "send": "Senden",
+      "thinking": "Die KI liest das Dokument …",
+      "notConfigured": "Für Fragen an das Dokument muss eine KI eingerichtet sein.",
+      "restart": "Neu beginnen",
+      "suggestions": {
+        "summary": "Worum geht es in diesem Dokument?",
+        "deadlines": "Gibt es Fristen oder Termine?",
+        "amounts": "Welche Beträge werden genannt?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Sprache der Ergebnisse",
         "outputLanguageHint": "In dieser Sprache schreibt die KI Titel, Zusammenfassung und Schlagworte.",
         "ocr": "Texterkennung für Scans",
-        "ocrHint": "Gescannte PDFs ohne Textebene lässt die Anwendung von der KI transkribieren – erst dadurch werden sie im Volltext durchsuchbar. Braucht je Scan mehr Zeit bzw. Kosten."
+        "ocrHint": "Gescannte PDFs ohne Textebene lässt die Anwendung von der KI transkribieren – erst dadurch werden sie im Volltext durchsuchbar. Braucht je Scan mehr Zeit bzw. Kosten.",
+        "quickOcrFirst": "Zuerst schnelle Texterkennung, dann mit der KI verfeinern",
+        "quickOcrFirstHint": "Neue Scans liest zuerst die eingebaute Texterkennung (Tesseract) – nach Sekunden sind sie durchsuchbar. Titel, Zusammenfassung und Schlagworte ergänzt die KI danach anhand dieses Textes."
       },
       "unanalyzed_one": "{{count, number}} Dokument ist noch nicht von der KI erschlossen.",
       "unanalyzed_other": "{{count, number}} Dokumente sind noch nicht von der KI erschlossen.",

@@ -73,7 +73,9 @@ public class SearchIndex {
 
     public record Criteria(String text, String category, String correspondent, List<String> tags,
                            DocumentStatus status, LocalDate from, LocalDate to,
-                           SortOrder sort, int page, int size) {
+                           SortOrder sort, int page, int size,
+                           /* nur Dokumente, die als mögliches Duplikat eines anderen vermerkt sind */
+                           boolean duplicates) {
     }
 
     public record Hit(String id, String snippet) {
@@ -98,6 +100,7 @@ public class SearchIndex {
     private static final String K_CORRESPONDENT = "correspondent_k";
     private static final String K_TAG = "tag_k";
     private static final String K_STATUS = "status_k";
+    private static final String K_DUPLICATE = "duplicate_k";
     private static final String P_DOC_DATE = "docdate_p";
     private static final String S_DOC_DATE = "docdate_s";
     private static final String S_CREATED = "created_s";
@@ -227,6 +230,9 @@ public class SearchIndex {
         addFilter(builder, K_CORRESPONDENT, criteria.correspondent());
         if (criteria.tags() != null) {
             criteria.tags().forEach(tag -> addFilter(builder, K_TAG, tag));
+        }
+        if (criteria.duplicates()) {
+            addFilter(builder, K_DUPLICATE, "1");
         }
         if (criteria.status() != null) {
             addFilter(builder, K_STATUS, criteria.status().name());
@@ -405,6 +411,7 @@ public class SearchIndex {
         addKeyword(lucene, K_CATEGORY, doc.getCategory());
         addKeyword(lucene, K_CORRESPONDENT, doc.getCorrespondent());
         addKeyword(lucene, K_STATUS, doc.getStatus().name());
+        addKeyword(lucene, K_DUPLICATE, doc.getDuplicateOf() != null ? "1" : null);
         doc.getTags().forEach(tag -> addKeyword(lucene, K_TAG, tag));
 
         long created = doc.getCreatedAt().toEpochMilli();

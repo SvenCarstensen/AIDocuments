@@ -123,15 +123,7 @@ final class OpenAiChatClient {
 
         ArrayNode messages = request.putArray("messages");
         messages.addObject().put("role", "system").put("content", system);
-        ArrayNode content = messages.addObject().put("role", "user").putArray("content");
-        for (Part part : userParts) {
-            if (part.jpeg() != null) {
-                content.addObject().put("type", "image_url").putObject("image_url")
-                        .put("url", "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(part.jpeg()));
-            } else {
-                content.addObject().put("type", "text").put("text", part.text());
-            }
-        }
+        addUserMessage(messages, userParts);
 
         ObjectNode function = request.putArray("tools").addObject().put("type", "function").putObject("function");
         function.put("name", toolName);
@@ -167,6 +159,47 @@ final class OpenAiChatClient {
     private static String reasoningOf(JsonNode message) {
         String reasoning = textOf(message.path("reasoning_content"));
         return reasoning.isEmpty() ? textOf(message.path("reasoning")) : reasoning;
+    }
+
+    /** Ein Beitrag eines Gesprächs: vom Anwender oder von der KI. */
+    record Turn(boolean fromUser, String text) {
+    }
+
+    /** Ein Gespräch ohne Werkzeug: Das Modell antwortet mit Text auf den letzten Beitrag. */
+    Reply chat(String model, String system, List<Turn> turns, long maxTokens, String tokenLimitField,
+               Duration timeout) {
+        ObjectNode request = JSON.createObjectNode();
+        request.put("model", model);
+        request.put(tokenLimitField, maxTokens);
+        ArrayNode messages = request.putArray("messages");
+        if (system != null && !system.isBlank()) {
+            messages.addObject().put("role", "system").put("content", system);
+        }
+        for (Turn turn : turns) {
+            messages.addObject().put("role", turn.fromUser() ? "user" : "assistant").put("content", turn.text());
+        }
+        JsonNode body = send(HttpRequest.newBuilder(URI.create(baseUrl + "/chat/completions"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(request.toString(), StandardCharsets.UTF_8)), timeout);
+        JsonNode choice = body.path("choices").path(0);
+        JsonNode message = choice.path("message");
+        return new Reply(null, textOf(message.path("content")),
+                "length".equals(choice.path("finish_reason").asText()),
+                message.hasNonNull("refusal") ? message.get("refusal").asText() : null,
+                body.path("usage").path("completion_tokens").asLong(-1),
+                reasoningOf(message).length());
+    }
+
+    private static void addUserMessage(ArrayNode messages, List<Part> userParts) {
+        ArrayNode content = messages.addObject().put("role", "user").putArray("content");
+        for (Part part : userParts) {
+            if (part.jpeg() != null) {
+                content.addObject().put("type", "image_url").putObject("image_url")
+                        .put("url", "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(part.jpeg()));
+            } else {
+                content.addObject().put("type", "text").put("text", part.text());
+            }
+        }
     }
 
     /** "content" ist meist ein Text, bei manchen Servern eine Liste von Textbausteinen. */

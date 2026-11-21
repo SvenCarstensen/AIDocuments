@@ -68,8 +68,12 @@
     },
     "search": {
       "placeholder": "Căutați documente, etichete, conținut …",
+      "placeholderAi": "Caută documente cu propriile cuvinte – de ex. „facturi de la Kia din 2024”",
       "label": "Căutare documente",
-      "clear": "Șterge căutarea"
+      "clear": "Șterge căutarea",
+      "modeAi": "Căutare cu IA – comută la căutarea după cuvinte cheie",
+      "modeKeywords": "Căutare după cuvinte cheie – comută la căutarea cu IA",
+      "askFailed": "Se caută după cuvinte cheie."
     },
     "userMenu": {
       "label": "Meniul utilizatorului ({{name}})",
@@ -120,6 +124,7 @@
     "ocrBadge": "Recunoaștere text",
     "aiNotice": {
       "text": "IA nu a fost încă configurată. Documentele noi pot fi căutate după text, dar nu sunt rezumate și nici etichetate.",
+      "builtinOcr": "Scanările fără strat de text sunt citite de recunoașterea de text integrată, astfel încât și în ele se poate căuta.",
       "action": "Configurează acum"
     },
     "searchResults_one": "<count>{{count, number}} rezultat</count> <query>pentru „{{query}}”</query>",
@@ -155,6 +160,7 @@
       "dateTo": "până la",
       "status": "Stare",
       "failed": "Eșuate",
+      "duplicates": "Posibile duplicate",
       "showAll": "Afișează tot",
       "showLess": "Afișează mai puțin",
       "activeFrom": "din {{date}}",
@@ -174,7 +180,10 @@
     "loadingAll_one": "{{loaded, number}} din {{count, number}} document încărcat …",
     "loadingAll_few": "{{loaded, number}} din {{count, number}} documente încărcate …",
     "loadingAll_other": "{{loaded, number}} din {{count, number}} de documente încărcate …",
-    "loadMore": "Încarcă mai multe ({{remaining, number}})"
+    "loadMore": "Încarcă mai multe ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Căutare cu IA: „{{question}}”. Filtrele arată cum a fost înțeleasă întrebarea."
+    }
   },
   "document": {
     "backToList": "Înapoi la prezentarea generală",
@@ -184,12 +193,31 @@
     "reprocessStarted": "Documentul este analizat din nou.",
     "deleted": "Document șters",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Modificări nesalvate în document",
+      "discard": "Renunță",
+      "save": "Salvează modificările",
+      "saved": "Modificări salvate – originalul se păstrează.",
+      "modified": "Modificat la {{when}} – originalul este păstrat.",
+      "downloadOriginal": "Descarcă originalul",
+      "restoreOriginal": "Restaurează originalul",
+      "restoreTitle": "Restaurați originalul?",
+      "restoreText": "Versiunea modificată va fi eliminată. Documentul va fi apoi exact așa cum a sosit.",
+      "restored": "Original restaurat"
+    },
+    "duplicate": {
+      "notice": "Posibil duplicat: conținutul acestui document corespunde cu „{{title}}”.",
+      "open": "Mergi la celălalt document",
+      "dismiss": "Nu este duplicat",
+      "dismissed": "Notat: nu este duplicat"
+    },
     "openInNewTab": "Deschide într-o filă nouă",
     "processingNotice": "Documentul este în curs de procesare. Rezumatul și etichetele vor apărea aici imediat ce analiza se încheie.",
     "textOnlyNotice": "Indexat fără IA: documentul poate fi căutat după text, dar nu are rezumat și nici etichete automate.",
     "tabs": {
       "overview": "Prezentare generală",
-      "text": "Text integral"
+      "text": "Text integral",
+      "chat": "Întrebări"
     },
     "fields": {
       "title": "Titlu",
@@ -236,6 +264,19 @@
       "title": "Ștergeți documentul?",
       "text": "„{{title}}” va fi șters împreună cu fișierul PDF, textul integral și etichetele. Acțiunea nu poate fi anulată.",
       "confirm": "Șterge definitiv"
+    },
+    "chat": {
+      "intro": "Pune o întrebare despre acest document – IA răspunde pe baza conținutului său.",
+      "placeholder": "Întreabă ceva despre acest document …",
+      "send": "Trimite",
+      "thinking": "IA citește documentul …",
+      "notConfigured": "Pentru întrebări despre document trebuie configurată o IA.",
+      "restart": "Ia de la capăt",
+      "suggestions": {
+        "summary": "Despre ce este acest document?",
+        "deadlines": "Există termene sau date?",
+        "amounts": "Ce sume sunt menționate?"
+      }
     }
   },
   "settings": {
@@ -380,7 +421,9 @@
         "outputLanguage": "Limba rezultatelor",
         "outputLanguageHint": "IA scrie titlul, rezumatul și etichetele în această limbă.",
         "ocr": "Recunoaștere text pentru scanări",
-        "ocrHint": "Aplicația pune IA să transcrie PDF-urile scanate fără strat de text – doar așa pot fi găsite prin căutarea în textul integral. Fiecare scanare durează mai mult și costă mai mult."
+        "ocrHint": "Aplicația pune IA să transcrie PDF-urile scanate fără strat de text – doar așa pot fi găsite prin căutarea în textul integral. Fiecare scanare durează mai mult și costă mai mult.",
+        "quickOcrFirst": "Mai întâi recunoaștere rapidă a textului, apoi rafinare cu IA",
+        "quickOcrFirstHint": "Scanările noi sunt citite mai întâi de recunoașterea de text integrată (Tesseract) – în câteva secunde se poate căuta în ele. Apoi IA adaugă titlul, rezumatul și etichetele pe baza acestui text."
       },
       "unanalyzed_one": "{{count, number}} document nu a fost încă analizat de IA.",
       "unanalyzed_few": "{{count, number}} documente nu au fost încă analizate de IA.",

@@ -6,3 +6,4 @@ backend/config
 .git
 .idea
 *.iml
+frontend/public/pdfjs

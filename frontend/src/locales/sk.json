@@ -69,8 +69,12 @@
     },
     "search": {
       "placeholder": "Hľadať v dokumentoch, štítkoch, obsahu …",
+      "placeholderAi": "Hľadaj dokumenty vlastnými slovami – napr. „faktúry od Kia z roku 2024“",
       "label": "Hľadať dokumenty",
-      "clear": "Vymazať hľadanie"
+      "clear": "Vymazať hľadanie",
+      "modeAi": "Vyhľadávanie AI – prepnúť na vyhľadávanie podľa kľúčových slov",
+      "modeKeywords": "Vyhľadávanie podľa kľúčových slov – prepnúť na vyhľadávanie AI",
+      "askFailed": "Vyhľadáva sa podľa kľúčových slov."
     },
     "userMenu": {
       "label": "Ponuka používateľa ({{name}})",
@@ -126,6 +130,7 @@
     "ocrBadge": "Rozpoznávanie textu",
     "aiNotice": {
       "text": "AI zatiaľ nie je nastavená. Nové dokumenty možno prehľadávať podľa ich textu, ale nie sú zhrnuté ani opatrené štítkami.",
+      "builtinOcr": "Skeny bez textovej vrstvy prečíta vstavané rozpoznávanie textu, takže aj v nich možno vyhľadávať.",
       "action": "Nastaviť teraz"
     },
     "searchResults_one": "<count>{{count, number}} výsledok</count> <query>pre „{{query}}“</query>",
@@ -162,6 +167,7 @@
       "dateTo": "do",
       "status": "Stav",
       "failed": "Neúspešné",
+      "duplicates": "Možné duplikáty",
       "showAll": "Zobraziť všetko",
       "showLess": "Zobraziť menej",
       "activeFrom": "od {{date}}",
@@ -182,7 +188,10 @@
     "loadingAll_few": "Načítané: {{loaded, number}} z {{count, number}} dokumentov …",
     "loadingAll_many": "Načítané: {{loaded, number}} z {{count, number}} dokumentu …",
     "loadingAll_other": "Načítané: {{loaded, number}} z {{count, number}} dokumentov …",
-    "loadMore": "Načítať ďalšie ({{remaining, number}})"
+    "loadMore": "Načítať ďalšie ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Vyhľadávanie AI: „{{question}}“. Filtre ukazujú, ako bola otázka pochopená."
+    }
   },
   "document": {
     "backToList": "Späť na prehľad",
@@ -192,12 +201,31 @@
     "reprocessStarted": "Dokument sa analyzuje znova.",
     "deleted": "Dokument bol odstránený",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Neuložené zmeny v dokumente",
+      "discard": "Zahodiť",
+      "save": "Uložiť zmeny",
+      "saved": "Zmeny uložené – originál zostáva zachovaný.",
+      "modified": "Zmenené {{when}} – originál je uschovaný.",
+      "downloadOriginal": "Stiahnuť originál",
+      "restoreOriginal": "Obnoviť originál",
+      "restoreTitle": "Obnoviť originál?",
+      "restoreText": "Zmenená verzia sa zahodí. Dokument potom bude presne taký, aký bol pri prijatí.",
+      "restored": "Originál obnovený"
+    },
+    "duplicate": {
+      "notice": "Možný duplikát: obsah tohto dokumentu zodpovedá dokumentu „{{title}}“.",
+      "open": "Prejsť na druhý dokument",
+      "dismiss": "Nie je duplikát",
+      "dismissed": "Zaznamenané: nie je duplikát"
+    },
     "openInNewTab": "Otvoriť na novej karte",
     "processingNotice": "Dokument sa spracúva. Zhrnutie a štítky sa tu zobrazia, hneď ako bude analýza dokončená.",
     "textOnlyNotice": "Indexované bez AI: dokument možno prehľadávať podľa jeho textu, ale nemá zhrnutie ani automatické štítky.",
     "tabs": {
       "overview": "Prehľad",
-      "text": "Celý text"
+      "text": "Celý text",
+      "chat": "Otázky"
     },
     "fields": {
       "title": "Názov",
@@ -245,6 +273,19 @@
       "title": "Odstrániť dokument?",
       "text": "Dokument „{{title}}“ bude odstránený vrátane súboru PDF, celého textu a štítkov. Túto akciu nemožno vrátiť späť.",
       "confirm": "Odstrániť natrvalo"
+    },
+    "chat": {
+      "intro": "Spýtaj sa na tento dokument – AI odpovie podľa jeho obsahu.",
+      "placeholder": "Spýtaj sa niečo k tomuto dokumentu …",
+      "send": "Odoslať",
+      "thinking": "AI číta dokument …",
+      "notConfigured": "Na otázky k dokumentu musí byť nastavená AI.",
+      "restart": "Začať odznova",
+      "suggestions": {
+        "summary": "O čom je tento dokument?",
+        "deadlines": "Sú tu nejaké lehoty alebo termíny?",
+        "amounts": "Aké sumy sú uvedené?"
+      }
     }
   },
   "settings": {
@@ -389,7 +430,9 @@
         "outputLanguage": "Jazyk výsledkov",
         "outputLanguageHint": "AI v tomto jazyku píše názov, zhrnutie a štítky.",
         "ocr": "Rozpoznávanie textu pri skenoch",
-        "ocrHint": "Aplikácia nechá AI prepísať naskenované súbory PDF bez textovej vrstvy – iba tak ich možno nájsť fulltextovým vyhľadávaním. Každý sken zaberie viac času a stojí viac."
+        "ocrHint": "Aplikácia nechá AI prepísať naskenované súbory PDF bez textovej vrstvy – iba tak ich možno nájsť fulltextovým vyhľadávaním. Každý sken zaberie viac času a stojí viac.",
+        "quickOcrFirst": "Najprv rýchle rozpoznanie textu, potom spresnenie pomocou AI",
+        "quickOcrFirstHint": "Nové skeny najprv prečíta vstavané rozpoznávanie textu (Tesseract) – o niekoľko sekúnd v nich možno vyhľadávať. Potom AI na základe tohto textu doplní názov, zhrnutie a štítky."
       },
       "unanalyzed_one": "{{count, number}} dokument ešte nebol analyzovaný pomocou AI.",
       "unanalyzed_few": "{{count, number}} dokumenty ešte neboli analyzované pomocou AI.",

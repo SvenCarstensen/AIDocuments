@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Dokumenter, Stéchwierder, Inhalter duerchsichen …",
+      "placeholderAi": "Sich Dokumenter mat denge Wierder – z. B. „Rechnunge vu Kia aus 2024“",
       "label": "Dokumenter duerchsichen",
-      "clear": "Sich läschen"
+      "clear": "Sich läschen",
+      "modeAi": "KI-Sich – op Stéchwuertsich wiesselen",
+      "modeKeywords": "Stéchwuertsich – op KI-Sich wiesselen",
+      "askFailed": "Et gëtt no Stéchwierder gesicht."
     },
     "userMenu": {
       "label": "Benotzermenü ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Texterkennung",
     "aiNotice": {
       "text": "D’KI ass nach net ageriicht. Nei Dokumenter kënnen iwwer hiren Text duerchsicht ginn, mee si ginn net zesummegefaasst an net mat Stéchwierder versinn.",
+      "builtinOcr": "Scanen ouni Textschicht liest déi agebaute Texterkennung, sou datt een och an hinne siche kann.",
       "action": "Elo ariichten"
     },
     "searchResults_one": "<count>{{count, number}} Resultat</count> <query>fir „{{query}}“</query>",
@@ -148,6 +153,7 @@
       "dateTo": "bis",
       "status": "Status",
       "failed": "Feelgeschloen",
+      "duplicates": "Méiglech Duplikater",
       "showAll": "All uweisen",
       "showLess": "Manner uweisen",
       "activeFrom": "vum {{date}} un",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} vun {{count, number}} Dokument gelueden …",
     "loadingAll_other": "{{loaded, number}} vun {{count, number}} Dokumenter gelueden …",
-    "loadMore": "Méi lueden ({{remaining, number}})"
+    "loadMore": "Méi lueden ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "KI-Sich: „{{question}}“. D’Filteren weisen, wéi d’Fro verstane gouf."
+    }
   },
   "document": {
     "backToList": "Zréck bei d’Iwwersiicht",
@@ -176,12 +185,31 @@
     "reprocessStarted": "D’Dokument gëtt nei analyséiert.",
     "deleted": "Dokument geläscht",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Net gespäichert Ännerungen am Dokument",
+      "discard": "Verwerfen",
+      "save": "Ännerunge späicheren",
+      "saved": "Ännerunge gespäichert – d’Original bleift erhalen.",
+      "modified": "Geännert den {{when}} – d’Original ass opgehuewen.",
+      "downloadOriginal": "Original eroflueden",
+      "restoreOriginal": "Original restauréieren",
+      "restoreTitle": "Original restauréieren?",
+      "restoreText": "Déi geännert Versioun gëtt verworf. D’Dokument ass duerno erëm genee sou wéi beim Akommen.",
+      "restored": "Original restauréiert"
+    },
+    "duplicate": {
+      "notice": "Méiglecherweis en Duplikat: Den Inhalt vun dësem Dokument entsprécht „{{title}}“.",
+      "open": "Bei dat anert Dokument",
+      "dismiss": "Keen Duplikat",
+      "dismissed": "Vermierkt: keen Duplikat"
+    },
     "openInNewTab": "An engem neien Tab opmaachen",
     "processingNotice": "D’Dokument gëtt grad veraarbecht. D’Zesummefaassung an d’Stéchwierder erschéngen hei, soubal d’Analys fäerdeg ass.",
     "textOnlyNotice": "Ouni KI indexéiert: D’Dokument kann iwwer säin Text duerchsicht ginn, huet awer keng Zesummefaassung a keng automatesch Stéchwierder.",
     "tabs": {
       "overview": "Iwwersiicht",
-      "text": "Volltext"
+      "text": "Volltext",
+      "chat": "Froen"
     },
     "fields": {
       "title": "Titel",
@@ -227,6 +255,19 @@
       "title": "Dokument läschen?",
       "text": "„{{title}}“ gëtt zesumme mam PDF-Fichier, dem Volltext an de Stéchwierder geläscht. Dat kann net réckgängeg gemaach ginn.",
       "confirm": "Definitiv läschen"
+    },
+    "chat": {
+      "intro": "Stell eng Fro zu dësem Dokument – d’KI äntwert op Basis vu sengem Inhalt.",
+      "placeholder": "Fro eppes zu dësem Dokument …",
+      "send": "Schécken",
+      "thinking": "D’KI liest d’Dokument …",
+      "notConfigured": "Fir Froen zum Dokument muss eng KI agericht sinn.",
+      "restart": "Nei ufänken",
+      "suggestions": {
+        "summary": "Ëm wat geet et an dësem Dokument?",
+        "deadlines": "Gëtt et Fristen oder Datumen?",
+        "amounts": "Wéi eng Beträg ginn ernimmt?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Sprooch vun de Resultater",
         "outputLanguageHint": "An dëser Sprooch schreift d’KI Titel, Zesummefaassung a Stéchwierder.",
         "ocr": "Texterkennung fir Scannen",
-        "ocrHint": "Gescannte PDFen ouni Textschicht léisst d’Applikatioun vun der KI transkribéieren – eréischt doduerch kënne se am Volltext duerchsicht ginn. Brauch pro Scan méi Zäit a kascht méi."
+        "ocrHint": "Gescannte PDFen ouni Textschicht léisst d’Applikatioun vun der KI transkribéieren – eréischt doduerch kënne se am Volltext duerchsicht ginn. Brauch pro Scan méi Zäit a kascht méi.",
+        "quickOcrFirst": "Fir d’éischt séier Texterkennung, duerno mat der KI verfeineren",
+        "quickOcrFirstHint": "Nei Scane liest fir d’éischt déi agebaute Texterkennung (Tesseract) – no e puer Sekonnen ass een dra siche kënnen. Duerno ergänzt d’KI Titel, Resumé a Schlagwierder op Basis vun dësem Text."
       },
       "unanalyzed_one": "{{count, number}} Dokument gouf nach net vun der KI analyséiert.",
       "unanalyzed_other": "{{count, number}} Dokumenter goufen nach net vun der KI analyséiert.",

@@ -2,6 +2,7 @@ package de.aidocuments.document;
 
 import de.aidocuments.ai.AiAnalysisService;
 import de.aidocuments.ai.AiException;
+import de.aidocuments.ai.BuiltinOcrService;
 import de.aidocuments.ai.DocumentAnalysis;
 import de.aidocuments.document.PdfExtractor.PdfContent;
 import de.aidocuments.document.PdfExtractor.PdfReadException;
@@ -9,6 +10,7 @@ import de.aidocuments.i18n.Messages;
 import de.aidocuments.i18n.Msg;
 import de.aidocuments.i18n.MsgCodec;
 import de.aidocuments.search.SearchIndex;
+import de.aidocuments.settings.AiSettingsService;
 import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,21 +37,32 @@ public class DocumentProcessor {
     private final FileStorage storage;
     private final PdfExtractor pdfExtractor;
     private final AiAnalysisService ai;
+    private final BuiltinOcrService builtinOcr;
     private final DocumentFacets facets;
     private final SearchIndex searchIndex;
     private final ThreadPoolTaskExecutor executor;
+    private final ThreadPoolTaskExecutor aiExecutor;
+    private final AiSettingsService aiSettings;
+    private final DuplicateDetector duplicates;
     private final Messages messages;
 
     public DocumentProcessor(DocumentRepository documents, DocumentTextRepository texts, FileStorage storage,
-                             PdfExtractor pdfExtractor, AiAnalysisService ai, DocumentFacets facets,
+                             PdfExtractor pdfExtractor, AiAnalysisService ai, BuiltinOcrService builtinOcr,
+                             DocumentFacets facets,
                              SearchIndex searchIndex,
-                             @Qualifier("documentExecutor") ThreadPoolTaskExecutor executor, Messages messages) {
+                             @Qualifier("documentExecutor") ThreadPoolTaskExecutor executor,
+                             @Qualifier("aiExecutor") ThreadPoolTaskExecutor aiExecutor, AiSettingsService aiSettings,
+                             DuplicateDetector duplicates, Messages messages) {
+        this.duplicates = duplicates;
+        this.aiExecutor = aiExecutor;
+        this.aiSettings = aiSettings;
         this.messages = messages;
         this.documents = documents;
         this.texts = texts;
         this.storage = storage;
         this.pdfExtractor = pdfExtractor;
         this.ai = ai;
+        this.builtinOcr = builtinOcr;
         this.facets = facets;
         this.searchIndex = searchIndex;
         this.executor = executor;
@@ -61,7 +74,7 @@ public class DocumentProcessor {
                 process(documentId);
             } catch (RuntimeException e) {
                 log.error("Verarbeitung von Dokument {} abgebrochen", documentId, e);
-                finish(documentId, null, null, Msg.of("error.unexpected", Msg.detailOf(e)));
+                finish(documentId, null, null, Msg.of("error.unexpected", Msg.detailOf(e)), null);
             }
         });
     }
@@ -80,12 +93,16 @@ public class DocumentProcessor {
         try {
             pdf = pdfExtractor.extract(storage.resolve(doc.getStoragePath()), storage.thumbnailPath(documentId));
         } catch (PdfReadException e) {
-            finish(documentId, null, null, e.msg());
+            finish(documentId, null, null, e.msg(), null);
             return;
         }
 
-        if (!ai.isEnabled()) {
-            finish(documentId, pdf, null, null);
+        boolean aiEnabled = ai.isEnabled();
+        boolean scan = pdf.textIsSparse() && builtinOcr.isAvailable();
+        // Ohne KI liest die eingebaute Texterkennung Scans; mit KI nur, wenn zuerst ein schnelles Ergebnis gewünscht ist.
+        boolean quickOcr = scan && (!aiEnabled || aiSettings.current().quickOcrFirst());
+        if (!aiEnabled && !quickOcr) {
+            finish(documentId, pdf, null, null, null);
             return;
         }
         // Zwischenstand sichern: Vorschaubild und Volltextsuche stehen schon bereit, während die KI noch liest.
@@ -94,33 +111,110 @@ public class DocumentProcessor {
         documents.save(doc);
         texts.save(new DocumentText(documentId, pdf.text()));
         reindex(doc);
+
+        BuiltinOcrService.Result ocr = null;
+        if (quickOcr) {
+            try {
+                ocr = builtinOcr.transcribe(storage.resolve(doc.getStoragePath()), pdf.pageCount());
+            } catch (AiException e) {
+                log.warn("Texterkennung von {} fehlgeschlagen: {}", doc.getOriginalFilename(), messages.forLog(e.msg()));
+                if (!aiEnabled) {
+                    finish(documentId, pdf, null, Msg.of("document.error.aiFailed", e.msg()), null);
+                    return;
+                }
+            }
+            if (!aiEnabled) {
+                finishTranscribed(documentId, pdf, ocr);
+                return;
+            }
+            if (ocr != null && !ocr.text().isBlank()) {
+                // schnelles erstes Ergebnis: der erkannte Text ist sofort durchsuchbar, die KI verfeinert danach
+                Document current = documents.findById(documentId).orElse(null);
+                if (current == null) {
+                    return;
+                }
+                current.setOcrUsed(true);
+                documents.save(current);
+                texts.save(new DocumentText(documentId, ocr.text().strip()));
+                reindex(current);
+            }
+        }
+        BuiltinOcrService.Result quickText = ocr;
+        aiExecutor.execute(() -> {
+            try {
+                analyze(documentId, pdf, quickText);
+            } catch (RuntimeException e) {
+                log.error("KI-Analyse von Dokument {} abgebrochen", documentId, e);
+                finish(documentId, pdf, null, Msg.of("error.unexpected", Msg.detailOf(e)), quickText);
+            }
+        });
+    }
+
+    /**
+     * Die KI-Analyse, in ihrer eigenen Warteschlange. Liegt schon ein Text der eingebauten Texterkennung vor, bekommt
+     * die KI diesen Text statt der Seitenbilder – sie verfeinert dann nur noch die Erschließung, das geht schneller.
+     */
+    private void analyze(String documentId, PdfContent pdf, BuiltinOcrService.Result ocr) {
+        Document doc = documents.findById(documentId).orElse(null);
+        if (doc == null) {
+            return; // inzwischen gelöscht
+        }
+        boolean ocrText = ocr != null && !ocr.text().isBlank();
         try {
             AiAnalysisService.Result result = ai.analyze(new AiAnalysisService.Request(
                     storage.resolve(doc.getStoragePath()), doc.getOriginalFilename(), doc.getSizeBytes(),
-                    pdf.pageCount(), pdf.text(), pdf.textIsSparse(), doc.getMailSubject(), doc.getMailFrom(),
+                    pdf.pageCount(), ocrText ? ocr.text() : pdf.text(), !ocrText && pdf.textIsSparse(),
+                    doc.getMailSubject(), doc.getMailFrom(),
                     facets.correspondents(150).stream().map(FacetCount::name).toList(),
                     facets.tags(300).stream().map(FacetCount::name).toList()));
-            finish(documentId, pdf, result, null);
+            finish(documentId, pdf, result, null, ocr);
         } catch (AiException e) {
             log.warn("KI-Analyse von {} fehlgeschlagen: {}", doc.getOriginalFilename(), messages.forLog(e.msg()));
-            finish(documentId, pdf, null, Msg.of("document.error.aiFailed", e.msg()));
+            finish(documentId, pdf, null, Msg.of("document.error.aiFailed", e.msg()), ocr);
         }
+    }
+
+    /** Ergebnis der eingebauten Texterkennung: nur der Text, keine Erschließung. */
+    private void finishTranscribed(String documentId, PdfContent pdf, BuiltinOcrService.Result ocr) {
+        Document doc = documents.findById(documentId).orElse(null);
+        if (doc == null || ocr == null) {
+            return; // während der Verarbeitung gelöscht
+        }
+        doc.setPageCount(pdf.pageCount());
+        doc.setHasThumbnail(pdf.thumbnailCreated());
+        if (doc.getTitle() == null) {
+            doc.setTitle(titleFromFilename(doc.getOriginalFilename()));
+        }
+        boolean transcribed = !ocr.text().isBlank();
+        doc.setOcrUsed(transcribed);
+        doc.setStatus(DocumentStatus.TEXT_ONLY);
+        doc.setErrorMessage(ocr.notes().isEmpty() ? null : MsgCodec.encode(ocr.notes()));
+        doc.setProcessedAt(Instant.now());
+        String text = transcribed ? ocr.text().strip() : pdf.text();
+        texts.save(new DocumentText(documentId, text));
+        duplicates.check(doc, text);
+        documents.save(doc);
+        reindex(doc);
     }
 
     /**
      * Schreibt das Ergebnis zurück. Das Dokument wird frisch geladen, falls es zwischenzeitlich bearbeitet wurde.
      * Fehlermeldung und Hinweise werden sprachneutral gespeichert – wer sie später liest, steht hier nicht fest.
      */
-    private void finish(String documentId, PdfContent pdf, AiAnalysisService.Result aiResult, Msg error) {
+    private void finish(String documentId, PdfContent pdf, AiAnalysisService.Result aiResult, Msg error,
+                        BuiltinOcrService.Result ocr) {
         Document doc = documents.findById(documentId).orElse(null);
         if (doc == null) {
             return; // während der Verarbeitung gelöscht
         }
         String fullText = null;
+        boolean ocrText = ocr != null && !ocr.text().isBlank();
         if (pdf != null) {
             doc.setPageCount(pdf.pageCount());
             doc.setHasThumbnail(pdf.thumbnailCreated());
-            fullText = pdf.text();
+            // Text der eingebauten Texterkennung bleibt, auch wenn die KI danach scheitert
+            fullText = ocrText ? ocr.text().strip() : pdf.text();
+            doc.setOcrUsed(ocrText);
         }
         if (aiResult != null) {
             DocumentAnalysis analysis = aiResult.analysis();
@@ -134,7 +228,7 @@ public class DocumentProcessor {
             doc.replaceKeyFacts(normalizeFacts(analysis.keyFacts()));
             boolean transcribed = aiResult.transcribed() && analysis.fullText() != null
                     && !analysis.fullText().isBlank();
-            doc.setOcrUsed(transcribed);
+            doc.setOcrUsed(transcribed || ocrText);
             if (transcribed) {
                 fullText = analysis.fullText().strip();
             }
@@ -152,6 +246,7 @@ public class DocumentProcessor {
         doc.setProcessedAt(Instant.now());
         if (fullText != null) {
             texts.save(new DocumentText(documentId, fullText));
+            duplicates.check(doc, fullText);
         }
         documents.save(doc);
         reindex(doc);

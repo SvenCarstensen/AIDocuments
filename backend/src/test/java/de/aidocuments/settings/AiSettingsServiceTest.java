@@ -61,7 +61,8 @@ class AiSettingsServiceTest {
         AppProperties.Ai ai = new AppProperties.Ai(LlmProvider.OPENAI_COMPATIBLE, "http://server.lan:8000", KEY,
                 "lokales-modell", "medium", "Deutsch", true, null, null, revealPresetKeys);
         AppProperties properties = new AppProperties(Path.of("./data"), ai,
-                new AppProperties.Import(Duration.ofMinutes(5), ""));
+                new AppProperties.Import(Duration.ofMinutes(5), ""),
+                new AppProperties.Ocr(false, "tesseract", "deu+eng", 50, 300, Duration.ofMinutes(5)));
         return new AiSettingsService(mock(MongoTemplate.class), mock(SecretCipher.class), properties,
                 TestMessages.create());
     }

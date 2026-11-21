@@ -68,8 +68,12 @@
     },
     "search": {
       "placeholder": "Pretražite dokumente, oznake, sadržaj…",
+      "placeholderAi": "Traži dokumente vlastitim riječima – npr. „računi od Kie iz 2024.“",
       "label": "Pretraga dokumenata",
-      "clear": "Očisti pretragu"
+      "clear": "Očisti pretragu",
+      "modeAi": "Pretraga s VI – prebaci na pretragu po ključnim riječima",
+      "modeKeywords": "Pretraga po ključnim riječima – prebaci na pretragu s VI",
+      "askFailed": "Pretražuje se po ključnim riječima."
     },
     "userMenu": {
       "label": "Korisnički meni ({{name}})",
@@ -120,6 +124,7 @@
     "ocrBadge": "Prepoznavanje teksta",
     "aiNotice": {
       "text": "AI još nije postavljen. Novi dokumenti mogu se pretraživati po tekstu, ali se ne sažimaju i ne označavaju.",
+      "builtinOcr": "Skenove bez tekstualnog sloja čita ugrađeno prepoznavanje teksta, pa se i u njima može pretraživati.",
       "action": "Postavi sada"
     },
     "searchResults_one": "<count>{{count, number}} rezultat</count> <query>za „{{query}}“</query>",
@@ -155,6 +160,7 @@
       "dateTo": "do",
       "status": "Status",
       "failed": "Neuspjelo",
+      "duplicates": "Mogući duplikati",
       "showAll": "Prikaži sve",
       "showLess": "Prikaži manje",
       "activeFrom": "od {{date}}",
@@ -174,7 +180,10 @@
     "loadingAll_one": "Učitano {{loaded, number}} od {{count, number}} dokumenta…",
     "loadingAll_few": "Učitano {{loaded, number}} od {{count, number}} dokumenta…",
     "loadingAll_other": "Učitano {{loaded, number}} od {{count, number}} dokumenata…",
-    "loadMore": "Učitaj još ({{remaining, number}})"
+    "loadMore": "Učitaj još ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Pretraga s VI: „{{question}}“. Filteri pokazuju kako je pitanje shvaćeno."
+    }
   },
   "document": {
     "backToList": "Nazad na pregled",
@@ -184,12 +193,31 @@
     "reprocessStarted": "Dokument se ponovo analizira.",
     "deleted": "Dokument je izbrisan",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Nesačuvane promjene u dokumentu",
+      "discard": "Odbaci",
+      "save": "Sačuvaj promjene",
+      "saved": "Promjene sačuvane – original ostaje sačuvan.",
+      "modified": "Promijenjeno {{when}} – original je sačuvan.",
+      "downloadOriginal": "Preuzmi original",
+      "restoreOriginal": "Vrati original",
+      "restoreTitle": "Vratiti original?",
+      "restoreText": "Promijenjena verzija bit će odbačena. Dokument će zatim biti tačno onakav kakav je bio pri prijemu.",
+      "restored": "Original vraćen"
+    },
+    "duplicate": {
+      "notice": "Mogući duplikat: sadržaj ovog dokumenta odgovara dokumentu „{{title}}“.",
+      "open": "Na drugi dokument",
+      "dismiss": "Nije duplikat",
+      "dismissed": "Zabilježeno: nije duplikat"
+    },
     "openInNewTab": "Otvori u novoj kartici",
     "processingNotice": "Dokument se upravo obrađuje. Sažetak i oznake pojavit će se ovdje čim analiza bude gotova.",
     "textOnlyNotice": "Indeksirano bez AI-ja: dokument se može pretraživati po tekstu, ali nema sažetak ni automatske oznake.",
     "tabs": {
       "overview": "Pregled",
-      "text": "Cijeli tekst"
+      "text": "Cijeli tekst",
+      "chat": "Pitanja"
     },
     "fields": {
       "title": "Naslov",
@@ -236,6 +264,19 @@
       "title": "Izbrisati dokument?",
       "text": "Dokument „{{title}}“ bit će izbrisan zajedno s PDF datotekom, cijelim tekstom i oznakama. Ovo se ne može poništiti.",
       "confirm": "Trajno izbriši"
+    },
+    "chat": {
+      "intro": "Postavi pitanje o ovom dokumentu – VI odgovara na osnovu njegovog sadržaja.",
+      "placeholder": "Pitaj nešto o ovom dokumentu …",
+      "send": "Pošalji",
+      "thinking": "VI čita dokument …",
+      "notConfigured": "Za pitanja o dokumentu mora biti postavljena VI.",
+      "restart": "Počni ispočetka",
+      "suggestions": {
+        "summary": "O čemu je ovaj dokument?",
+        "deadlines": "Ima li rokova ili datuma?",
+        "amounts": "Koji se iznosi spominju?"
+      }
     }
   },
   "settings": {
@@ -380,7 +421,9 @@
         "outputLanguage": "Jezik rezultata",
         "outputLanguageHint": "AI na ovom jeziku piše naslov, sažetak i oznake.",
         "ocr": "Prepoznavanje teksta za skenove",
-        "ocrHint": "AI prepisuje skenirane PDF-ove bez tekstualnog sloja – tek tada ih pretraga cijelog teksta može pronaći. Svaki sken zahtijeva više vremena i košta više."
+        "ocrHint": "AI prepisuje skenirane PDF-ove bez tekstualnog sloja – tek tada ih pretraga cijelog teksta može pronaći. Svaki sken zahtijeva više vremena i košta više.",
+        "quickOcrFirst": "Prvo brzo prepoznavanje teksta, zatim dorada pomoću VI",
+        "quickOcrFirstHint": "Nove skenove prvo čita ugrađeno prepoznavanje teksta (Tesseract) – za nekoliko sekundi mogu se pretraživati. Zatim VI na osnovu tog teksta dodaje naslov, sažetak i oznake."
       },
       "unanalyzed_one": "{{count, number}} dokument još nije analiziran pomoću AI-ja.",
       "unanalyzed_few": "{{count, number}} dokumenta još nisu analizirana pomoću AI-ja.",

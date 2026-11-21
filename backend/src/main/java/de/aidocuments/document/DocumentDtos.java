@@ -36,6 +36,12 @@ public final class DocumentDtos {
             Instant mailReceivedAt,
             Instant createdAt,
             Instant processedAt,
+            /* wann das PDF zuletzt geändert wurde; null = es ist das Original */
+            Instant modifiedAt,
+            /* ob eine Kopie des Originals aufbewahrt ist (nur nach einer Änderung) */
+            boolean hasOriginal,
+            /* das frühere Dokument, dem dieses inhaltlich gleicht; null = kein Duplikat bekannt */
+            String duplicateOf,
             /* Trefferausschnitt aus dem Volltext; U+E000/U+E001 markieren Anfang und Ende eines Treffers. */
             String snippet) {
 
@@ -64,6 +70,9 @@ public final class DocumentDtos {
                     d.getMailReceivedAt(),
                     d.getCreatedAt(),
                     d.getProcessedAt(),
+                    d.getModifiedAt(),
+                    d.getOriginalStoragePath() != null,
+                    d.getDuplicateOf(),
                     snippet);
         }
     }

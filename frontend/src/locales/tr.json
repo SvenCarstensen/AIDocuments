@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Belgelerde, etiketlerde, içerikte ara…",
+      "placeholderAi": "Belgeleri kendi sözlerinizle arayın – ör. “Kia’nın 2024 faturaları”",
       "label": "Belgelerde ara",
-      "clear": "Aramayı temizle"
+      "clear": "Aramayı temizle",
+      "modeAi": "Yapay zekâ araması – anahtar kelime aramasına geç",
+      "modeKeywords": "Anahtar kelime araması – yapay zekâ aramasına geç",
+      "askFailed": "Anahtar kelimelere göre aranıyor."
     },
     "userMenu": {
       "label": "Kullanıcı menüsü ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Metin tanıma",
     "aiNotice": {
       "text": "Yapay zeka henüz ayarlanmadı. Yeni belgeler metinleri üzerinden aranabilir, ancak özetlenmez ve etiketlenmez.",
+      "builtinOcr": "Metin katmanı olmayan taramalar yerleşik metin tanıma ile okunur; böylece onlarda da arama yapılabilir.",
       "action": "Şimdi ayarla"
     },
     "searchResults_one": "<query>“{{query}}” için</query> <count>{{count, number}} sonuç</count>",
@@ -148,6 +153,7 @@
       "dateTo": "bitiş",
       "status": "Durum",
       "failed": "Başarısız",
+      "duplicates": "Olası kopyalar",
       "showAll": "Tümünü göster",
       "showLess": "Daha az göster",
       "activeFrom": "{{date}} ve sonrası",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} / {{count, number}} belge getirildi…",
     "loadingAll_other": "{{loaded, number}} / {{count, number}} belge getirildi…",
-    "loadMore": "Daha fazla göster ({{remaining, number}})"
+    "loadMore": "Daha fazla göster ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Yapay zekâ araması: “{{question}}”. Filtreler sorunun nasıl anlaşıldığını gösterir."
+    }
   },
   "document": {
     "backToList": "Listeye dön",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Belge yeniden analiz ediliyor.",
     "deleted": "Belge silindi",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Belgede kaydedilmemiş değişiklikler var",
+      "discard": "Vazgeç",
+      "save": "Değişiklikleri kaydet",
+      "saved": "Değişiklikler kaydedildi – orijinal korunuyor.",
+      "modified": "{{when}} tarihinde değiştirildi – orijinal saklanıyor.",
+      "downloadOriginal": "Orijinali indir",
+      "restoreOriginal": "Orijinali geri yükle",
+      "restoreTitle": "Orijinal geri yüklensin mi?",
+      "restoreText": "Değiştirilmiş sürüm silinecek. Belge daha sonra tam olarak geldiği gibi olacak.",
+      "restored": "Orijinal geri yüklendi"
+    },
+    "duplicate": {
+      "notice": "Olası kopya: Bu belgenin içeriği “{{title}}” ile eşleşiyor.",
+      "open": "Diğer belgeye git",
+      "dismiss": "Kopya değil",
+      "dismissed": "Not edildi: kopya değil"
+    },
     "openInNewTab": "Yeni sekmede aç",
     "processingNotice": "Belge işleniyor. Analiz biter bitmez özet ve etiketler burada görünecek.",
     "textOnlyNotice": "Yapay zeka olmadan dizine eklendi: belge, metni üzerinden aranabilir, ancak özeti ve otomatik etiketleri yok.",
     "tabs": {
       "overview": "Genel bakış",
-      "text": "Tam metin"
+      "text": "Tam metin",
+      "chat": "Sorular"
     },
     "fields": {
       "title": "Başlık",
@@ -227,6 +255,19 @@
       "title": "Belge silinsin mi?",
       "text": "“{{title}}”; PDF dosyası, tam metni ve etiketleriyle birlikte silinecek. Bu işlem geri alınamaz.",
       "confirm": "Kalıcı olarak sil"
+    },
+    "chat": {
+      "intro": "Bu belge hakkında bir soru sorun – yapay zekâ içeriğine göre yanıtlar.",
+      "placeholder": "Bu belge hakkında bir şey sorun …",
+      "send": "Gönder",
+      "thinking": "Yapay zekâ belgeyi okuyor …",
+      "notConfigured": "Belge hakkında soru sormak için bir yapay zekâ ayarlanmış olmalıdır.",
+      "restart": "Yeniden başla",
+      "suggestions": {
+        "summary": "Bu belge ne hakkında?",
+        "deadlines": "Süreler veya tarihler var mı?",
+        "amounts": "Hangi tutarlar geçiyor?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Sonuçların dili",
         "outputLanguageHint": "Yapay zeka başlığı, özeti ve etiketleri bu dilde yazar.",
         "ocr": "Taramalar için metin tanıma",
-        "ocrHint": "Uygulama, metin katmanı olmayan taranmış PDF’leri yapay zekaya metne döktürür – tam metin aramasında ancak bu şekilde bulunabilirler. Her tarama daha fazla zaman alır ve daha pahalıya gelir."
+        "ocrHint": "Uygulama, metin katmanı olmayan taranmış PDF’leri yapay zekaya metne döktürür – tam metin aramasında ancak bu şekilde bulunabilirler. Her tarama daha fazla zaman alır ve daha pahalıya gelir.",
+        "quickOcrFirst": "Önce hızlı metin tanıma, ardından yapay zekâ ile iyileştirme",
+        "quickOcrFirstHint": "Yeni taramalar önce yerleşik metin tanıma (Tesseract) ile okunur – birkaç saniye içinde aranabilir olur. Ardından yapay zekâ bu metne dayanarak başlık, özet ve etiketleri ekler."
       },
       "unanalyzed_one": "{{count, number}} belge henüz yapay zeka tarafından analiz edilmedi.",
       "unanalyzed_other": "{{count, number}} belge henüz yapay zeka tarafından analiz edilmedi.",

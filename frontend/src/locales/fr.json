@@ -68,8 +68,12 @@
     },
     "search": {
       "placeholder": "Rechercher des documents, mots-clés, contenus …",
+      "placeholderAi": "Recherchez des documents en langage naturel – p. ex. « factures de Kia de 2024 »",
       "label": "Rechercher des documents",
-      "clear": "Effacer la recherche"
+      "clear": "Effacer la recherche",
+      "modeAi": "Recherche IA – passer à la recherche par mots-clés",
+      "modeKeywords": "Recherche par mots-clés – passer à la recherche IA",
+      "askFailed": "La recherche se fait par mots-clés."
     },
     "userMenu": {
       "label": "Menu utilisateur ({{name}})",
@@ -120,6 +124,7 @@
     "ocrBadge": "Reconnaissance de texte",
     "aiNotice": {
       "text": "L’IA n’est pas encore configurée. Les nouveaux documents peuvent être recherchés par leur texte, mais ils ne sont ni résumés ni dotés de mots-clés.",
+      "builtinOcr": "Les numérisations sans couche de texte sont lues par la reconnaissance de texte intégrée, si bien qu’elles apparaissent aussi dans la recherche.",
       "action": "Configurer maintenant"
     },
     "searchResults_one": "<count>{{count, number}} résultat</count> <query>pour « {{query}} »</query>",
@@ -155,6 +160,7 @@
       "dateTo": "au",
       "status": "Statut",
       "failed": "Échec",
+      "duplicates": "Doublons possibles",
       "showAll": "Tout afficher",
       "showLess": "Afficher moins",
       "activeFrom": "à partir du {{date}}",
@@ -174,7 +180,10 @@
     "loadingAll_one": "{{loaded, number}} sur {{count, number}} document chargé …",
     "loadingAll_many": "{{loaded, number}} sur {{count, number}} de documents chargés …",
     "loadingAll_other": "{{loaded, number}} sur {{count, number}} documents chargés …",
-    "loadMore": "Charger plus ({{remaining, number}})"
+    "loadMore": "Charger plus ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Recherche IA : « {{question}} ». Les filtres montrent comment la question a été comprise."
+    }
   },
   "document": {
     "backToList": "Retour à l’aperçu",
@@ -184,12 +193,31 @@
     "reprocessStarted": "Le document est en cours de nouvelle analyse.",
     "deleted": "Document supprimé",
     "pdfTitle": "PDF : {{title}}",
+    "pdf": {
+      "unsaved": "Modifications non enregistrées dans le document",
+      "discard": "Rejeter",
+      "save": "Enregistrer les modifications",
+      "saved": "Modifications enregistrées – l’original est conservé.",
+      "modified": "Modifié le {{when}} – l’original est conservé.",
+      "downloadOriginal": "Télécharger l’original",
+      "restoreOriginal": "Restaurer l’original",
+      "restoreTitle": "Restaurer l’original ?",
+      "restoreText": "La version modifiée sera supprimée. Le document redeviendra exactement tel qu’il était à son arrivée.",
+      "restored": "Original restauré"
+    },
+    "duplicate": {
+      "notice": "Doublon possible : ce document correspond par son contenu à « {{title}} ».",
+      "open": "Voir l’autre document",
+      "dismiss": "Pas un doublon",
+      "dismissed": "Noté : pas un doublon"
+    },
     "openInNewTab": "Ouvrir dans un nouvel onglet",
     "processingNotice": "Le document est en cours de traitement. Le résumé et les mots-clés apparaîtront ici dès que l’analyse sera terminée.",
     "textOnlyNotice": "Indexé sans IA : le document peut être recherché par son texte, mais il n’a ni résumé ni mots-clés automatiques.",
     "tabs": {
       "overview": "Aperçu",
-      "text": "Texte intégral"
+      "text": "Texte intégral",
+      "chat": "Questions"
     },
     "fields": {
       "title": "Titre",
@@ -236,6 +264,19 @@
       "title": "Supprimer le document ?",
       "text": "« {{title}} » sera supprimé avec son fichier PDF, son texte intégral et ses mots-clés. Cette action est irréversible.",
       "confirm": "Supprimer définitivement"
+    },
+    "chat": {
+      "intro": "Posez une question sur ce document – l’IA répond d’après son contenu.",
+      "placeholder": "Posez une question sur ce document …",
+      "send": "Envoyer",
+      "thinking": "L’IA lit le document …",
+      "notConfigured": "Pour poser des questions sur le document, une IA doit être configurée.",
+      "restart": "Recommencer",
+      "suggestions": {
+        "summary": "De quoi parle ce document ?",
+        "deadlines": "Y a-t-il des délais ou des dates ?",
+        "amounts": "Quels montants sont mentionnés ?"
+      }
     }
   },
   "settings": {
@@ -380,7 +421,9 @@
         "outputLanguage": "Langue des résultats",
         "outputLanguageHint": "L’IA rédige le titre, le résumé et les mots-clés dans cette langue.",
         "ocr": "Reconnaissance de texte pour les scans",
-        "ocrHint": "L’application fait transcrire par l’IA les PDF numérisés sans couche de texte – ce n’est qu’ainsi qu’ils peuvent être trouvés par la recherche en texte intégral. Chaque scan demande plus de temps et coûte plus cher."
+        "ocrHint": "L’application fait transcrire par l’IA les PDF numérisés sans couche de texte – ce n’est qu’ainsi qu’ils peuvent être trouvés par la recherche en texte intégral. Chaque scan demande plus de temps et coûte plus cher.",
+        "quickOcrFirst": "D’abord une reconnaissance de texte rapide, puis affiner avec l’IA",
+        "quickOcrFirstHint": "Les nouvelles numérisations sont d’abord lues par la reconnaissance de texte intégrée (Tesseract) : elles sont consultables par recherche en quelques secondes. L’IA ajoute ensuite le titre, le résumé et les mots-clés à partir de ce texte."
       },
       "unanalyzed_one": "{{count, number}} document n’a pas encore été analysé par l’IA.",
       "unanalyzed_many": "{{count, number}} de documents n’ont pas encore été analysés par l’IA.",

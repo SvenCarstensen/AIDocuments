@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Leita í skjölum, efnisorðum, efni …",
+      "placeholderAi": "Leitaðu að skjölum með eigin orðum – t.d. „reikningar frá Kia frá 2024“",
       "label": "Leita í skjölum",
-      "clear": "Hreinsa leit"
+      "clear": "Hreinsa leit",
+      "modeAi": "Gervigreindarleit – skipta yfir í leit eftir leitarorðum",
+      "modeKeywords": "Leit eftir leitarorðum – skipta yfir í gervigreindarleit",
+      "askFailed": "Leitað er eftir leitarorðum."
     },
     "userMenu": {
       "label": "Notandavalmynd ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Ljóslestur",
     "aiNotice": {
       "text": "Gervigreindin hefur ekki verið sett upp enn. Hægt er að leita í texta nýrra skjala, en þau fá hvorki samantekt né efnisorð.",
+      "builtinOcr": "Innbyggð textagreining les skannanir án textalags, svo einnig er hægt að leita í þeim.",
       "action": "Setja upp núna"
     },
     "searchResults_one": "<count>{{count, number}} niðurstaða</count> <query>fyrir „{{query}}“</query>",
@@ -148,6 +153,7 @@
       "dateTo": "til",
       "status": "Staða",
       "failed": "Mistókst",
+      "duplicates": "Möguleg tvítök",
       "showAll": "Sýna allt",
       "showLess": "Sýna minna",
       "activeFrom": "frá {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} af {{count, number}} skjali sótt …",
     "loadingAll_other": "{{loaded, number}} af {{count, number}} skjölum sótt …",
-    "loadMore": "Sækja fleiri ({{remaining, number}})"
+    "loadMore": "Sækja fleiri ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Gervigreindarleit: „{{question}}“. Síurnar sýna hvernig spurningin var skilin."
+    }
   },
   "document": {
     "backToList": "Til baka í yfirlit",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Verið er að greina skjalið aftur.",
     "deleted": "Skjali eytt",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Óvistaðar breytingar á skjalinu",
+      "discard": "Henda",
+      "save": "Vista breytingar",
+      "saved": "Breytingar vistaðar – frumritið er geymt.",
+      "modified": "Breytt {{when}} – frumritið er geymt.",
+      "downloadOriginal": "Sækja frumrit",
+      "restoreOriginal": "Endurheimta frumrit",
+      "restoreTitle": "Endurheimta frumritið?",
+      "restoreText": "Breyttu útgáfunni verður hent. Skjalið verður þá nákvæmlega eins og þegar það barst.",
+      "restored": "Frumrit endurheimt"
+    },
+    "duplicate": {
+      "notice": "Hugsanlega tvítak: Efni þessa skjals samsvarar „{{title}}“.",
+      "open": "Fara í hitt skjalið",
+      "dismiss": "Ekki tvítak",
+      "dismissed": "Skráð: ekki tvítak"
+    },
     "openInNewTab": "Opna í nýjum flipa",
     "processingNotice": "Verið er að vinna úr skjalinu. Samantektin og efnisorðin birtast hér um leið og greiningu lýkur.",
     "textOnlyNotice": "Skráð án gervigreindar: hægt er að leita í texta skjalsins, en það hefur enga samantekt og engin sjálfvirk efnisorð.",
     "tabs": {
       "overview": "Yfirlit",
-      "text": "Heildartexti"
+      "text": "Heildartexti",
+      "chat": "Spyrja"
     },
     "fields": {
       "title": "Titill",
@@ -227,6 +255,19 @@
       "title": "Eyða skjali?",
       "text": "„{{title}}“ verður eytt ásamt PDF-skránni, heildartextanum og efnisorðunum. Ekki er hægt að afturkalla þetta.",
       "confirm": "Eyða varanlega"
+    },
+    "chat": {
+      "intro": "Spurðu um þetta skjal – gervigreindin svarar út frá efni þess.",
+      "placeholder": "Spyrðu um eitthvað í þessu skjali …",
+      "send": "Senda",
+      "thinking": "Gervigreindin les skjalið …",
+      "notConfigured": "Til að spyrja um skjalið þarf að setja upp gervigreind.",
+      "restart": "Byrja upp á nýtt",
+      "suggestions": {
+        "summary": "Um hvað fjallar þetta skjal?",
+        "deadlines": "Eru einhverjir frestir eða dagsetningar?",
+        "amounts": "Hvaða upphæðir eru nefndar?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Tungumál niðurstaðna",
         "outputLanguageHint": "Gervigreindin skrifar titil, samantekt og efnisorð á þessu tungumáli.",
         "ocr": "Ljóslestur skannaðra skjala",
-        "ocrHint": "Forritið lætur gervigreindina skrifa upp skannaðar PDF-skrár án textalags – aðeins þannig finnast þær í heildartextaleit. Hver skönnun tekur lengri tíma og kostar meira."
+        "ocrHint": "Forritið lætur gervigreindina skrifa upp skannaðar PDF-skrár án textalags – aðeins þannig finnast þær í heildartextaleit. Hver skönnun tekur lengri tíma og kostar meira.",
+        "quickOcrFirst": "Fyrst hröð textagreining, síðan fínstilling með gervigreind",
+        "quickOcrFirstHint": "Nýjar skannanir les innbyggða textagreiningin (Tesseract) fyrst – eftir nokkrar sekúndur er hægt að leita í þeim. Síðan bætir gervigreindin við titli, samantekt og efnisorðum út frá þessum texta."
       },
       "unanalyzed_one": "Gervigreindin hefur ekki enn greint {{count, number}} skjal.",
       "unanalyzed_other": "Gervigreindin hefur ekki enn greint {{count, number}} skjöl.",

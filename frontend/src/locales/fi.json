@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Hae asiakirjoja, tunnisteita, sisältöä…",
+      "placeholderAi": "Hae asiakirjoja omin sanoin – esim. ”Kian laskut vuodelta 2024”",
       "label": "Hae asiakirjoja",
-      "clear": "Tyhjennä haku"
+      "clear": "Tyhjennä haku",
+      "modeAi": "Tekoälyhaku – vaihda hakusanahakuun",
+      "modeKeywords": "Hakusanahaku – vaihda tekoälyhakuun",
+      "askFailed": "Haetaan hakusanoilla."
     },
     "userMenu": {
       "label": "Käyttäjävalikko ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Tekstintunnistus",
     "aiNotice": {
       "text": "Tekoälyä ei ole vielä määritetty. Uusista asiakirjoista voi hakea niiden tekstin perusteella, mutta niitä ei tiivistetä eikä niille lisätä tunnisteita.",
+      "builtinOcr": "Sisäänrakennettu tekstintunnistus lukee skannaukset, joissa ei ole tekstikerrosta, joten niistäkin voi hakea.",
       "action": "Määritä nyt"
     },
     "searchResults_one": "<count>{{count, number}} tulos</count> <query>haulla ”{{query}}”</query>",
@@ -148,6 +153,7 @@
       "dateTo": "päättyen",
       "status": "Tila",
       "failed": "Epäonnistuneet",
+      "duplicates": "Mahdolliset kaksoiskappaleet",
       "showAll": "Näytä kaikki",
       "showLess": "Näytä vähemmän",
       "activeFrom": "{{date}} alkaen",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "Ladattu {{loaded, number}}/{{count, number}} asiakirjasta…",
     "loadingAll_other": "Ladattu {{loaded, number}}/{{count, number}} asiakirjasta…",
-    "loadMore": "Lataa lisää ({{remaining, number}})"
+    "loadMore": "Lataa lisää ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Tekoälyhaku: ”{{question}}”. Suodattimet näyttävät, miten kysymys ymmärrettiin."
+    }
   },
   "document": {
     "backToList": "Takaisin luetteloon",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Asiakirja analysoidaan uudelleen.",
     "deleted": "Asiakirja poistettu",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Tallentamattomia muutoksia asiakirjassa",
+      "discard": "Hylkää",
+      "save": "Tallenna muutokset",
+      "saved": "Muutokset tallennettu – alkuperäinen säilyy.",
+      "modified": "Muutettu {{when}} – alkuperäinen on tallessa.",
+      "downloadOriginal": "Lataa alkuperäinen",
+      "restoreOriginal": "Palauta alkuperäinen",
+      "restoreTitle": "Palautetaanko alkuperäinen?",
+      "restoreText": "Muutettu versio hylätään. Asiakirja on sen jälkeen täsmälleen sellainen kuin saapuessaan.",
+      "restored": "Alkuperäinen palautettu"
+    },
+    "duplicate": {
+      "notice": "Mahdollinen kaksoiskappale: tämän asiakirjan sisältö vastaa asiakirjaa ”{{title}}”.",
+      "open": "Siirry toiseen asiakirjaan",
+      "dismiss": "Ei kaksoiskappale",
+      "dismissed": "Merkitty: ei kaksoiskappale"
+    },
     "openInNewTab": "Avaa uudessa välilehdessä",
     "processingNotice": "Asiakirjaa käsitellään. Tiivistelmä ja tunnisteet ilmestyvät tähän heti, kun analyysi on valmis.",
     "textOnlyNotice": "Indeksoitu ilman tekoälyä: asiakirjasta voi hakea sen tekstin perusteella, mutta sillä ei ole tiivistelmää eikä automaattisia tunnisteita.",
     "tabs": {
       "overview": "Yleiskatsaus",
-      "text": "Koko teksti"
+      "text": "Koko teksti",
+      "chat": "Kysy"
     },
     "fields": {
       "title": "Otsikko",
@@ -227,6 +255,19 @@
       "title": "Poistetaanko asiakirja?",
       "text": "”{{title}}” poistetaan PDF-tiedostoineen, teksteineen ja tunnisteineen. Tätä ei voi kumota.",
       "confirm": "Poista pysyvästi"
+    },
+    "chat": {
+      "intro": "Kysy jotain tästä asiakirjasta – tekoäly vastaa sen sisällön perusteella.",
+      "placeholder": "Kysy jotain tästä asiakirjasta …",
+      "send": "Lähetä",
+      "thinking": "Tekoäly lukee asiakirjaa …",
+      "notConfigured": "Asiakirjaa koskeviin kysymyksiin tarvitaan käyttöön otettu tekoäly.",
+      "restart": "Aloita alusta",
+      "suggestions": {
+        "summary": "Mistä tässä asiakirjassa on kyse?",
+        "deadlines": "Onko määräaikoja tai päivämääriä?",
+        "amounts": "Mitä summia mainitaan?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Tulosten kieli",
         "outputLanguageHint": "Tekoäly kirjoittaa otsikon, tiivistelmän ja tunnisteet tällä kielellä.",
         "ocr": "Skannausten tekstintunnistus",
-        "ocrHint": "Sovellus antaa tekoälyn litteroida skannatut PDF-tiedostot, joissa ei ole tekstitasoa – vasta sitten ne löytyvät kokotekstihaulla. Jokainen skannaus vie enemmän aikaa ja maksaa enemmän."
+        "ocrHint": "Sovellus antaa tekoälyn litteroida skannatut PDF-tiedostot, joissa ei ole tekstitasoa – vasta sitten ne löytyvät kokotekstihaulla. Jokainen skannaus vie enemmän aikaa ja maksaa enemmän.",
+        "quickOcrFirst": "Ensin nopea tekstintunnistus, sitten tarkennus tekoälyllä",
+        "quickOcrFirstHint": "Sisäänrakennettu tekstintunnistus (Tesseract) lukee uudet skannaukset ensin – muutamassa sekunnissa niistä voi hakea. Sen jälkeen tekoäly lisää otsikon, tiivistelmän ja avainsanat tämän tekstin perusteella."
       },
       "unanalyzed_one": "{{count, number}} asiakirja on vielä analysoimatta tekoälyllä.",
       "unanalyzed_other": "{{count, number}} asiakirjaa on vielä analysoimatta tekoälyllä.",

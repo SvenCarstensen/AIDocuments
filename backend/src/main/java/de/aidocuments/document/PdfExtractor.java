@@ -94,6 +94,42 @@ public class PdfExtractor {
         return images;
     }
 
+    /** Rendert Seiten einzeln für die Texterkennung – so liegt nie mehr als eine Seite im Speicher. */
+    public interface PageImages extends AutoCloseable {
+
+        int pageCount();
+
+        /** Die Seite als Graustufen-PNG – verlustfrei, Kompressionsartefakte stören die Texterkennung. */
+        byte[] png(int page) throws IOException;
+
+        @Override
+        void close() throws IOException;
+    }
+
+    public PageImages openPageImages(Path file, float dpi) throws IOException {
+        PDDocument pdf = Loader.loadPDF(file.toFile());
+        PDFRenderer renderer = new PDFRenderer(pdf);
+        return new PageImages() {
+            @Override
+            public int pageCount() {
+                return pdf.getNumberOfPages();
+            }
+
+            @Override
+            public byte[] png(int page) throws IOException {
+                BufferedImage image = renderer.renderImageWithDPI(page, dpi, ImageType.GRAY);
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                ImageIO.write(image, "png", out);
+                return out.toByteArray();
+            }
+
+            @Override
+            public void close() throws IOException {
+                pdf.close();
+            }
+        };
+    }
+
     private static String extractText(PDDocument pdf) {
         try {
             PDFTextStripper stripper = new PDFTextStripper();

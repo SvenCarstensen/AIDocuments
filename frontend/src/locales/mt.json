@@ -70,8 +70,12 @@
     },
     "search": {
       "placeholder": "Fittex dokumenti, tikketti, kontenut…",
+      "placeholderAi": "Fittex dokumenti bi kliemek tiegħek – eż. “fatturi minn Kia mill-2024”",
       "label": "Fittex dokumenti",
-      "clear": "Ikklerja t-tfittxija"
+      "clear": "Ikklerja t-tfittxija",
+      "modeAi": "Tiftix bl-IA – aqleb għal tiftix b’kelmiet ewlenin",
+      "modeKeywords": "Tiftix b’kelmiet ewlenin – aqleb għal tiftix bl-IA",
+      "askFailed": "Qed jitfittex b’kelmiet ewlenin."
     },
     "userMenu": {
       "label": "Menu tal-utent ({{name}})",
@@ -132,6 +136,7 @@
     "ocrBadge": "Rikonoxximent tat-test",
     "aiNotice": {
       "text": "L-IA għadha mhix issettjata. Dokumenti ġodda jistgħu jiġu mfittxija permezz tat-test tagħhom, iżda ma jsirilhomx sommarju u ma jingħatawx tikketti.",
+      "builtinOcr": "L-iskens mingħajr saff ta’ test jinqraw mir-rikonoxximent tat-test integrat, għalhekk jistgħu jitfittxu wkoll.",
       "action": "Issettja issa"
     },
     "searchResults_one": "<count>{{count, number}} riżultat</count> <query>għal “{{query}}”</query>",
@@ -169,6 +174,7 @@
       "dateTo": "sa",
       "status": "Status",
       "failed": "Ma rnexxewx",
+      "duplicates": "Duplikati possibbli",
       "showAll": "Uri kollha",
       "showLess": "Uri inqas",
       "activeFrom": "minn {{date}}",
@@ -190,7 +196,10 @@
     "loadingAll_few": "Dokumenti llowdjati: {{loaded, number}} minn {{count, number}}…",
     "loadingAll_many": "Dokumenti llowdjati: {{loaded, number}} minn {{count, number}}…",
     "loadingAll_other": "Dokumenti llowdjati: {{loaded, number}} minn {{count, number}}…",
-    "loadMore": "Illowdja aktar ({{remaining, number}})"
+    "loadMore": "Illowdja aktar ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Tiftix bl-IA: “{{question}}”. Il-filtri juru kif inftehmet il-mistoqsija."
+    }
   },
   "document": {
     "backToList": "Lura għad-dokumenti",
@@ -200,12 +209,31 @@
     "reprocessStarted": "Id-dokument qed jerġa’ jiġi analizzat.",
     "deleted": "Id-dokument tħassar",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Bidliet mhux salvati fid-dokument",
+      "discard": "Warrab",
+      "save": "Issejvja l-bidliet",
+      "saved": "Il-bidliet ġew salvati – l-oriġinal jinżamm.",
+      "modified": "Mibdul fl-{{when}} – l-oriġinal jinżamm.",
+      "downloadOriginal": "Niżżel l-oriġinal",
+      "restoreOriginal": "Irrestawra l-oriġinal",
+      "restoreTitle": "Tirrestawra l-oriġinal?",
+      "restoreText": "Il-verżjoni mibdula se titwarrab. Imbagħad id-dokument se jkun eżattament kif wasal.",
+      "restored": "L-oriġinal ġie rrestawrat"
+    },
+    "duplicate": {
+      "notice": "Possibbilment duplikat: il-kontenut ta’ dan id-dokument jaqbel ma’ “{{title}}”.",
+      "open": "Mur għad-dokument l-ieħor",
+      "dismiss": "Mhux duplikat",
+      "dismissed": "Innotat: mhux duplikat"
+    },
     "openInNewTab": "Iftaħ f’tab ġdida",
     "processingNotice": "Id-dokument qed jiġi pproċessat. Is-sommarju u t-tikketti jidhru hawn hekk kif titlesta l-analiżi.",
     "textOnlyNotice": "Indiċizzat mingħajr IA: id-dokument jista’ jiġi mfittex permezz tat-test tiegħu, iżda m’għandux sommarju u lanqas tikketti awtomatiċi.",
     "tabs": {
       "overview": "Ħarsa ġenerali",
-      "text": "Test sħiħ"
+      "text": "Test sħiħ",
+      "chat": "Mistoqsijiet"
     },
     "fields": {
       "title": "Titlu",
@@ -254,6 +282,19 @@
       "title": "Tħassar id-dokument?",
       "text": "“{{title}}” se jitħassar flimkien mal-fajl PDF, it-test sħiħ u t-tikketti tiegħu. Dan ma jistax jitreġġa’ lura.",
       "confirm": "Ħassar għal dejjem"
+    },
+    "chat": {
+      "intro": "Staqsi dwar dan id-dokument – l-IA twieġeb abbażi tal-kontenut tiegħu.",
+      "placeholder": "Staqsi xi ħaġa dwar dan id-dokument …",
+      "send": "Ibgħat",
+      "thinking": "L-IA qed taqra d-dokument …",
+      "notConfigured": "Biex tistaqsi dwar id-dokument, trid tkun issettjata IA.",
+      "restart": "Erġa’ ibda",
+      "suggestions": {
+        "summary": "Dwar xiex inhu dan id-dokument?",
+        "deadlines": "Hemm skadenzi jew dati?",
+        "amounts": "Liema ammonti huma msemmija?"
+      }
     }
   },
   "settings": {
@@ -398,7 +439,9 @@
         "outputLanguage": "Lingwa tar-riżultati",
         "outputLanguageHint": "L-IA tikteb it-titlu, is-sommarju u t-tikketti b’din il-lingwa.",
         "ocr": "Rikonoxximent tat-test għal skans",
-        "ocrHint": "L-applikazzjoni tħalli lill-IA tittraskrivi PDFs skennjati mingħajr saff ta’ test – hekk biss jistgħu jinstabu bit-tfittxija fit-test sħiħ. Kull skan jieħu aktar ħin u jiswa aktar."
+        "ocrHint": "L-applikazzjoni tħalli lill-IA tittraskrivi PDFs skennjati mingħajr saff ta’ test – hekk biss jistgħu jinstabu bit-tfittxija fit-test sħiħ. Kull skan jieħu aktar ħin u jiswa aktar.",
+        "quickOcrFirst": "L-ewwel rikonoxximent ta’ test mgħaġġel, imbagħad irfinar bl-IA",
+        "quickOcrFirstHint": "L-iskens il-ġodda jinqraw l-ewwel mir-rikonoxximent tat-test integrat (Tesseract) – fi ftit sekondi jistgħu jitfittxu. Imbagħad l-IA żżid it-titlu, is-sommarju u t-tikketti abbażi ta’ dan it-test."
       },
       "unanalyzed_one": "{{count, number}} dokument għadu ma ġiex analizzat mill-IA.",
       "unanalyzed_two": "{{count, number}} dokumenti għadhom ma ġewx analizzati mill-IA.",

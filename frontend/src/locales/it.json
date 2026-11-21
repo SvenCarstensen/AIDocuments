@@ -68,8 +68,12 @@
     },
     "search": {
       "placeholder": "Cerca documenti, tag, contenuti …",
+      "placeholderAi": "Cerca documenti con parole tue – ad es. «fatture di Kia del 2024»",
       "label": "Cerca documenti",
-      "clear": "Cancella la ricerca"
+      "clear": "Cancella la ricerca",
+      "modeAi": "Ricerca IA – passa alla ricerca per parole chiave",
+      "modeKeywords": "Ricerca per parole chiave – passa alla ricerca IA",
+      "askFailed": "Si cerca per parole chiave."
     },
     "userMenu": {
       "label": "Menu utente ({{name}})",
@@ -120,6 +124,7 @@
     "ocrBadge": "Riconoscimento del testo",
     "aiNotice": {
       "text": "L’IA non è ancora configurata. I nuovi documenti sono ricercabili in base al testo, ma non vengono riassunti né provvisti di tag.",
+      "builtinOcr": "Le scansioni senza livello di testo vengono lette dal riconoscimento del testo integrato, quindi anche in esse si può cercare.",
       "action": "Configura ora"
     },
     "searchResults_one": "<count>{{count, number}} risultato</count> <query>per “{{query}}”</query>",
@@ -155,6 +160,7 @@
       "dateTo": "al",
       "status": "Stato",
       "failed": "Non riusciti",
+      "duplicates": "Possibili duplicati",
       "showAll": "Mostra tutto",
       "showLess": "Mostra meno",
       "activeFrom": "dal {{date}}",
@@ -174,7 +180,10 @@
     "loadingAll_one": "{{loaded, number}} di {{count, number}} documento caricato …",
     "loadingAll_many": "{{loaded, number}} di {{count, number}} di documenti caricati …",
     "loadingAll_other": "{{loaded, number}} di {{count, number}} documenti caricati …",
-    "loadMore": "Carica altri ({{remaining, number}})"
+    "loadMore": "Carica altri ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Ricerca IA: «{{question}}». I filtri mostrano come è stata interpretata la domanda."
+    }
   },
   "document": {
     "backToList": "Torna alla panoramica",
@@ -184,12 +193,31 @@
     "reprocessStarted": "Il documento è in corso di nuova analisi.",
     "deleted": "Documento eliminato",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Modifiche non salvate nel documento",
+      "discard": "Scarta",
+      "save": "Salva modifiche",
+      "saved": "Modifiche salvate: l’originale viene conservato.",
+      "modified": "Modificato il {{when}}: l’originale è conservato.",
+      "downloadOriginal": "Scarica originale",
+      "restoreOriginal": "Ripristina originale",
+      "restoreTitle": "Ripristinare l’originale?",
+      "restoreText": "La versione modificata verrà eliminata. Il documento tornerà esattamente com’era all’arrivo.",
+      "restored": "Originale ripristinato"
+    },
+    "duplicate": {
+      "notice": "Possibile duplicato: il contenuto di questo documento corrisponde a «{{title}}».",
+      "open": "Vai all’altro documento",
+      "dismiss": "Non è un duplicato",
+      "dismissed": "Annotato: non è un duplicato"
+    },
     "openInNewTab": "Apri in una nuova scheda",
     "processingNotice": "Il documento è in elaborazione. Il riassunto e i tag compariranno qui non appena l’analisi sarà terminata.",
     "textOnlyNotice": "Indicizzato senza IA: il documento è ricercabile in base al testo, ma non ha né riassunto né tag automatici.",
     "tabs": {
       "overview": "Panoramica",
-      "text": "Testo completo"
+      "text": "Testo completo",
+      "chat": "Domande"
     },
     "fields": {
       "title": "Titolo",
@@ -236,6 +264,19 @@
       "title": "Eliminare il documento?",
       "text": "“{{title}}” verrà eliminato insieme al file PDF, al testo completo e ai tag. L’operazione non può essere annullata.",
       "confirm": "Elimina definitivamente"
+    },
+    "chat": {
+      "intro": "Fai una domanda su questo documento: l’IA risponde in base al suo contenuto.",
+      "placeholder": "Chiedi qualcosa su questo documento …",
+      "send": "Invia",
+      "thinking": "L’IA sta leggendo il documento …",
+      "notConfigured": "Per fare domande sul documento occorre configurare un’IA.",
+      "restart": "Ricomincia",
+      "suggestions": {
+        "summary": "Di cosa tratta questo documento?",
+        "deadlines": "Ci sono scadenze o date?",
+        "amounts": "Quali importi sono indicati?"
+      }
     }
   },
   "settings": {
@@ -380,7 +421,9 @@
         "outputLanguage": "Lingua dei risultati",
         "outputLanguageHint": "L’IA scrive titolo, riassunto e tag in questa lingua.",
         "ocr": "Riconoscimento del testo per le scansioni",
-        "ocrHint": "L’applicazione fa trascrivere all’IA i PDF scansionati senza livello di testo: solo così possono essere trovati con la ricerca full-text. Ogni scansione richiede più tempo e costa di più."
+        "ocrHint": "L’applicazione fa trascrivere all’IA i PDF scansionati senza livello di testo: solo così possono essere trovati con la ricerca full-text. Ogni scansione richiede più tempo e costa di più.",
+        "quickOcrFirst": "Prima un riconoscimento del testo rapido, poi perfezionare con l’IA",
+        "quickOcrFirstHint": "Le nuove scansioni vengono lette prima dal riconoscimento del testo integrato (Tesseract): in pochi secondi sono ricercabili. L’IA aggiunge poi titolo, riepilogo e tag sulla base di questo testo."
       },
       "unanalyzed_one": "{{count, number}} documento non è ancora stato analizzato dall’IA.",
       "unanalyzed_many": "{{count, number}} di documenti non sono ancora stati analizzati dall’IA.",

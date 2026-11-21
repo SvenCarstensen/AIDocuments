@@ -9,6 +9,9 @@ import de.aidocuments.search.SearchIndex;
 import de.aidocuments.web.ApiException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +47,15 @@ public class DocumentService {
     private final SearchIndex searchIndex;
     private final Messages messages;
 
+    private final PdfExtractor pdfExtractor;
+    private final DuplicateDetector duplicates;
+
     public DocumentService(DocumentRepository documents, DocumentTextRepository texts, FileStorage storage,
-                           DocumentProcessor processor, SearchIndex searchIndex, Messages messages) {
+                           DocumentProcessor processor, SearchIndex searchIndex, Messages messages,
+                           PdfExtractor pdfExtractor, DuplicateDetector duplicates) {
+        this.duplicates = duplicates;
         this.messages = messages;
+        this.pdfExtractor = pdfExtractor;
         this.documents = documents;
         this.texts = texts;
         this.storage = storage;
@@ -142,7 +151,120 @@ public class DocumentService {
         documents.delete(doc);
         texts.deleteById(id);
         searchIndex.delete(id);
-        storage.delete(doc.getStoragePath(), id);
+        storage.delete(doc.getStoragePath(), doc.getOriginalStoragePath(), id);
+        duplicates.forget(id);
+    }
+
+    public DocumentDto notDuplicate(String id) {
+        Document doc = require(id);
+        duplicates.dismiss(doc);
+        documents.save(doc);
+        processor.reindex(doc);
+        return DocumentDto.of(doc, null, messages);
+    }
+
+    /** Größte Datei, die als geänderte Fassung angenommen wird – wie beim Hochladen gilt ein großzügiges Limit. */
+    private static final long MAX_EDITED_BYTES = 250L * 1024 * 1024;
+
+    /**
+     * Ersetzt das PDF durch eine geänderte Fassung (etwa mit Markierungen oder Notizen aus dem Betrachter). Beim
+     * ersten Mal wird das Original als Kopie aufbewahrt – es geht nie verloren und lässt sich wiederherstellen.
+     * Titel, Schlagworte und übrige Angaben bleiben; Text und Suchindex folgen der neuen Fassung, außer der Text
+     * stammt aus der Texterkennung (die ein geändertes PDF nicht besser machen würde).
+     */
+    public DocumentDto replaceFile(String id, InputStream body) throws IOException {
+        Document doc = require(id);
+        if (doc.getStatus() == DocumentStatus.PENDING || doc.getStatus() == DocumentStatus.PROCESSING) {
+            throw ApiException.conflict("error.document.alreadyProcessing");
+        }
+        FileStorage.Received received = storage.receive(body);
+        Path thumbnail = storage.temporaryFile(".jpg");
+        try {
+            if (received.size() > MAX_EDITED_BYTES) {
+                throw ApiException.badRequest("error.upload.tooLarge");
+            }
+            if (received.size() == 0 || !storage.looksLikePdf(received)) {
+                throw ApiException.badRequest("upload.notPdf");
+            }
+            PdfExtractor.PdfContent pdf;
+            try {
+                pdf = pdfExtractor.extract(received.tempFile(), thumbnail);
+            } catch (PdfExtractor.PdfReadException e) {
+                throw new ApiException(org.springframework.http.HttpStatus.BAD_REQUEST, e.msg());
+            }
+            if (doc.getOriginalStoragePath() == null) {
+                doc.setOriginalStoragePath(storage.keepOriginal(doc.getStoragePath()));
+                documents.save(doc); // erst die Kopie festhalten, dann die Datei ersetzen
+            }
+            storage.replace(doc.getStoragePath(), received);
+            adoptRendering(doc, pdf, thumbnail);
+            doc.setSizeBytes(received.size());
+            doc.setModifiedAt(Instant.now());
+            documents.save(doc);
+            processor.reindex(doc);
+            log.info("PDF von Dokument {} geändert, Original aufbewahrt unter {}", id, doc.getOriginalStoragePath());
+            return DocumentDto.of(doc, null, messages);
+        } finally {
+            storage.discard(received);
+            Files.deleteIfExists(thumbnail);
+        }
+    }
+
+    /** Stellt das aufbewahrte Original wieder her; die geänderte Fassung wird verworfen. */
+    public DocumentDto restoreOriginal(String id) throws IOException {
+        Document doc = require(id);
+        if (doc.getOriginalStoragePath() == null) {
+            throw ApiException.notFound("error.document.fileNotFound");
+        }
+        if (doc.getStatus() == DocumentStatus.PENDING || doc.getStatus() == DocumentStatus.PROCESSING) {
+            throw ApiException.conflict("error.document.alreadyProcessing");
+        }
+        Path thumbnail = storage.temporaryFile(".jpg");
+        try {
+            PdfExtractor.PdfContent pdf;
+            try {
+                pdf = pdfExtractor.extract(storage.resolve(doc.getOriginalStoragePath()), thumbnail);
+            } catch (PdfExtractor.PdfReadException e) {
+                throw new ApiException(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR, e.msg());
+            }
+            storage.restore(doc.getOriginalStoragePath(), doc.getStoragePath());
+            adoptRendering(doc, pdf, thumbnail);
+            doc.setSizeBytes(Files.size(storage.resolve(doc.getStoragePath())));
+            String copy = doc.getOriginalStoragePath();
+            doc.setOriginalStoragePath(null);
+            doc.setModifiedAt(null);
+            documents.save(doc);
+            Files.deleteIfExists(storage.resolve(copy)); // die Datei ist jetzt selbst wieder das Original
+            processor.reindex(doc);
+            log.info("Original von Dokument {} wiederhergestellt", id);
+            return DocumentDto.of(doc, null, messages);
+        } finally {
+            Files.deleteIfExists(thumbnail);
+        }
+    }
+
+    /** Seitenzahl, Vorschaubild und – bei Text aus der Textebene – den Text der neuen Fassung übernehmen. */
+    private void adoptRendering(Document doc, PdfExtractor.PdfContent pdf, Path thumbnail) throws IOException {
+        doc.setPageCount(pdf.pageCount());
+        if (pdf.thumbnailCreated()) {
+            Files.move(thumbnail, storage.thumbnailPath(doc.getId()), StandardCopyOption.REPLACE_EXISTING);
+            doc.setHasThumbnail(true);
+        }
+        if (!doc.isOcrUsed()) {
+            texts.save(new DocumentText(doc.getId(), pdf.text()));
+        }
+    }
+
+    public Path originalFile(String id) {
+        Document doc = require(id);
+        if (doc.getOriginalStoragePath() == null) {
+            throw ApiException.notFound("error.document.fileNotFound");
+        }
+        Path path = storage.resolve(doc.getOriginalStoragePath());
+        if (!Files.exists(path)) {
+            throw ApiException.notFound("error.document.fileNotFound");
+        }
+        return path;
     }
 
     public DocumentDto reprocess(String id) {

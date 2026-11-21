@@ -68,8 +68,12 @@
     },
     "search": {
       "placeholder": "Cerca documents, etiquetes, continguts …",
+      "placeholderAi": "Cerca documents amb les teves paraules – p. ex. «factures de Kia del 2024»",
       "label": "Cerca documents",
-      "clear": "Esborra la cerca"
+      "clear": "Esborra la cerca",
+      "modeAi": "Cerca amb IA – canvia a la cerca per paraules clau",
+      "modeKeywords": "Cerca per paraules clau – canvia a la cerca amb IA",
+      "askFailed": "Es cerca per paraules clau."
     },
     "userMenu": {
       "label": "Menú d’usuari ({{name}})",
@@ -120,6 +124,7 @@
     "ocrBadge": "Reconeixement de text",
     "aiNotice": {
       "text": "La IA encara no està configurada. Els documents nous es poden cercar pel text, però no es resumeixen ni s’etiqueten.",
+      "builtinOcr": "Els escanejats sense capa de text els llegeix el reconeixement de text integrat, de manera que també s’hi pot cercar.",
       "action": "Configura-la ara"
     },
     "searchResults_one": "<count>{{count, number}} resultat</count> <query>per a «{{query}}»</query>",
@@ -155,6 +160,7 @@
       "dateTo": "fins a",
       "status": "Estat",
       "failed": "Amb error",
+      "duplicates": "Possibles duplicats",
       "showAll": "Mostra-ho tot",
       "showLess": "Mostra’n menys",
       "activeFrom": "des del {{date}}",
@@ -174,7 +180,10 @@
     "loadingAll_one": "{{loaded, number}} de {{count, number}} document carregat …",
     "loadingAll_many": "{{loaded, number}} de {{count, number}} de documents carregats …",
     "loadingAll_other": "{{loaded, number}} de {{count, number}} documents carregats …",
-    "loadMore": "Carrega’n més ({{remaining, number}})"
+    "loadMore": "Carrega’n més ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Cerca amb IA: «{{question}}». Els filtres mostren com s’ha entès la pregunta."
+    }
   },
   "document": {
     "backToList": "Torna a la vista general",
@@ -184,12 +193,31 @@
     "reprocessStarted": "El document s’està tornant a analitzar.",
     "deleted": "Document eliminat",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Canvis no desats al document",
+      "discard": "Descarta",
+      "save": "Desa els canvis",
+      "saved": "Canvis desats: es conserva l’original.",
+      "modified": "Modificat el {{when}}: l’original es conserva.",
+      "downloadOriginal": "Baixa l’original",
+      "restoreOriginal": "Restaura l’original",
+      "restoreTitle": "Vols restaurar l’original?",
+      "restoreText": "Es descartarà la versió modificada. El document tornarà a ser exactament com quan va arribar.",
+      "restored": "Original restaurat"
+    },
+    "duplicate": {
+      "notice": "Possible duplicat: el contingut d’aquest document coincideix amb «{{title}}».",
+      "open": "Vés a l’altre document",
+      "dismiss": "No és un duplicat",
+      "dismissed": "Anotat: no és un duplicat"
+    },
     "openInNewTab": "Obre en una pestanya nova",
     "processingNotice": "El document s’està processant. El resum i les etiquetes apareixeran aquí tan bon punt acabi l’anàlisi.",
     "textOnlyNotice": "Indexat sense IA: el document es pot cercar pel text, però no té resum ni etiquetes automàtiques.",
     "tabs": {
       "overview": "Vista general",
-      "text": "Text complet"
+      "text": "Text complet",
+      "chat": "Preguntes"
     },
     "fields": {
       "title": "Títol",
@@ -236,6 +264,19 @@
       "title": "Vols eliminar el document?",
       "text": "«{{title}}» s’eliminarà juntament amb el fitxer PDF, el text complet i les etiquetes. Aquesta acció no es pot desfer.",
       "confirm": "Elimina’l definitivament"
+    },
+    "chat": {
+      "intro": "Fes una pregunta sobre aquest document: la IA respon a partir del seu contingut.",
+      "placeholder": "Pregunta alguna cosa sobre aquest document …",
+      "send": "Envia",
+      "thinking": "La IA està llegint el document …",
+      "notConfigured": "Per fer preguntes sobre el document cal configurar una IA.",
+      "restart": "Torna a començar",
+      "suggestions": {
+        "summary": "De què tracta aquest document?",
+        "deadlines": "Hi ha terminis o dates?",
+        "amounts": "Quins imports s’esmenten?"
+      }
     }
   },
   "settings": {
@@ -380,7 +421,9 @@
         "outputLanguage": "Idioma dels resultats",
         "outputLanguageHint": "La IA escriu el títol, el resum i les etiquetes en aquest idioma.",
         "ocr": "Reconeixement de text per a escanejos",
-        "ocrHint": "L’aplicació fa que la IA transcrigui els PDF escanejats sense capa de text: només així es poden trobar amb la cerca de text complet. Cada escaneig requereix més temps i costa més."
+        "ocrHint": "L’aplicació fa que la IA transcrigui els PDF escanejats sense capa de text: només així es poden trobar amb la cerca de text complet. Cada escaneig requereix més temps i costa més.",
+        "quickOcrFirst": "Primer reconeixement de text ràpid, després refinar amb la IA",
+        "quickOcrFirstHint": "Els escanejats nous els llegeix primer el reconeixement de text integrat (Tesseract): en pocs segons ja s’hi pot cercar. Després, la IA hi afegeix el títol, el resum i les etiquetes a partir d’aquest text."
       },
       "unanalyzed_one": "{{count, number}} document encara no ha estat analitzat per la IA.",
       "unanalyzed_many": "{{count, number}} de documents encara no han estat analitzats per la IA.",

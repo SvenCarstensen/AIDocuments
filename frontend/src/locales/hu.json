@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Keresés dokumentumokban, címkékben, tartalomban…",
+      "placeholderAi": "Keress dokumentumokat a saját szavaiddal – pl. „a Kia számlái 2024-ből”",
       "label": "Dokumentumok keresése",
-      "clear": "Keresés törlése"
+      "clear": "Keresés törlése",
+      "modeAi": "MI-keresés – váltás kulcsszavas keresésre",
+      "modeKeywords": "Kulcsszavas keresés – váltás MI-keresésre",
+      "askFailed": "Kulcsszavak alapján keresünk."
     },
     "userMenu": {
       "label": "Felhasználói menü ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Szövegfelismerés",
     "aiNotice": {
       "text": "Az MI még nincs beállítva. Az új dokumentumok a szövegük alapján kereshetők, de nem készül róluk összefoglaló, és címkéket sem kapnak.",
+      "builtinOcr": "A szövegréteg nélküli szkenneléseket a beépített szövegfelismerés olvassa be, így ezekben is lehet keresni.",
       "action": "Beállítás most"
     },
     "searchResults_one": "<count>{{count, number}} találat</count> <query>erre: „{{query}}”</query>",
@@ -148,6 +153,7 @@
       "dateTo": "eddig",
       "status": "Állapot",
       "failed": "Sikertelen",
+      "duplicates": "Lehetséges másolatok",
       "showAll": "Összes megjelenítése",
       "showLess": "Kevesebb megjelenítése",
       "activeFrom": "ettől: {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} / {{count, number}} dokumentum betöltve…",
     "loadingAll_other": "{{loaded, number}} / {{count, number}} dokumentum betöltve…",
-    "loadMore": "Továbbiak betöltése ({{remaining, number}})"
+    "loadMore": "Továbbiak betöltése ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "MI-keresés: „{{question}}”. A szűrők mutatják, hogyan értelmeztük a kérdést."
+    }
   },
   "document": {
     "backToList": "Vissza az áttekintéshez",
@@ -176,12 +185,31 @@
     "reprocessStarted": "A dokumentum újraelemzése folyamatban van.",
     "deleted": "Dokumentum törölve",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Nem mentett módosítások a dokumentumban",
+      "discard": "Elvetés",
+      "save": "Módosítások mentése",
+      "saved": "Módosítások mentve – az eredeti megmarad.",
+      "modified": "Módosítva: {{when}} – az eredeti megőrizve.",
+      "downloadOriginal": "Eredeti letöltése",
+      "restoreOriginal": "Eredeti visszaállítása",
+      "restoreTitle": "Visszaállítja az eredetit?",
+      "restoreText": "A módosított változat elvész. A dokumentum ezután pontosan olyan lesz, mint amikor beérkezett.",
+      "restored": "Az eredeti visszaállítva"
+    },
+    "duplicate": {
+      "notice": "Lehetséges másolat: ennek a dokumentumnak a tartalma megegyezik ezzel: „{{title}}”.",
+      "open": "A másik dokumentumhoz",
+      "dismiss": "Nem másolat",
+      "dismissed": "Feljegyezve: nem másolat"
+    },
     "openInNewTab": "Megnyitás új lapon",
     "processingNotice": "A dokumentum feldolgozása folyamatban van. Az összefoglaló és a címkék itt jelennek meg, amint az elemzés elkészült.",
     "textOnlyNotice": "MI nélkül indexelve: a dokumentum a szövege alapján kereshető, de nincs összefoglalója, és nincsenek automatikus címkéi.",
     "tabs": {
       "overview": "Áttekintés",
-      "text": "Teljes szöveg"
+      "text": "Teljes szöveg",
+      "chat": "Kérdések"
     },
     "fields": {
       "title": "Cím",
@@ -227,6 +255,19 @@
       "title": "Törlöd a dokumentumot?",
       "text": "„{{title}}” a PDF-fájllal, a teljes szöveggel és a címkékkel együtt törlődik. Ez nem vonható vissza.",
       "confirm": "Végleges törlés"
+    },
+    "chat": {
+      "intro": "Tegyél fel egy kérdést erről a dokumentumról – az MI a tartalma alapján válaszol.",
+      "placeholder": "Kérdezz valamit erről a dokumentumról …",
+      "send": "Küldés",
+      "thinking": "Az MI olvassa a dokumentumot …",
+      "notConfigured": "A dokumentumra vonatkozó kérdésekhez be kell állítani egy MI-t.",
+      "restart": "Újrakezdés",
+      "suggestions": {
+        "summary": "Miről szól ez a dokumentum?",
+        "deadlines": "Vannak határidők vagy dátumok?",
+        "amounts": "Milyen összegek szerepelnek benne?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Az eredmények nyelve",
         "outputLanguageHint": "Az MI ezen a nyelven írja a címet, az összefoglalót és a címkéket.",
         "ocr": "Szövegfelismerés szkennelt dokumentumokhoz",
-        "ocrHint": "A szövegréteg nélküli szkennelt PDF-eket az alkalmazás az MI-vel íratja át – csak így találja meg őket a teljes szöveges keresés. Minden szkennelt dokumentum több időbe és többe kerül."
+        "ocrHint": "A szövegréteg nélküli szkennelt PDF-eket az alkalmazás az MI-vel íratja át – csak így találja meg őket a teljes szöveges keresés. Minden szkennelt dokumentum több időbe és többe kerül.",
+        "quickOcrFirst": "Előbb gyors szövegfelismerés, majd finomítás MI-vel",
+        "quickOcrFirstHint": "Az új szkenneléseket először a beépített szövegfelismerés (Tesseract) olvassa be – másodperceken belül kereshetők. Ezután az MI e szöveg alapján hozzáadja a címet, az összefoglalót és a címkéket."
       },
       "unanalyzed_one": "{{count, number}} dokumentumot még nem elemzett az MI.",
       "unanalyzed_other": "{{count, number}} dokumentumot még nem elemzett az MI.",

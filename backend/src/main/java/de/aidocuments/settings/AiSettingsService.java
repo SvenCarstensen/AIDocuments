@@ -34,7 +34,9 @@ public class AiSettingsService {
 
     /** Wirksame Konfiguration inklusive Klartext-Schlüssel – nur serverintern verwenden. */
     public record Effective(LlmProvider provider, String baseUrl, String apiKey, KeySource keySource, String model,
-                            String effort, String outputLanguage, boolean ocr, boolean compatibilityMode) {
+                            String effort, String outputLanguage, boolean ocr, boolean compatibilityMode,
+                            /* Scans erst mit der eingebauten Texterkennung lesen, dann von der KI verfeinern lassen */
+                            boolean quickOcrFirst) {
 
         /** Genug beisammen, um Dokumente analysieren zu lassen? */
         public boolean enabled() {
@@ -46,7 +48,8 @@ public class AiSettingsService {
     }
 
     public record AiSettingsDto(LlmProvider provider, String baseUrl, String model, String effort,
-                                String outputLanguage, boolean ocr, boolean compatibilityMode, boolean enabled,
+                                String outputLanguage, boolean ocr, boolean quickOcrFirst, boolean compatibilityMode,
+                                boolean enabled,
                                 boolean apiKeySet, KeySource apiKeySource, List<ProviderOption> providers) {
     }
 
@@ -71,6 +74,8 @@ public class AiSettingsService {
             @NotBlank(message = NOT_BLANK) String effort,
             @NotBlank(message = NOT_BLANK) @Size(max = 50, message = SIZE) String outputLanguage,
             boolean ocr,
+            /* null = unverändert lassen */
+            Boolean quickOcrFirst,
             /* nur für Anthropic von Bedeutung; null = automatisch je nach Server */
             Boolean compatibilityMode) {
     }
@@ -112,7 +117,7 @@ public class AiSettingsService {
     public AiSettingsDto dto() {
         Effective e = current();
         return new AiSettingsDto(e.provider(), e.baseUrl(), e.model(), e.effort(), e.outputLanguage(), e.ocr(),
-                e.compatibilityMode(), e.enabled(), !e.apiKey().isBlank(), e.keySource(),
+                e.quickOcrFirst(), e.compatibilityMode(), e.enabled(), !e.apiKey().isBlank(), e.keySource(),
                 Arrays.stream(LlmProvider.values()).map(this::option).toList());
     }
 
@@ -150,6 +155,9 @@ public class AiSettingsService {
         stored.setEffort(effort);
         stored.setOutputLanguage(request.outputLanguage().strip());
         stored.setOcr(request.ocr());
+        if (request.quickOcrFirst() != null) {
+            stored.setQuickOcrFirst(request.quickOcrFirst());
+        }
         stored.setCompatibilityMode(
                 provider.protocol() == LlmProvider.Protocol.ANTHROPIC ? request.compatibilityMode() : null);
         if (request.apiKey() != null) {
@@ -219,6 +227,7 @@ public class AiSettingsService {
                 saved && stored.getOutputLanguage() != null ? stored.getOutputLanguage() : defaults.outputLanguage(),
                 saved && stored.getOcr() != null ? stored.getOcr() : defaults.ocr(),
                 provider.protocol() == LlmProvider.Protocol.ANTHROPIC
-                        && (compatibility != null ? compatibility : !isAnthropicApi(baseUrl)));
+                        && (compatibility != null ? compatibility : !isAnthropicApi(baseUrl)),
+                saved && Boolean.TRUE.equals(stored.getQuickOcrFirst()));
     }
 }

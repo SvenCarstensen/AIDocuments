@@ -21,9 +21,12 @@ public class DocumentStartup implements ApplicationRunner {
     private final SearchIndex searchIndex;
     private final DocumentProcessor processor;
     private final ThumbnailRepair thumbnailRepair;
+    private final DuplicateDetector duplicates;
 
     public DocumentStartup(DocumentRepository documents, DocumentTextRepository texts, SearchIndex searchIndex,
-                           DocumentProcessor processor, ThumbnailRepair thumbnailRepair) {
+                           DocumentProcessor processor, ThumbnailRepair thumbnailRepair,
+                           DuplicateDetector duplicates) {
+        this.duplicates = duplicates;
         this.documents = documents;
         this.texts = texts;
         this.searchIndex = searchIndex;
@@ -55,5 +58,6 @@ public class DocumentStartup implements ApplicationRunner {
             }
         }
         thumbnailRepair.startInBackground();
+        duplicates.scanAllInBackground();
     }
 }

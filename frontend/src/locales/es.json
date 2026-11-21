@@ -68,8 +68,12 @@
     },
     "search": {
       "placeholder": "Buscar documentos, etiquetas, contenidos …",
+      "placeholderAi": "Busca documentos con tus palabras: p. ej. «facturas de Kia de 2024»",
       "label": "Buscar documentos",
-      "clear": "Borrar la búsqueda"
+      "clear": "Borrar la búsqueda",
+      "modeAi": "Búsqueda con IA: cambiar a búsqueda por palabras clave",
+      "modeKeywords": "Búsqueda por palabras clave: cambiar a búsqueda con IA",
+      "askFailed": "Se busca por palabras clave."
     },
     "userMenu": {
       "label": "Menú de usuario ({{name}})",
@@ -120,6 +124,7 @@
     "ocrBadge": "Reconocimiento de texto",
     "aiNotice": {
       "text": "La IA aún no está configurada. Los documentos nuevos se pueden buscar por su texto, pero no se resumen ni se etiquetan.",
+      "builtinOcr": "Los escaneos sin capa de texto los lee el reconocimiento de texto integrado, así que también se pueden buscar.",
       "action": "Configurar ahora"
     },
     "searchResults_one": "<count>{{count, number}} resultado</count> <query>para «{{query}}»</query>",
@@ -155,6 +160,7 @@
       "dateTo": "hasta",
       "status": "Estado",
       "failed": "Con error",
+      "duplicates": "Posibles duplicados",
       "showAll": "Mostrar todo",
       "showLess": "Mostrar menos",
       "activeFrom": "desde el {{date}}",
@@ -174,7 +180,10 @@
     "loadingAll_one": "{{loaded, number}} de {{count, number}} documento cargado …",
     "loadingAll_many": "{{loaded, number}} de {{count, number}} de documentos cargados …",
     "loadingAll_other": "{{loaded, number}} de {{count, number}} documentos cargados …",
-    "loadMore": "Cargar más ({{remaining, number}})"
+    "loadMore": "Cargar más ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Búsqueda con IA: «{{question}}». Los filtros muestran cómo se entendió la pregunta."
+    }
   },
   "document": {
     "backToList": "Volver a la vista general",
@@ -184,12 +193,31 @@
     "reprocessStarted": "El documento se está analizando de nuevo.",
     "deleted": "Documento eliminado",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Cambios sin guardar en el documento",
+      "discard": "Descartar",
+      "save": "Guardar cambios",
+      "saved": "Cambios guardados: se conserva el original.",
+      "modified": "Modificado el {{when}}: se conserva el original.",
+      "downloadOriginal": "Descargar original",
+      "restoreOriginal": "Restaurar original",
+      "restoreTitle": "¿Restaurar el original?",
+      "restoreText": "Se descartará la versión modificada. El documento volverá a quedar exactamente como llegó.",
+      "restored": "Original restaurado"
+    },
+    "duplicate": {
+      "notice": "Posible duplicado: el contenido de este documento coincide con «{{title}}».",
+      "open": "Ir al otro documento",
+      "dismiss": "No es un duplicado",
+      "dismissed": "Anotado: no es un duplicado"
+    },
     "openInNewTab": "Abrir en una pestaña nueva",
     "processingNotice": "El documento se está procesando. El resumen y las etiquetas aparecerán aquí en cuanto termine el análisis.",
     "textOnlyNotice": "Indexado sin IA: el documento se puede buscar por su texto, pero no tiene resumen ni etiquetas automáticas.",
     "tabs": {
       "overview": "Vista general",
-      "text": "Texto completo"
+      "text": "Texto completo",
+      "chat": "Preguntas"
     },
     "fields": {
       "title": "Título",
@@ -236,6 +264,19 @@
       "title": "¿Eliminar el documento?",
       "text": "«{{title}}» se eliminará junto con su archivo PDF, su texto completo y sus etiquetas. Esta acción no se puede deshacer.",
       "confirm": "Eliminar definitivamente"
+    },
+    "chat": {
+      "intro": "Haz una pregunta sobre este documento: la IA responde según su contenido.",
+      "placeholder": "Pregunta algo sobre este documento …",
+      "send": "Enviar",
+      "thinking": "La IA está leyendo el documento …",
+      "notConfigured": "Para hacer preguntas sobre el documento hay que configurar una IA.",
+      "restart": "Empezar de nuevo",
+      "suggestions": {
+        "summary": "¿De qué trata este documento?",
+        "deadlines": "¿Hay plazos o fechas?",
+        "amounts": "¿Qué importes se mencionan?"
+      }
     }
   },
   "settings": {
@@ -380,7 +421,9 @@
         "outputLanguage": "Idioma de los resultados",
         "outputLanguageHint": "La IA escribe el título, el resumen y las etiquetas en este idioma.",
         "ocr": "Reconocimiento de texto para escaneos",
-        "ocrHint": "La aplicación hace que la IA transcriba los PDF escaneados sin capa de texto: solo así se pueden encontrar con la búsqueda de texto completo. Cada escaneo requiere más tiempo y cuesta más."
+        "ocrHint": "La aplicación hace que la IA transcriba los PDF escaneados sin capa de texto: solo así se pueden encontrar con la búsqueda de texto completo. Cada escaneo requiere más tiempo y cuesta más.",
+        "quickOcrFirst": "Primero reconocimiento de texto rápido, luego refinar con la IA",
+        "quickOcrFirstHint": "Los nuevos escaneos los lee primero el reconocimiento de texto integrado (Tesseract): se pueden buscar en segundos. Después, la IA añade título, resumen y etiquetas a partir de ese texto."
       },
       "unanalyzed_one": "{{count, number}} documento aún no ha sido analizado por la IA.",
       "unanalyzed_many": "{{count, number}} de documentos aún no han sido analizados por la IA.",

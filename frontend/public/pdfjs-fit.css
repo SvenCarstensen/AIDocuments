@@ -1,0 +1,35 @@
+/*
+ * Ergänzung zum eingebetteten PDF.js-Betrachter (geladen von src/components/PdfViewer.tsx): Stufen, in denen die
+ * Werkzeugleiste Platz schafft, damit sie immer vollständig sichtbar ist – erst Entbehrliches, dann Seltenes.
+ * Als eigene Datei, weil die Sicherheitsrichtlinie des Betrachters eingebettete Stile nicht zulässt.
+ */
+html.aid-fit-1 #scaleSelectContainer {
+  display: none !important;
+}
+html.aid-fit-2 #toolbarContainer #toolbarViewer .toolbarButtonSpacer {
+  width: 0 !important;
+}
+html.aid-fit-3 .hiddenMediumView {
+  display: none !important;
+}
+html.aid-fit-3 .visibleMediumView:not(.hidden, [hidden]) {
+  display: contents !important;
+}
+html.aid-fit-4 #editorComment,
+html.aid-fit-4 #editorSignature,
+html.aid-fit-4 #signatureProperties,
+html.aid-fit-4 #signaturePropertiesSeparator {
+  display: none !important;
+}
+html.aid-fit-5 .hiddenSmallView,
+html.aid-fit-5 .hiddenSmallView * {
+  display: none !important;
+}
+/* nur auf Telefonbreite nötig: Zoomen geht dort mit zwei Fingern, Bearbeiten ist selten */
+html.aid-fit-6 #toolbarViewerMiddle {
+  display: none !important;
+}
+html.aid-fit-7 #editorModeButtons,
+html.aid-fit-7 #editorModeSeparator {
+  display: none !important;
+}

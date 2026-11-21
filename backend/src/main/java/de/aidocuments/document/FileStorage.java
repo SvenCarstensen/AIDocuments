@@ -96,9 +96,53 @@ public class FileStorage {
         return thumbnails.resolve(documentId + ".jpg");
     }
 
+    /**
+     * Legt eine Kopie der Datei neben ihr ab ({@code <id>.original.pdf}), sofern es noch keine gibt.
+     *
+     * @return relativer Pfad der Kopie
+     */
+    public String keepOriginal(String relativePath) throws IOException {
+        String copy = relativePath.replaceFirst("(?i)\\.pdf$", "") + ".original.pdf";
+        Path target = resolve(copy);
+        if (!Files.exists(target)) {
+            Path part = target.resolveSibling(target.getFileName() + ".part");
+            Files.copy(resolve(relativePath), part, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(part, target, StandardCopyOption.ATOMIC_MOVE);
+        }
+        return copy;
+    }
+
+    /** Ersetzt die Datei durch eine empfangene – in einem Schritt, damit nie eine halbe Datei ausgeliefert wird. */
+    public void replace(String relativePath, Received received) throws IOException {
+        Path target = resolve(relativePath);
+        Path part = target.resolveSibling(target.getFileName() + ".part");
+        Files.move(received.tempFile(), part, StandardCopyOption.REPLACE_EXISTING);
+        Files.move(part, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+    }
+
+    /** Kopiert eine aufbewahrte Datei zurück an ihren Platz – in einem Schritt. */
+    public void restore(String copyPath, String relativePath) throws IOException {
+        Path target = resolve(relativePath);
+        Path part = target.resolveSibling(target.getFileName() + ".part");
+        Files.copy(resolve(copyPath), part, StandardCopyOption.REPLACE_EXISTING);
+        Files.move(part, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+    }
+
+    /** Für Prüfungen, bevor eine empfangene Datei übernommen wird (Vorschaubild in einer Zwischendatei). */
+    public Path temporaryFile(String suffix) {
+        return tmp.resolve(UUID.randomUUID() + suffix);
+    }
+
     public void delete(String relativePath, String documentId) {
+        delete(relativePath, null, documentId);
+    }
+
+    public void delete(String relativePath, String originalCopy, String documentId) {
         try {
             Files.deleteIfExists(resolve(relativePath));
+            if (originalCopy != null) {
+                Files.deleteIfExists(resolve(originalCopy));
+            }
             Files.deleteIfExists(thumbnailPath(documentId));
         } catch (IOException e) {
             throw new UncheckedIOException("Datei konnte nicht gelöscht werden", e);

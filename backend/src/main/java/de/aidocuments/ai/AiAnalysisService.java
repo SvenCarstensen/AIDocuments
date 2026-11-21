@@ -915,6 +915,135 @@ public class AiAnalysisService {
     }
 
     // ------------------------------------------------------------------------------------------------
+    // Weitere Aufrufe der eingerichteten KI: Gespräch und Werkzeugaufruf
+    // ------------------------------------------------------------------------------------------------
+
+    /** Ein Beitrag eines Gesprächs mit der KI. */
+    public record ChatTurn(boolean fromUser, String text) {
+    }
+
+    /** Zeitgrenze für Anfragen, auf die jemand am Bildschirm wartet – Modelle, die nachdenken, brauchen Zeit. */
+    private static final Duration INTERACTIVE_TIMEOUT = Duration.ofMinutes(5);
+
+    /** Ein Gespräch mit der eingerichteten KI; liefert ihre Antwort auf den letzten Beitrag. */
+    public String converse(String system, List<ChatTurn> turns, long maxTokens) throws AiException {
+        Effective config = settings.current();
+        if (!config.enabled()) {
+            throw new AiException(Msg.of("ai.error.notConfigured"));
+        }
+        try {
+            if (config.provider().protocol() == LlmProvider.Protocol.OPENAI) {
+                OpenAiChatClient.Reply reply = new OpenAiChatClient(config.baseUrl(), config.apiKey()).chat(
+                        config.model(), system,
+                        turns.stream().map(t -> new OpenAiChatClient.Turn(t.fromUser(), t.text())).toList(),
+                        maxTokens, limitField(config), INTERACTIVE_TIMEOUT);
+                if (reply.refusal() != null && !reply.refusal().isBlank()) {
+                    throw new AiException(Msg.of("ai.error.refusedWithReason", reply.refusal()));
+                }
+                if (reply.truncated() && reply.text().isBlank()) {
+                    throw new AiException(Msg.of("ai.error.truncated"));
+                }
+                return requireAnswer(reply.text());
+            }
+            MessageCreateParams.Builder params = MessageCreateParams.builder()
+                    .model(config.model())
+                    .maxTokens(maxTokens)
+                    .system(system);
+            for (ChatTurn turn : turns) {
+                if (turn.fromUser()) {
+                    params.addUserMessage(turn.text());
+                } else {
+                    params.addAssistantMessage(turn.text());
+                }
+            }
+            Message message = clientFor(config).messages().create(params.build());
+            if (StopReason.REFUSAL.equals(message.stopReason().orElse(null))) {
+                throw new AiException(Msg.of("ai.error.refused"));
+            }
+            return requireAnswer(message.content().stream()
+                    .flatMap(block -> block.text().stream())
+                    .map(block -> block.text())
+                    .collect(Collectors.joining("\n")));
+        } catch (RuntimeException e) {
+            throw new AiException(describe(e), e);
+        }
+    }
+
+    /**
+     * Ein Aufruf mit genau einem Werkzeug, über das die KI ein strukturiertes Ergebnis abliefert.
+     *
+     * @return die Argumente des Werkzeugaufrufs als JSON-Text (oder JSON, das die KI als Text schrieb)
+     */
+    public String callTool(String system, String user, String toolName, String toolDescription,
+                           Map<String, Object> schema, long maxTokens) throws AiException {
+        Effective config = settings.current();
+        if (!config.enabled()) {
+            throw new AiException(Msg.of("ai.error.notConfigured"));
+        }
+        try {
+            if (config.provider().protocol() == LlmProvider.Protocol.OPENAI) {
+                OpenAiChatClient.Reply reply = new OpenAiChatClient(config.baseUrl(), config.apiKey()).complete(
+                        config.model(), system, List.of(OpenAiChatClient.Part.text(user)), toolName, toolDescription,
+                        schema, maxTokens, limitField(config), INTERACTIVE_TIMEOUT);
+                if (reply.toolArguments() != null) {
+                    return reply.toolArguments();
+                }
+                if (reply.truncated()) {
+                    throw new AiException(Msg.of("ai.error.truncated"));
+                }
+                return requireAnswer(reply.text());
+            }
+            Message message = clientFor(config).messages().create(MessageCreateParams.builder()
+                    .model(config.model())
+                    .maxTokens(maxTokens)
+                    .system(system)
+                    .addUserMessage(user)
+                    .addTool(toolFrom(toolName, toolDescription, schema))
+                    .toolChoice(ToolChoiceAuto.builder().build())
+                    .build());
+            Optional<ToolUseBlock> toolCall = message.content().stream()
+                    .flatMap(block -> block.toolUse().stream())
+                    .filter(block -> toolName.equals(block.name()))
+                    .findFirst();
+            if (toolCall.isPresent()) {
+                return JSON.writeValueAsString(toolCall.get()._input().convert(Object.class));
+            }
+            return requireAnswer(message.content().stream()
+                    .flatMap(block -> block.text().stream())
+                    .map(block -> block.text())
+                    .collect(Collectors.joining("\n")));
+        } catch (JsonProcessingException e) {
+            throw new AiException(Msg.of("ai.problem.notJson"), e);
+        } catch (RuntimeException e) {
+            throw new AiException(describe(e), e);
+        }
+    }
+
+    private static String requireAnswer(String text) throws AiException {
+        if (text == null || text.isBlank()) {
+            throw new AiException(Msg.of("ai.error.noAnswer"));
+        }
+        return text.strip();
+    }
+
+    private static String limitField(Effective config) {
+        return config.provider() == LlmProvider.OPENAI ? "max_completion_tokens" : "max_tokens";
+    }
+
+    private static Tool toolFrom(String name, String description, Map<String, Object> schema) {
+        Tool.InputSchema.Properties.Builder properties = Tool.InputSchema.Properties.builder();
+        asMap(schema.get("properties")).forEach((key, value) ->
+                properties.putAdditionalProperty(key, JsonValue.from(value)));
+        @SuppressWarnings("unchecked")
+        List<String> required = (List<String>) schema.getOrDefault("required", List.of());
+        return Tool.builder()
+                .name(name)
+                .description(description)
+                .inputSchema(Tool.InputSchema.builder().properties(properties.build()).required(required).build())
+                .build();
+    }
+
+    // ------------------------------------------------------------------------------------------------
     // Gemeinsames
     // ------------------------------------------------------------------------------------------------
 
@@ -983,7 +1112,7 @@ public class AiAnalysisService {
      * Übersetzt technische Fehler in eine Meldung für den Anwender – sprachneutral. Was der fremde Server
      * selbst mitteilt, wird als Argument wörtlich durchgereicht.
      */
-    private static Msg describe(RuntimeException e) {
+    static Msg describe(RuntimeException e) {
         if (e instanceof OpenAiChatClient.StatusException status) {
             return switch (status.status()) {
                 case 401 -> Msg.of("ai.error.unauthorized");

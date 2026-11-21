@@ -50,8 +50,13 @@ public class DocumentController {
     private final FileStorage storage;
     private final Messages messages;
 
+    private final DocumentChatService chat;
+    private final AiSearchService aiSearch;
+
     public DocumentController(DocumentService service, DocumentFacets facets, FileStorage storage,
-                              Messages messages) {
+                              Messages messages, DocumentChatService chat, AiSearchService aiSearch) {
+        this.chat = chat;
+        this.aiSearch = aiSearch;
         this.messages = messages;
         this.service = service;
         this.facets = facets;
@@ -71,6 +76,7 @@ public class DocumentController {
             @RequestParam(required = false) DocumentStatus status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "false") boolean duplicates,
             @RequestParam(defaultValue = "relevance") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "24") int size) {
@@ -81,7 +87,7 @@ public class DocumentController {
         };
         return service.search(new SearchIndex.Criteria(q, category, correspondent,
                 tags == null ? List.of() : tags, status, from, to, order,
-                Math.max(0, page), Math.clamp(size, 1, 100)));
+                Math.max(0, page), Math.clamp(size, 1, 100), duplicates));
     }
 
     @GetMapping("/facets")
@@ -115,6 +121,82 @@ public class DocumentController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
                 .cacheControl(CacheControl.maxAge(Duration.ofHours(1)).cachePrivate())
                 .body(new FileSystemResource(path));
+    }
+
+    /** Speichert eine geänderte Fassung des PDFs; das Original bleibt als Kopie erhalten. */
+    @PutMapping(value = "/{id}/file", consumes = MediaType.APPLICATION_PDF_VALUE)
+    public DocumentDto replaceFile(@PathVariable String id, jakarta.servlet.http.HttpServletRequest request)
+            throws java.io.IOException {
+        return service.replaceFile(id, request.getInputStream());
+    }
+
+    /** Das aufbewahrte Original eines geänderten PDFs – immer als Download. */
+    @GetMapping("/{id}/original")
+    public ResponseEntity<Resource> original(@PathVariable String id) {
+        Document doc = service.require(id);
+        Path path = service.originalFile(id);
+        String name = doc.getOriginalFilename().replaceFirst("(?i)\\.pdf$", "") + " (Original).pdf";
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.attachment().filename(name, StandardCharsets.UTF_8).build().toString())
+                .cacheControl(CacheControl.noCache().cachePrivate())
+                .body(new FileSystemResource(path));
+    }
+
+    public record ChatMessage(
+            @jakarta.validation.constraints.NotNull boolean fromUser,
+            @jakarta.validation.constraints.NotBlank @jakarta.validation.constraints.Size(max = 8000) String text) {
+    }
+
+    public record ChatRequest(
+            @jakarta.validation.constraints.NotEmpty @jakarta.validation.constraints.Size(max = 60)
+            List<@Valid ChatMessage> messages) {
+    }
+
+    public record ChatAnswer(String answer) {
+    }
+
+    /** Fragen an ein Dokument – beantwortet von der eingerichteten KI anhand von Angaben und Volltext. */
+    @PostMapping("/{id}/chat")
+    public ChatAnswer chat(@PathVariable String id, @Valid @RequestBody ChatRequest request) {
+        try {
+            return new ChatAnswer(chat.answer(id, request.messages().stream()
+                    .map(m -> new de.aidocuments.ai.AiAnalysisService.ChatTurn(m.fromUser(), m.text())).toList()));
+        } catch (de.aidocuments.ai.AiException e) {
+            throw aiFailure(e);
+        }
+    }
+
+    public record AskRequest(@jakarta.validation.constraints.NotBlank
+                             @jakarta.validation.constraints.Size(max = 500) String question) {
+    }
+
+    /** KI-Suche: übersetzt eine Frage in natürlicher Sprache in Filter; gesucht wird danach wie gewohnt. */
+    @PostMapping("/ask")
+    public AiSearchService.Interpretation ask(@Valid @RequestBody AskRequest request) {
+        try {
+            return aiSearch.interpret(request.question());
+        } catch (de.aidocuments.ai.AiException e) {
+            throw aiFailure(e);
+        }
+    }
+
+    /** Ohne eingerichtete KI ein Konflikt (die Funktion ist nicht verfügbar), sonst ein Fehler beim KI-Server. */
+    private static ApiException aiFailure(de.aidocuments.ai.AiException e) {
+        HttpStatus status = "ai.error.notConfigured".equals(e.msg().key()) ? HttpStatus.CONFLICT : HttpStatus.BAD_GATEWAY;
+        return new ApiException(status, e.msg());
+    }
+
+    /** Der Anwender bestätigt: kein Duplikat. */
+    @PostMapping("/{id}/not-duplicate")
+    public DocumentDto notDuplicate(@PathVariable String id) {
+        return service.notDuplicate(id);
+    }
+
+    @PostMapping("/{id}/restore-original")
+    public DocumentDto restoreOriginal(@PathVariable String id) throws java.io.IOException {
+        return service.restoreOriginal(id);
     }
 
     @GetMapping("/{id}/thumbnail")

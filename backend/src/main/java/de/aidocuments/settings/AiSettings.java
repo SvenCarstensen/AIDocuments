@@ -18,6 +18,8 @@ public class AiSettings {
     private String effort;
     private String outputLanguage;
     private Boolean ocr;
+    /** Scans zuerst mit der eingebauten Texterkennung lesen, dann von der KI erschließen lassen. */
+    private Boolean quickOcrFirst;
     private Boolean compatibilityMode;
 
     public LlmProvider getProvider() {
@@ -74,6 +76,14 @@ public class AiSettings {
 
     public void setCompatibilityMode(Boolean compatibilityMode) {
         this.compatibilityMode = compatibilityMode;
+    }
+
+    public Boolean getQuickOcrFirst() {
+        return quickOcrFirst;
+    }
+
+    public void setQuickOcrFirst(Boolean quickOcrFirst) {
+        this.quickOcrFirst = quickOcrFirst;
     }
 
     public Boolean getOcr() {

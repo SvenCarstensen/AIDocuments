@@ -69,8 +69,12 @@
     },
     "search": {
       "placeholder": "Ieškoti dokumentų, žymų, turinio…",
+      "placeholderAi": "Ieškok dokumentų savais žodžiais – pvz., „Kia sąskaitos iš 2024 m.“",
       "label": "Ieškoti dokumentų",
-      "clear": "Išvalyti paiešką"
+      "clear": "Išvalyti paiešką",
+      "modeAi": "DI paieška – pereiti prie paieškos pagal raktažodžius",
+      "modeKeywords": "Paieška pagal raktažodžius – pereiti prie DI paieškos",
+      "askFailed": "Ieškoma pagal raktažodžius."
     },
     "userMenu": {
       "label": "Naudotojo meniu ({{name}})",
@@ -126,6 +130,7 @@
     "ocrBadge": "Teksto atpažinimas",
     "aiNotice": {
       "text": "DI dar nesukonfigūruotas. Naujų dokumentų galima ieškoti pagal jų tekstą, tačiau jie neapibendrinami ir jiems nepriskiriamos žymos.",
+      "builtinOcr": "Skenuotus dokumentus be teksto sluoksnio nuskaito įtaisytasis teksto atpažinimas, todėl juose taip pat galima ieškoti.",
       "action": "Konfigūruoti dabar"
     },
     "searchResults_one": "<count>{{count, number}} rezultatas</count> <query>pagal užklausą „{{query}}“</query>",
@@ -162,6 +167,7 @@
       "dateTo": "iki",
       "status": "Būsena",
       "failed": "Nepavyko",
+      "duplicates": "Galimi dublikatai",
       "showAll": "Rodyti visus",
       "showLess": "Rodyti mažiau",
       "activeFrom": "nuo {{date}}",
@@ -182,7 +188,10 @@
     "loadingAll_few": "Įkelta {{loaded, number}} iš {{count, number}} dokumentų…",
     "loadingAll_many": "Įkelta {{loaded, number}} iš {{count, number}} dokumento…",
     "loadingAll_other": "Įkelta {{loaded, number}} iš {{count, number}} dokumentų…",
-    "loadMore": "Įkelti daugiau ({{remaining, number}})"
+    "loadMore": "Įkelti daugiau ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "DI paieška: „{{question}}“. Filtrai rodo, kaip klausimas buvo suprastas."
+    }
   },
   "document": {
     "backToList": "Atgal į apžvalgą",
@@ -192,12 +201,31 @@
     "reprocessStarted": "Dokumentas analizuojamas iš naujo.",
     "deleted": "Dokumentas ištrintas",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Dokumente yra neįrašytų pakeitimų",
+      "discard": "Atmesti",
+      "save": "Įrašyti pakeitimus",
+      "saved": "Pakeitimai įrašyti – originalas išsaugomas.",
+      "modified": "Pakeista {{when}} – originalas išsaugotas.",
+      "downloadOriginal": "Atsisiųsti originalą",
+      "restoreOriginal": "Atkurti originalą",
+      "restoreTitle": "Atkurti originalą?",
+      "restoreText": "Pakeista versija bus atmesta. Tada dokumentas bus lygiai toks, koks buvo gautas.",
+      "restored": "Originalas atkurtas"
+    },
+    "duplicate": {
+      "notice": "Galimas dublikatas: šio dokumento turinys atitinka „{{title}}“.",
+      "open": "Į kitą dokumentą",
+      "dismiss": "Ne dublikatas",
+      "dismissed": "Pažymėta: ne dublikatas"
+    },
     "openInNewTab": "Atidaryti naujame skirtuke",
     "processingNotice": "Dokumentas apdorojamas. Santrauka ir žymos atsiras čia, kai tik analizė bus baigta.",
     "textOnlyNotice": "Indeksuota be DI: dokumento galima ieškoti pagal jo tekstą, tačiau jis neturi santraukos ir automatinių žymų.",
     "tabs": {
       "overview": "Apžvalga",
-      "text": "Visas tekstas"
+      "text": "Visas tekstas",
+      "chat": "Klausti"
     },
     "fields": {
       "title": "Pavadinimas",
@@ -245,6 +273,19 @@
       "title": "Ištrinti dokumentą?",
       "text": "„{{title}}“ bus ištrintas kartu su PDF failu, visu tekstu ir žymomis. Šio veiksmo anuliuoti negalima.",
       "confirm": "Ištrinti visam laikui"
+    },
+    "chat": {
+      "intro": "Užduok klausimą apie šį dokumentą – DI atsakys pagal jo turinį.",
+      "placeholder": "Paklausk ko nors apie šį dokumentą …",
+      "send": "Siųsti",
+      "thinking": "DI skaito dokumentą …",
+      "notConfigured": "Norint užduoti klausimų apie dokumentą, turi būti nustatytas DI.",
+      "restart": "Pradėti iš naujo",
+      "suggestions": {
+        "summary": "Apie ką šis dokumentas?",
+        "deadlines": "Ar yra terminų ar datų?",
+        "amounts": "Kokios sumos minimos?"
+      }
     }
   },
   "settings": {
@@ -389,7 +430,9 @@
         "outputLanguage": "Rezultatų kalba",
         "outputLanguageHint": "Šia kalba DI rašo pavadinimą, santrauką ir žymas.",
         "ocr": "Skenuotų kopijų teksto atpažinimas",
-        "ocrHint": "Programa paveda DI transkribuoti skenuotus PDF failus be teksto sluoksnio – tik tada juos galima rasti viso teksto paieška. Kiekviena skenuota kopija užtrunka ilgiau ir kainuoja daugiau."
+        "ocrHint": "Programa paveda DI transkribuoti skenuotus PDF failus be teksto sluoksnio – tik tada juos galima rasti viso teksto paieška. Kiekviena skenuota kopija užtrunka ilgiau ir kainuoja daugiau.",
+        "quickOcrFirst": "Pirmiausia greitas teksto atpažinimas, tada patikslinimas su DI",
+        "quickOcrFirstHint": "Naujus skenuotus dokumentus pirmiausia nuskaito įtaisytasis teksto atpažinimas (Tesseract) – po kelių sekundžių juose galima ieškoti. Tada DI pagal šį tekstą prideda pavadinimą, santrauką ir žymes."
       },
       "unanalyzed_one": "DI dar neišanalizavo {{count, number}} dokumento.",
       "unanalyzed_few": "DI dar neišanalizavo {{count, number}} dokumentų.",

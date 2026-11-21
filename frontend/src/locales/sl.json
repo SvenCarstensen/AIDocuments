@@ -69,8 +69,12 @@
     },
     "search": {
       "placeholder": "Iskanje po dokumentih, oznakah, vsebini …",
+      "placeholderAi": "Išči dokumente s svojimi besedami – npr. »računi od Kie iz leta 2024«",
       "label": "Iskanje dokumentov",
-      "clear": "Počisti iskanje"
+      "clear": "Počisti iskanje",
+      "modeAi": "Iskanje z UI – preklopi na iskanje po ključnih besedah",
+      "modeKeywords": "Iskanje po ključnih besedah – preklopi na iskanje z UI",
+      "askFailed": "Išče se po ključnih besedah."
     },
     "userMenu": {
       "label": "Meni uporabnika ({{name}})",
@@ -126,6 +130,7 @@
     "ocrBadge": "Prepoznavanje besedila",
     "aiNotice": {
       "text": "UI še ni nastavljena. Nove dokumente je mogoče iskati po besedilu, vendar niso povzeti in nimajo oznak.",
+      "builtinOcr": "Skene brez besedilne plasti prebere vgrajeno prepoznavanje besedila, zato je mogoče iskati tudi po njih.",
       "action": "Nastavi zdaj"
     },
     "searchResults_one": "<count>{{count, number}} rezultat</count> <query>za »{{query}}«</query>",
@@ -162,6 +167,7 @@
       "dateTo": "do",
       "status": "Stanje",
       "failed": "Neuspešno",
+      "duplicates": "Morebitni dvojniki",
       "showAll": "Prikaži vse",
       "showLess": "Prikaži manj",
       "activeFrom": "od {{date}}",
@@ -182,7 +188,10 @@
     "loadingAll_two": "Naloženo: {{loaded, number}} od {{count, number}} dokumentov …",
     "loadingAll_few": "Naloženo: {{loaded, number}} od {{count, number}} dokumentov …",
     "loadingAll_other": "Naloženo: {{loaded, number}} od {{count, number}} dokumentov …",
-    "loadMore": "Naloži več ({{remaining, number}})"
+    "loadMore": "Naloži več ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Iskanje z UI: »{{question}}«. Filtri kažejo, kako je bilo vprašanje razumljeno."
+    }
   },
   "document": {
     "backToList": "Nazaj na pregled",
@@ -192,12 +201,31 @@
     "reprocessStarted": "Dokument se ponovno analizira.",
     "deleted": "Dokument je izbrisan",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Neshranjene spremembe v dokumentu",
+      "discard": "Zavrzi",
+      "save": "Shrani spremembe",
+      "saved": "Spremembe shranjene – izvirnik ostane ohranjen.",
+      "modified": "Spremenjeno {{when}} – izvirnik je shranjen.",
+      "downloadOriginal": "Prenesi izvirnik",
+      "restoreOriginal": "Obnovi izvirnik",
+      "restoreTitle": "Želite obnoviti izvirnik?",
+      "restoreText": "Spremenjena različica bo zavržena. Dokument bo nato natanko takšen, kot je prispel.",
+      "restored": "Izvirnik obnovljen"
+    },
+    "duplicate": {
+      "notice": "Morda dvojnik: vsebina tega dokumenta ustreza dokumentu »{{title}}«.",
+      "open": "Na drugi dokument",
+      "dismiss": "Ni dvojnik",
+      "dismissed": "Zabeleženo: ni dvojnik"
+    },
     "openInNewTab": "Odpri v novem zavihku",
     "processingNotice": "Dokument se obdeluje. Povzetek in oznake se bodo tu prikazali takoj, ko bo analiza končana.",
     "textOnlyNotice": "Indeksirano brez UI: dokument je mogoče iskati po besedilu, nima pa povzetka in samodejnih oznak.",
     "tabs": {
       "overview": "Pregled",
-      "text": "Celotno besedilo"
+      "text": "Celotno besedilo",
+      "chat": "Vprašaj"
     },
     "fields": {
       "title": "Naslov",
@@ -245,6 +273,19 @@
       "title": "Izbrisati dokument?",
       "text": "Dokument »{{title}}« bo izbrisan skupaj z datoteko PDF, celotnim besedilom in oznakami. Tega dejanja ni mogoče razveljaviti.",
       "confirm": "Izbriši trajno"
+    },
+    "chat": {
+      "intro": "Postavi vprašanje o tem dokumentu – UI odgovori na podlagi njegove vsebine.",
+      "placeholder": "Vprašaj kaj o tem dokumentu …",
+      "send": "Pošlji",
+      "thinking": "UI bere dokument …",
+      "notConfigured": "Za vprašanja o dokumentu mora biti nastavljena UI.",
+      "restart": "Začni znova",
+      "suggestions": {
+        "summary": "O čem govori ta dokument?",
+        "deadlines": "Ali so navedeni roki ali datumi?",
+        "amounts": "Kateri zneski so navedeni?"
+      }
     }
   },
   "settings": {
@@ -389,7 +430,9 @@
         "outputLanguage": "Jezik rezultatov",
         "outputLanguageHint": "UI v tem jeziku napiše naslov, povzetek in oznake.",
         "ocr": "Prepoznavanje besedila pri skeniranih dokumentih",
-        "ocrHint": "Aplikacija da UI prepisati skenirane datoteke PDF brez besedilnega sloja – le tako jih je mogoče najti z iskanjem po celotnem besedilu. Vsak sken vzame več časa in stane več."
+        "ocrHint": "Aplikacija da UI prepisati skenirane datoteke PDF brez besedilnega sloja – le tako jih je mogoče najti z iskanjem po celotnem besedilu. Vsak sken vzame več časa in stane več.",
+        "quickOcrFirst": "Najprej hitro prepoznavanje besedila, nato izboljšava z UI",
+        "quickOcrFirstHint": "Nove skene najprej prebere vgrajeno prepoznavanje besedila (Tesseract) – v nekaj sekundah je mogoče iskati po njih. Nato UI na podlagi tega besedila doda naslov, povzetek in oznake."
       },
       "unanalyzed_one": "{{count, number}} dokument še ni bil analiziran z UI.",
       "unanalyzed_two": "{{count, number}} dokumenta še nista bila analizirana z UI.",

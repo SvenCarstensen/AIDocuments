@@ -69,8 +69,12 @@
     },
     "search": {
       "placeholder": "Szukaj w dokumentach, tagach, treści …",
+      "placeholderAi": "Szukaj dokumentów własnymi słowami – np. „faktury od Kia z 2024”",
       "label": "Szukaj dokumentów",
-      "clear": "Wyczyść wyszukiwanie"
+      "clear": "Wyczyść wyszukiwanie",
+      "modeAi": "Wyszukiwanie AI – przełącz na wyszukiwanie słów kluczowych",
+      "modeKeywords": "Wyszukiwanie słów kluczowych – przełącz na wyszukiwanie AI",
+      "askFailed": "Wyszukiwanie odbywa się według słów kluczowych."
     },
     "userMenu": {
       "label": "Menu użytkownika ({{name}})",
@@ -126,6 +130,7 @@
     "ocrBadge": "Rozpoznawanie tekstu",
     "aiNotice": {
       "text": "AI nie zostało jeszcze skonfigurowane. Nowe dokumenty można przeszukiwać według ich tekstu, ale nie są podsumowywane ani oznaczane tagami.",
+      "builtinOcr": "Skany bez warstwy tekstowej odczytuje wbudowane rozpoznawanie tekstu, dzięki czemu również je można przeszukiwać.",
       "action": "Skonfiguruj teraz"
     },
     "searchResults_one": "<count>{{count, number}} wynik</count> <query>dla „{{query}}”</query>",
@@ -162,6 +167,7 @@
       "dateTo": "do",
       "status": "Status",
       "failed": "Z błędem",
+      "duplicates": "Możliwe duplikaty",
       "showAll": "Pokaż wszystkie",
       "showLess": "Pokaż mniej",
       "activeFrom": "od {{date}}",
@@ -182,7 +188,10 @@
     "loadingAll_few": "Wczytano {{loaded, number}} z {{count, number}} dokumentów …",
     "loadingAll_many": "Wczytano {{loaded, number}} z {{count, number}} dokumentów …",
     "loadingAll_other": "Wczytano {{loaded, number}} z {{count, number}} dokumentu …",
-    "loadMore": "Wczytaj więcej ({{remaining, number}})"
+    "loadMore": "Wczytaj więcej ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Wyszukiwanie AI: „{{question}}”. Filtry pokazują, jak zrozumiano pytanie."
+    }
   },
   "document": {
     "backToList": "Wróć do przeglądu",
@@ -192,12 +201,31 @@
     "reprocessStarted": "Dokument jest analizowany ponownie.",
     "deleted": "Dokument został usunięty",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Niezapisane zmiany w dokumencie",
+      "discard": "Odrzuć",
+      "save": "Zapisz zmiany",
+      "saved": "Zmiany zapisane – oryginał zostaje zachowany.",
+      "modified": "Zmieniono {{when}} – oryginał jest zachowany.",
+      "downloadOriginal": "Pobierz oryginał",
+      "restoreOriginal": "Przywróć oryginał",
+      "restoreTitle": "Przywrócić oryginał?",
+      "restoreText": "Zmieniona wersja zostanie odrzucona. Dokument będzie wtedy dokładnie taki, jak w chwili otrzymania.",
+      "restored": "Przywrócono oryginał"
+    },
+    "duplicate": {
+      "notice": "Możliwy duplikat: treść tego dokumentu odpowiada dokumentowi „{{title}}”.",
+      "open": "Przejdź do drugiego dokumentu",
+      "dismiss": "To nie duplikat",
+      "dismissed": "Zapisano: to nie duplikat"
+    },
     "openInNewTab": "Otwórz w nowej karcie",
     "processingNotice": "Dokument jest przetwarzany. Podsumowanie i tagi pojawią się tutaj, gdy tylko analiza się zakończy.",
     "textOnlyNotice": "Zaindeksowano bez AI: dokument można przeszukiwać według jego tekstu, ale nie ma podsumowania ani automatycznych tagów.",
     "tabs": {
       "overview": "Przegląd",
-      "text": "Pełny tekst"
+      "text": "Pełny tekst",
+      "chat": "Pytania"
     },
     "fields": {
       "title": "Tytuł",
@@ -245,6 +273,19 @@
       "title": "Usunąć dokument?",
       "text": "Dokument „{{title}}” zostanie usunięty razem z plikiem PDF, pełnym tekstem i tagami. Tej operacji nie można cofnąć.",
       "confirm": "Usuń na stałe"
+    },
+    "chat": {
+      "intro": "Zadaj pytanie o ten dokument – AI odpowie na podstawie jego treści.",
+      "placeholder": "Zapytaj o coś w tym dokumencie …",
+      "send": "Wyślij",
+      "thinking": "AI czyta dokument …",
+      "notConfigured": "Aby zadawać pytania o dokument, trzeba skonfigurować AI.",
+      "restart": "Zacznij od nowa",
+      "suggestions": {
+        "summary": "O czym jest ten dokument?",
+        "deadlines": "Czy są jakieś terminy lub daty?",
+        "amounts": "Jakie kwoty są wymienione?"
+      }
     }
   },
   "settings": {
@@ -389,7 +430,9 @@
         "outputLanguage": "Język wyników",
         "outputLanguageHint": "AI pisze tytuł, podsumowanie i tagi w tym języku.",
         "ocr": "Rozpoznawanie tekstu w skanach",
-        "ocrHint": "Aplikacja zleca AI przepisanie zeskanowanych plików PDF bez warstwy tekstowej – tylko wtedy można je znaleźć wyszukiwaniem pełnotekstowym. Każdy skan wymaga więcej czasu i kosztuje więcej."
+        "ocrHint": "Aplikacja zleca AI przepisanie zeskanowanych plików PDF bez warstwy tekstowej – tylko wtedy można je znaleźć wyszukiwaniem pełnotekstowym. Każdy skan wymaga więcej czasu i kosztuje więcej.",
+        "quickOcrFirst": "Najpierw szybkie rozpoznawanie tekstu, potem dopracowanie przez AI",
+        "quickOcrFirstHint": "Nowe skany najpierw odczytuje wbudowane rozpoznawanie tekstu (Tesseract) – po kilku sekundach można je przeszukiwać. Następnie AI na podstawie tego tekstu dodaje tytuł, podsumowanie i tagi."
       },
       "unanalyzed_one": "{{count, number}} dokument nie został jeszcze przeanalizowany przez AI.",
       "unanalyzed_few": "{{count, number}} dokumenty nie zostały jeszcze przeanalizowane przez AI.",

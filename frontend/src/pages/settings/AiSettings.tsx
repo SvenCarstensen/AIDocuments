@@ -81,6 +81,7 @@ export function AiSettingsSection() {
   const [effort, setEffort] = useState('medium')
   const [outputLanguage, setOutputLanguage] = useState('Deutsch')
   const [ocr, setOcr] = useState(true)
+  const [quickOcrFirst, setQuickOcrFirst] = useState(false)
   const [test, setTest] = useState<TestResult | null>(null)
 
   const data = settings.data
@@ -95,6 +96,7 @@ export function AiSettingsSection() {
     setEffort(efforts.some((e) => e === data.effort) ? data.effort : 'high')
     setOutputLanguage(data.outputLanguage)
     setOcr(data.ocr)
+    setQuickOcrFirst(data.quickOcrFirst)
   }, [data])
 
   const save = useMutation({
@@ -109,6 +111,7 @@ export function AiSettingsSection() {
         effort,
         outputLanguage: outputLanguage.trim(),
         ocr,
+        quickOcrFirst,
         compatibilityMode: provider === 'ANTHROPIC' ? compatibilityMode : null,
       }),
     onSuccess: async (updated) => {
@@ -168,6 +171,7 @@ export function AiSettingsSection() {
     effort !== data.effort ||
     outputLanguage.trim() !== data.outputLanguage ||
     ocr !== data.ocr ||
+    quickOcrFirst !== data.quickOcrFirst ||
     (provider === 'ANTHROPIC' && compatibilityMode !== data.compatibilityMode)
   const waiting = (system.data?.unanalyzed ?? 0) + (system.data?.failed ?? 0)
   const modelSuggestions = Array.from(
@@ -404,6 +408,14 @@ export function AiSettingsSection() {
             label={t('settings.ai.analysis.ocr')}
             description={t('settings.ai.analysis.ocrHint')}
           />
+          {system.data?.ocrAvailable && (
+            <Switch
+              checked={quickOcrFirst}
+              onChange={setQuickOcrFirst}
+              label={t('settings.ai.analysis.quickOcrFirst')}
+              description={t('settings.ai.analysis.quickOcrFirstHint')}
+            />
+          )}
         </div>
       </Card>
 

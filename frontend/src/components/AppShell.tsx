@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
-import { FileUp, KeyRound, LogOut, Moon, Search, Settings, Sun, Upload, X } from 'lucide-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { FileUp, KeyRound, Loader2, LogOut, Moon, Search, Settings, Sparkles, Sun, Upload, X } from 'lucide-react'
 import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { api, errorMessage } from '../lib/api'
+import { api, type AskResult, errorMessage } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { cx } from '../lib/format'
 import { useTheme } from '../lib/theme'
@@ -82,14 +82,44 @@ export function AppShell() {
   )
 }
 
-/** Suchfeld der Kopfleiste. Der Suchbegriff steht in der Adresse (?q=…), damit Suchen teilbar und per Zurück erreichbar sind. */
+type SearchMode = 'ai' | 'keywords'
+
+function storedSearchMode(): SearchMode {
+  try {
+    return localStorage.getItem('searchMode') === 'keywords' ? 'keywords' : 'ai'
+  } catch {
+    return 'ai'
+  }
+}
+
+/** Baut aus der Deutung der KI die Adresse der Dokumentliste – dieselben Filter, die man auch von Hand setzen kann. */
+function askParams(result: AskResult): URLSearchParams {
+  const next = new URLSearchParams()
+  if (result.text) next.set('q', result.text)
+  if (result.category) next.set('category', result.category)
+  if (result.correspondent) next.set('correspondent', result.correspondent)
+  result.tags.forEach((tag) => next.append('tag', tag))
+  if (result.from) next.set('from', result.from)
+  if (result.to) next.set('to', result.to)
+  next.set('ai', result.question)
+  return next
+}
+
+/**
+ * Suchfeld der Kopfleiste. Der Suchbegriff steht in der Adresse (?q=…), damit Suchen teilbar und per Zurück erreichbar sind.
+ * Ist eine KI eingerichtet, versteht das Feld auch Fragen in natürlicher Sprache (KI-Suche, umschaltbar): Die KI übersetzt
+ * sie in Filter, gesucht wird danach wie gewohnt.
+ */
 function SearchBox() {
   const { t } = useTranslation()
   const [params] = useSearchParams()
   const location = useLocation()
   const navigate = useNavigate()
+  const system = useQuery({ queryKey: ['system'], queryFn: api.system })
+  const [mode, setMode] = useState<SearchMode>(storedSearchMode)
+  const aiMode = !!system.data?.aiEnabled && mode === 'ai'
   const onList = location.pathname === '/documents'
-  const urlQuery = onList ? (params.get('q') ?? '') : ''
+  const urlQuery = onList ? ((aiMode ? params.get('ai') : params.get('q')) ?? '') : ''
   const [text, setText] = useState(urlQuery)
   const input = useRef<HTMLInputElement>(null)
   const lastPushed = useRef(urlQuery)
@@ -107,17 +137,30 @@ function SearchBox() {
     const trimmed = value.trim()
     if (trimmed) next.set('q', trimmed)
     else next.delete('q')
+    next.delete('ai')
     lastPushed.current = trimmed
     navigate({ pathname: '/documents', search: next.toString() }, { replace: replace && onList })
   }
 
-  // Feld → Adresse, kurz verzögert: Treffer erscheinen schon beim Tippen
+  const ask = useMutation({
+    mutationFn: (question: string) => api.askSearch(question),
+    onSuccess: (result) => {
+      lastPushed.current = result.question
+      navigate({ pathname: '/documents', search: askParams(result).toString() })
+    },
+    onError: (error, question) => {
+      toast.error(`${errorMessage(error)} ${t('shell.search.askFailed')}`)
+      apply(question, false)
+    },
+  })
+
+  // Feld → Adresse, kurz verzögert: Treffer erscheinen schon beim Tippen. Die KI-Suche fragt erst bei Enter.
   useEffect(() => {
-    if (text.trim() === lastPushed.current) return
+    if (aiMode || text.trim() === lastPushed.current) return
     const timer = setTimeout(() => apply(text, true), 280)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text])
+  }, [text, aiMode])
 
   // "/" springt von überall ins Suchfeld
   useEffect(() => {
@@ -136,12 +179,46 @@ function SearchBox() {
 
   function submit(event: FormEvent) {
     event.preventDefault()
-    apply(text, false)
+    if (aiMode && text.trim()) ask.mutate(text.trim())
+    else apply(text, false)
+  }
+
+  function toggleMode() {
+    const next: SearchMode = mode === 'ai' ? 'keywords' : 'ai'
+    setMode(next)
+    try {
+      localStorage.setItem('searchMode', next)
+    } catch {
+      // ohne Speicher gilt die Wahl bis zum Neuladen
+    }
+    input.current?.focus()
   }
 
   return (
     <form onSubmit={submit} role="search" className="relative mx-auto min-w-0 flex-1 md:max-w-2xl">
-      <Search className="pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2 text-subtle" aria-hidden />
+      {system.data?.aiEnabled ? (
+        <button
+          type="button"
+          onClick={toggleMode}
+          title={aiMode ? t('shell.search.modeAi') : t('shell.search.modeKeywords')}
+          aria-label={aiMode ? t('shell.search.modeAi') : t('shell.search.modeKeywords')}
+          aria-pressed={aiMode}
+          className={cx(
+            'absolute top-1/2 left-1.5 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg transition-colors',
+            aiMode ? 'text-brand hover:bg-brand-soft' : 'text-subtle hover:bg-line hover:text-ink',
+          )}
+        >
+          {ask.isPending ? (
+            <Loader2 className="size-[18px] animate-spin" aria-hidden />
+          ) : aiMode ? (
+            <Sparkles className="size-[18px]" aria-hidden />
+          ) : (
+            <Search className="size-[18px]" aria-hidden />
+          )}
+        </button>
+      ) : (
+        <Search className="pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2 text-subtle" aria-hidden />
+      )}
       <input
         ref={input}
         value={text}
@@ -152,7 +229,8 @@ function SearchBox() {
             input.current?.blur()
           }
         }}
-        placeholder={t('shell.search.placeholder')}
+        placeholder={aiMode ? t('shell.search.placeholderAi') : t('shell.search.placeholder')}
+        aria-busy={ask.isPending}
         aria-label={t('shell.search.label')}
         className={cx(
           'h-11 w-full rounded-xl border border-line bg-raised pr-11 pl-10.5 text-[15px] text-ink',

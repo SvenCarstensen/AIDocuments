@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Søk i dokumenter, stikkord, innhold …",
+      "placeholderAi": "Søk etter dokumenter med egne ord – f.eks. «fakturaer fra Kia fra 2024»",
       "label": "Søk i dokumenter",
-      "clear": "Tøm søket"
+      "clear": "Tøm søket",
+      "modeAi": "KI-søk – bytt til søk med stikkord",
+      "modeKeywords": "Søk med stikkord – bytt til KI-søk",
+      "askFailed": "Det søkes med stikkord."
     },
     "userMenu": {
       "label": "Brukermeny ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Tekstgjenkjenning",
     "aiNotice": {
       "text": "KI-en er ikke satt opp ennå. Nye dokumenter kan søkes opp via teksten, men de får verken sammendrag eller stikkord.",
+      "builtinOcr": "Skanninger uten tekstlag leses av den innebygde tekstgjenkjenningen, slik at også de blir søkbare.",
       "action": "Sett opp nå"
     },
     "searchResults_one": "<count>{{count, number}} treff</count> <query>for «{{query}}»</query>",
@@ -148,6 +153,7 @@
       "dateTo": "til",
       "status": "Status",
       "failed": "Mislyktes",
+      "duplicates": "Mulige duplikater",
       "showAll": "Vis alle",
       "showLess": "Vis færre",
       "activeFrom": "fra {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} av {{count, number}} dokument lastet inn …",
     "loadingAll_other": "{{loaded, number}} av {{count, number}} dokumenter lastet inn …",
-    "loadMore": "Last inn flere ({{remaining, number}})"
+    "loadMore": "Last inn flere ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "KI-søk: «{{question}}». Filtrene viser hvordan spørsmålet ble forstått."
+    }
   },
   "document": {
     "backToList": "Tilbake til oversikten",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Dokumentet analyseres på nytt.",
     "deleted": "Dokumentet er slettet",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Ulagrede endringer i dokumentet",
+      "discard": "Forkast",
+      "save": "Lagre endringer",
+      "saved": "Endringene er lagret – originalen beholdes.",
+      "modified": "Endret {{when}} – originalen er tatt vare på.",
+      "downloadOriginal": "Last ned original",
+      "restoreOriginal": "Gjenopprett original",
+      "restoreTitle": "Gjenopprette originalen?",
+      "restoreText": "Den endrede versjonen forkastes. Dokumentet blir deretter nøyaktig slik det var da det kom inn.",
+      "restored": "Originalen er gjenopprettet"
+    },
+    "duplicate": {
+      "notice": "Muligens et duplikat: Dette dokumentet tilsvarer innholdsmessig «{{title}}».",
+      "open": "Til det andre dokumentet",
+      "dismiss": "Ikke et duplikat",
+      "dismissed": "Notert: ikke et duplikat"
+    },
     "openInNewTab": "Åpne i ny fane",
     "processingNotice": "Dokumentet behandles. Sammendraget og stikkordene vises her så snart analysen er ferdig.",
     "textOnlyNotice": "Indeksert uten KI: Dokumentet kan søkes opp via teksten, men har verken sammendrag eller automatiske stikkord.",
     "tabs": {
       "overview": "Oversikt",
-      "text": "Fulltekst"
+      "text": "Fulltekst",
+      "chat": "Spør"
     },
     "fields": {
       "title": "Tittel",
@@ -227,6 +255,19 @@
       "title": "Slette dokumentet?",
       "text": "«{{title}}» slettes sammen med PDF-filen, fullteksten og stikkordene. Dette kan ikke angres.",
       "confirm": "Slett permanent"
+    },
+    "chat": {
+      "intro": "Still et spørsmål om dette dokumentet – KI svarer ut fra innholdet.",
+      "placeholder": "Spør om noe i dette dokumentet …",
+      "send": "Send",
+      "thinking": "KI leser dokumentet …",
+      "notConfigured": "For å stille spørsmål om dokumentet må en KI være satt opp.",
+      "restart": "Start på nytt",
+      "suggestions": {
+        "summary": "Hva handler dette dokumentet om?",
+        "deadlines": "Er det frister eller datoer?",
+        "amounts": "Hvilke beløp nevnes?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Språk for resultatene",
         "outputLanguageHint": "KI-en skriver tittel, sammendrag og stikkord på dette språket.",
         "ocr": "Tekstgjenkjenning for skanninger",
-        "ocrHint": "Programmet lar KI-en transkribere skannede PDF-er uten tekstlag – først da kan de finnes med fulltekstsøk. Hver skanning tar lengre tid og koster mer."
+        "ocrHint": "Programmet lar KI-en transkribere skannede PDF-er uten tekstlag – først da kan de finnes med fulltekstsøk. Hver skanning tar lengre tid og koster mer.",
+        "quickOcrFirst": "Først rask tekstgjenkjenning, deretter forbedring med KI",
+        "quickOcrFirstHint": "Nye skanninger leses først av den innebygde tekstgjenkjenningen (Tesseract) – etter noen sekunder er de søkbare. Deretter legger KI til tittel, sammendrag og stikkord basert på denne teksten."
       },
       "unanalyzed_one": "{{count, number}} dokument er ikke analysert av KI-en ennå.",
       "unanalyzed_other": "{{count, number}} dokumenter er ikke analysert av KI-en ennå.",

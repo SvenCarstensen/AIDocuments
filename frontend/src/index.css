@@ -107,6 +107,11 @@
 
 @layer base {
   html {
+    /* Die Bildlaufleiste immer zeigen bzw. ihren Platz freihalten – sonst springt der zentrierte Inhalt seitlich,
+       sobald eine Seite länger oder kürzer als das Fenster ist (etwa beim Wechsel zwischen den Einstellungsseiten).
+       overflow-y: scroll wirkt in jedem Browser; bei ausgeblendeten (überlagernden) Leisten ändert es nichts. */
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
     font-family: var(--font-sans);
     font-feature-settings: 'cv11', 'ss03';
     -webkit-font-smoothing: antialiased;

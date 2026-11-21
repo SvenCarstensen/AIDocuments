@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Search documents, tags, contents …",
+      "placeholderAi": "Ask for documents – e.g. “invoices from Kia from 2024”",
       "label": "Search documents",
-      "clear": "Clear search"
+      "clear": "Clear search",
+      "modeAi": "AI search – switch to keyword search",
+      "modeKeywords": "Keyword search – switch to AI search",
+      "askFailed": "Searching by keywords instead."
     },
     "userMenu": {
       "label": "User menu ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Text recognition",
     "aiNotice": {
       "text": "The AI has not been set up yet. New documents can be searched by their text, but they are not summarized or tagged.",
+      "builtinOcr": "Scans without a text layer are read by the built-in text recognition, so they are searchable too.",
       "action": "Set up now"
     },
     "searchResults_one": "<count>{{count, number}} result</count> <query>for “{{query}}”</query>",
@@ -148,6 +153,7 @@
       "dateTo": "to",
       "status": "Status",
       "failed": "Failed",
+      "duplicates": "Possible duplicates",
       "showAll": "Show all",
       "showLess": "Show less",
       "activeFrom": "from {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} of {{count, number}} document loaded …",
     "loadingAll_other": "{{loaded, number}} of {{count, number}} documents loaded …",
-    "loadMore": "Load more ({{remaining, number}})"
+    "loadMore": "Load more ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "AI search: “{{question}}”. The filters show how the question was understood."
+    }
   },
   "document": {
     "backToList": "Back to overview",
@@ -176,12 +185,31 @@
     "reprocessStarted": "The document is being analyzed again.",
     "deleted": "Document deleted",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Unsaved changes to the document",
+      "discard": "Discard",
+      "save": "Save changes",
+      "saved": "Changes saved – the original is kept.",
+      "modified": "Changed on {{when}} – the original is kept.",
+      "downloadOriginal": "Download original",
+      "restoreOriginal": "Restore original",
+      "restoreTitle": "Restore the original?",
+      "restoreText": "The changed version will be discarded. The document will then be exactly as it was when it arrived.",
+      "restored": "Original restored"
+    },
+    "duplicate": {
+      "notice": "Possibly a duplicate: this document matches “{{title}}” in content.",
+      "open": "Go to the other document",
+      "dismiss": "Not a duplicate",
+      "dismissed": "Noted: not a duplicate"
+    },
     "openInNewTab": "Open in new tab",
     "processingNotice": "The document is being processed. The summary and tags will appear here as soon as the analysis is finished.",
     "textOnlyNotice": "Indexed without AI: the document can be searched by its text, but it has no summary and no automatic tags.",
     "tabs": {
       "overview": "Overview",
-      "text": "Full text"
+      "text": "Full text",
+      "chat": "Ask"
     },
     "fields": {
       "title": "Title",
@@ -227,6 +255,19 @@
       "title": "Delete document?",
       "text": "“{{title}}” will be deleted together with its PDF file, full text and tags. This cannot be undone.",
       "confirm": "Delete permanently"
+    },
+    "chat": {
+      "intro": "Ask a question about this document – the AI answers based on its content.",
+      "placeholder": "Ask something about this document …",
+      "send": "Send",
+      "thinking": "The AI is reading the document …",
+      "notConfigured": "Questions about the document need an AI to be set up.",
+      "restart": "Start over",
+      "suggestions": {
+        "summary": "What is this document about?",
+        "deadlines": "Are there any deadlines or dates?",
+        "amounts": "Which amounts are mentioned?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Language of the results",
         "outputLanguageHint": "The AI writes the title, summary and tags in this language.",
         "ocr": "Text recognition for scans",
-        "ocrHint": "The application has the AI transcribe scanned PDFs without a text layer – only then can they be found by full-text search. Each scan takes more time and costs more."
+        "ocrHint": "The application has the AI transcribe scanned PDFs without a text layer – only then can they be found by full-text search. Each scan takes more time and costs more.",
+        "quickOcrFirst": "Quick text recognition first, then refine with the AI",
+        "quickOcrFirstHint": "New scans are read by the built-in text recognition (Tesseract) first – they are searchable within seconds. The AI then adds title, summary and tags based on this text."
       },
       "unanalyzed_one": "{{count, number}} document has not been analyzed by the AI yet.",
       "unanalyzed_other": "{{count, number}} documents have not been analyzed by the AI yet.",

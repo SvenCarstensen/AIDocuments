@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, Download, ExternalLink, Pencil, Plus, RefreshCw, Sparkles, Trash2, X } from 'lucide-react'
-import { type FormEvent, type KeyboardEvent, type ReactNode, useEffect, useState } from 'react'
+import { ArrowLeft, Download, Pencil, Plus, RefreshCw, Sparkles, Trash2, X } from 'lucide-react'
+import { type FormEvent, type KeyboardEvent, type ReactNode, useEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { isBusy, OcrHint, sourceInfo, StatusBadge } from '../components/documents'
 import { Alert, Badge, Button, Card, ConfirmDialog, Field, Input, Modal, Spinner, Textarea } from '../components/ui'
-import { api, ApiError, type Doc, errorMessage, fileUrl } from '../lib/api'
+import { PdfViewer } from '../components/PdfViewer'
+import { api, ApiError, type ChatMessage, type Doc, errorMessage, fileUrl } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { cx, formatBytes, formatDateTime, formatLongDate } from '../lib/format'
 
@@ -18,7 +19,7 @@ export function DocumentPage() {
   const queryClient = useQueryClient()
   const [editing, setEditing] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
-  const [tab, setTab] = useState<'overview' | 'text'>('overview')
+  const [tab, setTab] = useState<'overview' | 'text' | 'chat'>('overview')
 
   const query = useQuery({
     queryKey: ['document', id],
@@ -120,17 +121,9 @@ export function DocumentPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_26rem]">
-        {/* PDF-Ansicht: der eingebaute Betrachter des Browsers (blättern, zoomen, im PDF suchen, drucken) */}
+        {/* PDF-Ansicht: blättern, zoomen, suchen, drucken – und markieren, beschriften, unterschreiben */}
         <div className="relative h-[70dvh] overflow-hidden rounded-xl border border-line bg-raised shadow-card xl:sticky xl:top-22 xl:h-[calc(100dvh-10.5rem)]">
-          <iframe src={fileUrl(doc.id)} title={t('document.pdfTitle', { title: doc.title })} className="size-full" />
-          <a
-            href={fileUrl(doc.id)}
-            target="_blank"
-            rel="noreferrer"
-            className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface/95 px-2.5 py-1.5 text-xs font-medium text-muted shadow-card backdrop-blur hover:text-ink"
-          >
-            <ExternalLink className="size-3.5" aria-hidden /> {t('document.openInNewTab')}
-          </a>
+          <PdfViewer doc={doc} />
         </div>
 
         <div className="flex min-w-0 flex-col gap-4">
@@ -138,9 +131,11 @@ export function DocumentPage() {
           {doc.status === 'FAILED' && doc.errorMessage && <Alert tone="danger">{doc.errorMessage}</Alert>}
           {doc.status === 'INDEXED' && doc.errorMessage && <Alert tone="warn">{doc.errorMessage}</Alert>}
           {doc.status === 'TEXT_ONLY' && <Alert tone="warn">{t('document.textOnlyNotice')}</Alert>}
+          {doc.status === 'TEXT_ONLY' && doc.errorMessage && <Alert tone="warn">{doc.errorMessage}</Alert>}
+          {doc.duplicateOf && <DuplicateNotice doc={doc} />}
 
           <div className="flex gap-1 rounded-lg bg-raised p-1">
-            {(['overview', 'text'] as const).map((key) => (
+            {(['overview', 'text', 'chat'] as const).map((key) => (
               <button
                 key={key}
                 type="button"
@@ -210,8 +205,10 @@ export function DocumentPage() {
                 </dl>
               </Card>
             </>
-          ) : (
+          ) : tab === 'text' ? (
             <FullText id={doc.id} stamp={doc.processedAt} />
+          ) : (
+            <DocumentChat doc={doc} />
           )}
         </div>
       </div>
@@ -228,6 +225,180 @@ export function DocumentPage() {
         {t('document.delete.text', { title: doc.title })}
       </ConfirmDialog>
     </div>
+  )
+}
+
+/**
+ * Fragen an das Dokument. Das Gespräch lebt nur hier im Browser; jede Frage schickt den bisherigen Verlauf mit, damit
+ * die KI Rückfragen versteht („Und bis wann?“).
+ */
+function DocumentChat({ doc }: { doc: Doc }) {
+  const { t } = useTranslation()
+  const { isAdmin } = useAuth()
+  const system = useQuery({ queryKey: ['system'], queryFn: api.system })
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [draft, setDraft] = useState('')
+  const end = useRef<HTMLDivElement>(null)
+
+  const ask = useMutation({
+    mutationFn: (conversation: ChatMessage[]) => api.chat(doc.id, conversation),
+    onSuccess: ({ answer }) => setMessages((current) => [...current, { fromUser: false, text: answer }]),
+    onError: (e) => {
+      toast.error(errorMessage(e))
+      // die unbeantwortete Frage zurück ins Eingabefeld, damit sie nicht verloren geht
+      setMessages((current) => {
+        const last = current.at(-1)
+        if (last?.fromUser) setDraft(last.text)
+        return last?.fromUser ? current.slice(0, -1) : current
+      })
+    },
+  })
+
+  useEffect(() => {
+    end.current?.scrollIntoView({ block: 'nearest' })
+  }, [messages, ask.isPending])
+
+  function send(question: string) {
+    const text = question.trim()
+    if (!text || ask.isPending) return
+    const conversation = [...messages, { fromUser: true, text }]
+    setMessages(conversation)
+    setDraft('')
+    ask.mutate(conversation)
+  }
+
+  if (system.data && !system.data.aiEnabled) {
+    return (
+      <Card className="p-4 text-sm text-muted">
+        {t('document.chat.notConfigured')}{' '}
+        {isAdmin && (
+          <Link to="/settings/ai" className="font-medium text-brand-ink underline underline-offset-2">
+            {t('documents.aiNotice.action')}
+          </Link>
+        )}
+      </Card>
+    )
+  }
+
+  const suggestions = [t('document.chat.suggestions.summary'), t('document.chat.suggestions.deadlines'), t('document.chat.suggestions.amounts')]
+  return (
+    <Card className="flex flex-col gap-3 p-4">
+      <div role="log" aria-live="polite" className="flex max-h-[55dvh] flex-col gap-2.5 overflow-y-auto">
+        {messages.length === 0 && (
+          <>
+            <p className="text-sm text-muted">{t('document.chat.intro')}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {suggestions.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => send(suggestion)}
+                  className="rounded-full border border-line bg-raised px-3 py-1 text-[13px] text-ink hover:border-brand hover:text-brand-ink"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={cx(
+              'max-w-[90%] rounded-xl px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap [overflow-wrap:anywhere]',
+              message.fromUser ? 'self-end bg-brand text-white' : 'self-start bg-raised text-ink',
+            )}
+          >
+            {message.fromUser ? message.text : <AnswerText text={message.text} />}
+          </div>
+        ))}
+        {ask.isPending && (
+          <div className="flex items-center gap-2 self-start text-[13px] text-muted">
+            <Spinner className="size-4" /> {t('document.chat.thinking')}
+          </div>
+        )}
+        <div ref={end} />
+      </div>
+      <form
+        className="flex items-end gap-2"
+        onSubmit={(event) => {
+          event.preventDefault()
+          send(draft)
+        }}
+      >
+        <Textarea
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+              event.preventDefault()
+              send(draft)
+            }
+          }}
+          rows={2}
+          maxLength={4000}
+          placeholder={t('document.chat.placeholder')}
+          aria-label={t('document.chat.placeholder')}
+          className="min-h-0 flex-1 resize-none"
+        />
+        <Button type="submit" variant="primary" loading={ask.isPending} disabled={!draft.trim()}>
+          {t('document.chat.send')}
+        </Button>
+      </form>
+      {messages.length > 0 && !ask.isPending && (
+        <button type="button" onClick={() => setMessages([])} className="self-start text-[13px] font-medium text-brand-ink hover:underline">
+          {t('document.chat.restart')}
+        </button>
+      )}
+    </Card>
+  )
+}
+
+/** Antwort der KI: schlichter Text, nur **Fettes** wird dargestellt statt als Sternchen zu erscheinen. */
+function AnswerText({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(\*\*[^*]+\*\*)/).map((part, index) =>
+        part.startsWith('**') && part.endsWith('**') && part.length > 4 ? <strong key={index}>{part.slice(2, -2)}</strong> : part,
+      )}
+    </>
+  )
+}
+
+/** Hinweis auf ein mögliches Duplikat – mit Weg zum anderen Dokument und der Möglichkeit, es zu verneinen. */
+function DuplicateNotice({ doc }: { doc: Doc }) {
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const other = useQuery({ queryKey: ['document', doc.duplicateOf], queryFn: () => api.document(doc.duplicateOf!) })
+  const dismiss = useMutation({
+    mutationFn: () => api.notDuplicate(doc.id),
+    onSuccess: async (updated) => {
+      queryClient.setQueryData(['document', doc.id], updated)
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['documents'] }),
+        queryClient.invalidateQueries({ queryKey: ['system'] }),
+      ])
+      toast.success(t('document.duplicate.dismissed'))
+    },
+    onError: (e) => toast.error(errorMessage(e)),
+  })
+  if (!other.data) return null
+  return (
+    <Alert
+      tone="warn"
+      action={
+        <div className="flex shrink-0 flex-col items-end gap-1.5">
+          <Link to={`/documents/${other.data.id}`} className="font-semibold underline underline-offset-2">
+            {t('document.duplicate.open')}
+          </Link>
+          <button type="button" onClick={() => dismiss.mutate()} disabled={dismiss.isPending} className="font-medium underline underline-offset-2">
+            {t('document.duplicate.dismiss')}
+          </button>
+        </div>
+      }
+    >
+      {t('document.duplicate.notice', { title: other.data.title })}
+    </Alert>
   )
 }
 

@@ -16,3 +16,6 @@ frontend/dist/
 *.iml
 .vscode/
 .DS_Store
+
+# PDF.js-Betrachter – wird von frontend/scripts/fetch-pdfjs.mjs in fester Version geholt
+frontend/public/pdfjs/

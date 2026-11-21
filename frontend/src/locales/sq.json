@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Kërko dokumente, etiketa, përmbajtje…",
+      "placeholderAi": "Kërko dokumente me fjalët e tua – p.sh. “faturat nga Kia nga 2024”",
       "label": "Kërko dokumente",
-      "clear": "Pastro kërkimin"
+      "clear": "Pastro kërkimin",
+      "modeAi": "Kërkim me IA – kalo te kërkimi me fjalë kyçe",
+      "modeKeywords": "Kërkim me fjalë kyçe – kalo te kërkimi me IA",
+      "askFailed": "Po kërkohet me fjalë kyçe."
     },
     "userMenu": {
       "label": "Menyja e përdoruesit ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Njohje teksti",
     "aiNotice": {
       "text": "IA nuk është konfiguruar ende. Dokumentet e reja mund të kërkohen sipas tekstit, por nuk përmblidhen dhe nuk etiketohen.",
+      "builtinOcr": "Skanimet pa shtresë teksti lexohen nga njohja e integruar e tekstit, kështu që edhe në to mund të kërkohet.",
       "action": "Konfiguro tani"
     },
     "searchResults_one": "<count>{{count, number}} rezultat</count> <query>për „{{query}}“</query>",
@@ -148,6 +153,7 @@
       "dateTo": "deri",
       "status": "Gjendja",
       "failed": "Të dështuara",
+      "duplicates": "Dublikata të mundshme",
       "showAll": "Shfaq të gjitha",
       "showLess": "Shfaq më pak",
       "activeFrom": "nga {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "U ngarkua {{loaded, number}} nga {{count, number}} dokument…",
     "loadingAll_other": "U ngarkuan {{loaded, number}} nga {{count, number}} dokumente…",
-    "loadMore": "Shfaq më shumë ({{remaining, number}})"
+    "loadMore": "Shfaq më shumë ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Kërkim me IA: “{{question}}”. Filtrat tregojnë si u kuptua pyetja."
+    }
   },
   "document": {
     "backToList": "Kthehu te pasqyra",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Dokumenti po analizohet sërish.",
     "deleted": "Dokumenti u fshi",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Ndryshime të paruajtura në dokument",
+      "discard": "Hidh poshtë",
+      "save": "Ruaj ndryshimet",
+      "saved": "Ndryshimet u ruajtën – origjinali mbetet.",
+      "modified": "Ndryshuar më {{when}} – origjinali është ruajtur.",
+      "downloadOriginal": "Shkarko origjinalin",
+      "restoreOriginal": "Rikthe origjinalin",
+      "restoreTitle": "Të rikthehet origjinali?",
+      "restoreText": "Versioni i ndryshuar do të hidhet poshtë. Dokumenti do të jetë më pas saktësisht si kur mbërriti.",
+      "restored": "Origjinali u rikthye"
+    },
+    "duplicate": {
+      "notice": "Ndoshta dublikatë: përmbajtja e këtij dokumenti përputhet me “{{title}}”.",
+      "open": "Te dokumenti tjetër",
+      "dismiss": "Nuk është dublikatë",
+      "dismissed": "U shënua: nuk është dublikatë"
+    },
     "openInNewTab": "Hap në skedë të re",
     "processingNotice": "Dokumenti po përpunohet. Përmbledhja dhe etiketat do të shfaqen këtu sapo të përfundojë analiza.",
     "textOnlyNotice": "I indeksuar pa IA: dokumenti mund të kërkohet sipas tekstit, por nuk ka përmbledhje dhe as etiketa automatike.",
     "tabs": {
       "overview": "Pasqyrë",
-      "text": "Teksti i plotë"
+      "text": "Teksti i plotë",
+      "chat": "Pyetje"
     },
     "fields": {
       "title": "Titulli",
@@ -227,6 +255,19 @@
       "title": "Të fshihet dokumenti?",
       "text": "Dokumenti „{{title}}“ do të fshihet bashkë me skedarin PDF, tekstin e plotë dhe etiketat. Ky veprim nuk mund të zhbëhet.",
       "confirm": "Fshi përgjithmonë"
+    },
+    "chat": {
+      "intro": "Bëj një pyetje për këtë dokument – IA përgjigjet bazuar në përmbajtjen e tij.",
+      "placeholder": "Pyet diçka për këtë dokument …",
+      "send": "Dërgo",
+      "thinking": "IA po lexon dokumentin …",
+      "notConfigured": "Për pyetje rreth dokumentit duhet të jetë konfiguruar një IA.",
+      "restart": "Fillo nga e para",
+      "suggestions": {
+        "summary": "Për çfarë bën fjalë ky dokument?",
+        "deadlines": "A ka afate ose data?",
+        "amounts": "Cilat shuma përmenden?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Gjuha e rezultateve",
         "outputLanguageHint": "IA e shkruan titullin, përmbledhjen dhe etiketat në këtë gjuhë.",
         "ocr": "Njohje teksti për skanimet",
-        "ocrHint": "IA i transkripton skedarët PDF të skanuar pa shtresë teksti – vetëm atëherë ata mund të gjenden me kërkimin në tekstin e plotë. Çdo skanim kërkon më shumë kohë dhe kushton më shumë."
+        "ocrHint": "IA i transkripton skedarët PDF të skanuar pa shtresë teksti – vetëm atëherë ata mund të gjenden me kërkimin në tekstin e plotë. Çdo skanim kërkon më shumë kohë dhe kushton më shumë.",
+        "quickOcrFirst": "Fillimisht njohje e shpejtë e tekstit, pastaj përmirësim me IA",
+        "quickOcrFirstHint": "Skanimet e reja lexohen fillimisht nga njohja e integruar e tekstit (Tesseract) – brenda pak sekondash mund të kërkohet në to. Pastaj IA shton titullin, përmbledhjen dhe etiketat bazuar në këtë tekst."
       },
       "unanalyzed_one": "{{count, number}} dokument nuk është analizuar ende nga IA.",
       "unanalyzed_other": "{{count, number}} dokumente nuk janë analizuar ende nga IA.",

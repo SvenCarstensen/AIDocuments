@@ -70,8 +70,12 @@
     },
     "search": {
       "placeholder": "Cuardaigh doiciméid, clibeanna, ábhar…",
+      "placeholderAi": "Cuardaigh doiciméid i d’fhocail féin – m.sh. „sonraisc ó Kia ó 2024“",
       "label": "Cuardaigh doiciméid",
-      "clear": "Glan an cuardach"
+      "clear": "Glan an cuardach",
+      "modeAi": "Cuardach IS – athraigh go cuardach eochairfhocal",
+      "modeKeywords": "Cuardach eochairfhocal – athraigh go cuardach IS",
+      "askFailed": "Déantar cuardach de réir eochairfhocal."
     },
     "userMenu": {
       "label": "Roghchlár úsáideora ({{name}})",
@@ -132,6 +136,7 @@
     "ocrBadge": "Aithint téacs",
     "aiNotice": {
       "text": "Níl an intleacht shaorga socraithe go fóill. Is féidir doiciméid nua a chuardach de réir a dtéacs, ach ní dhéantar achoimre orthu ná ní chuirtear clibeanna leo.",
+      "builtinOcr": "Léann an aithint téacs ionsuite scananna nach bhfuil sraith téacs iontu, ionas gur féidir cuardach a dhéanamh iontu freisin.",
       "action": "Socraigh anois"
     },
     "searchResults_one": "<count>{{count, number}} toradh</count> <query>ar “{{query}}”</query>",
@@ -169,6 +174,7 @@
       "dateTo": "go dtí",
       "status": "Stádas",
       "failed": "Teipthe",
+      "duplicates": "Dúbailtí féideartha",
       "showAll": "Taispeáin iad uile",
       "showLess": "Taispeáin níos lú",
       "activeFrom": "ó {{date}}",
@@ -190,7 +196,10 @@
     "loadingAll_few": "{{loaded, number}} as {{count, number}} dhoiciméad lódáilte…",
     "loadingAll_many": "{{loaded, number}} as {{count, number}} ndoiciméad lódáilte…",
     "loadingAll_other": "{{loaded, number}} as {{count, number}} doiciméad lódáilte…",
-    "loadMore": "Lódáil tuilleadh ({{remaining, number}})"
+    "loadMore": "Lódáil tuilleadh ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "Cuardach IS: „{{question}}“. Taispeánann na scagairí conas a tuigeadh an cheist."
+    }
   },
   "document": {
     "backToList": "Ar ais chuig na doiciméid",
@@ -200,12 +209,31 @@
     "reprocessStarted": "Tá an doiciméad á anailísiú arís.",
     "deleted": "Scriosadh an doiciméad",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Athruithe gan sábháil sa doiciméad",
+      "discard": "Caith uait",
+      "save": "Sábháil athruithe",
+      "saved": "Athruithe sábháilte – coinnítear an bunleagan.",
+      "modified": "Athraithe {{when}} – tá an bunleagan coinnithe.",
+      "downloadOriginal": "Íoslódáil an bunleagan",
+      "restoreOriginal": "Athchóirigh an bunleagan",
+      "restoreTitle": "An bunleagan a athchóiriú?",
+      "restoreText": "Caithfear an leagan athraithe uait. Beidh an doiciméad ansin díreach mar a bhí sé nuair a tháinig sé.",
+      "restored": "Bunleagan athchóirithe"
+    },
+    "duplicate": {
+      "notice": "Dúbailt b’fhéidir: tá ábhar an doiciméid seo cosúil le „{{title}}“.",
+      "open": "Téigh go dtí an doiciméad eile",
+      "dismiss": "Ní dúbailt é",
+      "dismissed": "Nótáilte: ní dúbailt é"
+    },
     "openInNewTab": "Oscail i gcluaisín nua",
     "processingNotice": "Tá an doiciméad á phróiseáil. Beidh an achoimre agus na clibeanna le feiceáil anseo a luaithe a bheidh an anailís críochnaithe.",
     "textOnlyNotice": "Innéacsaithe gan IS: is féidir an doiciméad a chuardach de réir a théacs, ach níl achoimre ná clibeanna uathoibríocha aige.",
     "tabs": {
       "overview": "Forbhreathnú",
-      "text": "Téacs iomlán"
+      "text": "Téacs iomlán",
+      "chat": "Ceisteanna"
     },
     "fields": {
       "title": "Teideal",
@@ -254,6 +282,19 @@
       "title": "Scrios an doiciméad?",
       "text": "Scriosfar “{{title}}” mar aon lena chomhad PDF, lena théacs iomlán agus lena chlibeanna. Ní féidir é seo a chealú.",
       "confirm": "Scrios go buan"
+    },
+    "chat": {
+      "intro": "Cuir ceist faoin doiciméad seo – freagraíonn an IS bunaithe ar a ábhar.",
+      "placeholder": "Fiafraigh rud éigin faoin doiciméad seo …",
+      "send": "Seol",
+      "thinking": "Tá an IS ag léamh an doiciméid …",
+      "notConfigured": "Le ceisteanna a chur faoin doiciméad, ní mór IS a shocrú.",
+      "restart": "Tosaigh as an nua",
+      "suggestions": {
+        "summary": "Cad faoi a bhfuil an doiciméad seo?",
+        "deadlines": "An bhfuil spriocdhátaí nó dátaí ann?",
+        "amounts": "Cé na suimeanna a luaitear?"
+      }
     }
   },
   "settings": {
@@ -398,7 +439,9 @@
         "outputLanguage": "Teanga na dtorthaí",
         "outputLanguageHint": "Scríobhann an intleacht shaorga an teideal, an achoimre agus na clibeanna sa teanga seo.",
         "ocr": "Aithint téacs do dhoiciméid scanta",
-        "ocrHint": "Iarrann an feidhmchlár ar an intleacht shaorga PDFanna scanta gan sraith téacs a thras-scríobh – is ansin amháin is féidir iad a aimsiú leis an gcuardach sa téacs iomlán. Tógann gach doiciméad scanta níos mó ama agus cosnaíonn sé níos mó."
+        "ocrHint": "Iarrann an feidhmchlár ar an intleacht shaorga PDFanna scanta gan sraith téacs a thras-scríobh – is ansin amháin is féidir iad a aimsiú leis an gcuardach sa téacs iomlán. Tógann gach doiciméad scanta níos mó ama agus cosnaíonn sé níos mó.",
+        "quickOcrFirst": "Aithint téacs thapa ar dtús, ansin feabhsú leis an IS",
+        "quickOcrFirstHint": "Léann an aithint téacs ionsuite (Tesseract) scananna nua ar dtús – i gceann cúpla soicind is féidir cuardach a dhéanamh iontu. Ansin cuireann an IS teideal, achoimre agus clibeanna leo bunaithe ar an téacs sin."
       },
       "unanalyzed_one": "Tá {{count, number}} doiciméad gan anailís IS go fóill.",
       "unanalyzed_two": "Tá {{count, number}} dhoiciméad gan anailís IS go fóill.",

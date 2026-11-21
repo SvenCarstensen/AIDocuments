@@ -124,6 +124,8 @@ class ApplicationFlowTest {
         registry.add("app.data-dir", dataDir::toString);
         // unabhängig von einer lokalen config/debug.yml: Auslieferungszustand ohne KI-Zugang
         registry.add("app.ai.provider", () -> "anthropic");
+        // Ergebnisse sollen nicht davon abhängen, ob auf dem Rechner zufällig Tesseract installiert ist
+        registry.add("app.ocr.enabled", () -> "false");
         registry.add("app.ai.base-url", () -> "");
         registry.add("app.ai.api-key", () -> "");
         registry.add("app.ai.model", () -> "claude-opus-5-5");
@@ -443,6 +445,57 @@ class ApplicationFlowTest {
     }
 
     @Test
+    @Order(4)
+    void aChangedPdfIsSavedAndTheOriginalIsAlwaysKept() throws Exception {
+        Document invoice = documents.findAll().stream()
+                .filter(doc -> doc.getOriginalFilename().startsWith("Stromrechnung")).findFirst().orElseThrow();
+        String id = invoice.getId();
+        byte[] original = mvc.perform(get("/api/documents/" + id + "/file").session(userSession))
+                .andReturn().getResponse().getContentAsByteArray();
+        byte[] changed = pdf("Rechnungsbetrag 482,17 EUR", "Geprüft und bezahlt");
+
+        // kein PDF → abgelehnt, nichts verändert
+        mvc.perform(put("/api/documents/" + id + "/file").with(csrf()).session(userSession)
+                        .contentType(MediaType.APPLICATION_PDF).content("kein pdf".getBytes()))
+                .andExpect(status().isBadRequest());
+        mvc.perform(get("/api/documents/" + id + "/original").session(userSession))
+                .andExpect(status().isNotFound());
+
+        // die erste Änderung legt das Original beiseite
+        mvc.perform(put("/api/documents/" + id + "/file").with(csrf()).session(userSession)
+                        .contentType(MediaType.APPLICATION_PDF).content(changed))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.hasOriginal").value(true))
+                .andExpect(jsonPath("$.modifiedAt").isNotEmpty())
+                .andExpect(jsonPath("$.id").value(id));
+        // eine zweite überschreibt nur die Arbeitsfassung, nie das Original
+        byte[] changedAgain = pdf("Rechnungsbetrag 482,17 EUR", "Geprüft, bezahlt und abgelegt");
+        mvc.perform(put("/api/documents/" + id + "/file").with(csrf()).session(userSession)
+                        .contentType(MediaType.APPLICATION_PDF).content(changedAgain))
+                .andExpect(status().isOk());
+
+        assertThat(mvc.perform(get("/api/documents/" + id + "/file").session(userSession))
+                .andReturn().getResponse().getContentAsByteArray()).isEqualTo(changedAgain);
+        assertThat(mvc.perform(get("/api/documents/" + id + "/original").session(userSession))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsByteArray()).isEqualTo(original);
+        // Text und Suche folgen der geänderten Fassung
+        mvc.perform(get("/api/documents").param("q", "abgelegt").session(userSession))
+                .andExpect(jsonPath("$.total").value(1));
+
+        // wiederherstellen: wieder genau das Original, die Kopie ist überflüssig
+        mvc.perform(post("/api/documents/" + id + "/restore-original").with(csrf()).session(userSession))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.hasOriginal").value(false))
+                .andExpect(jsonPath("$.modifiedAt").isEmpty());
+        assertThat(mvc.perform(get("/api/documents/" + id + "/file").session(userSession))
+                .andReturn().getResponse().getContentAsByteArray()).isEqualTo(original);
+        mvc.perform(get("/api/documents").param("q", "abgelegt").session(userSession))
+                .andExpect(jsonPath("$.total").value(0));
+        assertThat(documents.findById(id).orElseThrow().getOriginalStoragePath()).isNull();
+    }
+
+    @Test
     @Order(7)
     void onlyAdminsDeleteAndDeletedDocumentsLeaveTheSearch() throws Exception {
         Document contract = documents.findAll().stream()
@@ -686,6 +739,55 @@ class ApplicationFlowTest {
                 .andExpect(jsonPath("$[0].lastSyncMessage").value("The folder “Gibt es nicht” does not exist."));
         mvc.perform(get("/api/mail-accounts").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
                 .andExpect(jsonPath("$[0].lastSyncMessage").value("Der Ordner „Gibt es nicht“ existiert nicht."));
+    }
+
+    @Test
+    @Order(11)
+    void theSameLetterScannedTwiceIsMarkedAsPossibleDuplicate() throws Exception {
+        String[] letter = {
+                "Hausverwaltung Muster, Am Markt 3, 12345 Musterstadt",
+                "Nebenkostenabrechnung für das Jahr 2025, Wohnung im zweiten Obergeschoss links",
+                "Abrechnungsdatum: 15.04.2026",
+                "Für den Abrechnungszeitraum ergeben sich die folgenden Kosten für Heizung,",
+                "Wasser, Müllabfuhr, Hausmeister und Gartenpflege. Die Vorauszahlungen wurden",
+                "berücksichtigt. Der Nachzahlungsbetrag ist innerhalb von vier Wochen zu überweisen.",
+                "Nachzahlung: 312,40 EUR"};
+        String[] rescan = letter.clone();
+        rescan[3] = rescan[3].replace("Heizung", "Heizunq"); // ein Lesefehler beim zweiten Scan
+        long before = documents.count();
+        for (byte[] pdf : List.of(pdf(letter), pdf(rescan))) {
+            mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files", "nebenkosten.pdf",
+                            "application/pdf", pdf)).with(csrf()).session(adminSession))
+                    .andExpect(jsonPath("$[0].outcome").value("CREATED"));
+        }
+        awaitProcessed((int) before + 2);
+
+        List<Document> pair = documents.findAll().stream()
+                .filter(doc -> doc.getOriginalFilename().equals("nebenkosten.pdf"))
+                .sorted(java.util.Comparator.comparing(Document::getCreatedAt)).toList();
+        assertThat(pair).hasSize(2);
+        assertThat(pair.get(0).getDuplicateOf()).isNull();
+        assertThat(pair.get(1).getDuplicateOf()).isEqualTo(pair.get(0).getId());
+        mvc.perform(get("/api/documents").param("duplicates", "true").session(adminSession))
+                .andExpect(jsonPath("$.total").value(1))
+                .andExpect(jsonPath("$.items[0].duplicateOf").value(pair.get(0).getId()));
+        mvc.perform(get("/api/system").session(adminSession)).andExpect(jsonPath("$.duplicates").value(1));
+
+        // „kein Duplikat“ – und der Vermerk kommt auch bei erneuter Prüfung nicht wieder
+        mvc.perform(post("/api/documents/" + pair.get(1).getId() + "/not-duplicate").with(csrf()).session(adminSession))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.duplicateOf").isEmpty());
+        mvc.perform(post("/api/documents/" + pair.get(1).getId() + "/reprocess").with(csrf()).session(adminSession))
+                .andExpect(status().isOk());
+        awaitProcessed((int) before + 2);
+        assertThat(documents.findById(pair.get(1).getId()).orElseThrow().getDuplicateOf()).isNull();
+        mvc.perform(get("/api/documents").param("duplicates", "true").session(adminSession))
+                .andExpect(jsonPath("$.total").value(0));
+
+        for (Document doc : pair) {
+            mvc.perform(delete("/api/documents/" + doc.getId()).with(csrf()).session(adminSession))
+                    .andExpect(status().isNoContent());
+        }
     }
 
     // --- Hilfen ---

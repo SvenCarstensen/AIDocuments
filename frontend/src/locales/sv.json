@@ -67,8 +67,12 @@
     },
     "search": {
       "placeholder": "Sök i dokument, taggar, innehåll …",
+      "placeholderAi": "Sök dokument med egna ord – t.ex. ”fakturor från Kia från 2024”",
       "label": "Sök i dokument",
-      "clear": "Rensa sökning"
+      "clear": "Rensa sökning",
+      "modeAi": "AI-sökning – byt till sökning på nyckelord",
+      "modeKeywords": "Sökning på nyckelord – byt till AI-sökning",
+      "askFailed": "Sökningen görs på nyckelord."
     },
     "userMenu": {
       "label": "Användarmeny ({{name}})",
@@ -114,6 +118,7 @@
     "ocrBadge": "Textigenkänning",
     "aiNotice": {
       "text": "AI:n är inte konfigurerad än. Nya dokument går att söka i via sin text, men de sammanfattas och taggas inte.",
+      "builtinOcr": "Skanningar utan textlager läses av den inbyggda textigenkänningen, så även de blir sökbara.",
       "action": "Konfigurera nu"
     },
     "searchResults_one": "<count>{{count, number}} träff</count> <query>för ”{{query}}”</query>",
@@ -148,6 +153,7 @@
       "dateTo": "till",
       "status": "Status",
       "failed": "Misslyckades",
+      "duplicates": "Möjliga dubbletter",
       "showAll": "Visa alla",
       "showLess": "Visa färre",
       "activeFrom": "fr.o.m. {{date}}",
@@ -166,7 +172,10 @@
     },
     "loadingAll_one": "{{loaded, number}} av {{count, number}} dokument har lästs in …",
     "loadingAll_other": "{{loaded, number}} av {{count, number}} dokument har lästs in …",
-    "loadMore": "Läs in fler ({{remaining, number}})"
+    "loadMore": "Läs in fler ({{remaining, number}})",
+    "aiSearch": {
+      "notice": "AI-sökning: ”{{question}}”. Filtren visar hur frågan tolkades."
+    }
   },
   "document": {
     "backToList": "Tillbaka till översikten",
@@ -176,12 +185,31 @@
     "reprocessStarted": "Dokumentet analyseras igen.",
     "deleted": "Dokumentet har raderats",
     "pdfTitle": "PDF: {{title}}",
+    "pdf": {
+      "unsaved": "Osparade ändringar i dokumentet",
+      "discard": "Förkasta",
+      "save": "Spara ändringar",
+      "saved": "Ändringarna har sparats – originalet behålls.",
+      "modified": "Ändrat {{when}} – originalet är sparat.",
+      "downloadOriginal": "Ladda ned original",
+      "restoreOriginal": "Återställ original",
+      "restoreTitle": "Återställa originalet?",
+      "restoreText": "Den ändrade versionen förkastas. Dokumentet blir sedan exakt som när det kom in.",
+      "restored": "Originalet har återställts"
+    },
+    "duplicate": {
+      "notice": "Möjligen en dubblett: Det här dokumentet motsvarar innehållsmässigt ”{{title}}”.",
+      "open": "Till det andra dokumentet",
+      "dismiss": "Ingen dubblett",
+      "dismissed": "Noterat: ingen dubblett"
+    },
     "openInNewTab": "Öppna i ny flik",
     "processingNotice": "Dokumentet bearbetas. Sammanfattningen och taggarna visas här så snart analysen är klar.",
     "textOnlyNotice": "Indexerat utan AI: dokumentet går att söka i via sin text, men det har ingen sammanfattning och inga automatiska taggar.",
     "tabs": {
       "overview": "Översikt",
-      "text": "Fulltext"
+      "text": "Fulltext",
+      "chat": "Fråga"
     },
     "fields": {
       "title": "Titel",
@@ -227,6 +255,19 @@
       "title": "Radera dokumentet?",
       "text": "”{{title}}” raderas tillsammans med PDF-filen, fulltexten och taggarna. Detta kan inte ångras.",
       "confirm": "Radera permanent"
+    },
+    "chat": {
+      "intro": "Ställ en fråga om det här dokumentet – AI svarar utifrån innehållet.",
+      "placeholder": "Fråga något om det här dokumentet …",
+      "send": "Skicka",
+      "thinking": "AI läser dokumentet …",
+      "notConfigured": "För att ställa frågor om dokumentet måste en AI vara inställd.",
+      "restart": "Börja om",
+      "suggestions": {
+        "summary": "Vad handlar det här dokumentet om?",
+        "deadlines": "Finns det frister eller datum?",
+        "amounts": "Vilka belopp nämns?"
+      }
     }
   },
   "settings": {
@@ -371,7 +412,9 @@
         "outputLanguage": "Resultatens språk",
         "outputLanguageHint": "AI:n skriver titel, sammanfattning och taggar på det här språket.",
         "ocr": "Textigenkänning för skanningar",
-        "ocrHint": "Programmet låter AI:n transkribera skannade PDF-filer utan textlager – först då kan de hittas med fulltextsökning. Varje skanning tar längre tid och kostar mer."
+        "ocrHint": "Programmet låter AI:n transkribera skannade PDF-filer utan textlager – först då kan de hittas med fulltextsökning. Varje skanning tar längre tid och kostar mer.",
+        "quickOcrFirst": "Först snabb textigenkänning, sedan förfining med AI",
+        "quickOcrFirstHint": "Nya skanningar läses först av den inbyggda textigenkänningen (Tesseract) – efter några sekunder är de sökbara. Sedan lägger AI till titel, sammanfattning och nyckelord utifrån den texten."
       },
       "unanalyzed_one": "{{count, number}} dokument har ännu inte analyserats av AI:n.",
       "unanalyzed_other": "{{count, number}} dokument har ännu inte analyserats av AI:n.",

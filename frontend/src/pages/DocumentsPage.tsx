@@ -1,5 +1,5 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { FileSearch, FolderOpen, LayoutGrid, List, Loader2, SlidersHorizontal, Sparkles, X } from 'lucide-react'
+import { ChevronDown, FileSearch, FolderOpen, LayoutGrid, List, Loader2, SlidersHorizontal, Sparkles, X } from 'lucide-react'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -37,6 +37,7 @@ function useDocumentFilters() {
       correspondent: params.get('correspondent') ?? '',
       tags: params.getAll('tag'),
       status: params.get('status') ?? '',
+      duplicates: params.get('duplicates') === '1',
       from: params.get('from') ?? '',
       to: params.get('to') ?? '',
       sort: sort ?? (q ? 'relevance' : 'newest'),
@@ -63,7 +64,8 @@ function useDocumentFilters() {
     setParams(next)
   }
   const activeCount =
-    [filters.category, filters.correspondent, filters.status, filters.from, filters.to].filter(Boolean).length +
+    [filters.category, filters.correspondent, filters.status, filters.duplicates, filters.from, filters.to].filter(Boolean)
+      .length +
     filters.tags.length
   return { filters, set, toggleTag, clearFilters, activeCount }
 }
@@ -72,6 +74,9 @@ export function DocumentsPage() {
   const { t } = useTranslation()
   const { isAdmin } = useAuth()
   const { filters, set, toggleTag, clearFilters, activeCount } = useDocumentFilters()
+  const [searchParams] = useSearchParams()
+  // Frage der KI-Suche – die Filter darunter zeigen, wie sie verstanden wurde
+  const aiQuestion = searchParams.get('ai')
   const [view, setView] = useState<View>(() => (localStorage.getItem('view') === 'list' ? 'list' : 'grid'))
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [pageSize, setPageSize] = useState<PageSize>(storedPageSize)
@@ -90,11 +95,18 @@ export function DocumentsPage() {
 
   // Der Filter „Fehlgeschlagen“ ist nur wählbar, solange es Fehlschläge gibt. Ist der letzte behoben, während
   // er gesetzt ist, entfällt er – sonst bliebe eine leere Liste hinter einem Filter, den niemand mehr sieht.
+  const duplicates = system.data?.duplicates ?? 0
   const failedFilterObsolete = filters.status === 'FAILED' && system.data !== undefined && failed === 0
+  const duplicatesFilterObsolete = filters.duplicates && system.data !== undefined && duplicates === 0
   useEffect(() => {
     if (failedFilterObsolete) set('status', '', true)
     // hängt bewusst nur an der Bedingung: "set" entsteht bei jedem Rendern neu
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [failedFilterObsolete])
+  useEffect(() => {
+    if (duplicatesFilterObsolete) set('duplicates', '', true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duplicatesFilterObsolete])
   const remainingSeconds = system.data?.estimatedSecondsRemaining ?? null
   const working = inProgress > 0
 
@@ -150,6 +162,7 @@ export function DocumentsPage() {
       facets={facets.data}
       filters={filters}
       failed={failed}
+      duplicates={duplicates}
       onSet={set}
       onToggleTag={toggleTag}
     />
@@ -177,6 +190,16 @@ export function DocumentsPage() {
             }
           >
             {t('documents.aiNotice.text')}
+            {system.data.builtinOcr && <> {t('documents.aiNotice.builtinOcr')}</>}
+          </Alert>
+        )}
+
+        {aiQuestion && (
+          <Alert tone="brand" className="mb-4">
+            <span className="inline-flex items-start gap-2">
+              <Sparkles className="mt-0.5 size-4 shrink-0" aria-hidden />
+              {t('documents.aiSearch.notice', { question: aiQuestion })}
+            </span>
           </Alert>
         )}
 
@@ -267,6 +290,7 @@ export function DocumentsPage() {
               <ActiveFilter key={tag} label={`# ${tag}`} onRemove={() => toggleTag(tag)} />
             ))}
             {filters.status === 'FAILED' && <ActiveFilter label={t('documents.filters.failed')} onRemove={() => set('status', '')} />}
+            {filters.duplicates && <ActiveFilter label={t('documents.filters.duplicates')} onRemove={() => set('duplicates', '')} />}
             {filters.from && <ActiveFilter label={t('documents.filters.activeFrom', { date: filters.from })} onRemove={() => set('from', '')} />}
             {filters.to && <ActiveFilter label={t('documents.filters.activeTo', { date: filters.to })} onRemove={() => set('to', '')} />}
             <button type="button" onClick={clearFilters} className="text-[13px] font-medium text-muted hover:text-ink">
@@ -355,11 +379,12 @@ interface FilterPanelProps {
   facets: Facets | undefined
   filters: DocumentQuery
   failed: number
+  duplicates: number
   onSet: (key: string, value: string) => void
   onToggleTag: (tag: string) => void
 }
 
-function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPanelProps) {
+function FilterPanel({ facets, filters, failed, duplicates, onSet, onToggleTag }: FilterPanelProps) {
   const { t } = useTranslation()
   const [allTags, setAllTags] = useState(false)
   const [allCorrespondents, setAllCorrespondents] = useState(false)
@@ -389,7 +414,7 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
       )}
 
       {facets.categories.length > 0 && (
-        <FilterSection title={t('document.fields.category')}>
+        <FilterSection title={t('document.fields.category')} collapsible="category" selected={filters.category ? 1 : 0}>
           {facets.categories.map((facet) => (
             <FacetRow
               key={facet.name}
@@ -403,7 +428,7 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
       )}
 
       {frequentTags.length > 0 && (
-        <FilterSection title={t('document.fields.tags')}>
+        <FilterSection title={t('document.fields.tags')} collapsible="tags" selected={filters.tags.length}>
           <div className="flex flex-wrap gap-1.5">
             {tags.map((facet) => (
               <TagChip
@@ -420,7 +445,11 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
       )}
 
       {facets.correspondents.length > 0 && (
-        <FilterSection title={t('document.fields.correspondent')}>
+        <FilterSection
+          title={t('document.fields.correspondent')}
+          collapsible="correspondent"
+          selected={filters.correspondent ? 1 : 0}
+        >
           {correspondents.map((facet) => (
             <FacetRow
               key={facet.name}
@@ -449,25 +478,90 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
         </div>
       </FilterSection>
 
-      {failed > 0 && (
+      {(failed > 0 || duplicates > 0) && (
         <FilterSection title={t('documents.filters.status')}>
-          <FacetRow
-            label={t('documents.filters.failed')}
-            count={failed}
-            active={filters.status === 'FAILED'}
-            onClick={() => onSet('status', filters.status === 'FAILED' ? '' : 'FAILED')}
-          />
+          {failed > 0 && (
+            <FacetRow
+              label={t('documents.filters.failed')}
+              count={failed}
+              active={filters.status === 'FAILED'}
+              onClick={() => onSet('status', filters.status === 'FAILED' ? '' : 'FAILED')}
+            />
+          )}
+          {duplicates > 0 && (
+            <FacetRow
+              label={t('documents.filters.duplicates')}
+              count={duplicates}
+              active={filters.duplicates}
+              onClick={() => onSet('duplicates', filters.duplicates ? '' : '1')}
+            />
+          )}
         </FilterSection>
       )}
     </div>
   )
 }
 
-function FilterSection({ title, children }: { title: string; children: ReactNode }) {
+interface FilterSectionProps {
+  title: string
+  children: ReactNode
+  /** Macht den Abschnitt einklappbar; der Wert ist sein Name, unter dem der Browser den Zustand behält. */
+  collapsible?: string
+  /** Wie viele Einträge des Abschnitts gerade als Filter gesetzt sind – steht am eingeklappten Abschnitt. */
+  selected?: number
+}
+
+/** Ob ein einklappbarer Abschnitt offen ist. Ohne gemerkten Zustand ist er zu. */
+function useSectionOpen(name: string | undefined): [boolean, (open: boolean) => void] {
+  const key = `filters.open.${name}`
+  const [open, setOpen] = useState(() => {
+    if (!name) return true
+    try {
+      return localStorage.getItem(key) === '1'
+    } catch {
+      return false
+    }
+  })
+  function change(next: boolean) {
+    setOpen(next)
+    try {
+      localStorage.setItem(key, next ? '1' : '0')
+    } catch {
+      // ohne Speicher gilt die Wahl nur bis zum Neuladen
+    }
+  }
+  return [open, change]
+}
+
+function FilterSection({ title, children, collapsible, selected = 0 }: FilterSectionProps) {
+  const [open, setOpen] = useSectionOpen(collapsible)
+  if (!collapsible) {
+    return (
+      <section>
+        <h2 className="mb-2 text-xs font-semibold tracking-wider text-subtle uppercase">{title}</h2>
+        <div className="flex flex-col gap-0.5">{children}</div>
+      </section>
+    )
+  }
   return (
     <section>
-      <h2 className="mb-2 text-xs font-semibold tracking-wider text-subtle uppercase">{title}</h2>
-      <div className="flex flex-col gap-0.5">{children}</div>
+      <h2 className="text-xs font-semibold tracking-wider text-subtle uppercase">
+        <button
+          type="button"
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+          className="-mx-2 flex w-[calc(100%+1rem)] items-center gap-2 rounded-lg px-2 py-1.5 text-left tracking-wider uppercase transition-colors hover:bg-raised hover:text-ink"
+        >
+          <span className="truncate">{title}</span>
+          {!open && selected > 0 && (
+            <span className="rounded-full bg-brand-soft px-1.5 text-[11px] leading-4 font-semibold text-brand-ink tabular-nums">
+              {selected}
+            </span>
+          )}
+          <ChevronDown className={cx('ml-auto size-4 shrink-0 transition-transform', open && 'rotate-180')} aria-hidden />
+        </button>
+      </h2>
+      {open && <div className="mt-1 flex flex-col gap-0.5">{children}</div>}
     </section>
   )
 }

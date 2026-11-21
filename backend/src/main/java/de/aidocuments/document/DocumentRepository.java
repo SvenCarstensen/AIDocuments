@@ -17,4 +17,10 @@ public interface DocumentRepository extends MongoRepository<Document, String> {
 
     /** Die zuletzt fertig bearbeiteten Dokumente, neueste zuerst – Grundlage der Restzeit-Schätzung. */
     List<Document> findTop25ByProcessedAtNotNullOrderByProcessedAtDesc();
+
+    List<Document> findByFingerprintIsNotNull();
+
+    List<Document> findByDuplicateOf(String duplicateOf);
+
+    long countByDuplicateOfIsNotNull();
 }

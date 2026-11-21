@@ -61,7 +61,7 @@ class LongAnswerTest {
         AiSettingsService settings = mock(AiSettingsService.class);
         when(settings.current()).thenReturn(new Effective(LlmProvider.OPENAI_COMPATIBLE,
                 "http://127.0.0.1:" + server.getAddress().getPort() + "/v1", "", KeySource.NONE, "modell",
-                "medium", "Deutsch", true, false));
+                "medium", "Deutsch", true, false, false));
         service = new AiAnalysisService(settings, new PdfExtractor());
     }
 
