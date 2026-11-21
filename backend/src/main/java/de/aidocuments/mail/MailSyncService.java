@@ -4,7 +4,8 @@ import de.aidocuments.document.DocumentService;
 import de.aidocuments.document.DocumentService.MailOrigin;
 import de.aidocuments.document.DocumentService.Outcome;
 import de.aidocuments.document.DocumentSource;
-import de.aidocuments.mail.MailDtos.ConnectionTestDto;
+import de.aidocuments.i18n.Localizable;
+import de.aidocuments.i18n.Msg;
 import jakarta.mail.Address;
 import jakarta.mail.AuthenticationFailedException;
 import jakarta.mail.FetchProfile;
@@ -53,6 +54,10 @@ public class MailSyncService {
     private static final int FETCH_BATCH = 200;
     private static final int MAX_NESTING = 10;
 
+    /** Ergebnis des Verbindungstests; die Meldung übersetzt der Controller in die Sprache der Anfrage. */
+    public record TestResult(boolean ok, Msg message) {
+    }
+
     private final MailAccountRepository accounts;
     private final MailAccountService accountService;
     private final DocumentService documentService;
@@ -88,11 +93,13 @@ public class MailSyncService {
                 Counters counters = fetch(account);
                 accountService.markFinished(accountId, MailAccount.SyncStatus.OK, counters.summary());
                 if (counters.imported > 0) {
-                    log.info("Postfach {}: {}", account.getName(), counters.summary());
+                    log.info("Postfach {}: {} neue E-Mails geprüft, {} PDFs übernommen, {} bereits vorhanden, "
+                                    + "{} kein gültiges PDF, {} nicht lesbar", account.getName(), counters.checked,
+                            counters.imported, counters.duplicates, counters.rejected, counters.unreadable);
                 }
             } catch (Exception e) {
                 log.warn("Abruf von Postfach {} fehlgeschlagen: {}", account.getName(), e.toString());
-                accountService.markFinished(accountId, MailAccount.SyncStatus.ERROR, describe(e));
+                accountService.markFinished(accountId, MailAccount.SyncStatus.ERROR, List.of(describe(e)));
             }
         } finally {
             running.remove(accountId);
@@ -100,20 +107,18 @@ public class MailSyncService {
     }
 
     /** Baut testweise eine Verbindung auf und öffnet den Ordner. */
-    public ConnectionTestDto test(MailAccount account, String password) {
+    public TestResult test(MailAccount account, String password) {
         try (Store store = connect(account, password)) {
             Folder folder = store.getFolder(account.getFolder());
             if (!folder.exists()) {
-                return new ConnectionTestDto(false, "Die Anmeldung klappt, aber den Ordner „"
-                        + account.getFolder() + "“ gibt es nicht.");
+                return new TestResult(false, Msg.of("mailbox.test.folderMissing", account.getFolder()));
             }
             folder.open(Folder.READ_ONLY);
             int count = folder.getMessageCount();
             folder.close(false);
-            return new ConnectionTestDto(true, "Verbindung erfolgreich – " + count + " E-Mail"
-                    + (count == 1 ? "" : "s") + " im Ordner „" + account.getFolder() + "“.");
+            return new TestResult(true, Msg.of("mailbox.test.success", account.getFolder(), count));
         } catch (Exception e) {
-            return new ConnectionTestDto(false, describe(e));
+            return new TestResult(false, describe(e));
         }
     }
 
@@ -122,7 +127,7 @@ public class MailSyncService {
         try (Store store = connect(account, accountService.password(account))) {
             Folder folder = store.getFolder(account.getFolder());
             if (!folder.exists()) {
-                throw new MessagingException("Der Ordner „" + account.getFolder() + "“ existiert nicht.");
+                throw new MissingFolderException(account.getFolder());
             }
             folder.open(Folder.READ_ONLY);
             try {
@@ -287,27 +292,48 @@ public class MailSyncService {
         return store;
     }
 
-    /** Übersetzt technische Fehler in eine Meldung, mit der der Anwender etwas anfangen kann. */
-    static String describe(Exception e) {
+    /**
+     * Übersetzt technische Fehler in eine Meldung, mit der der Anwender etwas anfangen kann – sprachneutral,
+     * denn beim Abruf im Hintergrund steht noch nicht fest, wer sie liest. Unbekannte Fehler werden mit der
+     * Meldung ihrer Quelle (Mailserver, Bibliothek) wörtlich durchgereicht.
+     */
+    static Msg describe(Exception e) {
+        if (e instanceof Localizable localizable) {
+            return localizable.msg();
+        }
         if (e instanceof AuthenticationFailedException) {
-            return "Anmeldung abgelehnt – bitte Benutzername und Passwort prüfen.";
+            return Msg.of("mailbox.error.authFailed");
         }
         for (Throwable cause = e; cause != null; cause = cause.getCause()) {
             if (cause instanceof UnknownHostException) {
-                return "Der Server „" + cause.getMessage() + "“ wurde nicht gefunden.";
+                return Msg.of("mailbox.error.unknownHost", cause.getMessage());
             }
             if (cause instanceof ConnectException || cause instanceof SocketTimeoutException) {
-                return "Der Server antwortet nicht – bitte Adresse, Port und Verschlüsselung prüfen.";
+                return Msg.of("mailbox.error.noResponse");
             }
             if (cause instanceof SSLException) {
-                return "Die verschlüsselte Verbindung kam nicht zustande (" + cause.getMessage()
-                        + ") – passen Port und Verschlüsselung zusammen?";
+                return Msg.of("mailbox.error.ssl", cause.getMessage());
             }
             if (cause.getCause() == cause) {
                 break;
             }
         }
-        return e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+        return Msg.literal(e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
+    }
+
+    private static final class MissingFolderException extends MessagingException implements Localizable {
+
+        private final Msg msg;
+
+        MissingFolderException(String folder) {
+            super("Ordner " + folder + " existiert nicht");
+            this.msg = Msg.of("mailbox.error.folderMissing", folder);
+        }
+
+        @Override
+        public Msg msg() {
+            return msg;
+        }
     }
 
     private static String clip(String value, int max) {
@@ -321,23 +347,27 @@ public class MailSyncService {
         int rejected;
         int unreadable;
 
-        String summary() {
+        /**
+         * Das Ergebnis als Folge von Sätzen der Form „Bezeichnung: Anzahl.“ – so stimmt es in jeder Sprache
+         * für jede Anzahl, ohne Einzahl- und Mehrzahlformen.
+         */
+        List<Msg> summary() {
             if (checked == 0) {
-                return "Keine neuen E-Mails.";
+                return List.of(Msg.of("mailbox.sync.none"));
             }
-            List<String> parts = new ArrayList<>();
-            parts.add(checked + (checked == 1 ? " neue E-Mail geprüft" : " neue E-Mails geprüft"));
-            parts.add(imported + (imported == 1 ? " PDF übernommen" : " PDFs übernommen"));
+            List<Msg> sentences = new ArrayList<>();
+            sentences.add(Msg.of("mailbox.sync.checked", checked));
+            sentences.add(Msg.of("mailbox.sync.imported", imported));
             if (duplicates > 0) {
-                parts.add(duplicates + " bereits vorhanden");
+                sentences.add(Msg.of("mailbox.sync.duplicates", duplicates));
             }
             if (rejected > 0) {
-                parts.add(rejected + " kein gültiges PDF");
+                sentences.add(Msg.of("mailbox.sync.rejected", rejected));
             }
             if (unreadable > 0) {
-                parts.add(unreadable + " nicht lesbar");
+                sentences.add(Msg.of("mailbox.sync.unreadable", unreadable));
             }
-            return String.join(", ", parts) + ".";
+            return sentences;
         }
     }
 }

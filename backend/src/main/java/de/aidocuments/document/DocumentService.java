@@ -3,6 +3,8 @@ package de.aidocuments.document;
 import de.aidocuments.document.DocumentDtos.DocumentDto;
 import de.aidocuments.document.DocumentDtos.PageDto;
 import de.aidocuments.document.DocumentDtos.UpdateDocumentRequest;
+import de.aidocuments.i18n.Messages;
+import de.aidocuments.i18n.Msg;
 import de.aidocuments.search.SearchIndex;
 import de.aidocuments.web.ApiException;
 import java.io.IOException;
@@ -31,7 +33,8 @@ public class DocumentService {
     public record MailOrigin(String accountId, String subject, String from, Instant receivedAt) {
     }
 
-    public record IngestResult(Outcome outcome, Document document, String message) {
+    /** @param message warum nichts Neues entstand – sprachneutral; {@code null} bei {@link Outcome#CREATED} */
+    public record IngestResult(Outcome outcome, Document document, Msg message) {
     }
 
     private final DocumentRepository documents;
@@ -39,9 +42,11 @@ public class DocumentService {
     private final FileStorage storage;
     private final DocumentProcessor processor;
     private final SearchIndex searchIndex;
+    private final Messages messages;
 
     public DocumentService(DocumentRepository documents, DocumentTextRepository texts, FileStorage storage,
-                           DocumentProcessor processor, SearchIndex searchIndex) {
+                           DocumentProcessor processor, SearchIndex searchIndex, Messages messages) {
+        this.messages = messages;
         this.documents = documents;
         this.texts = texts;
         this.storage = storage;
@@ -59,11 +64,11 @@ public class DocumentService {
         FileStorage.Received received = storage.receive(content);
         try {
             if (received.size() == 0 || !storage.looksLikePdf(received)) {
-                return new IngestResult(Outcome.REJECTED, null, "Die Datei ist kein PDF.");
+                return new IngestResult(Outcome.REJECTED, null, Msg.of("upload.notPdf"));
             }
             Document existing = documents.findBySha256(received.sha256()).orElse(null);
             if (existing != null) {
-                return new IngestResult(Outcome.DUPLICATE, existing, "Dieses Dokument ist bereits vorhanden.");
+                return new IngestResult(Outcome.DUPLICATE, existing, Msg.of("upload.duplicate"));
             }
             String id = UUID.randomUUID().toString();
             Document doc = new Document(id, cleanName, storage.commit(received, id), received.sha256(),
@@ -78,7 +83,7 @@ public class DocumentService {
                 // dieselbe Datei kam gleichzeitig über einen zweiten Weg herein
                 storage.delete(doc.getStoragePath(), id);
                 Document winner = documents.findBySha256(received.sha256()).orElse(null);
-                return new IngestResult(Outcome.DUPLICATE, winner, "Dieses Dokument ist bereits vorhanden.");
+                return new IngestResult(Outcome.DUPLICATE, winner, Msg.of("upload.duplicate"));
             }
             searchIndex.index(doc, "");
             processor.enqueue(id);
@@ -97,7 +102,7 @@ public class DocumentService {
         List<DocumentDto> items = result.hits().stream()
                 .map(hit -> {
                     Document doc = byId.get(hit.id());
-                    return doc == null ? null : DocumentDto.of(doc, hit.snippet());
+                    return doc == null ? null : DocumentDto.of(doc, hit.snippet(), messages);
                 })
                 .filter(Objects::nonNull)
                 .toList();
@@ -105,11 +110,11 @@ public class DocumentService {
     }
 
     public Document require(String id) {
-        return documents.findById(id).orElseThrow(() -> ApiException.notFound("Das Dokument"));
+        return documents.findById(id).orElseThrow(() -> ApiException.notFound("error.document.notFound"));
     }
 
     public DocumentDto get(String id) {
-        return DocumentDto.of(require(id), null);
+        return DocumentDto.of(require(id), null, messages);
     }
 
     public String text(String id) {
@@ -129,7 +134,7 @@ public class DocumentService {
         doc.replaceTags(DocumentProcessor.normalizeTags(request.tags()));
         documents.save(doc);
         processor.reindex(doc);
-        return DocumentDto.of(doc, null);
+        return DocumentDto.of(doc, null, messages);
     }
 
     public void delete(String id) {
@@ -143,14 +148,14 @@ public class DocumentService {
     public DocumentDto reprocess(String id) {
         Document doc = require(id);
         if (doc.getStatus() == DocumentStatus.PENDING || doc.getStatus() == DocumentStatus.PROCESSING) {
-            throw ApiException.conflict("Das Dokument wird bereits verarbeitet.");
+            throw ApiException.conflict("error.document.alreadyProcessing");
         }
         doc.setStatus(DocumentStatus.PENDING);
         doc.setErrorMessage(null);
         documents.save(doc);
         processor.reindex(doc);
         processor.enqueue(id);
-        return DocumentDto.of(doc, null);
+        return DocumentDto.of(doc, null, messages);
     }
 
     /** Schickt alle Dokumente erneut durch die Pipeline, die (noch) nicht von der KI erschlossen sind. */

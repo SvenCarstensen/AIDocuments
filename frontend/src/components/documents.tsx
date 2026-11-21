@@ -1,5 +1,6 @@
 import { AlertCircle, FileText, FolderInput, Loader2, Mail, ScanText, Upload } from 'lucide-react'
 import { Fragment, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { type Doc, type DocumentSource, thumbnailUrl } from '../lib/api'
 import { cx, formatDate } from '../lib/format'
 import { Badge } from './ui'
@@ -19,27 +20,28 @@ export function Snippet({ text, className }: { text: string; className?: string 
 }
 
 export function StatusBadge({ doc }: { doc: Pick<Doc, 'status'> }) {
+  const { t } = useTranslation()
   switch (doc.status) {
     case 'PENDING':
       return (
         <Badge tone="neutral">
-          <Loader2 className="size-3 animate-spin" aria-hidden /> Wartet
+          <Loader2 className="size-3 animate-spin" aria-hidden /> {t('documents.status.pending')}
         </Badge>
       )
     case 'PROCESSING':
       return (
         <Badge tone="brand">
-          <Loader2 className="size-3 animate-spin" aria-hidden /> Wird analysiert
+          <Loader2 className="size-3 animate-spin" aria-hidden /> {t('documents.status.processing')}
         </Badge>
       )
     case 'FAILED':
       return (
         <Badge tone="danger">
-          <AlertCircle className="size-3" aria-hidden /> Fehler
+          <AlertCircle className="size-3" aria-hidden /> {t('documents.status.failed')}
         </Badge>
       )
     case 'TEXT_ONLY':
-      return <Badge tone="warn">Ohne KI</Badge>
+      return <Badge tone="warn">{t('documents.status.textOnly')}</Badge>
     default:
       return null
   }
@@ -100,10 +102,11 @@ export function TagChip({
   )
 }
 
-export const sourceInfo: Record<DocumentSource, { label: string; icon: typeof Mail }> = {
-  MAIL: { label: 'E-Mail-Postfach', icon: Mail },
-  FOLDER: { label: 'Eingangsordner', icon: FolderInput },
-  UPLOAD: { label: 'Hochgeladen', icon: Upload },
+/** Symbol je Herkunft; die Bezeichnung dazu steht in den Übersetzungen unter document.source.<Herkunft>. */
+export const sourceInfo: Record<DocumentSource, { icon: typeof Mail }> = {
+  MAIL: { icon: Mail },
+  FOLDER: { icon: FolderInput },
+  UPLOAD: { icon: Upload },
 }
 
 /** "Stadtwerke · 28.02.2025" – was davon bekannt ist; sonst das Eingangsdatum. */
@@ -113,9 +116,10 @@ export function metaLine(doc: Doc): string {
 }
 
 export function OcrHint() {
+  const { t } = useTranslation()
   return (
     <Badge tone="neutral">
-      <ScanText className="size-3" aria-hidden /> Texterkennung
+      <ScanText className="size-3" aria-hidden /> {t('documents.ocrBadge')}
     </Badge>
   )
 }

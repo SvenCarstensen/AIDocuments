@@ -4,6 +4,8 @@ import de.aidocuments.document.DocumentService;
 import de.aidocuments.document.DocumentService.IngestResult;
 import de.aidocuments.document.DocumentService.Outcome;
 import de.aidocuments.document.DocumentSource;
+import de.aidocuments.i18n.Msg;
+import de.aidocuments.i18n.MsgCodec;
 import de.aidocuments.importer.ImportSettings.FolderMode;
 import de.aidocuments.importer.ImportSettingsService.Effective;
 import java.io.IOException;
@@ -38,7 +40,19 @@ public class FolderImportService {
     private static final long SETTLE_MILLIS = 10_000;
     private static final int MAX_DEPTH = 8;
 
+    /**
+     * @param message das Ergebnis des letzten Durchlaufs – hier sprachneutral (siehe {@link MsgCodec}), denn der
+     *                Durchlauf hat keinen Leser; der Controller übersetzt es beim Ausliefern
+     */
     public record Status(Instant lastScanAt, boolean ok, String message, boolean running) {
+
+        static Status of(boolean ok, List<Msg> result) {
+            return new Status(Instant.now(), ok, MsgCodec.encode(result), false);
+        }
+
+        public Status withMessage(String text) {
+            return new Status(lastScanAt, ok, text, running);
+        }
     }
 
     private final ImportSettingsService settings;
@@ -69,7 +83,7 @@ public class FolderImportService {
             status = run(config);
         } catch (RuntimeException e) {
             log.warn("Eingangsordner konnte nicht geprüft werden", e);
-            status = new Status(Instant.now(), false, "Unerwarteter Fehler: " + e.getMessage(), false);
+            status = Status.of(false, List.of(Msg.of("error.unexpected", Msg.detailOf(e))));
         } finally {
             lock.unlock();
         }
@@ -78,14 +92,13 @@ public class FolderImportService {
     private Status run(Effective config) {
         Path root = Path.of(config.folderPath());
         if (!Files.isDirectory(root)) {
-            return new Status(Instant.now(), false, "Der Ordner „" + root + "“ ist nicht erreichbar.", false);
+            return Status.of(false, List.of(Msg.of("folder.scan.unreachable", root)));
         }
         List<Path> candidates;
         try (Stream<Path> walk = Files.walk(root, MAX_DEPTH)) {
             candidates = walk.filter(path -> isCandidate(root, path)).sorted().toList();
         } catch (IOException | RuntimeException e) {
-            return new Status(Instant.now(), false, "Der Ordner konnte nicht gelesen werden: " + e.getMessage(),
-                    false);
+            return Status.of(false, List.of(Msg.of("folder.scan.readFailed", Msg.detailOf(e))));
         }
 
         int imported = 0;
@@ -125,24 +138,26 @@ public class FolderImportService {
             }
         }
 
-        List<String> parts = new ArrayList<>();
-        parts.add(imported + (imported == 1 ? " neues PDF übernommen" : " neue PDFs übernommen"));
+        if (imported > 0) {
+            log.info("Eingangsordner {}: {} neue PDFs übernommen, {} bereits vorhanden, {} kein gültiges PDF, "
+                    + "{} nicht lesbar", root, imported, duplicates, rejected, failed);
+        }
+        if (imported + duplicates + rejected + failed == 0) {
+            return Status.of(true, List.of(Msg.of("folder.scan.none")));
+        }
+        // Sätze der Form „Bezeichnung: Anzahl.“ – stimmt in jeder Sprache für jede Anzahl
+        List<Msg> sentences = new ArrayList<>();
+        sentences.add(Msg.of("folder.scan.imported", imported));
         if (duplicates > 0) {
-            parts.add(duplicates + " bereits vorhanden");
+            sentences.add(Msg.of("folder.scan.duplicates", duplicates));
         }
         if (rejected > 0) {
-            parts.add(rejected + " kein gültiges PDF");
+            sentences.add(Msg.of("folder.scan.rejected", rejected));
         }
         if (failed > 0) {
-            parts.add(failed + " nicht lesbar");
+            sentences.add(Msg.of("folder.scan.unreadable", failed));
         }
-        String message = imported + duplicates + rejected + failed == 0
-                ? "Keine neuen Dateien."
-                : String.join(", ", parts) + ".";
-        if (imported > 0) {
-            log.info("Eingangsordner {}: {}", root, message);
-        }
-        return new Status(Instant.now(), failed == 0, message, false);
+        return Status.of(failed == 0, sentences);
     }
 
     private static boolean isCandidate(Path root, Path path) {

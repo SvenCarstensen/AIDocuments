@@ -1,6 +1,11 @@
 package de.aidocuments.settings;
 
+import static de.aidocuments.i18n.ValidationMessages.NOT_BLANK;
+import static de.aidocuments.i18n.ValidationMessages.NOT_NULL;
+import static de.aidocuments.i18n.ValidationMessages.SIZE;
+
 import de.aidocuments.config.AppProperties;
+import de.aidocuments.i18n.Messages;
 import de.aidocuments.security.SecretCipher;
 import de.aidocuments.web.ApiException;
 import jakarta.validation.constraints.NotBlank;
@@ -42,18 +47,29 @@ public class AiSettingsService {
 
     public record AiSettingsDto(LlmProvider provider, String baseUrl, String model, String effort,
                                 String outputLanguage, boolean ocr, boolean compatibilityMode, boolean enabled,
-                                boolean apiKeySet, KeySource apiKeySource, List<LlmProvider.Info> providers) {
+                                boolean apiKeySet, KeySource apiKeySource, List<ProviderOption> providers) {
+    }
+
+    /**
+     * Ein auswählbarer Anbieter samt dem, was die Oberfläche beim Auswählen einträgt. Der vorbelegte
+     * Schlüssel selbst bleibt im Normalfall auf dem Server – übermittelt wird nur, dass es einen gibt.
+     */
+    public record ProviderOption(LlmProvider id, String label, LlmProvider.Protocol protocol, String defaultBaseUrl,
+                                 boolean requiresApiKey, boolean cloud, String presetBaseUrl, String presetModel,
+                                 boolean presetApiKeySet,
+                                 /* nur in der Entwicklungsumgebung gefüllt (app.ai.reveal-preset-keys), sonst leer */
+                                 String presetApiKey) {
     }
 
     public record UpdateRequest(
-            @NotNull LlmProvider provider,
-            @Size(max = 500) @Pattern(regexp = "^$|^https?://\\S+$", message = "muss mit http:// oder https:// beginnen")
-            String baseUrl,
+            @NotNull(message = NOT_NULL) LlmProvider provider,
+            @Size(max = 500, message = SIZE)
+            @Pattern(regexp = "^$|^https?://\\S+$", message = "{validation.baseUrl}") String baseUrl,
             /* null = unverändert lassen, leer = gespeicherten Schlüssel entfernen */
-            @Size(max = 500) String apiKey,
-            @NotBlank @Size(max = 100) String model,
-            @NotBlank String effort,
-            @NotBlank @Size(max = 50) String outputLanguage,
+            @Size(max = 500, message = SIZE) String apiKey,
+            @NotBlank(message = NOT_BLANK) @Size(max = 100, message = SIZE) String model,
+            @NotBlank(message = NOT_BLANK) String effort,
+            @NotBlank(message = NOT_BLANK) @Size(max = 50, message = SIZE) String outputLanguage,
             boolean ocr,
             /* nur für Anthropic von Bedeutung; null = automatisch je nach Server */
             Boolean compatibilityMode) {
@@ -74,9 +90,11 @@ public class AiSettingsService {
     private final MongoTemplate mongo;
     private final SecretCipher cipher;
     private final AppProperties.Ai defaults;
+    private final Messages messages;
     private volatile Effective cached;
 
-    public AiSettingsService(MongoTemplate mongo, SecretCipher cipher, AppProperties properties) {
+    public AiSettingsService(MongoTemplate mongo, SecretCipher cipher, AppProperties properties, Messages messages) {
+        this.messages = messages;
         this.mongo = mongo;
         this.cipher = cipher;
         this.defaults = properties.ai();
@@ -95,18 +113,28 @@ public class AiSettingsService {
         Effective e = current();
         return new AiSettingsDto(e.provider(), e.baseUrl(), e.model(), e.effort(), e.outputLanguage(), e.ocr(),
                 e.compatibilityMode(), e.enabled(), !e.apiKey().isBlank(), e.keySource(),
-                Arrays.stream(LlmProvider.values()).map(LlmProvider::info).toList());
+                Arrays.stream(LlmProvider.values()).map(this::option).toList());
+    }
+
+    private ProviderOption option(LlmProvider provider) {
+        AppProperties.Preset preset = defaults.presetFor(provider);
+        String presetUrl = preset.baseUrl().isBlank() ? "" : normalizeBaseUrl(provider, preset.baseUrl());
+        String label = provider.labelKey() != null ? messages.get(provider.labelKey()) : provider.label();
+        return new ProviderOption(provider, label, provider.protocol(), provider.defaultBaseUrl(),
+                provider.requiresApiKey(), provider.cloud(), presetUrl, preset.model().strip(),
+                !preset.apiKey().isBlank(),
+                defaults.revealPresetKeys() ? preset.apiKey().strip() : "");
     }
 
     public synchronized AiSettingsDto update(UpdateRequest request) {
         String effort = request.effort().strip().toLowerCase();
         if (!EFFORTS.contains(effort)) {
-            throw ApiException.badRequest("Unbekannte Gründlichkeit: " + request.effort());
+            throw ApiException.badRequest("error.ai.unknownEffort", request.effort());
         }
         LlmProvider provider = request.provider();
         String baseUrl = normalizeBaseUrl(provider, request.baseUrl());
         if (baseUrl.isBlank() && provider.defaultBaseUrl().isBlank()) {
-            throw ApiException.badRequest("Bitte die Server-Adresse angeben, z. B. http://192.168.1.10:8000/v1.");
+            throw ApiException.badRequest("error.ai.baseUrlRequired");
         }
 
         AiSettings stored = mongo.findById(AiSettings.ID, AiSettings.class);
@@ -115,8 +143,9 @@ public class AiSettingsService {
         }
         boolean providerChanged = resolve(stored).provider() != provider;
         stored.setProvider(provider);
-        // Die Standardadresse wird nicht festgeschrieben – ändert sie sich mit einer neuen Version, gilt die neue.
-        stored.setBaseUrl(baseUrl.equals(provider.defaultBaseUrl()) ? "" : baseUrl);
+        // Die Adresse wird so gespeichert, wie sie im Formular stand – auch die Standardadresse. Sonst träte
+        // an ihre Stelle stillschweigend wieder eine Vorbelegung aus der Konfiguration.
+        stored.setBaseUrl(baseUrl.isBlank() ? provider.defaultBaseUrl() : baseUrl);
         stored.setModel(request.model().strip());
         stored.setEffort(effort);
         stored.setOutputLanguage(request.outputLanguage().strip());
@@ -148,36 +177,37 @@ public class AiSettingsService {
             String path = URI.create(url).getPath();
             return path == null || path.isEmpty() ? url + "/v1" : url;
         } catch (IllegalArgumentException e) {
-            throw ApiException.badRequest("Die Server-Adresse ist ungültig.");
+            throw ApiException.badRequest("error.ai.baseUrlInvalid");
         }
     }
 
     private Effective resolve(AiSettings stored) {
-        LlmProvider provider = stored != null && stored.getProvider() != null ? stored.getProvider() : defaults.provider();
-        // Vorgaben aus der Konfiguration gelten nur für den dort eingestellten Anbieter.
-        boolean configApplies = provider == defaults.provider();
+        boolean saved = stored != null && stored.getProvider() != null;
+        LlmProvider provider = saved ? stored.getProvider() : defaults.provider();
+        AppProperties.Preset preset = defaults.presetFor(provider);
 
-        String baseUrl = stored != null && stored.getBaseUrl() != null && !stored.getBaseUrl().isBlank()
-                ? stored.getBaseUrl().strip()
-                : configApplies && !defaults.baseUrl().isBlank()
-                        ? normalizeBaseUrl(provider, defaults.baseUrl())
-                        : provider.defaultBaseUrl();
+        // Gespeichertes gilt wörtlich. Nur solange nichts gespeichert ist, wirkt die Vorbelegung.
+        String baseUrl;
+        if (saved) {
+            baseUrl = stored.getBaseUrl() == null || stored.getBaseUrl().isBlank()
+                    ? provider.defaultBaseUrl() : stored.getBaseUrl().strip();
+        } else {
+            baseUrl = preset.baseUrl().isBlank() ? provider.defaultBaseUrl() : normalizeBaseUrl(provider, preset.baseUrl());
+        }
 
+        // Ein in der Oberfläche gespeicherter Schlüssel hat Vorrang; sonst der für diesen Anbieter vorbelegte.
         String key = "";
         KeySource source = KeySource.NONE;
         if (stored != null && stored.getApiKeyEncrypted() != null) {
             key = cipher.decrypt(stored.getApiKeyEncrypted());
             source = KeySource.SETTINGS;
-        } else if (configApplies && defaults.apiKey() != null && !defaults.apiKey().isBlank()) {
-            key = defaults.apiKey().strip();
+        } else if (!preset.apiKey().isBlank()) {
+            key = preset.apiKey().strip();
             source = KeySource.ENVIRONMENT;
         }
 
-        String model = stored != null && stored.getModel() != null ? stored.getModel()
-                : configApplies ? defaults.model() : "";
-        Boolean compatibility = stored != null && stored.getCompatibilityMode() != null
-                ? stored.getCompatibilityMode()
-                : stored == null ? defaults.compatibilityMode() : null;
+        String model = saved && stored.getModel() != null ? stored.getModel() : preset.model().strip();
+        Boolean compatibility = saved ? stored.getCompatibilityMode() : defaults.compatibilityMode();
 
         return new Effective(
                 provider,
@@ -185,10 +215,9 @@ public class AiSettingsService {
                 key,
                 source,
                 model,
-                stored != null && stored.getEffort() != null ? stored.getEffort() : defaults.effort(),
-                stored != null && stored.getOutputLanguage() != null ? stored.getOutputLanguage()
-                        : defaults.outputLanguage(),
-                stored != null && stored.getOcr() != null ? stored.getOcr() : defaults.ocr(),
+                saved && stored.getEffort() != null ? stored.getEffort() : defaults.effort(),
+                saved && stored.getOutputLanguage() != null ? stored.getOutputLanguage() : defaults.outputLanguage(),
+                saved && stored.getOcr() != null ? stored.getOcr() : defaults.ocr(),
                 provider.protocol() == LlmProvider.Protocol.ANTHROPIC
                         && (compatibility != null ? compatibility : !isAnthropicApi(baseUrl)));
     }

@@ -1,5 +1,7 @@
 // Schlanke Anbindung an das Backend: fetch mit CSRF-Token, einheitlicher Fehlerbehandlung und allen Typen.
 
+import { currentLanguage, t } from './i18n'
+
 export class ApiError extends Error {
   status: number
   constructor(status: number, message: string) {
@@ -21,6 +23,8 @@ async function send(path: string, init: RequestInit): Promise<Response> {
     if (token) headers.set('X-XSRF-TOKEN', token)
   }
   if (typeof init.body === 'string') headers.set('Content-Type', 'application/json')
+  // Der Server antwortet in der Sprache der Oberfläche (Fehlertexte, Statusmeldungen).
+  headers.set('Accept-Language', currentLanguage())
   return fetch(path, { ...init, headers, credentials: 'same-origin' })
 }
 
@@ -29,15 +33,15 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const isWrite = (init.method ?? 'GET').toUpperCase() !== 'GET'
   if (response.status === 403 && isWrite && !path.startsWith('/api/auth/status')) {
     // Möglicherweise fehlte nur das CSRF-Cookie (z. B. nach der Abmeldung): neu holen, einmal wiederholen.
-    await fetch('/api/auth/status', { credentials: 'same-origin' })
+    await send('/api/auth/status', {})
     response = await send(path, init)
   }
   if (response.status === 401 && !path.startsWith('/api/auth/')) {
     window.dispatchEvent(new Event('auth:expired'))
   }
   if (!response.ok) {
-    let message = `Der Server meldet einen Fehler (${response.status}).`
-    if (response.status === 403) message = 'Dafür fehlt die Berechtigung.'
+    let message = t('errors.server', { status: response.status })
+    if (response.status === 403) message = t('errors.forbidden')
     try {
       const problem = await response.json()
       if (problem?.detail) message = problem.detail
@@ -149,6 +153,8 @@ export interface SystemInfo {
   processing: number
   failed: number
   unanalyzed: number
+  /** Geschätzte Sekunden, bis alle Dokumente bearbeitet sind; null = (noch) keine Schätzung. */
+  estimatedSecondsRemaining: number | null
 }
 
 export type MailSecurity = 'SSL' | 'STARTTLS' | 'NONE'
@@ -192,6 +198,12 @@ export interface LlmProviderInfo {
   requiresApiKey: boolean
   /** Dienst im Internet: Dokumentinhalte verlassen bei der Analyse den eigenen Rechner. */
   cloud: boolean
+  /** Vorbelegung aus der Server-Konfiguration (leer = keine); der Schlüssel selbst bleibt auf dem Server. */
+  presetBaseUrl: string
+  presetModel: string
+  presetApiKeySet: boolean
+  /** Nur in der Entwicklungsumgebung gefüllt; sonst leer – dann bleibt der Schlüssel auf dem Server. */
+  presetApiKey: string
 }
 export interface AiSettings {
   provider: LlmProvider
@@ -309,6 +321,6 @@ export const thumbnailUrl = (doc: Pick<Doc, 'id' | 'processedAt'>) =>
 
 export function errorMessage(error: unknown): string {
   if (error instanceof ApiError) return error.message
-  if (error instanceof TypeError) return 'Der Server ist nicht erreichbar.'
-  return 'Unerwarteter Fehler.'
+  if (error instanceof TypeError) return t('errors.unreachable')
+  return t('errors.unexpected')
 }

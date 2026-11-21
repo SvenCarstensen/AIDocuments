@@ -54,6 +54,13 @@ final class OpenAiChatClient {
         }
     }
 
+    /** Der Server hat geantwortet, aber nicht mit JSON – meist stimmt dann die Adresse nicht. */
+    static final class NotJsonException extends RuntimeException {
+        NotJsonException(Throwable cause) {
+            super("Antwort ist kein JSON", cause);
+        }
+    }
+
     /** Der Server war nicht erreichbar oder hat nicht rechtzeitig geantwortet. */
     static final class ConnectionException extends RuntimeException {
         private final boolean timeout;
@@ -181,8 +188,7 @@ final class OpenAiChatClient {
         try {
             return JSON.readTree(response.body());
         } catch (IOException e) {
-            throw new StatusException(response.statusCode(), "Die Antwort des Servers ist kein JSON – stimmt die "
-                    + "Adresse (üblich ist …/v1)?");
+            throw new NotJsonException(e);
         }
     }
 

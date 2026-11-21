@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Salvesta",
+    "cancel": "Tühista",
+    "close": "Sulge",
+    "edit": "Muuda",
+    "delete": "Kustuta",
+    "remove": "Eemalda",
+    "add": "Lisa",
+    "back": "Tagasi",
+    "retry": "Proovi uuesti",
+    "loading": "Laadimine",
+    "language": "Keel",
+    "testConnection": "Testi ühendust",
+    "saveFirst": "Salvesta esmalt",
+    "username": "Kasutajanimi",
+    "usernameHint": "3–50 märki: tähed, numbrid, punkt, sidekriips, allkriips, @",
+    "password": "Parool",
+    "newPassword": "Uus parool",
+    "passwordHint": "Vähemalt 8 märki",
+    "passwordMismatch": "Paroolid ei kattu.",
+    "justNow": "äsja",
+    "documentCount_one": "{{count, number}} dokument",
+    "documentCount_other": "{{count, number}} dokumenti",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Kasutaja"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} kB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Serveriga puudub ühendus",
+    "server": "Server teatas veast ({{status}}).",
+    "forbidden": "Sul pole selleks õigust.",
+    "unreachable": "Server pole kättesaadav.",
+    "unexpected": "Ootamatu viga.",
+    "languageLoad": "Keelt ei õnnestunud laadida."
+  },
+  "auth": {
+    "login": {
+      "title": "Tere tulemast tagasi",
+      "subtitle": "Logi sisse, et oma dokumentidele ligi pääseda.",
+      "submit": "Logi sisse"
+    },
+    "setup": {
+      "title": "AIDocumentsi seadistamine",
+      "subtitle": "Loo esmalt administraatorikonto. Teisi kasutajaid saad hiljem lisada seadetes.",
+      "adminAccount": "Administraatorikonto",
+      "repeatPassword": "Korda parooli",
+      "submit": "Loo konto ja alusta",
+      "features": {
+        "import": "PDF-id postkastist ja impordikaustast",
+        "ai": "TI teeb kokkuvõtte ja lisab märksõnad",
+        "search": "Täistekstiotsing otse dokumentide sisust"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Laadi üles",
+    "theme": {
+      "light": "Hele teema",
+      "dark": "Tume teema"
+    },
+    "search": {
+      "placeholder": "Otsi dokumente, märksõnu, sisu…",
+      "label": "Otsi dokumente",
+      "clear": "Tühjenda otsing"
+    },
+    "userMenu": {
+      "label": "Kasutajamenüü ({{name}})",
+      "aiActive": "TI aktiivne",
+      "aiNotConfigured": "TI seadistamata",
+      "changePassword": "Muuda parooli",
+      "logout": "Logi välja"
+    },
+    "passwordDialog": {
+      "current": "Praegune parool",
+      "repeat": "Korda uut parooli",
+      "changed": "Parool muudetud"
+    },
+    "dropzone": {
+      "title": "Lohista PDF-id siia",
+      "hint": "Korraga võib lisada mitu faili. Need salvestatakse, analüüsitakse ja varustatakse märksõnadega."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Lisada saab ainult PDF-faile.",
+    "uploadingFile": "Faili „{{name}}“ üleslaadimine…",
+    "uploadingFiles_one": "{{count, number}} PDF-i üleslaadimine…",
+    "uploadingFiles_other": "{{count, number}} PDF-i üleslaadimine…",
+    "created_one": "Lisatud {{count, number}} dokument",
+    "created_other": "Lisatud {{count, number}} dokumenti",
+    "processingInBackground": "Töötlemine jätkub taustal.",
+    "duplicates_one": "{{count, number}} on juba olemas",
+    "duplicates_other": "{{count, number}} on juba olemas",
+    "rejected_one": "{{count, number}} fail ei ole kehtiv PDF",
+    "rejected_other": "{{count, number}} faili ei ole kehtivad PDF-id",
+    "onlyDuplicates_one": "See dokument on juba olemas.",
+    "onlyDuplicates_other": "Need dokumendid on juba olemas.",
+    "noneValid": "Ükski fail ei ole kehtiv PDF.",
+    "failed": "Üleslaadimine ebaõnnestus"
+  },
+  "documents": {
+    "status": {
+      "pending": "Ootel",
+      "processing": "Analüüsimisel",
+      "failed": "Viga",
+      "textOnly": "Ilma TI-ta"
+    },
+    "ocrBadge": "Tekstituvastus",
+    "aiNotice": {
+      "text": "TI ei ole veel seadistatud. Uusi dokumente saab otsida teksti järgi, kuid neist ei tehta kokkuvõtet ja neile ei lisata märksõnu.",
+      "action": "Seadista kohe"
+    },
+    "searchResults_one": "<count>{{count, number}} tulemus</count> <query>otsingule „{{query}}“</query>",
+    "searchResults_other": "<count>{{count, number}} tulemust</count> <query>otsingule „{{query}}“</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} töös",
+      "inProgressHint": "Ootavad TI-analüüsi või on parajasti analüüsimisel",
+      "remaining": "jäänud umbes {{duration}}",
+      "remainingLessThan": "jäänud alla {{duration}}",
+      "finishHint": "Eeldatav lõpp: {{time}} – hinnang viimati töödeldud dokumentide tempo põhjal"
+    },
+    "sort": {
+      "label": "Järjestus",
+      "relevance": "Parimad vasted",
+      "newest": "Uuemad eespool",
+      "date": "Dokumendi kuupäeva järgi"
+    },
+    "view": {
+      "grid": "Ruudustikvaade",
+      "list": "Loendivaade"
+    },
+    "pageSize": {
+      "label": "Kuvatavate dokumentide arv",
+      "all": "Kõik"
+    },
+    "filters": {
+      "title": "Filtrid",
+      "titleWithCount": "Filtrid ({{active, number}})",
+      "apply": "Näita",
+      "hint": "Kui dokumendid on analüüsitud, ilmuvad siia filtritena dokumendiliigid, märksõnad ja saatjad.",
+      "dateFrom": "alates",
+      "dateTo": "kuni",
+      "status": "Olek",
+      "failed": "Ebaõnnestunud",
+      "showAll": "Näita kõiki",
+      "showLess": "Näita vähem",
+      "activeFrom": "alates {{date}}",
+      "activeTo": "kuni {{date}}",
+      "removeOne": "Eemalda filter „{{label}}“",
+      "removeAll": "Eemalda kõik filtrid",
+      "clear": "Eemalda filtrid"
+    },
+    "empty": {
+      "libraryTitle": "Dokumente veel pole",
+      "libraryHint": "Lohista PDF-failid lihtsalt sellesse aknasse või kasuta nuppu „Laadi üles“.",
+      "libraryHintAdmin": "Lohista PDF-failid lihtsalt sellesse aknasse või kasuta nuppu „Laadi üles“. Seadetes saad seadistada postkasti või impordikausta, kust uued PDF-id automaatselt imporditakse.",
+      "noResultsTitle": "Midagi ei leitud",
+      "noResultsSearch": "Sellele otsingule ei vasta ükski dokument. Otsing leiab ka sõnaosi – proovi lühemat otsisõna või vähem sõnu.",
+      "noResultsFilters": "Valitud filtritele ei vasta ükski dokument."
+    },
+    "loadingAll_one": "{{count, number}} dokumendist on laaditud {{loaded, number}}…",
+    "loadingAll_other": "{{count, number}} dokumendist on laaditud {{loaded, number}}…",
+    "loadMore": "Laadi veel ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Tagasi ülevaatesse",
+    "download": "Laadi alla",
+    "reprocess": "Analüüsi uuesti",
+    "reprocessHint": "Loe PDF uuesti sisse ja lase TI-l seda analüüsida",
+    "reprocessStarted": "Dokumenti analüüsitakse uuesti.",
+    "deleted": "Dokument kustutatud",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Ava uuel vahekaardil",
+    "processingNotice": "Dokumenti töödeldakse. Kokkuvõte ja märksõnad ilmuvad siia kohe, kui analüüs on valmis.",
+    "textOnlyNotice": "Indekseeritud ilma TI-ta: dokumenti saab otsida teksti järgi, kuid sellel pole kokkuvõtet ega automaatseid märksõnu.",
+    "tabs": {
+      "overview": "Ülevaade",
+      "text": "Täistekst"
+    },
+    "fields": {
+      "title": "Pealkiri",
+      "category": "Dokumendiliik",
+      "documentDate": "Dokumendi kuupäev",
+      "correspondent": "Saatja",
+      "tags": "Märksõnad",
+      "summary": "Kokkuvõte"
+    },
+    "tags": {
+      "allWith": "Kõik dokumendid märksõnaga „{{tag}}“",
+      "none": "Märksõnu pole. <add>Lisa</add>",
+      "inputHint": "Kinnita klahviga Enter või komaga. Soovitustena kuvatakse juba kasutusel olevaid märksõnu.",
+      "inputPlaceholder": "Sisesta märksõna…",
+      "remove": "Eemalda märksõna „{{tag}}“"
+    },
+    "keyFacts": "Põhiandmed",
+    "details": {
+      "title": "Üksikasjad",
+      "file": "Fail",
+      "size": "Maht",
+      "pageCount_one": "{{count, number}} lehekülg",
+      "pageCount_other": "{{count, number}} lehekülge",
+      "language": "Keel",
+      "source": "Allikas",
+      "mailSubject": "Teema",
+      "mailFrom": "Kellelt",
+      "mailReceived": "Saabunud",
+      "added": "Lisatud",
+      "text": "Tekst"
+    },
+    "source": {
+      "MAIL": "Postkast",
+      "FOLDER": "Impordikaust",
+      "UPLOAD": "Üles laaditud"
+    },
+    "noText": "Selle dokumendi kohta teksti ei ole – tõenäoliselt on see tekstikihita skann. Kui TI on seadistatud ja tekstituvastus sisse lülitatud, transkribeeritakse sisu analüüsi käigus.",
+    "edit": {
+      "title": "Dokumendi muutmine",
+      "saved": "Muudatused salvestatud"
+    },
+    "delete": {
+      "title": "Kas kustutada dokument?",
+      "text": "„{{title}}“ kustutatakse koos PDF-faili, täisteksti ja märksõnadega. Seda ei saa tagasi võtta.",
+      "confirm": "Kustuta jäädavalt"
+    }
+  },
+  "settings": {
+    "title": "Seaded",
+    "mailboxes": {
+      "title": "Postkastid",
+      "navHint": "IMAP-serverid, kust imporditakse PDF-manused",
+      "intro": "Nendest IMAP-postkastidest imporditakse PDF-manused automaatselt. Postkaste ainult loetakse – e-kirjad jäävad muutmata ja lugemata.",
+      "add": "Lisa postkast",
+      "emptyTitle": "Ühtegi postkasti pole veel seadistatud",
+      "emptyText": "Sisesta IMAP-postkasti juurdepääsuandmed – näiteks selle postkasti omad, kuhu sinu skanner dokumente saadab.",
+      "paused": "Peatatud",
+      "syncNow": "Kontrolli kohe",
+      "syncing": "Postkasti kontrollimine…",
+      "neverSynced": "Pole veel kontrollitud.",
+      "saved": "Postkast salvestatud",
+      "added": "Postkast lisatud",
+      "firstSyncRunning": "Esimene kontroll juba käib.",
+      "removed": "Postkast eemaldatud",
+      "delete": {
+        "title": "Kas eemaldada postkast?",
+        "text": "Postkasti „{{name}}“ enam ei kontrollita. Juba imporditud dokumendid jäävad alles."
+      },
+      "dialog": {
+        "editTitle": "Postkasti muutmine",
+        "description": "Juurdepääsuandmed saad oma e-posti teenusepakkujalt. Parool salvestatakse krüptitult.",
+        "name": "Nimi",
+        "nameHint": "Vabalt valitav, nt „Skanner“ või „Arved“",
+        "namePlaceholder": "Skanner",
+        "host": "IMAP-server",
+        "port": "Port",
+        "security": "Krüptimine",
+        "securityNone": "Puudub",
+        "securityNoneWarning": "Ilma krüptimiseta edastatakse kasutajanimi ja parool lihttekstina.",
+        "passwordKeepHint": "Jäta tühjaks, et säilitada salvestatud parool",
+        "folder": "Kaust",
+        "folderHint": "Tavaliselt {{folder}} (sisendkaust)",
+        "since": "Ainult e-kirjad alates",
+        "sinceHint": "Valikuline – vanemad e-kirjad jäetakse vahele",
+        "enabled": "Kontrolli automaatselt",
+        "enabledHint": "Postkastist otsitakse määratud intervalliga uusi PDF-e."
+      }
+    },
+    "import": {
+      "title": "Ajakava ja impordikaust",
+      "navHint": "Kontrollimisintervall ja jälgitav kaust",
+      "intro": "Määrab, kui sageli rakendus uusi PDF-faile otsib – postkastidest ja impordikaustast.",
+      "saved": "Seaded salvestatud",
+      "interval": {
+        "title": "Kontrollimisintervall",
+        "text": "Nii sageli otsib rakendus kõigist postkastidest ja impordikaustast uusi PDF-e.",
+        "label": "Iga … minuti järel",
+        "nextRun": "Järgmine automaatne kontroll {{when}}."
+      },
+      "folder": {
+        "title": "Impordikaust",
+        "text": "Serveris asuv kaust, mida jälgitakse uute PDF-failide leidmiseks – näiteks võrguskanneri sihtkaust. Otsitakse ka alamkaustadest.",
+        "enable": "Jälgi impordikausta",
+        "path": "Tee serveris",
+        "pathHint": "Absoluutne tee. Dockeri konteineris on see ühendatud kaust, tavaliselt {{path}}.",
+        "afterImport": "Pärast importimist",
+        "keep": "Jäta fail oma kohale",
+        "move": "Teisalda kausta „{{folder}}“",
+        "keepHint": "Failid jäävad muutmata. Rakendus peab meeles, mille ta on juba importinud.",
+        "moveHint": "Imporditud failid teisaldatakse alamkausta „{{folder}}“ – nii püsib impordikaust korras.",
+        "scanning": "Kausta kontrollimine…",
+        "neverScanned": "Pole veel kontrollitud.",
+        "scanNow": "Kontrolli kohe",
+        "scanStarted": "Impordikausta kontrollitakse."
+      }
+    },
+    "ai": {
+      "title": "TI",
+      "navHint": "LLM-server, mudel ja tekstituvastus",
+      "intro": "Tehisintellekt (TI) loeb iga uut PDF-i, teeb sellest kokkuvõtte, määrab dokumendiliigi ja märksõnad ning toob välja põhiandmed, näiteks summad ja tähtajad.",
+      "configured": "Seadistatud",
+      "notConfigured": "Seadistamata",
+      "saved": "TI seaded salvestatud",
+      "server": {
+        "title": "LLM-server",
+        "provider": "Teenusepakkuja",
+        "baseUrl": "Serveri aadress",
+        "model": "Mudel",
+        "modelPlaceholder": "Mudeli ID",
+        "compatibilityMode": "Ühilduvusrežiim kohalike mudelite jaoks",
+        "compatibilityModeHint": "Serveritele, mis kasutavad küll Anthropicu liidest, kuid ei toeta PDF-sisendit ega struktureeritud väljundeid: dokument saadetakse mudelile tekstina või skannide puhul lehekülgede piltidena. Claude API puhul jäta välja lülitatuks.",
+        "testIncomplete": "Seaded pole veel täielikud"
+      },
+      "privacy": {
+        "title": "Teenusepakkuja {{provider}} kasutamisel lahkuvad sinu dokumendid sellest arvutist",
+        "text": "Analüüsimiseks edastatakse iga PDF-i sisu interneti kaudu teenusepakkuja {{provider}} serveritesse ja töödeldakse seal – sealhulgas arved, lepingud, arstikirjad ja ametlik kirjavahetus.",
+        "recommendation": "<emphasis>Soovitus:</emphasis> kasuta kohalikku TI-d. <lmStudio>LM Studio</lmStudio> või oma võrgus asuva <compatible>OpenAI-ga ühilduva serveri</compatible> abil jääb kogu sisu sinu juurde."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Anthropicu Claude API. Muuda ainult siis, kui selle ees on sinu oma lüüs.",
+          "modelHint": "Soovitatav valik on Claude Opus 5.5; Sonnet ja Haiku on kiiremad ja odavamad."
+        },
+        "OPENAI": {
+          "urlHint": "OpenAI API. Muuda ainult siis, kui selle ees on sinu oma lüüs.",
+          "modelHint": "Mudeli ID nii, nagu OpenAI seda nimetab. Pärast võtme salvestamist ilmuvad siia saadaolevad mudelid."
+        },
+        "MOONSHOT": {
+          "urlHint": "Moonshot AI (Kimi) API. Hiina platvormi kontode jaoks: {{url}}",
+          "modelHint": "Mudeli ID nii, nagu Moonshot seda nimetab. Pärast võtme salvestamist ilmuvad siia saadaolevad mudelid."
+        },
+        "LM_STUDIO": {
+          "urlHint": "LM Studio kohalik server (käivita see LM Studios jaotises „Developer“). Kui AIDocuments töötab Dockeris: {{url}}",
+          "modelHint": "LM Studios laaditud mudeli ID. Skannide jaoks on vaja pildisisendiga mudelit, analüüsiks tööriistade kasutamist (Tool Use) toetavat mudelit."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "OpenAI liidest kasutava serveri aadress – tavaliselt lõpeb see osaga /v1, nt {{url}}",
+          "modelHint": "Mudeli ID nii, nagu server seda nimetab. Pärast salvestamist ilmuvad siia serveri pakutavad mudelid."
+        }
+      },
+      "apiKey": {
+        "label": "API-võti",
+        "labelOptional": "API-võti (valikuline)",
+        "placeholderStored": "{{mask}} (salvestatud)",
+        "placeholderPreset": "{{mask}} (eelseadistatud)",
+        "placeholderNotNeeded": "pole vaja",
+        "placeholderIfRequired": "ainult siis, kui server seda nõuab",
+        "hintShown": "Eelseadistatud serveri konfiguratsioonis.",
+        "hintRemoving": "Salvestatud võti eemaldatakse salvestamisel.",
+        "hintStored": "Võti on salvestatud krüptitult. Jäta tühjaks, et see säilitada – <remove>eemalda võti</remove>",
+        "hintEnvironment": "Võti pärineb praegu serveri konfiguratsioonist (keskkonnamuutujast või konfiguratsioonifailist). Siia sisestatud võti on ülimuslik.",
+        "hintPreset": "Selle teenusepakkuja võti on serveri konfiguratsioonis eelseadistatud. Jäta tühjaks, et seda kasutada.",
+        "hintDiscardedOnSwitch": "Seni salvestatud võti kuulub teenusepakkujale {{previous}} ja see eemaldatakse vahetamisel.",
+        "hintPresetOtherProvider": "Eelseadistatud võti kehtib ainult teenusepakkuja {{previous}} puhul. Teenusepakkuja {{provider}} jaoks sisesta eraldi võti.",
+        "hintRequired": "Salvestatakse krüptitult ja seda ei kuvata enam kunagi.",
+        "hintLocal": "Kohalikud serverid tavaliselt võtit ei vaja."
+      },
+      "analysis": {
+        "title": "Analüüs",
+        "effort": "Põhjalikkus",
+        "effortLevels": {
+          "low": "Kiire",
+          "medium": "Tasakaalustatud",
+          "high": "Põhjalik"
+        },
+        "effortHint": "Põhjalikum tähendab hoolikamaid tulemusi, kuid on dokumendi kohta aeglasem ja kallim.",
+        "outputLanguage": "Tulemuste keel",
+        "outputLanguageHint": "Selles keeles kirjutab TI pealkirja, kokkuvõtte ja märksõnad.",
+        "ocr": "Skannide tekstituvastus",
+        "ocrHint": "Rakendus laseb TI-l tekstikihita skannitud PDF-id transkribeerida – alles siis leiab neid täistekstiotsinguga. Iga skann võtab rohkem aega ja maksab rohkem."
+      },
+      "unanalyzed_one": "{{count, number}} dokument on TI-ga veel analüüsimata.",
+      "unanalyzed_other": "{{count, number}} dokumenti on TI-ga veel analüüsimata.",
+      "analyzeNow": "Analüüsi kohe",
+      "analysisStarted_one": "Nüüd analüüsitakse {{count, number}} dokumenti.",
+      "analysisStarted_other": "Nüüd analüüsitakse {{count, number}} dokumenti."
+    },
+    "users": {
+      "title": "Kasutajad",
+      "navHint": "Kontod ja rollid",
+      "intro": "Iga inimene logib sisse oma kontoga. Administraatorid haldavad rakendust, kasutajad töötavad dokumentidega.",
+      "add": "Loo kasutaja",
+      "you": "Sina",
+      "disabled": "Keelatud",
+      "lastLogin": "Viimati sisse logitud {{when}}",
+      "neverLoggedIn": "Pole kunagi sisse loginud",
+      "editUser": "Muuda kasutajat {{name}}",
+      "deleteUser": "Kustuta kasutaja {{name}}",
+      "saved": "Kasutaja salvestatud",
+      "created": "Kasutaja loodud",
+      "deleted": "Kasutaja kustutatud",
+      "delete": {
+        "title": "Kas kustutada kasutaja?",
+        "text": "Konto „{{name}}“ kustutatakse ja logitakse kohe välja. Dokumendid jäävad alles."
+      },
+      "dialog": {
+        "selfNotice": "See on sinu enda konto. Pärast salvestamist pead uuesti sisse logima.",
+        "passwordKeepHint": "Jäta tühjaks, et praegune parool säiliks. Muidu vähemalt 8 märki.",
+        "role": "Roll",
+        "roleHints": {
+          "ADMIN": "Võib teha kõike – sealhulgas muuta seadeid, hallata kasutajaid ja kustutada dokumente.",
+          "USER": "Võib dokumente vaadata, otsida ja üles laadida ning nende andmeid muuta."
+        },
+        "active": "Konto on aktiivne",
+        "activeHint": "Keelatud kontoga ei saa sisse logida; aktiivsed seansid lõpevad kohe.",
+        "create": "Loo"
+      }
+    }
+  }
+}

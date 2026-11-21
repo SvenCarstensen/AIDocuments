@@ -45,7 +45,7 @@ public class UserService implements UserDetailsService {
     /** Legt beim allerersten Start das Administratorkonto an. */
     public synchronized AppUser createInitialAdmin(String username, String password) {
         if (!setupRequired()) {
-            throw ApiException.conflict("Die Ersteinrichtung wurde bereits abgeschlossen.");
+            throw ApiException.conflict("error.setup.alreadyDone");
         }
         return users.save(new AppUser(newId(), normalize(username), passwordEncoder.encode(password), Role.ADMIN));
     }
@@ -64,13 +64,13 @@ public class UserService implements UserDetailsService {
     public UserDto create(CreateUserRequest request) {
         String username = normalize(request.username());
         if (users.findByUsername(username).isPresent()) {
-            throw ApiException.conflict("Der Benutzername „" + username + "“ ist bereits vergeben.");
+            throw ApiException.conflict("error.user.nameTaken", username);
         }
         try {
             return UserDto.of(users.save(
                     new AppUser(newId(), username, passwordEncoder.encode(request.password()), request.role())));
         } catch (DuplicateKeyException e) {
-            throw ApiException.conflict("Der Benutzername „" + username + "“ ist bereits vergeben.");
+            throw ApiException.conflict("error.user.nameTaken", username);
         }
     }
 
@@ -79,13 +79,13 @@ public class UserService implements UserDetailsService {
         boolean losesAdmin = user.getRole() == Role.ADMIN && user.isEnabled()
                 && (request.role() != Role.ADMIN || !request.enabled());
         if (losesAdmin && users.countByRoleAndEnabled(Role.ADMIN, true) <= 1) {
-            throw ApiException.conflict("Es muss mindestens ein aktiver Administrator bestehen bleiben.");
+            throw ApiException.conflict("error.user.lastAdmin");
         }
         user.setRole(request.role());
         user.setEnabled(request.enabled());
         if (request.password() != null && !request.password().isBlank()) {
             if (request.password().length() < 8) {
-                throw ApiException.badRequest("Das Passwort braucht " + UserDtos.PASSWORD_MESSAGE + ".");
+                throw ApiException.badRequest("error.user.passwordTooShort");
             }
             user.setPasswordHash(passwordEncoder.encode(request.password()));
         }
@@ -97,11 +97,11 @@ public class UserService implements UserDetailsService {
     public synchronized void delete(String id, String actingUserId) {
         AppUser user = require(id);
         if (id.equals(actingUserId)) {
-            throw ApiException.conflict("Das eigene Konto kann nicht gelöscht werden.");
+            throw ApiException.conflict("error.user.cannotDeleteSelf");
         }
         if (user.getRole() == Role.ADMIN && user.isEnabled()
                 && users.countByRoleAndEnabled(Role.ADMIN, true) <= 1) {
-            throw ApiException.conflict("Es muss mindestens ein aktiver Administrator bestehen bleiben.");
+            throw ApiException.conflict("error.user.lastAdmin");
         }
         users.delete(user);
         invalidateSessions(id);
@@ -110,7 +110,7 @@ public class UserService implements UserDetailsService {
     public void changeOwnPassword(String id, String currentPassword, String newPassword) {
         AppUser user = require(id);
         if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
-            throw ApiException.badRequest("Das aktuelle Passwort ist nicht korrekt.");
+            throw ApiException.badRequest("error.user.currentPasswordWrong");
         }
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         users.save(user);
@@ -137,7 +137,7 @@ public class UserService implements UserDetailsService {
     }
 
     private AppUser require(String id) {
-        return users.findById(id).orElseThrow(() -> ApiException.notFound("Der Benutzer"));
+        return users.findById(id).orElseThrow(() -> ApiException.notFound("error.user.notFound"));
     }
 
     private static String normalize(String username) {

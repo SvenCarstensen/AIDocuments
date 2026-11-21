@@ -1,5 +1,8 @@
 package de.aidocuments.importer;
 
+import static de.aidocuments.i18n.ValidationMessages.NOT_NULL;
+import static de.aidocuments.i18n.ValidationMessages.SIZE;
+
 import de.aidocuments.config.AppProperties;
 import de.aidocuments.importer.ImportSettings.FolderMode;
 import de.aidocuments.web.ApiException;
@@ -26,11 +29,11 @@ public class ImportSettingsService {
     }
 
     public record UpdateRequest(
-            @Min(value = 1, message = "mindestens 1 Minute")
-            @Max(value = 1440, message = "höchstens 1440 Minuten (24 Stunden)") int intervalMinutes,
+            @Min(value = 1, message = "{validation.interval.min}")
+            @Max(value = 1440, message = "{validation.interval.max}") int intervalMinutes,
             boolean folderEnabled,
-            @Size(max = 1000) String folderPath,
-            @NotNull FolderMode folderMode) {
+            @Size(max = 1000, message = SIZE) String folderPath,
+            @NotNull(message = NOT_NULL) FolderMode folderMode) {
     }
 
     private final MongoTemplate mongo;
@@ -63,24 +66,22 @@ public class ImportSettingsService {
         String path = request.folderPath() == null ? "" : request.folderPath().strip();
         if (request.folderEnabled()) {
             if (path.isEmpty()) {
-                throw ApiException.badRequest("Bitte den Pfad des Eingangsordners angeben.");
+                throw ApiException.badRequest("error.folder.pathRequired");
             }
             Path directory;
             try {
                 directory = Path.of(path);
             } catch (InvalidPathException e) {
-                throw ApiException.badRequest("Der Pfad ist ungültig.");
+                throw ApiException.badRequest("error.folder.pathInvalid");
             }
             if (!directory.isAbsolute()) {
-                throw ApiException.badRequest("Bitte einen absoluten Pfad angeben (z. B. /import).");
+                throw ApiException.badRequest("error.folder.pathNotAbsolute");
             }
             if (!Files.isDirectory(directory) || !Files.isReadable(directory)) {
-                throw ApiException.badRequest("Der Ordner „" + path + "“ existiert auf dem Server nicht "
-                        + "oder ist nicht lesbar.");
+                throw ApiException.badRequest("error.folder.notReadable", path);
             }
             if (request.folderMode() == FolderMode.MOVE && !Files.isWritable(directory)) {
-                throw ApiException.badRequest("Der Ordner ist schreibgeschützt – zum Verschieben übernommener "
-                        + "Dateien braucht die Anwendung Schreibrechte.");
+                throw ApiException.badRequest("error.folder.readOnly");
             }
         }
         ImportSettings stored = new ImportSettings();

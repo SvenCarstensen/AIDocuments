@@ -31,6 +31,7 @@ import com.anthropic.models.messages.Tool;
 import com.anthropic.models.messages.ToolChoiceAuto;
 import com.anthropic.models.messages.ToolUseBlock;
 import de.aidocuments.document.PdfExtractor;
+import de.aidocuments.i18n.Msg;
 import de.aidocuments.settings.AiSettingsService;
 import de.aidocuments.settings.AiSettingsService.Effective;
 import de.aidocuments.settings.LlmProvider;
@@ -44,6 +45,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -132,7 +134,8 @@ public class AiAnalysisService {
                           List<String> knownCorrespondents, List<String> knownTags) {
     }
 
-    public record Result(DocumentAnalysis analysis, boolean transcribed, String note) {
+    /** @param notes Hinweise für den Anwender zu einem gelungenen Ergebnis – sprachneutral, meist leer */
+    public record Result(DocumentAnalysis analysis, boolean transcribed, List<Msg> notes) {
     }
 
     private final AiSettingsService settings;
@@ -152,7 +155,7 @@ public class AiAnalysisService {
     public Result analyze(Request request) throws AiException {
         Effective config = settings.current();
         if (!config.enabled()) {
-            throw new AiException("Es ist kein KI-Zugang konfiguriert.");
+            throw new AiException(Msg.of("ai.error.notConfigured"));
         }
         try {
             if (config.provider().protocol() == LlmProvider.Protocol.OPENAI) {
@@ -172,14 +175,14 @@ public class AiAnalysisService {
      * die Modellauskunft antwortet dagegen sofort. Nur wenn ein Server gar keine Modellauskunft anbietet,
      * wird eine Mini-Anfrage gestellt. In jedem Fall gilt eine feste Zeitgrenze.
      *
-     * @return Ergebnis als Satz für den Anwender
+     * @return Ergebnis als Satz für den Anwender – sprachneutral; übersetzt wird beim Antworten
      */
-    public String testConnection() throws AiException {
+    public Msg testConnection() throws AiException {
         Effective config = settings.current();
         if (!config.enabled()) {
-            throw new AiException(config.provider().requiresApiKey() && config.apiKey().isBlank()
-                    ? "Es ist kein API-Schlüssel hinterlegt."
-                    : "Server-Adresse und Modell müssen angegeben sein.");
+            throw new AiException(Msg.of(config.provider().requiresApiKey() && config.apiKey().isBlank()
+                    ? "ai.test.noApiKey"
+                    : "ai.test.incomplete"));
         }
         if (config.provider().protocol() == LlmProvider.Protocol.OPENAI) {
             return testOpenAi(config);
@@ -188,7 +191,7 @@ public class AiAnalysisService {
         try {
             try {
                 quick.models().retrieve(config.model());
-                return "Verbindung erfolgreich – der Server kennt das Modell „" + config.model() + "“.";
+                return Msg.of("ai.test.modelKnown", config.model());
             } catch (NotFoundException noSuchModelOrEndpoint) {
                 // weiter unten klären: unbekanntes Modell oder Server ohne Einzelauskunft
             }
@@ -199,22 +202,20 @@ public class AiAnalysisService {
                 offered = List.of();
             }
             if (offered.contains(config.model())) {
-                return "Verbindung erfolgreich – der Server bietet das Modell „" + config.model() + "“ an.";
+                return Msg.of("ai.test.modelOffered", config.model());
             }
             if (!offered.isEmpty()) {
-                throw new AiException("Server und Schlüssel sind in Ordnung, aber das Modell „" + config.model()
-                        + "“ gibt es dort nicht. Angeboten werden: " + String.join(", ", offered) + ".");
+                throw new AiException(Msg.of("ai.test.modelMissing", config.model(), String.join(", ", offered)));
             }
             quick.messages().create(MessageCreateParams.builder()
                     .model(config.model())
                     .maxTokens(256L)
                     .addUserMessage("Antworte nur mit: OK")
                     .build());
-            return "Verbindung erfolgreich – das Modell „" + config.model() + "“ antwortet.";
+            return Msg.of("ai.test.modelAnswers", config.model());
         } catch (AnthropicIoException e) {
             if (hasCause(e, java.io.InterruptedIOException.class)) {
-                throw new AiException("Der Server hat nicht innerhalb von " + TEST_TIMEOUT.toSeconds()
-                        + " Sekunden geantwortet. Entweder ist die Adresse falsch oder er ist gerade ausgelastet.", e);
+                throw new AiException(Msg.of("ai.test.timeout", TEST_TIMEOUT.toSeconds()), e);
             }
             throw new AiException(describe(e), e);
         } catch (RuntimeException e) {
@@ -250,21 +251,19 @@ public class AiAnalysisService {
         }
     }
 
-    private String testOpenAi(Effective config) throws AiException {
+    private Msg testOpenAi(Effective config) throws AiException {
         try {
             List<String> offered = new OpenAiChatClient(config.baseUrl(), config.apiKey()).listModels(TEST_TIMEOUT);
             if (offered.isEmpty() || offered.contains(config.model())) {
-                return "Verbindung erfolgreich – " + (offered.isEmpty()
-                        ? "der Server antwortet."
-                        : "der Server bietet das Modell „" + config.model() + "“ an.");
+                return offered.isEmpty()
+                        ? Msg.of("ai.test.serverAnswers")
+                        : Msg.of("ai.test.modelOffered", config.model());
             }
-            throw new AiException("Server und Schlüssel sind in Ordnung, aber das Modell „" + config.model()
-                    + "“ gibt es dort nicht. Angeboten werden: "
-                    + String.join(", ", offered.stream().sorted().limit(30).toList()) + ".");
+            throw new AiException(Msg.of("ai.test.modelMissing", config.model(),
+                    String.join(", ", offered.stream().sorted().limit(30).toList())));
         } catch (OpenAiChatClient.ConnectionException e) {
             if (e.timeout()) {
-                throw new AiException("Der Server hat nicht innerhalb von " + TEST_TIMEOUT.toSeconds()
-                        + " Sekunden geantwortet. Entweder ist die Adresse falsch oder er ist gerade ausgelastet.", e);
+                throw new AiException(Msg.of("ai.test.timeout", TEST_TIMEOUT.toSeconds()), e);
             }
             throw new AiException(describe(e), e);
         } catch (RuntimeException e) {
@@ -303,24 +302,22 @@ public class AiAnalysisService {
     private Result analyzeNative(Effective config, Request request) throws AiException {
         boolean sendPdf = request.sizeBytes() <= MAX_PDF_BYTES && request.pageCount() <= MAX_PDF_PAGES;
         if (!sendPdf && request.extractedText().isBlank()) {
-            throw new AiException("Das PDF ist für die KI-Analyse zu groß (über 22 MB oder mehr als 600 Seiten) "
-                    + "und enthält keine auslesbare Textebene.");
+            throw new AiException(Msg.of("ai.error.tooLarge"));
         }
         boolean transcribe = config.ocr() && sendPdf && request.textIsSparse();
         try {
-            return new Result(callNative(config, request, sendPdf, transcribe), transcribe, null);
+            return new Result(callNative(config, request, sendPdf, transcribe), transcribe, List.of());
         } catch (TruncatedResponseException e) {
             if (!transcribe) {
-                throw new AiException("Die Antwort der KI wurde wegen ihrer Länge abgeschnitten.");
+                throw new AiException(Msg.of("ai.error.truncated"));
             }
             // Die Transkription sprengt das Ausgabelimit – dann wenigstens die Metadaten erschließen.
             log.info("Transkription von {} zu lang, analysiere ohne Volltext", request.filename());
             try {
                 return new Result(callNative(config, request, sendPdf, false), false,
-                        "Der Scan ist zu umfangreich für die Texterkennung; durchsuchbar sind nur "
-                                + "Zusammenfassung, Schlagworte und Kerndaten.");
+                        List.of(Msg.of("ai.note.scanTooLarge")));
             } catch (TruncatedResponseException again) {
-                throw new AiException("Die Antwort der KI wurde wegen ihrer Länge abgeschnitten.");
+                throw new AiException(Msg.of("ai.error.truncated"));
             }
         }
     }
@@ -353,7 +350,7 @@ public class AiAnalysisService {
 
         BetaStopReason stopReason = accumulator.message().stopReason().orElse(null);
         if (BetaStopReason.REFUSAL.equals(stopReason)) {
-            throw new AiException("Die KI hat die Analyse dieses Dokuments abgelehnt.");
+            throw new AiException(Msg.of("ai.error.refused"));
         }
         if (BetaStopReason.MAX_TOKENS.equals(stopReason)) {
             throw new TruncatedResponseException();
@@ -363,7 +360,7 @@ public class AiAnalysisService {
                 .flatMap(block -> block.text().stream())
                 .map(text -> text.text())
                 .findFirst()
-                .orElseThrow(() -> new AiException("Die KI hat keine auswertbare Antwort geliefert."));
+                .orElseThrow(() -> new AiException(Msg.of("ai.error.noAnswer")));
     }
 
     private static BetaRequestDocumentBlock documentBlock(Request request, boolean sendPdf) throws AiException {
@@ -377,7 +374,7 @@ public class AiAnalysisService {
             String base64 = Base64.getEncoder().encodeToString(Files.readAllBytes(request.file()));
             return BetaRequestDocumentBlock.builder().base64Source(base64).title(request.filename()).build();
         } catch (IOException e) {
-            throw new AiException("Die PDF-Datei konnte nicht gelesen werden.", e);
+            throw new AiException(Msg.of("ai.error.fileUnreadable"), e);
         }
     }
 
@@ -394,7 +391,7 @@ public class AiAnalysisService {
 
     private Result analyzeCompatible(Effective config, Request request, Transport transport) throws AiException {
         List<OpenAiChatClient.Part> document = new ArrayList<>();
-        List<String> notes = new ArrayList<>();
+        List<Msg> notes = new ArrayList<>();
         String hint;
         boolean transcribe = false;
 
@@ -404,47 +401,43 @@ public class AiAnalysisService {
             try {
                 pages = pdfExtractor.renderPagesAsJpeg(request.file(), COMPAT_MAX_PAGE_IMAGES, COMPAT_PAGE_WIDTH_PX);
             } catch (IOException e) {
-                throw new AiException("Die Seiten des PDFs konnten nicht als Bild aufbereitet werden.", e);
+                throw new AiException(Msg.of("ai.error.renderFailed"), e);
             }
             if (pages.isEmpty()) {
-                throw new AiException("Das PDF enthält weder Text noch darstellbare Seiten.");
+                throw new AiException(Msg.of("ai.error.emptyPdf"));
             }
             pages.forEach(page -> document.add(OpenAiChatClient.Part.image(page)));
             hint = pages.size() == 1
                     ? "Das Dokument ist ein Scan; du siehst seine Seite als Bild."
                     : "Das Dokument ist ein Scan; du siehst seine ersten " + pages.size() + " Seiten als Bilder.";
             if (request.pageCount() > pages.size()) {
-                notes.add("Die KI hat nur die ersten " + pages.size() + " von " + request.pageCount()
-                        + " Seiten des Scans gesehen.");
+                notes.add(Msg.of("ai.note.partialScan", pages.size(), request.pageCount()));
             }
             transcribe = config.ocr();
         } else {
             String text = request.extractedText();
             if (text.length() > COMPAT_MAX_CHARS) {
                 text = text.substring(0, COMPAT_MAX_CHARS);
-                notes.add("Das Dokument ist sehr lang: Die KI hat nur den Anfang ausgewertet. "
-                        + "Die Volltextsuche umfasst trotzdem den gesamten Text.");
+                notes.add(Msg.of("ai.note.longDocument"));
             }
             document.add(OpenAiChatClient.Part.text("<dokument>\n" + text + "\n</dokument>"));
             hint = "Zwischen <dokument> und </dokument> steht der aus dem PDF ausgelesene Text.";
         }
 
-        String note = notes.isEmpty() ? null : String.join(" ", notes);
         try {
             return new Result(callCompatible(config, request, document, hint, transcribe, transport), transcribe,
-                    note);
+                    List.copyOf(notes));
         } catch (TruncatedResponseException e) {
             if (!transcribe) {
-                throw new AiException("Die Antwort der KI wurde wegen ihrer Länge abgeschnitten.");
+                throw new AiException(Msg.of("ai.error.truncated"));
             }
             log.info("Transkription von {} zu lang, analysiere ohne Volltext", request.filename());
             try {
-                notes.add("Der Scan ist zu umfangreich für die Texterkennung; durchsuchbar sind nur "
-                        + "Zusammenfassung, Schlagworte und Kerndaten.");
+                notes.add(Msg.of("ai.note.scanTooLarge"));
                 return new Result(callCompatible(config, request, document, hint, false, transport), false,
-                        String.join(" ", notes));
+                        List.copyOf(notes));
             } catch (TruncatedResponseException again) {
-                throw new AiException("Die Antwort der KI wurde wegen ihrer Länge abgeschnitten.");
+                throw new AiException(Msg.of("ai.error.truncated"));
             }
         }
     }
@@ -463,21 +456,33 @@ public class AiAnalysisService {
             return first.analysis();
         }
         log.info("Antwort zu {} nicht sauber verarbeitbar ({}) – frage einmal nach", request.filename(),
-                String.join(" ", first.problems()));
+                first.problemsForModel());
         Attempt second = transport.request(config, document, task
-                + "\n\nDein erster Versuch ließ sich nicht verarbeiten: " + String.join(" ", first.problems())
+                + "\n\nDein erster Versuch ließ sich nicht verarbeiten: " + first.problemsForModel()
                 + " Liefere das Ergebnis jetzt genau in der beschriebenen Form.", transcribe);
 
         Attempt best = second.isBetterThan(first) ? second : first;
         if (best.analysis() == null) {
-            throw new AiException("Das Modell hat auch im zweiten Anlauf keine verarbeitbare Antwort geliefert: "
-                    + String.join(" ", second.problems()));
+            throw new AiException(Msg.of("ai.error.unprocessable",
+                    second.problems().stream().map(Problem::forUser).toList()));
         }
         return best.analysis();
     }
 
+    /**
+     * Was an einer Antwort des Modells nicht verarbeitbar war – zweimal gesagt: als deutscher Satz an das Modell
+     * (Teil der Nachfrage, wie die übrige Anweisung) und sprachneutral für den Anwender, falls auch der zweite
+     * Anlauf scheitert.
+     */
+    record Problem(String forModel, Msg forUser) {
+    }
+
     /** Eine Antwort des Modells samt dem, was an ihr nicht verarbeitbar war (leer = einwandfrei). */
-    private record Attempt(DocumentAnalysis analysis, List<String> problems) {
+    private record Attempt(DocumentAnalysis analysis, List<Problem> problems) {
+
+        String problemsForModel() {
+            return problems.stream().map(Problem::forModel).collect(Collectors.joining(" "));
+        }
 
         boolean isBetterThan(Attempt other) {
             if (analysis == null || other.analysis == null) {
@@ -520,7 +525,7 @@ public class AiAnalysisService {
             throw new TruncatedResponseException();
         }
         if (StopReason.REFUSAL.equals(stopReason)) {
-            throw new AiException("Die KI hat die Analyse dieses Dokuments abgelehnt.");
+            throw new AiException(Msg.of("ai.error.refused"));
         }
 
         Optional<ToolUseBlock> toolCall = message.content().stream()
@@ -531,7 +536,7 @@ public class AiAnalysisService {
             try {
                 return checked(LenientAnalysisParser.parse(toolCall.get()._input().convert(Object.class)), transcribe);
             } catch (IllegalArgumentException e) {
-                return new Attempt(null, List.of("Die Antwort war kein gültiges JSON."));
+                return new Attempt(null, List.of(NOT_JSON));
             }
         }
         String text = message.content().stream()
@@ -554,7 +559,7 @@ public class AiAnalysisService {
                 config.model(), SYSTEM_PROMPT, content, RESULT_TOOL, RESULT_TOOL_DESCRIPTION, resultSchema(),
                 maxTokens(transcribe), limitField, ANALYSIS_TIMEOUT);
         if (reply.refusal() != null && !reply.refusal().isBlank()) {
-            throw new AiException("Die KI hat die Analyse dieses Dokuments abgelehnt: " + reply.refusal());
+            throw new AiException(Msg.of("ai.error.refusedWithReason", reply.refusal()));
         }
         if (reply.truncated()) {
             throw new TruncatedResponseException();
@@ -563,7 +568,9 @@ public class AiAnalysisService {
             try {
                 return checked(LenientAnalysisParser.parseText(reply.toolArguments()), transcribe);
             } catch (IOException e) {
-                return new Attempt(null, List.of("Die Argumente des Werkzeugaufrufs waren kein gültiges JSON."));
+                return new Attempt(null, List.of(new Problem(
+                        "Die Argumente des Werkzeugaufrufs waren kein gültiges JSON.",
+                        Msg.of("ai.problem.argumentsNotJson"))));
             }
         }
         return fromText(reply.text(), transcribe);
@@ -572,46 +579,59 @@ public class AiAnalysisService {
     /** Manche Modelle schreiben das JSON trotz Werkzeug in den Text – ist es vollständig, genügt das. */
     private static Attempt fromText(String text, boolean transcribe) {
         if (text == null || !text.contains("{")) {
-            return new Attempt(null, List.of("Es kam kein Aufruf des Werkzeugs " + RESULT_TOOL + " an, nur Text."));
+            return new Attempt(null, List.of(new Problem(
+                    "Es kam kein Aufruf des Werkzeugs " + RESULT_TOOL + " an, nur Text.",
+                    Msg.of("ai.problem.noToolCall", RESULT_TOOL))));
         }
         try {
             return checked(LenientAnalysisParser.parseText(text), transcribe);
         } catch (IOException e) {
-            return new Attempt(null, List.of("Die Antwort war kein gültiges JSON."));
+            return new Attempt(null, List.of(NOT_JSON));
         }
     }
 
     private static Attempt checked(DocumentAnalysis parsed, boolean transcribe) {
         DocumentAnalysis analysis = withCanonicalCategory(parsed);
-        return new Attempt(analysis, problemsOf(analysis, transcribe));
+        return new Attempt(analysis, problems(analysis, transcribe));
     }
 
     private static long maxTokens(boolean transcribe) {
         return transcribe ? 20000L : 8000L;
     }
 
+    private static final Problem NOT_JSON =
+            new Problem("Die Antwort war kein gültiges JSON.", Msg.of("ai.problem.notJson"));
+
     /** Was an einem Ergebnis fehlt oder nicht der verlangten Form entspricht – als Sätze an das Modell. */
     static List<String> problemsOf(DocumentAnalysis analysis, boolean transcriptionExpected) {
-        List<String> problems = new ArrayList<>();
+        return problems(analysis, transcriptionExpected).stream().map(Problem::forModel).toList();
+    }
+
+    /** Dasselbe mit beiden Fassungen: dem Satz an das Modell und der übersetzbaren Meldung für den Anwender. */
+    static List<Problem> problems(DocumentAnalysis analysis, boolean transcriptionExpected) {
+        List<Problem> problems = new ArrayList<>();
         if (analysis.title().isBlank()) {
-            problems.add("Das Feld title war leer.");
+            problems.add(new Problem("Das Feld title war leer.", Msg.of("ai.problem.titleEmpty")));
         }
         if (analysis.summary().isBlank()) {
-            problems.add("Das Feld summary war leer.");
+            problems.add(new Problem("Das Feld summary war leer.", Msg.of("ai.problem.summaryEmpty")));
         }
         if (!CATEGORIES.contains(analysis.category())) {
-            problems.add("Das Feld category war „" + analysis.category() + "“ – erlaubt ist nur genau einer der "
-                    + "Begriffe aus der Liste der Dokumentarten.");
+            problems.add(new Problem("Das Feld category war „" + analysis.category() + "“ – erlaubt ist nur genau "
+                    + "einer der Begriffe aus der Liste der Dokumentarten.",
+                    Msg.of("ai.problem.categoryInvalid", analysis.category())));
         }
         if (analysis.tags().isEmpty()) {
-            problems.add("Das Feld tags war leer oder keine Liste von Zeichenketten.");
+            problems.add(new Problem("Das Feld tags war leer oder keine Liste von Zeichenketten.",
+                    Msg.of("ai.problem.tagsEmpty")));
         }
         if (!analysis.documentDate().isBlank() && DocumentAnalysis.parseDate(analysis.documentDate()) == null) {
-            problems.add("Das Feld documentDate war „" + analysis.documentDate() + "“ – verlangt ist JJJJ-MM-TT "
-                    + "oder ein leerer Text.");
+            problems.add(new Problem("Das Feld documentDate war „" + analysis.documentDate() + "“ – verlangt ist "
+                    + "JJJJ-MM-TT oder ein leerer Text.", Msg.of("ai.problem.dateInvalid", analysis.documentDate())));
         }
         if (transcriptionExpected && analysis.fullText().isBlank()) {
-            problems.add("Das Feld fullText war leer, obwohl die Transkription des Scans verlangt ist.");
+            problems.add(new Problem("Das Feld fullText war leer, obwohl die Transkription des Scans verlangt ist.",
+                    Msg.of("ai.problem.fullTextEmpty")));
         }
         return problems;
     }
@@ -749,51 +769,54 @@ public class AiAnalysisService {
         }
     }
 
-    private static String describe(RuntimeException e) {
+    /**
+     * Übersetzt technische Fehler in eine Meldung für den Anwender – sprachneutral. Was der fremde Server
+     * selbst mitteilt, wird als Argument wörtlich durchgereicht.
+     */
+    private static Msg describe(RuntimeException e) {
         if (e instanceof OpenAiChatClient.StatusException status) {
             return switch (status.status()) {
-                case 401 -> "Der API-Schlüssel wurde vom KI-Server abgelehnt.";
-                case 403 -> "Der API-Schlüssel hat keine Berechtigung für dieses Modell oder diese Funktion.";
-                case 404 -> "Das Modell oder die Server-Adresse wurde nicht gefunden (bei dieser Schnittstelle "
-                        + "endet die Adresse üblicherweise auf /v1).";
-                case 429 -> "Das Anfragelimit oder Guthaben beim KI-Anbieter ist erschöpft: " + status.getMessage();
+                case 401 -> Msg.of("ai.error.unauthorized");
+                case 403 -> Msg.of("ai.error.forbidden");
+                case 404 -> Msg.of("ai.error.notFoundOpenAi");
+                case 429 -> Msg.of("ai.error.quotaExhausted", status.getMessage());
                 default -> status.status() >= 500
-                        ? "Der KI-Server meldet einen Fehler (HTTP " + status.status() + ")."
-                        : "Der KI-Server hat die Anfrage zurückgewiesen: " + status.getMessage();
+                        ? Msg.of("ai.error.serverError", String.valueOf(status.status()))
+                        : Msg.of("ai.error.rejected", status.getMessage());
             };
         }
+        if (e instanceof OpenAiChatClient.NotJsonException) {
+            return Msg.of("ai.error.rejected", Msg.of("ai.error.notJson"));
+        }
         if (e instanceof OpenAiChatClient.ConnectionException connection) {
-            return connection.timeout()
-                    ? "Der KI-Server hat nicht rechtzeitig geantwortet."
-                    : "Der KI-Server ist unter der eingestellten Adresse nicht erreichbar. Läuft er, und stimmen "
-                            + "Adresse und Port?";
+            return Msg.of(connection.timeout() ? "ai.error.timeout" : "ai.error.unreachable");
         }
         if (e instanceof UnauthorizedException) {
-            return "Der API-Schlüssel wurde vom KI-Server abgelehnt.";
+            return Msg.of("ai.error.unauthorized");
         }
         if (e instanceof PermissionDeniedException) {
-            return "Der API-Schlüssel hat keine Berechtigung für dieses Modell oder diese Funktion.";
+            return Msg.of("ai.error.forbidden");
         }
         if (e instanceof NotFoundException) {
-            return "Das konfigurierte Modell oder die Server-Adresse wurde nicht gefunden.";
+            return Msg.of("ai.error.notFound");
         }
         if (e instanceof RateLimitException) {
-            return "Das Anfragelimit des KI-Servers ist erreicht. Bitte später erneut versuchen.";
+            return Msg.of("ai.error.rateLimit");
         }
         if (e instanceof BadRequestException) {
-            return "Der KI-Server hat die Anfrage zurückgewiesen: " + e.getMessage();
+            return Msg.of("ai.error.rejected", e.getMessage());
         }
         if (e instanceof AnthropicServiceException service && service.statusCode() < 400) {
             // Fehler mitten im Antwortstrom, z. B. weil der Server neu gestartet wurde
-            return "Der KI-Server hat die Antwort abgebrochen. Bitte die Analyse erneut anstoßen.";
+            return Msg.of("ai.error.aborted");
         }
         if (e instanceof AnthropicServiceException service) {
-            return "Der KI-Server meldet einen Fehler (HTTP " + service.statusCode() + ").";
+            return Msg.of("ai.error.serverError", String.valueOf(service.statusCode()));
         }
         if (e instanceof AnthropicIoException) {
-            return "Der KI-Server ist nicht erreichbar: " + rootMessage(e);
+            return Msg.of("ai.error.unreachableDetail", rootMessage(e));
         }
-        return "Unerwarteter Fehler bei der KI-Analyse: " + rootMessage(e);
+        return Msg.of("ai.error.unexpected", rootMessage(e));
     }
 
     private static String rootMessage(Throwable e) {

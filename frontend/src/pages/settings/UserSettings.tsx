@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Alert, Badge, Button, Card, ConfirmDialog, Field, IconButton, Input, Modal, Select, Spinner, Switch } from '../../components/ui'
 import { api, errorMessage, type Role, type User } from '../../lib/api'
@@ -8,12 +9,8 @@ import { useAuth } from '../../lib/auth'
 import { formatRelative } from '../../lib/format'
 import { SectionHeader } from './SectionHeader'
 
-const roleHints: Record<Role, string> = {
-  ADMIN: 'Darf alles – auch Einstellungen ändern, Benutzer verwalten und Dokumente löschen.',
-  USER: 'Darf Dokumente ansehen, durchsuchen, hochladen und ihre Angaben bearbeiten.',
-}
-
 export function UserSettings() {
+  const { t } = useTranslation()
   const { user: me } = useAuth()
   const queryClient = useQueryClient()
   const users = useQuery({ queryKey: ['users'], queryFn: api.users })
@@ -24,7 +21,7 @@ export function UserSettings() {
     mutationFn: (id: string) => api.deleteUser(id),
     onSuccess: async () => {
       setDeleting(null)
-      toast.success('Benutzer gelöscht')
+      toast.success(t('settings.users.deleted'))
       await queryClient.invalidateQueries({ queryKey: ['users'] })
     },
     onError: (e) => {
@@ -36,15 +33,14 @@ export function UserSettings() {
   return (
     <section>
       <SectionHeader
-        title="Benutzer"
+        title={t('settings.users.title')}
         action={
           <Button variant="primary" icon={<Plus className="size-4" aria-hidden />} onClick={() => setEditing('new')}>
-            Benutzer anlegen
+            {t('settings.users.add')}
           </Button>
         }
       >
-        Jede Person meldet sich mit einem eigenen Konto an. Administratoren verwalten die Anwendung, Benutzer arbeiten
-        mit den Dokumenten.
+        {t('settings.users.intro')}
       </SectionHeader>
 
       {users.isPending ? (
@@ -64,19 +60,19 @@ export function UserSettings() {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <span className="truncate text-sm font-semibold">{user.username}</span>
-                    <Badge tone={user.role === 'ADMIN' ? 'brand' : 'neutral'}>{user.role === 'ADMIN' ? 'Admin' : 'Benutzer'}</Badge>
-                    {user.id === me.id && <Badge>Du</Badge>}
-                    {!user.enabled && <Badge tone="warn">Deaktiviert</Badge>}
+                    <Badge tone={user.role === 'ADMIN' ? 'brand' : 'neutral'}>{t(`common.role.${user.role}`)}</Badge>
+                    {user.id === me.id && <Badge>{t('settings.users.you')}</Badge>}
+                    {!user.enabled && <Badge tone="warn">{t('settings.users.disabled')}</Badge>}
                   </div>
                   <p className="mt-0.5 text-xs text-muted">
-                    {user.lastLoginAt ? `Zuletzt angemeldet ${formatRelative(user.lastLoginAt)}` : 'Noch nie angemeldet'}
+                    {user.lastLoginAt ? t('settings.users.lastLogin', { when: formatRelative(user.lastLoginAt) }) : t('settings.users.neverLoggedIn')}
                   </p>
                 </div>
-                <IconButton label={`${user.username} bearbeiten`} onClick={() => setEditing(user)}>
+                <IconButton label={t('settings.users.editUser', { name: user.username })} onClick={() => setEditing(user)}>
                   <Pencil className="size-4" />
                 </IconButton>
                 <IconButton
-                  label={`${user.username} löschen`}
+                  label={t('settings.users.deleteUser', { name: user.username })}
                   onClick={() => setDeleting(user)}
                   disabled={user.id === me.id}
                   className="hover:!bg-danger-soft hover:!text-danger"
@@ -95,16 +91,17 @@ export function UserSettings() {
         onClose={() => setDeleting(null)}
         onConfirm={() => deleting && remove.mutate(deleting.id)}
         loading={remove.isPending}
-        title="Benutzer löschen?"
-        confirmLabel="Löschen"
+        title={t('settings.users.delete.title')}
+        confirmLabel={t('common.delete')}
       >
-        Das Konto „{deleting?.username}“ wird gelöscht und sofort abgemeldet. Dokumente bleiben erhalten.
+        {t('settings.users.delete.text', { name: deleting?.username ?? '' })}
       </ConfirmDialog>
     </section>
   )
 }
 
 function UserDialog({ user, isSelf, onClose }: { user: User | null; isSelf: boolean; onClose: () => void }) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [username, setUsername] = useState(user?.username ?? '')
   const [password, setPassword] = useState('')
@@ -118,7 +115,7 @@ function UserDialog({ user, isSelf, onClose }: { user: User | null; isSelf: bool
         : api.createUser({ username: username.trim(), password, role }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['users'] })
-      toast.success(user ? 'Benutzer gespeichert' : 'Benutzer angelegt')
+      toast.success(user ? t('settings.users.saved') : t('settings.users.created'))
       onClose()
       if (isSelf) {
         // Eigene Rolle oder eigenes Passwort geändert: Die Sitzung ist damit beendet.
@@ -133,37 +130,37 @@ function UserDialog({ user, isSelf, onClose }: { user: User | null; isSelf: bool
   }
 
   return (
-    <Modal open onClose={onClose} title={user ? `${user.username} bearbeiten` : 'Benutzer anlegen'}>
+    <Modal open onClose={onClose} title={user ? t('settings.users.editUser', { name: user.username }) : t('settings.users.add')}>
       <form onSubmit={submit} className="flex flex-col gap-4">
         {save.isError && <Alert tone="danger">{errorMessage(save.error)}</Alert>}
-        {isSelf && <Alert tone="brand">Das ist dein eigenes Konto. Nach dem Speichern musst du dich neu anmelden.</Alert>}
+        {isSelf && <Alert tone="brand">{t('settings.users.dialog.selfNotice')}</Alert>}
         {!user && (
-          <Field label="Benutzername" hint="3–50 Zeichen: Buchstaben, Ziffern, Punkt, Bindestrich, Unterstrich, @">
+          <Field label={t('common.username')} hint={t('common.usernameHint')}>
             {(id) => (
               <Input id={id} value={username} onChange={(e) => setUsername(e.target.value)} pattern="[A-Za-z0-9._@\-]{3,50}" autoComplete="off" autoCapitalize="none" autoFocus required />
             )}
           </Field>
         )}
-        <Field label={user ? 'Neues Passwort' : 'Passwort'} hint={user ? 'Leer lassen, um das Passwort nicht zu ändern. Sonst mindestens 8 Zeichen.' : 'Mindestens 8 Zeichen'}>
+        <Field label={user ? t('common.newPassword') : t('common.password')} hint={user ? t('settings.users.dialog.passwordKeepHint') : t('common.passwordHint')}>
           {(id) => (
             <Input id={id} type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" minLength={8} required={!user} />
           )}
         </Field>
-        <Field label="Rolle" hint={roleHints[role]}>
+        <Field label={t('settings.users.dialog.role')} hint={t(`settings.users.dialog.roleHints.${role}`)}>
           {(id) => (
             <Select id={id} value={role} onChange={(e) => setRole(e.target.value as Role)}>
-              <option value="USER">Benutzer</option>
-              <option value="ADMIN">Admin</option>
+              <option value="USER">{t('common.role.USER')}</option>
+              <option value="ADMIN">{t('common.role.ADMIN')}</option>
             </Select>
           )}
         </Field>
         {user && (
-          <Switch checked={enabled} onChange={setEnabled} label="Konto aktiv" description="Deaktivierte Konten können sich nicht anmelden; laufende Sitzungen enden sofort." />
+          <Switch checked={enabled} onChange={setEnabled} label={t('settings.users.dialog.active')} description={t('settings.users.dialog.activeHint')} />
         )}
         <div className="mt-1 flex justify-end gap-2">
-          <Button onClick={onClose}>Abbrechen</Button>
+          <Button onClick={onClose}>{t('common.cancel')}</Button>
           <Button type="submit" variant="primary" loading={save.isPending}>
-            {user ? 'Speichern' : 'Anlegen'}
+            {user ? t('common.save') : t('settings.users.dialog.create')}
           </Button>
         </div>
       </form>

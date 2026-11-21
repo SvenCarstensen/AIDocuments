@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "remove": "Entfernen",
+    "add": "Hinzufügen",
+    "back": "Zurück",
+    "retry": "Erneut versuchen",
+    "loading": "Lädt",
+    "language": "Sprache",
+    "testConnection": "Verbindung testen",
+    "saveFirst": "Bitte zuerst speichern",
+    "username": "Benutzername",
+    "usernameHint": "3–50 Zeichen: Buchstaben, Ziffern, Punkt, Bindestrich, Unterstrich, @",
+    "password": "Passwort",
+    "newPassword": "Neues Passwort",
+    "passwordHint": "Mindestens 8 Zeichen",
+    "passwordMismatch": "Die Passwörter stimmen nicht überein.",
+    "justNow": "gerade eben",
+    "documentCount_one": "{{count, number}} Dokument",
+    "documentCount_other": "{{count, number}} Dokumente",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Benutzer"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Keine Verbindung zum Server",
+    "server": "Der Server meldet einen Fehler ({{status}}).",
+    "forbidden": "Dafür fehlt die Berechtigung.",
+    "unreachable": "Der Server ist nicht erreichbar.",
+    "unexpected": "Unerwarteter Fehler.",
+    "languageLoad": "Die Sprache konnte nicht geladen werden."
+  },
+  "auth": {
+    "login": {
+      "title": "Willkommen zurück",
+      "subtitle": "Melde dich an, um auf deine Dokumente zuzugreifen.",
+      "submit": "Anmelden"
+    },
+    "setup": {
+      "title": "AIDocuments einrichten",
+      "subtitle": "Lege zuerst das Administratorkonto an. Weitere Benutzer kannst du danach in den Einstellungen hinzufügen.",
+      "adminAccount": "Administratorkonto",
+      "repeatPassword": "Passwort wiederholen",
+      "submit": "Konto anlegen und starten",
+      "features": {
+        "import": "PDFs aus Postfach und Eingangsordner",
+        "ai": "KI fasst zusammen und verschlagwortet",
+        "search": "Volltextsuche bis ins Dokument"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Hochladen",
+    "theme": {
+      "light": "Helles Design",
+      "dark": "Dunkles Design"
+    },
+    "search": {
+      "placeholder": "Dokumente, Schlagworte, Inhalte durchsuchen …",
+      "label": "Dokumente durchsuchen",
+      "clear": "Suche leeren"
+    },
+    "userMenu": {
+      "label": "Benutzermenü ({{name}})",
+      "aiActive": "KI aktiv",
+      "aiNotConfigured": "KI nicht eingerichtet",
+      "changePassword": "Passwort ändern",
+      "logout": "Abmelden"
+    },
+    "passwordDialog": {
+      "current": "Aktuelles Passwort",
+      "repeat": "Neues Passwort wiederholen",
+      "changed": "Passwort geändert"
+    },
+    "dropzone": {
+      "title": "PDFs hier ablegen",
+      "hint": "Mehrere Dateien auf einmal sind möglich. Sie werden gespeichert, analysiert und verschlagwortet."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Es können nur PDF-Dateien hinzugefügt werden.",
+    "uploadingFile": "„{{name}}“ wird hochgeladen …",
+    "uploadingFiles_one": "{{count, number}} PDF wird hochgeladen …",
+    "uploadingFiles_other": "{{count, number}} PDFs werden hochgeladen …",
+    "created_one": "{{count, number}} Dokument hinzugefügt",
+    "created_other": "{{count, number}} Dokumente hinzugefügt",
+    "processingInBackground": "Die Verarbeitung läuft im Hintergrund.",
+    "duplicates_one": "{{count, number}} bereits vorhanden",
+    "duplicates_other": "{{count, number}} bereits vorhanden",
+    "rejected_one": "{{count, number}} Datei kein gültiges PDF",
+    "rejected_other": "{{count, number}} Dateien kein gültiges PDF",
+    "onlyDuplicates_one": "Dieses Dokument ist bereits vorhanden.",
+    "onlyDuplicates_other": "Diese Dokumente sind bereits vorhanden.",
+    "noneValid": "Keine der Dateien ist ein gültiges PDF.",
+    "failed": "Hochladen fehlgeschlagen"
+  },
+  "documents": {
+    "status": {
+      "pending": "Wartet",
+      "processing": "Wird analysiert",
+      "failed": "Fehler",
+      "textOnly": "Ohne KI"
+    },
+    "ocrBadge": "Texterkennung",
+    "aiNotice": {
+      "text": "Die KI ist noch nicht eingerichtet. Neue Dokumente sind über ihren Text durchsuchbar, werden aber nicht zusammengefasst und verschlagwortet.",
+      "action": "Jetzt einrichten"
+    },
+    "searchResults_one": "<count>{{count, number}} Treffer</count> <query>für „{{query}}“</query>",
+    "searchResults_other": "<count>{{count, number}} Treffer</count> <query>für „{{query}}“</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} in Bearbeitung",
+      "inProgressHint": "Warten auf die KI-Analyse oder werden gerade analysiert",
+      "remaining": "noch ca. {{duration}}",
+      "remainingLessThan": "noch unter {{duration}}",
+      "finishHint": "Voraussichtlich fertig: {{time}} Uhr – geschätzt aus dem Tempo der zuletzt bearbeiteten Dokumente"
+    },
+    "sort": {
+      "label": "Sortierung",
+      "relevance": "Beste Treffer",
+      "newest": "Neueste zuerst",
+      "date": "Nach Dokumentdatum"
+    },
+    "view": {
+      "grid": "Kachelansicht",
+      "list": "Listenansicht"
+    },
+    "pageSize": {
+      "label": "Anzahl sichtbarer Dokumente",
+      "all": "Alle"
+    },
+    "filters": {
+      "title": "Filter",
+      "titleWithCount": "Filter ({{active, number}})",
+      "apply": "Anzeigen",
+      "hint": "Sobald Dokumente analysiert sind, erscheinen hier Dokumentarten, Schlagworte und Absender zum Filtern.",
+      "dateFrom": "von",
+      "dateTo": "bis",
+      "status": "Status",
+      "failed": "Fehlgeschlagen",
+      "showAll": "Alle anzeigen",
+      "showLess": "Weniger anzeigen",
+      "activeFrom": "ab {{date}}",
+      "activeTo": "bis {{date}}",
+      "removeOne": "Filter „{{label}}“ entfernen",
+      "removeAll": "Alle Filter entfernen",
+      "clear": "Filter entfernen"
+    },
+    "empty": {
+      "libraryTitle": "Noch keine Dokumente",
+      "libraryHint": "Ziehe PDF-Dateien einfach in dieses Fenster oder nutze „Hochladen“.",
+      "libraryHintAdmin": "Ziehe PDF-Dateien einfach in dieses Fenster oder nutze „Hochladen“. Unter Einstellungen richtest du ein Postfach oder einen Eingangsordner ein, aus dem neue PDFs automatisch übernommen werden.",
+      "noResultsTitle": "Nichts gefunden",
+      "noResultsSearch": "Kein Dokument passt zu dieser Suche. Die Suche findet auch Wortteile – versuche es mit einem kürzeren Begriff oder weniger Wörtern.",
+      "noResultsFilters": "Kein Dokument passt zu den gewählten Filtern."
+    },
+    "loadingAll_one": "{{loaded, number}} von {{count, number}} Dokument geladen …",
+    "loadingAll_other": "{{loaded, number}} von {{count, number}} Dokumenten geladen …",
+    "loadMore": "Weitere laden ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Zur Übersicht",
+    "download": "Herunterladen",
+    "reprocess": "Neu analysieren",
+    "reprocessHint": "PDF erneut auslesen und von der KI analysieren lassen",
+    "reprocessStarted": "Das Dokument wird neu analysiert.",
+    "deleted": "Dokument gelöscht",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "In neuem Tab öffnen",
+    "processingNotice": "Das Dokument wird gerade verarbeitet. Zusammenfassung und Schlagworte erscheinen hier, sobald die Analyse fertig ist.",
+    "textOnlyNotice": "Ohne KI erschlossen: Das Dokument ist über seinen Text durchsuchbar, hat aber keine Zusammenfassung und keine automatischen Schlagworte.",
+    "tabs": {
+      "overview": "Übersicht",
+      "text": "Volltext"
+    },
+    "fields": {
+      "title": "Titel",
+      "category": "Dokumentart",
+      "documentDate": "Dokumentdatum",
+      "correspondent": "Absender",
+      "tags": "Schlagworte",
+      "summary": "Zusammenfassung"
+    },
+    "tags": {
+      "allWith": "Alle Dokumente mit „{{tag}}“",
+      "none": "Keine Schlagworte. <add>Hinzufügen</add>",
+      "inputHint": "Mit Enter oder Komma bestätigen. Vorschläge sind bereits verwendete Schlagworte.",
+      "inputPlaceholder": "Schlagwort eingeben …",
+      "remove": "Schlagwort „{{tag}}“ entfernen"
+    },
+    "keyFacts": "Kerndaten",
+    "details": {
+      "title": "Details",
+      "file": "Datei",
+      "size": "Umfang",
+      "pageCount_one": "{{count, number}} Seite",
+      "pageCount_other": "{{count, number}} Seiten",
+      "language": "Sprache",
+      "source": "Herkunft",
+      "mailSubject": "Betreff",
+      "mailFrom": "Von",
+      "mailReceived": "Empfangen",
+      "added": "Hinzugefügt",
+      "text": "Text"
+    },
+    "source": {
+      "MAIL": "E-Mail-Postfach",
+      "FOLDER": "Eingangsordner",
+      "UPLOAD": "Hochgeladen"
+    },
+    "noText": "Für dieses Dokument liegt kein Text vor – vermutlich ein Scan ohne Textebene. Mit eingerichteter KI und aktivierter Texterkennung wird der Inhalt beim Analysieren transkribiert.",
+    "edit": {
+      "title": "Dokument bearbeiten",
+      "saved": "Änderungen gespeichert"
+    },
+    "delete": {
+      "title": "Dokument löschen?",
+      "text": "„{{title}}“ wird mitsamt PDF-Datei, Volltext und Schlagworten gelöscht. Das lässt sich nicht rückgängig machen.",
+      "confirm": "Endgültig löschen"
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "mailboxes": {
+      "title": "Postfächer",
+      "navHint": "IMAP-Server, aus denen PDF-Anhänge übernommen werden",
+      "intro": "Aus diesen IMAP-Postfächern werden PDF-Anhänge automatisch übernommen. Die Postfächer werden nur gelesen – E-Mails bleiben unverändert und ungelesen.",
+      "add": "Postfach hinzufügen",
+      "emptyTitle": "Noch kein Postfach eingerichtet",
+      "emptyText": "Trage die Zugangsdaten eines IMAP-Postfachs ein – zum Beispiel das Postfach, an das dein Scanner Dokumente schickt.",
+      "paused": "Pausiert",
+      "syncNow": "Jetzt abrufen",
+      "syncing": "Postfach wird abgerufen …",
+      "neverSynced": "Noch nicht abgerufen.",
+      "saved": "Postfach gespeichert",
+      "added": "Postfach hinzugefügt",
+      "firstSyncRunning": "Der erste Abruf läuft bereits.",
+      "removed": "Postfach entfernt",
+      "delete": {
+        "title": "Postfach entfernen?",
+        "text": "„{{name}}“ wird nicht mehr abgerufen. Bereits übernommene Dokumente bleiben erhalten."
+      },
+      "dialog": {
+        "editTitle": "Postfach bearbeiten",
+        "description": "Die Zugangsdaten bekommst du von deinem E-Mail-Anbieter. Das Passwort wird verschlüsselt gespeichert.",
+        "name": "Bezeichnung",
+        "nameHint": "Frei wählbar, z. B. „Scanner“ oder „Rechnungen“",
+        "namePlaceholder": "Scanner",
+        "host": "IMAP-Server",
+        "port": "Port",
+        "security": "Verschlüsselung",
+        "securityNone": "Keine",
+        "securityNoneWarning": "Ohne Verschlüsselung werden Benutzername und Passwort im Klartext übertragen.",
+        "passwordKeepHint": "Leer lassen, um das gespeicherte Passwort zu behalten",
+        "folder": "Ordner",
+        "folderHint": "Meist {{folder}} (Posteingang)",
+        "since": "Nur E-Mails ab",
+        "sinceHint": "Optional – ältere E-Mails werden übersprungen",
+        "enabled": "Automatisch abrufen",
+        "enabledHint": "Das Postfach wird im eingestellten Intervall auf neue PDFs geprüft."
+      }
+    },
+    "import": {
+      "title": "Abruf & Eingangsordner",
+      "navHint": "Abrufintervall und überwachtes Verzeichnis",
+      "intro": "Legt fest, wie oft nach neuen PDF-Dateien gesucht wird – in den Postfächern und im Eingangsordner.",
+      "saved": "Einstellungen gespeichert",
+      "interval": {
+        "title": "Abrufintervall",
+        "text": "So oft prüft die Anwendung alle Postfächer und den Eingangsordner auf neue PDFs.",
+        "label": "Alle … Minuten",
+        "nextRun": "Nächster automatischer Abruf {{when}}."
+      },
+      "folder": {
+        "title": "Eingangsordner",
+        "text": "Ein Verzeichnis auf dem Server, das auf neue PDF-Dateien überwacht wird – etwa das Ziel eines Netzwerkscanners. Unterordner werden mit durchsucht.",
+        "enable": "Eingangsordner überwachen",
+        "path": "Pfad auf dem Server",
+        "pathHint": "Absoluter Pfad. Im Docker-Container ist das der eingebundene Ordner, üblicherweise {{path}}.",
+        "afterImport": "Nach der Übernahme",
+        "keep": "Datei liegen lassen",
+        "move": "In „{{folder}}“ verschieben",
+        "keepHint": "Die Dateien bleiben unverändert. Die Anwendung merkt sich, was sie bereits übernommen hat.",
+        "moveHint": "Übernommene Dateien wandern in den Unterordner „{{folder}}“ – der Eingangsordner bleibt aufgeräumt.",
+        "scanning": "Ordner wird geprüft …",
+        "neverScanned": "Noch nicht geprüft.",
+        "scanNow": "Jetzt prüfen",
+        "scanStarted": "Der Eingangsordner wird geprüft."
+      }
+    },
+    "ai": {
+      "title": "KI",
+      "navHint": "LLM-Server, Modell und Texterkennung",
+      "intro": "Die KI liest jedes neue PDF, fasst es zusammen, vergibt Dokumentart und Schlagworte und zieht Kerndaten wie Beträge oder Fristen heraus.",
+      "configured": "Eingerichtet",
+      "notConfigured": "Nicht eingerichtet",
+      "saved": "KI-Einstellungen gespeichert",
+      "server": {
+        "title": "LLM-Server",
+        "provider": "Anbieter",
+        "baseUrl": "Server-Adresse",
+        "model": "Modell",
+        "modelPlaceholder": "Modell-ID",
+        "compatibilityMode": "Kompatibilitätsmodus für lokale Modelle",
+        "compatibilityModeHint": "Für Server, die zwar die Anthropic-Schnittstelle sprechen, aber keine PDF-Eingabe und keine strukturierten Ausgaben kennen: Das Dokument geht als Text bzw. bei Scans als Seitenbilder an das Modell. Bei der Claude API ausgeschaltet lassen.",
+        "testIncomplete": "Die Angaben sind noch nicht vollständig"
+      },
+      "privacy": {
+        "title": "Deine Dokumente verlassen bei {{provider}} diesen Rechner",
+        "text": "Zur Analyse wird der Inhalt jedes PDFs an die Server von {{provider}} im Internet übertragen und dort verarbeitet – auch Rechnungen, Verträge, Arztbriefe und Behördenpost.",
+        "recommendation": "<emphasis>Empfehlung:</emphasis> eine lokale KI verwenden. Mit <lmStudio>LM Studio</lmStudio> oder einem <compatible>OpenAI-kompatiblen Server</compatible> im eigenen Netz bleiben alle Inhalte bei dir."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Die Claude API von Anthropic. Nur ändern, wenn ein eigenes Gateway davorsteht.",
+          "modelHint": "Claude Opus 5.5 ist die empfohlene Wahl; Sonnet und Haiku sind schneller und günstiger."
+        },
+        "OPENAI": {
+          "urlHint": "Die API von OpenAI. Nur ändern, wenn ein eigenes Gateway davorsteht.",
+          "modelHint": "Die Modell-ID, wie OpenAI sie nennt. Nach dem Speichern des Schlüssels erscheinen hier die verfügbaren Modelle."
+        },
+        "MOONSHOT": {
+          "urlHint": "Die API von Moonshot AI (Kimi). Für Konten der chinesischen Plattform: {{url}}",
+          "modelHint": "Die Modell-ID, wie Moonshot sie nennt. Nach dem Speichern des Schlüssels erscheinen hier die verfügbaren Modelle."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Der lokale Server von LM Studio (in LM Studio unter „Developer“ starten). Läuft AIDocuments in Docker: {{url}}",
+          "modelHint": "Die ID des in LM Studio geladenen Modells. Für Scans braucht es ein Modell mit Bildeingabe, für die Erschließung eines mit Werkzeugaufrufen (Tool Use)."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adresse eines Servers, der die OpenAI-Schnittstelle spricht – üblicherweise mit /v1 am Ende, z. B. {{url}}",
+          "modelHint": "Die Modell-ID, wie der Server sie nennt. Nach dem Speichern erscheinen hier die Modelle, die er anbietet."
+        }
+      },
+      "apiKey": {
+        "label": "API-Schlüssel",
+        "labelOptional": "API-Schlüssel (optional)",
+        "placeholderStored": "{{mask}} (gespeichert)",
+        "placeholderPreset": "{{mask}} (vorbelegt)",
+        "placeholderNotNeeded": "nicht nötig",
+        "placeholderIfRequired": "nur falls der Server einen verlangt",
+        "hintShown": "Aus der Server-Konfiguration vorbelegt.",
+        "hintRemoving": "Der gespeicherte Schlüssel wird beim Speichern entfernt.",
+        "hintStored": "Ein Schlüssel ist verschlüsselt gespeichert. Leer lassen, um ihn zu behalten – <remove>Schlüssel entfernen</remove>",
+        "hintEnvironment": "Der Schlüssel kommt derzeit aus der Server-Konfiguration (Umgebungsvariable bzw. Konfigurationsdatei). Ein hier eingetragener Schlüssel hat Vorrang.",
+        "hintPreset": "Für diesen Anbieter ist in der Server-Konfiguration ein Schlüssel vorbelegt. Leer lassen, um ihn zu verwenden.",
+        "hintDiscardedOnSwitch": "Der bisher gespeicherte Schlüssel gehört zu {{previous}} und wird beim Wechsel verworfen.",
+        "hintPresetOtherProvider": "Der vorbelegte Schlüssel gilt nur für {{previous}}. Für {{provider}} bitte einen eigenen eintragen.",
+        "hintRequired": "Wird verschlüsselt gespeichert und nie wieder angezeigt.",
+        "hintLocal": "Lokale Server brauchen meist keinen Schlüssel."
+      },
+      "analysis": {
+        "title": "Analyse",
+        "effort": "Gründlichkeit",
+        "effortLevels": {
+          "low": "Schnell",
+          "medium": "Ausgewogen",
+          "high": "Gründlich"
+        },
+        "effortHint": "Gründlicher bedeutet: sorgfältigere Ergebnisse, aber langsamer und teurer je Dokument.",
+        "outputLanguage": "Sprache der Ergebnisse",
+        "outputLanguageHint": "In dieser Sprache schreibt die KI Titel, Zusammenfassung und Schlagworte.",
+        "ocr": "Texterkennung für Scans",
+        "ocrHint": "Gescannte PDFs ohne Textebene lässt die Anwendung von der KI transkribieren – erst dadurch werden sie im Volltext durchsuchbar. Braucht je Scan mehr Zeit bzw. Kosten."
+      },
+      "unanalyzed_one": "{{count, number}} Dokument ist noch nicht von der KI erschlossen.",
+      "unanalyzed_other": "{{count, number}} Dokumente sind noch nicht von der KI erschlossen.",
+      "analyzeNow": "Jetzt analysieren",
+      "analysisStarted_one": "{{count, number}} Dokument wird jetzt analysiert.",
+      "analysisStarted_other": "{{count, number}} Dokumente werden jetzt analysiert."
+    },
+    "users": {
+      "title": "Benutzer",
+      "navHint": "Konten und Rollen",
+      "intro": "Jede Person meldet sich mit einem eigenen Konto an. Administratoren verwalten die Anwendung, Benutzer arbeiten mit den Dokumenten.",
+      "add": "Benutzer anlegen",
+      "you": "Du",
+      "disabled": "Deaktiviert",
+      "lastLogin": "Zuletzt angemeldet {{when}}",
+      "neverLoggedIn": "Noch nie angemeldet",
+      "editUser": "{{name}} bearbeiten",
+      "deleteUser": "{{name}} löschen",
+      "saved": "Benutzer gespeichert",
+      "created": "Benutzer angelegt",
+      "deleted": "Benutzer gelöscht",
+      "delete": {
+        "title": "Benutzer löschen?",
+        "text": "Das Konto „{{name}}“ wird gelöscht und sofort abgemeldet. Dokumente bleiben erhalten."
+      },
+      "dialog": {
+        "selfNotice": "Das ist dein eigenes Konto. Nach dem Speichern musst du dich neu anmelden.",
+        "passwordKeepHint": "Leer lassen, um das Passwort nicht zu ändern. Sonst mindestens 8 Zeichen.",
+        "role": "Rolle",
+        "roleHints": {
+          "ADMIN": "Darf alles – auch Einstellungen ändern, Benutzer verwalten und Dokumente löschen.",
+          "USER": "Darf Dokumente ansehen, durchsuchen, hochladen und ihre Angaben bearbeiten."
+        },
+        "active": "Konto aktiv",
+        "activeHint": "Deaktivierte Konten können sich nicht anmelden; laufende Sitzungen enden sofort.",
+        "create": "Anlegen"
+      }
+    }
+  }
+}

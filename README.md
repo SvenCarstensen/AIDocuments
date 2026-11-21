@@ -18,6 +18,7 @@ Absender, Datum, Schlagworte, Kerndaten – bei Scans auch den Volltext) und mac
 | Ansicht | Kachel- und Listenansicht mit Vorschaubildern, Detailseite mit PDF-Betrachter, Metadaten von Hand bearbeitbar, helles und dunkles Design. |
 | Benutzer | Ersteinrichtung mit Administratorkonto, weitere Konten mit den Rollen **Admin** und **Benutzer**. |
 | Einstellungen | Postfächer, Abrufintervall und Eingangsordner, KI-/LLM-Server, Benutzer – alles in der Oberfläche. |
+| Sprachen | Oberfläche und Meldungen des Servers in 36 europäischen Sprachen. Beim ersten Start gilt die Systemsprache, ohne passende Übersetzung Englisch; umschaltbar im Benutzermenü. Siehe [Sprachen](#sprachen). |
 
 ### Rollen
 
@@ -180,11 +181,42 @@ Ohne KI-Zugang funktioniert die Anwendung weiter: PDFs werden gespeichert und si
 durchsuchbar, nur Zusammenfassung und Schlagworte fehlen. Nachträglich analysieren: *Einstellungen → KI →
 „Jetzt analysieren“*.
 
+## Sprachen
+
+Die Anwendung ist in 36 Sprachen übersetzt: die 24 Amtssprachen der EU (Bulgarisch, Dänisch, Deutsch,
+Englisch, Estnisch, Finnisch, Französisch, Griechisch, Irisch, Italienisch, Kroatisch, Lettisch, Litauisch,
+Maltesisch, Niederländisch, Polnisch, Portugiesisch, Rumänisch, Schwedisch, Slowakisch, Slowenisch, Spanisch,
+Tschechisch, Ungarisch) sowie Albanisch, Belarussisch, Bosnisch, Isländisch, Katalanisch, Luxemburgisch,
+Mazedonisch, Norwegisch (Bokmål), Russisch, Serbisch, Türkisch und Ukrainisch.
+
+- **Welche Sprache gilt:** Beim ersten Start die Systemsprache, wie der Browser sie meldet (`de-AT` wird mit
+  Deutsch bedient, `nn`/`no` mit Norwegisch Bokmål). Gibt es dafür keine Übersetzung, gilt Englisch. Die
+  Sprache lässt sich im Benutzermenü und auf der Anmeldeseite umschalten; die Wahl merkt sich der Browser.
+- **Was übersetzt ist:** die Oberfläche, Fehlermeldungen und Statusmeldungen des Servers (etwa das Ergebnis
+  eines Postfachabrufs – sie werden sprachneutral gespeichert und erst beim Anzeigen übersetzt) sowie Datums-,
+  Zahlen- und Zeitangaben.
+- **Was nicht:** Inhalte, die die KI erzeugt (Titel, Zusammenfassung, Schlagworte, Dokumentart) – deren Sprache
+  bestimmt *Einstellungen → KI → Sprache der Ergebnisse*. Die Volltextsuche bildet Stammformen für deutsche
+  Texte; Teiltextsuche funktioniert in jeder Sprache.
+- **Herkunft:** Deutsch ist der ursprüngliche Wortlaut. Alle anderen Sprachen sind maschinell übersetzt und nicht
+  von Muttersprachlern gegengelesen – Korrekturen sind einfache Textänderungen in den Dateien unten.
+
+| | Oberfläche | Server |
+|---|---|---|
+| Dateien | `frontend/src/locales/<code>.json` | `backend/src/main/resources/messages_<code>.properties` |
+| Vorlage und Rückfallsprache (Englisch) | `en.json` | `messages.properties` |
+| Regeln für Übersetzungen | `frontend/src/locales/README.md` | Kopf von `messages.properties` |
+| Prüfung | `cd frontend && npm run check:locales` | `MessageBundlesTest` (läuft mit `./mvnw test`) |
+
+Eine weitere Sprache hinzufügen: beide Dateien anlegen – sie wird ohne Codeänderung erkannt und erscheint in der
+Sprachauswahl. Norwegisch heißt in der Oberfläche `nb.json`, auf dem Server `messages_no.properties`.
+
 ## Projektstruktur
 
 ```
 backend/     Spring-Boot-Anwendung
   src/main/java/de/aidocuments/
+    i18n/       Mehrsprachigkeit: sprachneutrale Meldungen, Sprachwahl je Anfrage
     document/   Dokumente, Verarbeitungs-Pipeline, REST-API
     ai/         KI-Analyse (Anthropic- und OpenAI-Schnittstelle)
     search/     Lucene-Volltextindex

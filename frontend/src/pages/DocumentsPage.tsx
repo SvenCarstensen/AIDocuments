@@ -1,12 +1,13 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { FileSearch, FolderOpen, LayoutGrid, List, SlidersHorizontal, Sparkles, X } from 'lucide-react'
+import { FileSearch, FolderOpen, LayoutGrid, List, Loader2, SlidersHorizontal, Sparkles, X } from 'lucide-react'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { isBusy, metaLine, Snippet, StatusBadge, TagChip, Thumbnail } from '../components/documents'
 import { Alert, Badge, Button, EmptyState, IconButton, Input, Modal, Select, Spinner } from '../components/ui'
 import { api, type Doc, type DocumentQuery, errorMessage, type Facets, MAX_PAGE_SIZE, type SortOrder } from '../lib/api'
 import { useAuth } from '../lib/auth'
-import { cx, plural } from '../lib/format'
+import { cx, formatFinishTime, formatRemaining } from '../lib/format'
 
 type View = 'grid' | 'list'
 
@@ -67,6 +68,7 @@ function useDocumentFilters() {
 }
 
 export function DocumentsPage() {
+  const { t } = useTranslation()
   const { isAdmin } = useAuth()
   const { filters, set, toggleTag, clearFilters, activeCount } = useDocumentFilters()
   const [view, setView] = useState<View>(() => (localStorage.getItem('view') === 'list' ? 'list' : 'grid'))
@@ -77,8 +79,14 @@ export function DocumentsPage() {
   const requestSize = showAll ? MAX_PAGE_SIZE : Number(pageSize)
 
   // Die Kennzahlen verraten, ob im Hintergrund gerade etwas verarbeitet wird (z. B. neue Post).
-  const system = useQuery({ queryKey: ['system'], queryFn: api.system, refetchInterval: 10_000 })
-  const working = (system.data?.processing ?? 0) > 0
+  const system = useQuery({
+    queryKey: ['system'],
+    queryFn: api.system,
+    refetchInterval: (query) => ((query.state.data?.processing ?? 0) > 0 ? 4000 : 10_000),
+  })
+  const inProgress = system.data?.processing ?? 0
+  const remainingSeconds = system.data?.estimatedSecondsRemaining ?? null
+  const working = inProgress > 0
 
   const documents = useInfiniteQuery({
     queryKey: ['documents', filters, requestSize],
@@ -102,7 +110,14 @@ export function DocumentsPage() {
   }, [showAll, hasNextPage, isFetching, fetchNextPage])
   const facets = useQuery({ queryKey: ['documents', 'facets'], queryFn: api.facets, refetchInterval: 30_000 })
 
-  const items = documents.data?.pages.flatMap((page) => page.items) ?? []
+  // Kommen während des Ladens neue Dokumente hinzu, verschieben sich die Seiten gegeneinander und ein
+  // Dokument kann in zwei Seiten stehen. Jedes darf aber nur einmal erscheinen.
+  const items = useMemo(() => {
+    const seen = new Set<string>()
+    return (documents.data?.pages ?? [])
+      .flatMap((page) => page.items)
+      .filter((doc) => (seen.has(doc.id) ? false : (seen.add(doc.id), true)))
+  }, [documents.data])
   const total = documents.data?.pages[0]?.total ?? 0
   const searching = filters.q !== ''
   const libraryEmpty = system.data?.documents === 0
@@ -146,31 +161,50 @@ export function DocumentsPage() {
             action={
               isAdmin && (
                 <Link to="/settings/ai" className="shrink-0 font-semibold underline underline-offset-2">
-                  Jetzt einrichten
+                  {t('documents.aiNotice.action')}
                 </Link>
               )
             }
           >
-            Die KI ist noch nicht eingerichtet. Neue Dokumente sind über ihren Text durchsuchbar, werden aber
-            nicht zusammengefasst und verschlagwortet.
+            {t('documents.aiNotice.text')}
           </Alert>
         )}
 
         <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <h1 className="mr-auto text-xl font-semibold tracking-tight">
-            {searching ? (
-              <>
-                {plural(total, 'Treffer', 'Treffer')} <span className="font-normal text-muted">für „{filters.q}“</span>
-              </>
-            ) : (
-              <>
-                Dokumente <span className="ml-1 text-base font-normal text-muted">{total.toLocaleString('de-DE')}</span>
-              </>
+          {/* Überschrift, Anzahl und Bearbeitungsstand stehen auf einer Linie – jeweils senkrecht mittig */}
+          <div className="mr-auto flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+            <h1 className="flex min-w-0 items-center gap-2 text-xl font-semibold tracking-tight">
+              {searching ? (
+                // Ein Satz aus zwei unterschiedlich gesetzten Teilen – die Wortstellung bestimmt die Übersetzung.
+                <Trans
+                  i18nKey="documents.searchResults"
+                  count={total}
+                  values={{ query: filters.q }}
+                  components={{ count: <span />, query: <span className="truncate font-normal text-muted" /> }}
+                />
+              ) : (
+                <span>{t('common.documentCount', { count: total })}</span>
+              )}
+            </h1>
+            {inProgress > 0 && (
+              <Badge tone="brand" className="!gap-1.5 !px-2 !py-1 !text-[13px] !leading-none !font-medium">
+                <Loader2 className="size-3.5 animate-spin" aria-hidden />
+                <span title={t('documents.progress.inProgressHint')}>
+                  {t('documents.progress.inProgress', { documents: inProgress })}
+                </span>
+                {remainingSeconds != null && (
+                  <span
+                    className="border-l border-current/25 pl-1.5 font-normal"
+                    title={t('documents.progress.finishHint', { time: formatFinishTime(remainingSeconds) })}
+                  >
+                    {formatRemaining(remainingSeconds)}
+                  </span>
+                )}
+              </Badge>
             )}
-            {documents.isFetching && !documents.isFetchingNextPage && (
-              <Spinner className="ml-2.5 inline size-4 align-[-2px]" />
-            )}
-          </h1>
+            {/* Ladeanzeige nur beim Wechsel von Suche oder Filter – nicht bei jeder Hintergrundabfrage */}
+            {documents.isPlaceholderData && <Spinner className="size-4" />}
+          </div>
 
           <Button
             size="sm"
@@ -178,36 +212,36 @@ export function DocumentsPage() {
             icon={<SlidersHorizontal className="size-4" aria-hidden />}
             onClick={() => setFiltersOpen(true)}
           >
-            Filter{activeCount > 0 && ` (${activeCount})`}
+            {activeCount > 0 ? t('documents.filters.titleWithCount', { active: activeCount }) : t('documents.filters.title')}
           </Button>
           <Select
-            aria-label="Sortierung"
+            aria-label={t('documents.sort.label')}
             value={filters.sort}
             onChange={(event) => set('sort', event.target.value)}
             className="!h-8 !w-auto !text-[13px]"
           >
-            {searching && <option value="relevance">Beste Treffer</option>}
-            <option value="newest">Neueste zuerst</option>
-            <option value="date">Nach Dokumentdatum</option>
+            {searching && <option value="relevance">{t('documents.sort.relevance')}</option>}
+            <option value="newest">{t('documents.sort.newest')}</option>
+            <option value="date">{t('documents.sort.date')}</option>
           </Select>
           <div className="flex rounded-lg border border-line-strong bg-surface p-0.5">
-            <IconButton label="Kachelansicht" active={view === 'grid'} onClick={() => changeView('grid')} className="!size-7 !rounded-md">
+            <IconButton label={t('documents.view.grid')} active={view === 'grid'} onClick={() => changeView('grid')} className="!size-7 !rounded-md">
               <LayoutGrid className="size-4" />
             </IconButton>
-            <IconButton label="Listenansicht" active={view === 'list'} onClick={() => changeView('list')} className="!size-7 !rounded-md">
+            <IconButton label={t('documents.view.list')} active={view === 'list'} onClick={() => changeView('list')} className="!size-7 !rounded-md">
               <List className="size-4" />
             </IconButton>
           </div>
           <Select
-            aria-label="Anzahl sichtbarer Dokumente"
-            title="Anzahl sichtbarer Dokumente"
+            aria-label={t('documents.pageSize.label')}
+            title={t('documents.pageSize.label')}
             value={pageSize}
             onChange={(event) => changePageSize(event.target.value as PageSize)}
             className="!h-8 !w-auto !text-[13px]"
           >
             {PAGE_SIZES.map((size) => (
               <option key={size} value={size}>
-                {size === 'all' ? 'Alle' : size}
+                {size === 'all' ? t('documents.pageSize.all') : size}
               </option>
             ))}
           </Select>
@@ -222,11 +256,11 @@ export function DocumentsPage() {
             {filters.tags.map((tag) => (
               <ActiveFilter key={tag} label={`# ${tag}`} onRemove={() => toggleTag(tag)} />
             ))}
-            {filters.status === 'FAILED' && <ActiveFilter label="Fehlgeschlagen" onRemove={() => set('status', '')} />}
-            {filters.from && <ActiveFilter label={`ab ${filters.from}`} onRemove={() => set('from', '')} />}
-            {filters.to && <ActiveFilter label={`bis ${filters.to}`} onRemove={() => set('to', '')} />}
+            {filters.status === 'FAILED' && <ActiveFilter label={t('documents.filters.failed')} onRemove={() => set('status', '')} />}
+            {filters.from && <ActiveFilter label={t('documents.filters.activeFrom', { date: filters.from })} onRemove={() => set('from', '')} />}
+            {filters.to && <ActiveFilter label={t('documents.filters.activeTo', { date: filters.to })} onRemove={() => set('to', '')} />}
             <button type="button" onClick={clearFilters} className="text-[13px] font-medium text-muted hover:text-ink">
-              Alle Filter entfernen
+              {t('documents.filters.removeAll')}
             </button>
           </div>
         )}
@@ -237,29 +271,26 @@ export function DocumentsPage() {
           <SkeletonGrid view={view} />
         ) : items.length === 0 ? (
           libraryEmpty && !searching && activeCount === 0 ? (
-            <EmptyState icon={<FolderOpen className="size-7" />} title="Noch keine Dokumente">
-              Ziehe PDF-Dateien einfach in dieses Fenster oder nutze „Hochladen“.
-              {isAdmin && ' Unter Einstellungen richtest du ein Postfach oder einen Eingangsordner ein, aus dem neue PDFs automatisch übernommen werden.'}
+            <EmptyState icon={<FolderOpen className="size-7" />} title={t('documents.empty.libraryTitle')}>
+              {isAdmin ? t('documents.empty.libraryHintAdmin') : t('documents.empty.libraryHint')}
             </EmptyState>
           ) : (
             <EmptyState
               icon={<FileSearch className="size-7" />}
-              title="Nichts gefunden"
-              action={activeCount > 0 && <Button onClick={clearFilters}>Filter entfernen</Button>}
+              title={t('documents.empty.noResultsTitle')}
+              action={activeCount > 0 && <Button onClick={clearFilters}>{t('documents.filters.clear')}</Button>}
             >
-              {searching
-                ? 'Kein Dokument passt zu dieser Suche. Die Suche findet auch Wortteile – versuche es mit einem kürzeren Begriff oder weniger Wörtern.'
-                : 'Kein Dokument passt zu den gewählten Filtern.'}
+              {searching ? t('documents.empty.noResultsSearch') : t('documents.empty.noResultsFilters')}
             </EmptyState>
           )
         ) : view === 'grid' ? (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4">
+          <div key="grid" className="grid auto-rows-fr grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4">
             {items.map((doc) => (
               <DocumentCard key={doc.id} doc={doc} activeTags={filters.tags} onTag={toggleTag} />
             ))}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-card">
+          <div key="list" className="overflow-hidden rounded-xl border border-line bg-surface shadow-card">
             {items.map((doc) => (
               <DocumentRow key={doc.id} doc={doc} activeTags={filters.tags} onTag={toggleTag} />
             ))}
@@ -270,18 +301,18 @@ export function DocumentsPage() {
           (showAll ? (
             <p className="mt-6 flex items-center justify-center gap-2 text-sm text-muted">
               <Spinner className="size-4" />
-              {items.length.toLocaleString('de-DE')} von {total.toLocaleString('de-DE')} Dokumenten geladen …
+              {t('documents.loadingAll', { loaded: items.length, count: total })}
             </p>
           ) : (
             <div className="mt-6 flex justify-center">
               <Button onClick={() => documents.fetchNextPage()} loading={documents.isFetchingNextPage}>
-                Weitere laden ({(total - items.length).toLocaleString('de-DE')})
+                {t('documents.loadMore', { remaining: total - items.length })}
               </Button>
             </div>
           ))}
       </div>
 
-      <Modal open={filtersOpen} onClose={() => setFiltersOpen(false)} title="Filter" footer={<Button variant="primary" onClick={() => setFiltersOpen(false)}>Anzeigen</Button>}>
+      <Modal open={filtersOpen} onClose={() => setFiltersOpen(false)} title={t('documents.filters.title')} footer={<Button variant="primary" onClick={() => setFiltersOpen(false)}>{t('documents.filters.apply')}</Button>}>
         {filterPanel}
       </Modal>
     </div>
@@ -289,12 +320,13 @@ export function DocumentsPage() {
 }
 
 function ActiveFilter({ label, onRemove }: { label: string; onRemove: () => void }) {
+  const { t } = useTranslation()
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-brand-soft py-1 pr-1 pl-3 text-[13px] font-medium text-brand-ink">
       {label}
       <button
         type="button"
-        aria-label={`Filter „${label}“ entfernen`}
+        aria-label={t('documents.filters.removeOne', { label })}
         onClick={onRemove}
         className="flex size-5 items-center justify-center rounded-full hover:bg-brand/15"
       >
@@ -315,6 +347,7 @@ interface FilterPanelProps {
 }
 
 function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPanelProps) {
+  const { t } = useTranslation()
   const [allTags, setAllTags] = useState(false)
   const [allCorrespondents, setAllCorrespondents] = useState(false)
   if (!facets) {
@@ -335,12 +368,12 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
       {nothingYet && (
         <p className="flex gap-2 text-[13px] leading-relaxed text-muted">
           <Sparkles className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />
-          Sobald Dokumente analysiert sind, erscheinen hier Dokumentarten, Schlagworte und Absender zum Filtern.
+          {t('documents.filters.hint')}
         </p>
       )}
 
       {facets.categories.length > 0 && (
-        <FilterSection title="Dokumentart">
+        <FilterSection title={t('document.fields.category')}>
           {facets.categories.map((facet) => (
             <FacetRow
               key={facet.name}
@@ -354,7 +387,7 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
       )}
 
       {facets.tags.length > 0 && (
-        <FilterSection title="Schlagworte">
+        <FilterSection title={t('document.fields.tags')}>
           <div className="flex flex-wrap gap-1.5">
             {tags.map((facet) => (
               <TagChip
@@ -371,7 +404,7 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
       )}
 
       {facets.correspondents.length > 0 && (
-        <FilterSection title="Absender">
+        <FilterSection title={t('document.fields.correspondent')}>
           {correspondents.map((facet) => (
             <FacetRow
               key={facet.name}
@@ -387,23 +420,23 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
         </FilterSection>
       )}
 
-      <FilterSection title="Dokumentdatum">
+      <FilterSection title={t('document.fields.documentDate')}>
         <div className="grid grid-cols-2 gap-2">
           <label className="flex flex-col gap-1 text-xs text-muted">
-            von
+            {t('documents.filters.dateFrom')}
             <Input type="date" value={filters.from} max={filters.to || undefined} onChange={(e) => onSet('from', e.target.value)} className="!h-9 !px-2 !text-[13px]" />
           </label>
           <label className="flex flex-col gap-1 text-xs text-muted">
-            bis
+            {t('documents.filters.dateTo')}
             <Input type="date" value={filters.to} min={filters.from || undefined} onChange={(e) => onSet('to', e.target.value)} className="!h-9 !px-2 !text-[13px]" />
           </label>
         </div>
       </FilterSection>
 
       {(failed > 0 || filters.status === 'FAILED') && (
-        <FilterSection title="Status">
+        <FilterSection title={t('documents.filters.status')}>
           <FacetRow
-            label="Fehlgeschlagen"
+            label={t('documents.filters.failed')}
             count={failed}
             active={filters.status === 'FAILED'}
             onClick={() => onSet('status', filters.status === 'FAILED' ? '' : 'FAILED')}
@@ -441,9 +474,10 @@ function FacetRow({ label, count, active, onClick }: { label: string; count: num
 }
 
 function MoreToggle({ open, onClick }: { open: boolean; onClick: () => void }) {
+  const { t } = useTranslation()
   return (
     <button type="button" onClick={onClick} className="mt-1.5 self-start text-[13px] font-medium text-brand-ink hover:underline">
-      {open ? 'Weniger anzeigen' : 'Alle anzeigen'}
+      {open ? t('documents.filters.showLess') : t('documents.filters.showAll')}
     </button>
   )
 }
@@ -458,7 +492,7 @@ interface DocItemProps {
 
 function DocumentCard({ doc, activeTags, onTag }: DocItemProps) {
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition duration-150 focus-within:border-brand hover:-translate-y-0.5 hover:border-line-strong hover:shadow-pop">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition duration-150 focus-within:border-brand hover:-translate-y-0.5 hover:border-line-strong hover:shadow-pop">
       <div className="relative aspect-[5/4] overflow-hidden border-b border-line bg-raised">
         <Thumbnail doc={doc} className={cx(isBusy(doc) && 'opacity-50')} />
         <div className="absolute inset-x-2.5 top-2.5 flex items-start justify-between gap-2">

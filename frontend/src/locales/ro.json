@@ -1,0 +1,425 @@
+{
+  "common": {
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "close": "Închide",
+    "edit": "Editează",
+    "delete": "Șterge",
+    "remove": "Elimină",
+    "add": "Adaugă",
+    "back": "Înapoi",
+    "retry": "Încearcă din nou",
+    "loading": "Se încarcă",
+    "language": "Limbă",
+    "testConnection": "Testează conexiunea",
+    "saveFirst": "Salvați mai întâi",
+    "username": "Nume de utilizator",
+    "usernameHint": "3–50 de caractere: litere, cifre, punct, cratimă, liniuță de subliniere, @",
+    "password": "Parolă",
+    "newPassword": "Parolă nouă",
+    "passwordHint": "Cel puțin 8 caractere",
+    "passwordMismatch": "Parolele nu se potrivesc.",
+    "justNow": "chiar acum",
+    "documentCount_one": "{{count, number}} document",
+    "documentCount_few": "{{count, number}} documente",
+    "documentCount_other": "{{count, number}} de documente",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Utilizator"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Nu se poate stabili conexiunea cu serverul",
+    "server": "Serverul a raportat o eroare ({{status}}).",
+    "forbidden": "Nu aveți permisiunea de a face acest lucru.",
+    "unreachable": "Serverul nu poate fi contactat.",
+    "unexpected": "Eroare neașteptată.",
+    "languageLoad": "Limba nu a putut fi încărcată."
+  },
+  "auth": {
+    "login": {
+      "title": "Bine ați revenit",
+      "subtitle": "Autentificați-vă pentru a accesa documentele dvs.",
+      "submit": "Autentificare"
+    },
+    "setup": {
+      "title": "Configurați AIDocuments",
+      "subtitle": "Începeți prin a crea contul de administrator. Ulterior puteți adăuga alți utilizatori din setări.",
+      "adminAccount": "Cont de administrator",
+      "repeatPassword": "Repetați parola",
+      "submit": "Creează contul și începe",
+      "features": {
+        "import": "PDF-uri din căsuța dvs. de e-mail și din folderul de import",
+        "ai": "IA le rezumă și le etichetează",
+        "search": "Căutare în textul integral, până în interiorul documentului"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Încarcă",
+    "theme": {
+      "light": "Temă luminoasă",
+      "dark": "Temă întunecată"
+    },
+    "search": {
+      "placeholder": "Căutați documente, etichete, conținut …",
+      "label": "Căutare documente",
+      "clear": "Șterge căutarea"
+    },
+    "userMenu": {
+      "label": "Meniul utilizatorului ({{name}})",
+      "aiActive": "IA activă",
+      "aiNotConfigured": "IA neconfigurată",
+      "changePassword": "Schimbă parola",
+      "logout": "Deconectare"
+    },
+    "passwordDialog": {
+      "current": "Parola curentă",
+      "repeat": "Repetați parola nouă",
+      "changed": "Parola a fost schimbată"
+    },
+    "dropzone": {
+      "title": "Trageți PDF-urile aici",
+      "hint": "Puteți trage mai multe fișiere deodată. Acestea sunt salvate, analizate și etichetate."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Se pot adăuga doar fișiere PDF.",
+    "uploadingFile": "Se încarcă „{{name}}” …",
+    "uploadingFiles_one": "Se încarcă {{count, number}} PDF …",
+    "uploadingFiles_few": "Se încarcă {{count, number}} PDF-uri …",
+    "uploadingFiles_other": "Se încarcă {{count, number}} de PDF-uri …",
+    "created_one": "{{count, number}} document adăugat",
+    "created_few": "{{count, number}} documente adăugate",
+    "created_other": "{{count, number}} de documente adăugate",
+    "processingInBackground": "Procesarea continuă în fundal.",
+    "duplicates_one": "{{count, number}} există deja",
+    "duplicates_few": "{{count, number}} există deja",
+    "duplicates_other": "{{count, number}} există deja",
+    "rejected_one": "{{count, number}} fișier nu este un PDF valid",
+    "rejected_few": "{{count, number}} fișiere nu sunt PDF-uri valide",
+    "rejected_other": "{{count, number}} de fișiere nu sunt PDF-uri valide",
+    "onlyDuplicates_one": "Acest document există deja.",
+    "onlyDuplicates_few": "Aceste documente există deja.",
+    "onlyDuplicates_other": "Aceste documente există deja.",
+    "noneValid": "Niciunul dintre fișiere nu este un PDF valid.",
+    "failed": "Încărcarea a eșuat"
+  },
+  "documents": {
+    "status": {
+      "pending": "În așteptare",
+      "processing": "Se analizează",
+      "failed": "Eroare",
+      "textOnly": "Fără IA"
+    },
+    "ocrBadge": "Recunoaștere text",
+    "aiNotice": {
+      "text": "IA nu a fost încă configurată. Documentele noi pot fi căutate după text, dar nu sunt rezumate și nici etichetate.",
+      "action": "Configurează acum"
+    },
+    "searchResults_one": "<count>{{count, number}} rezultat</count> <query>pentru „{{query}}”</query>",
+    "searchResults_few": "<count>{{count, number}} rezultate</count> <query>pentru „{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} de rezultate</count> <query>pentru „{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} în curs",
+      "inProgressHint": "Așteaptă analiza IA sau sunt analizate chiar acum",
+      "remaining": "mai sunt aproximativ {{duration}}",
+      "remainingLessThan": "mai sunt mai puțin de {{duration}}",
+      "finishHint": "Finalizare estimată: {{time}} – calculată după ritmul ultimelor documente procesate"
+    },
+    "sort": {
+      "label": "Ordine de sortare",
+      "relevance": "Cele mai relevante",
+      "newest": "Cele mai noi mai întâi",
+      "date": "După data documentului"
+    },
+    "view": {
+      "grid": "Vizualizare grilă",
+      "list": "Vizualizare listă"
+    },
+    "pageSize": {
+      "label": "Numărul de documente afișate",
+      "all": "Toate"
+    },
+    "filters": {
+      "title": "Filtre",
+      "titleWithCount": "Filtre ({{active, number}})",
+      "apply": "Afișează",
+      "hint": "După ce documentele au fost analizate, tipurile de document, etichetele și expeditorii vor apărea aici ca filtre.",
+      "dateFrom": "de la",
+      "dateTo": "până la",
+      "status": "Stare",
+      "failed": "Eșuate",
+      "showAll": "Afișează tot",
+      "showLess": "Afișează mai puțin",
+      "activeFrom": "din {{date}}",
+      "activeTo": "până la {{date}}",
+      "removeOne": "Elimină filtrul „{{label}}”",
+      "removeAll": "Elimină toate filtrele",
+      "clear": "Elimină filtrele"
+    },
+    "empty": {
+      "libraryTitle": "Niciun document încă",
+      "libraryHint": "Trageți pur și simplu fișiere PDF în această fereastră sau folosiți „Încarcă”.",
+      "libraryHintAdmin": "Trageți pur și simplu fișiere PDF în această fereastră sau folosiți „Încarcă”. În setări puteți configura o căsuță de e-mail sau un folder de import din care PDF-urile noi sunt importate automat.",
+      "noResultsTitle": "Nu s-a găsit nimic",
+      "noResultsSearch": "Niciun document nu corespunde acestei căutări. Căutarea găsește și fragmente de cuvinte – încercați un termen mai scurt sau mai puține cuvinte.",
+      "noResultsFilters": "Niciun document nu corespunde filtrelor selectate."
+    },
+    "loadingAll_one": "{{loaded, number}} din {{count, number}} document încărcat …",
+    "loadingAll_few": "{{loaded, number}} din {{count, number}} documente încărcate …",
+    "loadingAll_other": "{{loaded, number}} din {{count, number}} de documente încărcate …",
+    "loadMore": "Încarcă mai multe ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Înapoi la prezentarea generală",
+    "download": "Descarcă",
+    "reprocess": "Analizează din nou",
+    "reprocessHint": "Citește din nou PDF-ul și pune IA să îl analizeze",
+    "reprocessStarted": "Documentul este analizat din nou.",
+    "deleted": "Document șters",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Deschide într-o filă nouă",
+    "processingNotice": "Documentul este în curs de procesare. Rezumatul și etichetele vor apărea aici imediat ce analiza se încheie.",
+    "textOnlyNotice": "Indexat fără IA: documentul poate fi căutat după text, dar nu are rezumat și nici etichete automate.",
+    "tabs": {
+      "overview": "Prezentare generală",
+      "text": "Text integral"
+    },
+    "fields": {
+      "title": "Titlu",
+      "category": "Tip de document",
+      "documentDate": "Data documentului",
+      "correspondent": "Expeditor",
+      "tags": "Etichete",
+      "summary": "Rezumat"
+    },
+    "tags": {
+      "allWith": "Toate documentele cu eticheta „{{tag}}”",
+      "none": "Nicio etichetă. <add>Adaugă</add>",
+      "inputHint": "Confirmați cu Enter sau cu virgulă. Sugestiile sunt etichete deja folosite.",
+      "inputPlaceholder": "Introduceți o etichetă …",
+      "remove": "Elimină eticheta „{{tag}}”"
+    },
+    "keyFacts": "Date esențiale",
+    "details": {
+      "title": "Detalii",
+      "file": "Fișier",
+      "size": "Dimensiune",
+      "pageCount_one": "{{count, number}} pagină",
+      "pageCount_few": "{{count, number}} pagini",
+      "pageCount_other": "{{count, number}} de pagini",
+      "language": "Limbă",
+      "source": "Sursă",
+      "mailSubject": "Subiect",
+      "mailFrom": "De la",
+      "mailReceived": "Primit",
+      "added": "Adăugat",
+      "text": "Text"
+    },
+    "source": {
+      "MAIL": "Căsuță de e-mail",
+      "FOLDER": "Folder de import",
+      "UPLOAD": "Încărcat"
+    },
+    "noText": "Documentul nu conține text – probabil este o scanare fără strat de text. Dacă IA este configurată și recunoașterea textului este activată, conținutul este transcris în timpul analizei.",
+    "edit": {
+      "title": "Editează documentul",
+      "saved": "Modificările au fost salvate"
+    },
+    "delete": {
+      "title": "Ștergeți documentul?",
+      "text": "„{{title}}” va fi șters împreună cu fișierul PDF, textul integral și etichetele. Acțiunea nu poate fi anulată.",
+      "confirm": "Șterge definitiv"
+    }
+  },
+  "settings": {
+    "title": "Setări",
+    "mailboxes": {
+      "title": "Căsuțe de e-mail",
+      "navHint": "Servere IMAP din care se importă atașamentele PDF",
+      "intro": "Atașamentele PDF sunt importate automat din aceste căsuțe de e-mail IMAP. Căsuțele sunt doar citite – mesajele rămân neschimbate și necitite.",
+      "add": "Adaugă căsuță de e-mail",
+      "emptyTitle": "Nicio căsuță de e-mail configurată încă",
+      "emptyText": "Introduceți datele de acces ale unei căsuțe de e-mail IMAP – de exemplu cea la care scannerul dvs. trimite documentele.",
+      "paused": "În pauză",
+      "syncNow": "Verifică acum",
+      "syncing": "Se verifică căsuța de e-mail …",
+      "neverSynced": "Încă neverificată.",
+      "saved": "Căsuța de e-mail a fost salvată",
+      "added": "Căsuța de e-mail a fost adăugată",
+      "firstSyncRunning": "Prima verificare este deja în curs.",
+      "removed": "Căsuța de e-mail a fost eliminată",
+      "delete": {
+        "title": "Eliminați căsuța de e-mail?",
+        "text": "„{{name}}” nu va mai fi verificată. Documentele deja importate se păstrează."
+      },
+      "dialog": {
+        "editTitle": "Editează căsuța de e-mail",
+        "description": "Datele de acces le primiți de la furnizorul dvs. de e-mail. Parola este stocată criptat.",
+        "name": "Nume",
+        "nameHint": "Oricare doriți, de ex. „Scanner” sau „Facturi”",
+        "namePlaceholder": "Scanner",
+        "host": "Server IMAP",
+        "port": "Port",
+        "security": "Criptare",
+        "securityNone": "Niciuna",
+        "securityNoneWarning": "Fără criptare, numele de utilizator și parola sunt transmise în text simplu.",
+        "passwordKeepHint": "Lăsați gol pentru a păstra parola stocată",
+        "folder": "Folder",
+        "folderHint": "De obicei {{folder}} (căsuța de intrare)",
+        "since": "Doar e-mailurile din",
+        "sinceHint": "Opțional – e-mailurile mai vechi sunt ignorate",
+        "enabled": "Verifică automat",
+        "enabledHint": "Căsuța de e-mail este verificată pentru PDF-uri noi la intervalul configurat."
+      }
+    },
+    "import": {
+      "title": "Program și folder de import",
+      "navHint": "Intervalul de verificare și folderul monitorizat",
+      "intro": "Stabilește cât de des caută aplicația fișiere PDF noi – în căsuțele de e-mail și în folderul de import.",
+      "saved": "Setările au fost salvate",
+      "interval": {
+        "title": "Interval de verificare",
+        "text": "Atât de des verifică aplicația toate căsuțele de e-mail și folderul de import pentru PDF-uri noi.",
+        "label": "La fiecare … minute",
+        "nextRun": "Următoarea verificare automată {{when}}."
+      },
+      "folder": {
+        "title": "Folder de import",
+        "text": "Un director de pe server care este monitorizat pentru fișiere PDF noi – de exemplu destinația unui scanner de rețea. Sunt căutate și subfolderele.",
+        "enable": "Monitorizează folderul de import",
+        "path": "Calea de pe server",
+        "pathHint": "Cale absolută. În containerul Docker este folderul montat, de obicei {{path}}.",
+        "afterImport": "După import",
+        "keep": "Lasă fișierul pe loc",
+        "move": "Mută în „{{folder}}”",
+        "keepHint": "Fișierele rămân neschimbate. Aplicația reține ce a importat deja.",
+        "moveHint": "Fișierele importate sunt mutate în subfolderul „{{folder}}” – folderul de import rămâne ordonat.",
+        "scanning": "Se verifică folderul …",
+        "neverScanned": "Încă neverificat.",
+        "scanNow": "Verifică acum",
+        "scanStarted": "Folderul de import este în curs de verificare."
+      }
+    },
+    "ai": {
+      "title": "IA",
+      "navHint": "Server LLM, model și recunoaștere text",
+      "intro": "IA citește fiecare PDF nou, îl rezumă, îi atribuie un tip de document și etichete și extrage date esențiale, precum sume sau termene.",
+      "configured": "Configurată",
+      "notConfigured": "Neconfigurată",
+      "saved": "Setările IA au fost salvate",
+      "server": {
+        "title": "Server LLM",
+        "provider": "Furnizor",
+        "baseUrl": "Adresa serverului",
+        "model": "Model",
+        "modelPlaceholder": "ID-ul modelului",
+        "compatibilityMode": "Mod de compatibilitate pentru modele locale",
+        "compatibilityModeHint": "Pentru servere care folosesc interfața Anthropic, dar nu acceptă nici PDF-uri ca intrare, nici ieșiri structurate: documentul este trimis modelului ca text sau, în cazul scanărilor, ca imagini ale paginilor. Lăsați dezactivat pentru API-ul Claude.",
+        "testIncomplete": "Setările nu sunt încă complete"
+      },
+      "privacy": {
+        "title": "Cu {{provider}}, documentele dvs. părăsesc acest calculator",
+        "text": "Pentru analiză, conținutul fiecărui PDF este transmis serverelor {{provider}} de pe internet și procesat acolo – inclusiv facturi, contracte, scrisori medicale și corespondență oficială.",
+        "recommendation": "<emphasis>Recomandare:</emphasis> folosiți o IA locală. Cu <lmStudio>LM Studio</lmStudio> sau cu un <compatible>server compatibil OpenAI</compatible> în propria rețea, tot conținutul rămâne la dvs."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "API-ul Claude al Anthropic. Modificați-l doar dacă aveți propriul gateway în față.",
+          "modelHint": "Claude Opus 5.5 este alegerea recomandată; Sonnet și Haiku sunt mai rapide și mai ieftine."
+        },
+        "OPENAI": {
+          "urlHint": "API-ul OpenAI. Modificați-l doar dacă aveți propriul gateway în față.",
+          "modelHint": "ID-ul modelului așa cum îl numește OpenAI. După ce salvați cheia, modelele disponibile apar aici."
+        },
+        "MOONSHOT": {
+          "urlHint": "API-ul Moonshot AI (Kimi). Pentru conturile de pe platforma chineză: {{url}}",
+          "modelHint": "ID-ul modelului așa cum îl numește Moonshot. După ce salvați cheia, modelele disponibile apar aici."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Serverul local al LM Studio (porniți-l în LM Studio, la „Developer”). Dacă AIDocuments rulează în Docker: {{url}}",
+          "modelHint": "ID-ul modelului încărcat în LM Studio. Scanările necesită un model cu intrare de imagini, analiza unul cu utilizare de instrumente."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adresa unui server care folosește interfața OpenAI – de obicei se termină cu /v1, de ex. {{url}}",
+          "modelHint": "ID-ul modelului așa cum îl numește serverul. După salvare, modelele oferite de acesta apar aici."
+        }
+      },
+      "apiKey": {
+        "label": "Cheie API",
+        "labelOptional": "Cheie API (opțională)",
+        "placeholderStored": "{{mask}} (stocată)",
+        "placeholderPreset": "{{mask}} (presetată)",
+        "placeholderNotNeeded": "nu este necesară",
+        "placeholderIfRequired": "doar dacă serverul o cere",
+        "hintShown": "Presetată în configurația serverului.",
+        "hintRemoving": "Cheia stocată va fi eliminată la salvare.",
+        "hintStored": "O cheie este stocată criptat. Lăsați gol pentru a o păstra – <remove>elimină cheia</remove>",
+        "hintEnvironment": "Cheia provine în prezent din configurația serverului (variabilă de mediu sau fișier de configurare). O cheie introdusă aici are prioritate.",
+        "hintPreset": "În configurația serverului este presetată o cheie pentru acest furnizor. Lăsați gol pentru a o folosi.",
+        "hintDiscardedOnSwitch": "Cheia stocată până acum aparține {{previous}} și va fi eliminată dacă schimbați furnizorul.",
+        "hintPresetOtherProvider": "Cheia presetată este valabilă doar pentru {{previous}}. Introduceți o cheie separată pentru {{provider}}.",
+        "hintRequired": "Stocată criptat și niciodată afișată din nou.",
+        "hintLocal": "Serverele locale de obicei nu au nevoie de cheie."
+      },
+      "analysis": {
+        "title": "Analiză",
+        "effort": "Nivel de detaliu",
+        "effortLevels": {
+          "low": "Rapid",
+          "medium": "Echilibrat",
+          "high": "Amănunțit"
+        },
+        "effortHint": "Mai amănunțit înseamnă rezultate mai atente, dar mai lente și mai costisitoare pentru fiecare document.",
+        "outputLanguage": "Limba rezultatelor",
+        "outputLanguageHint": "IA scrie titlul, rezumatul și etichetele în această limbă.",
+        "ocr": "Recunoaștere text pentru scanări",
+        "ocrHint": "Aplicația pune IA să transcrie PDF-urile scanate fără strat de text – doar așa pot fi găsite prin căutarea în textul integral. Fiecare scanare durează mai mult și costă mai mult."
+      },
+      "unanalyzed_one": "{{count, number}} document nu a fost încă analizat de IA.",
+      "unanalyzed_few": "{{count, number}} documente nu au fost încă analizate de IA.",
+      "unanalyzed_other": "{{count, number}} de documente nu au fost încă analizate de IA.",
+      "analyzeNow": "Analizează acum",
+      "analysisStarted_one": "{{count, number}} document este acum în curs de analiză.",
+      "analysisStarted_few": "{{count, number}} documente sunt acum în curs de analiză.",
+      "analysisStarted_other": "{{count, number}} de documente sunt acum în curs de analiză."
+    },
+    "users": {
+      "title": "Utilizatori",
+      "navHint": "Conturi și roluri",
+      "intro": "Fiecare persoană se autentifică cu propriul cont. Administratorii gestionează aplicația, utilizatorii lucrează cu documentele.",
+      "add": "Creează utilizator",
+      "you": "Dvs.",
+      "disabled": "Dezactivat",
+      "lastLogin": "Ultima autentificare {{when}}",
+      "neverLoggedIn": "Niciodată autentificat",
+      "editUser": "Editează {{name}}",
+      "deleteUser": "Șterge {{name}}",
+      "saved": "Utilizatorul a fost salvat",
+      "created": "Utilizatorul a fost creat",
+      "deleted": "Utilizatorul a fost șters",
+      "delete": {
+        "title": "Ștergeți utilizatorul?",
+        "text": "Contul „{{name}}” va fi șters și deconectat imediat. Documentele se păstrează."
+      },
+      "dialog": {
+        "selfNotice": "Acesta este propriul dvs. cont. După salvare va trebui să vă autentificați din nou.",
+        "passwordKeepHint": "Lăsați gol pentru a păstra parola curentă. Altfel, cel puțin 8 caractere.",
+        "role": "Rol",
+        "roleHints": {
+          "ADMIN": "Poate face orice – inclusiv să modifice setările, să gestioneze utilizatorii și să șteargă documente.",
+          "USER": "Poate vizualiza, căuta și încărca documente și poate edita detaliile acestora."
+        },
+        "active": "Cont activ",
+        "activeHint": "Conturile dezactivate nu se pot autentifica; sesiunile active se încheie imediat.",
+        "create": "Creează"
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@ import {
   useId,
   useRef,
 } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cx } from '../lib/format'
 
 // ---------- Schaltflächen ----------
@@ -226,7 +227,8 @@ export function Badge({ tone = 'neutral', className, children }: { tone?: Tone; 
 }
 
 export function Spinner({ className }: { className?: string }) {
-  return <Loader2 className={cx('animate-spin text-brand', className ?? 'size-5')} aria-label="Lädt" />
+  const { t } = useTranslation()
+  return <Loader2 className={cx('animate-spin text-brand', className ?? 'size-5')} aria-label={t('common.loading')} />
 }
 
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
@@ -296,6 +298,7 @@ interface ModalProps {
 
 /** Modaler Dialog auf Basis des nativen <dialog>: Fokusfalle, Escape und Hintergrundsperre inklusive. */
 export function Modal({ open, onClose, title, description, children, footer, size = 'md' }: ModalProps) {
+  const { t } = useTranslation()
   const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -327,7 +330,7 @@ export function Modal({ open, onClose, title, description, children, footer, siz
             <h2 className="text-lg font-semibold text-ink">{title}</h2>
             {description && <p className="mt-1 text-sm leading-relaxed text-muted">{description}</p>}
           </div>
-          <IconButton label="Schließen" onClick={onClose} className="-mt-1 -mr-2">
+          <IconButton label={t('common.close')} onClick={onClose} className="-mt-1 -mr-2">
             <X className="size-5" />
           </IconButton>
         </header>
@@ -353,6 +356,7 @@ interface ConfirmProps {
 }
 
 export function ConfirmDialog({ open, onClose, onConfirm, title, children, confirmLabel, loading }: ConfirmProps) {
+  const { t } = useTranslation()
   return (
     <Modal
       open={open}
@@ -361,7 +365,7 @@ export function ConfirmDialog({ open, onClose, onConfirm, title, children, confi
       size="sm"
       footer={
         <>
-          <Button onClick={onClose}>Abbrechen</Button>
+          <Button onClick={onClose}>{t('common.cancel')}</Button>
           <Button variant="danger" onClick={onConfirm} loading={loading}>
             {confirmLabel}
           </Button>

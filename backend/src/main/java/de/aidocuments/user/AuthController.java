@@ -65,8 +65,7 @@ public class AuthController {
     public UserDto login(@Valid @RequestBody LoginRequest body, HttpServletRequest request,
                          HttpServletResponse response) {
         if (throttle.isLocked(body.username())) {
-            throw new ApiException(HttpStatus.TOO_MANY_REQUESTS,
-                    "Zu viele Fehlversuche. Bitte in einigen Minuten erneut versuchen.");
+            throw ApiException.of(HttpStatus.TOO_MANY_REQUESTS, "error.auth.tooManyAttempts");
         }
         try {
             UserDto user = authenticate(body.username(), body.password(), request, response);
@@ -74,7 +73,7 @@ public class AuthController {
             return user;
         } catch (AuthenticationException e) {
             throttle.recordFailure(body.username());
-            throw new ApiException(HttpStatus.UNAUTHORIZED, "Benutzername oder Passwort ist nicht korrekt.");
+            throw ApiException.of(HttpStatus.UNAUTHORIZED, "error.auth.badCredentials");
         }
     }
 

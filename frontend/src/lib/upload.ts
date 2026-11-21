@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { toast } from 'sonner'
 import { api, errorMessage } from './api'
-import { plural } from './format'
+import { t } from './i18n'
 
 const isPdf = (file: File) => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
 
@@ -15,11 +15,11 @@ export function useUpload() {
       const pdfs = files.filter(isPdf)
       const skipped = files.length - pdfs.length
       if (pdfs.length === 0) {
-        toast.error('Es können nur PDF-Dateien hinzugefügt werden.')
+        toast.error(t('upload.onlyPdf'))
         return
       }
       const toastId = toast.loading(
-        pdfs.length === 1 ? `„${pdfs[0].name}“ wird hochgeladen …` : `${pdfs.length} PDFs werden hochgeladen …`,
+        pdfs.length === 1 ? t('upload.uploadingFile', { name: pdfs[0].name }) : t('upload.uploadingFiles', { count: pdfs.length }),
       )
       try {
         // In Paketen senden, damit auch viele Dateien auf einmal das Anfragelimit nicht sprengen.
@@ -31,31 +31,26 @@ export function useUpload() {
         const duplicates = results.filter((r) => r.outcome === 'DUPLICATE').length
         const rejected = results.filter((r) => r.outcome === 'REJECTED').length + skipped
 
-        const details = [
-          duplicates > 0 && `${duplicates} bereits vorhanden`,
-          rejected > 0 && `${plural(rejected, 'Datei', 'Dateien')} kein gültiges PDF`,
-        ].filter(Boolean)
+        const rejectedNote = rejected > 0 ? t('upload.rejected', { count: rejected }) : undefined
+        const details = [duplicates > 0 && t('upload.duplicates', { count: duplicates }), rejectedNote].filter(Boolean)
         const description = details.length > 0 ? details.join(' · ') : undefined
 
         if (created > 0) {
-          toast.success(`${plural(created, 'Dokument', 'Dokumente')} hinzugefügt`, {
+          toast.success(t('upload.created', { count: created }), {
             id: toastId,
-            description: description ?? 'Die Verarbeitung läuft im Hintergrund.',
+            description: description ?? t('upload.processingInBackground'),
           })
         } else if (duplicates > 0) {
-          toast.info(duplicates === 1 ? 'Dieses Dokument ist bereits vorhanden.' : 'Diese Dokumente sind bereits vorhanden.', {
-            id: toastId,
-            description: rejected > 0 ? `${plural(rejected, 'Datei', 'Dateien')} kein gültiges PDF` : undefined,
-          })
+          toast.info(t('upload.onlyDuplicates', { count: duplicates }), { id: toastId, description: rejectedNote })
         } else {
-          toast.error('Keine der Dateien ist ein gültiges PDF.', { id: toastId })
+          toast.error(t('upload.noneValid'), { id: toastId })
         }
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ['documents'] }),
           queryClient.invalidateQueries({ queryKey: ['system'] }),
         ])
       } catch (e) {
-        toast.error('Hochladen fehlgeschlagen', { id: toastId, description: errorMessage(e) })
+        toast.error(t('upload.failed'), { id: toastId, description: errorMessage(e) })
       }
     },
     [queryClient],

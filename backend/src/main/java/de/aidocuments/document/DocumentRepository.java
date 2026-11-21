@@ -14,4 +14,7 @@ public interface DocumentRepository extends MongoRepository<Document, String> {
     long countByStatusIn(Collection<DocumentStatus> statuses);
 
     long countByMailAccountId(String mailAccountId);
+
+    /** Die zuletzt fertig bearbeiteten Dokumente, neueste zuerst – Grundlage der Restzeit-Schätzung. */
+    List<Document> findTop25ByProcessedAtNotNullOrderByProcessedAtDesc();
 }

@@ -5,6 +5,9 @@ import de.aidocuments.ai.AiException;
 import de.aidocuments.ai.DocumentAnalysis;
 import de.aidocuments.document.PdfExtractor.PdfContent;
 import de.aidocuments.document.PdfExtractor.PdfReadException;
+import de.aidocuments.i18n.Messages;
+import de.aidocuments.i18n.Msg;
+import de.aidocuments.i18n.MsgCodec;
 import de.aidocuments.search.SearchIndex;
 import java.time.Instant;
 import java.util.LinkedHashSet;
@@ -35,11 +38,13 @@ public class DocumentProcessor {
     private final DocumentFacets facets;
     private final SearchIndex searchIndex;
     private final ThreadPoolTaskExecutor executor;
+    private final Messages messages;
 
     public DocumentProcessor(DocumentRepository documents, DocumentTextRepository texts, FileStorage storage,
                              PdfExtractor pdfExtractor, AiAnalysisService ai, DocumentFacets facets,
                              SearchIndex searchIndex,
-                             @Qualifier("documentExecutor") ThreadPoolTaskExecutor executor) {
+                             @Qualifier("documentExecutor") ThreadPoolTaskExecutor executor, Messages messages) {
+        this.messages = messages;
         this.documents = documents;
         this.texts = texts;
         this.storage = storage;
@@ -56,7 +61,7 @@ public class DocumentProcessor {
                 process(documentId);
             } catch (RuntimeException e) {
                 log.error("Verarbeitung von Dokument {} abgebrochen", documentId, e);
-                finish(documentId, null, null, "Unerwarteter Fehler: " + e.getMessage());
+                finish(documentId, null, null, Msg.of("error.unexpected", Msg.detailOf(e)));
             }
         });
     }
@@ -75,7 +80,7 @@ public class DocumentProcessor {
         try {
             pdf = pdfExtractor.extract(storage.resolve(doc.getStoragePath()), storage.thumbnailPath(documentId));
         } catch (PdfReadException e) {
-            finish(documentId, null, null, e.getMessage());
+            finish(documentId, null, null, e.msg());
             return;
         }
 
@@ -97,13 +102,16 @@ public class DocumentProcessor {
                     facets.tags(300).stream().map(FacetCount::name).toList()));
             finish(documentId, pdf, result, null);
         } catch (AiException e) {
-            log.warn("KI-Analyse von {} fehlgeschlagen: {}", doc.getOriginalFilename(), e.getMessage());
-            finish(documentId, pdf, null, "KI-Analyse fehlgeschlagen: " + e.getMessage());
+            log.warn("KI-Analyse von {} fehlgeschlagen: {}", doc.getOriginalFilename(), messages.forLog(e.msg()));
+            finish(documentId, pdf, null, Msg.of("document.error.aiFailed", e.msg()));
         }
     }
 
-    /** Schreibt das Ergebnis zurück. Das Dokument wird frisch geladen, falls es zwischenzeitlich bearbeitet wurde. */
-    private void finish(String documentId, PdfContent pdf, AiAnalysisService.Result aiResult, String error) {
+    /**
+     * Schreibt das Ergebnis zurück. Das Dokument wird frisch geladen, falls es zwischenzeitlich bearbeitet wurde.
+     * Fehlermeldung und Hinweise werden sprachneutral gespeichert – wer sie später liest, steht hier nicht fest.
+     */
+    private void finish(String documentId, PdfContent pdf, AiAnalysisService.Result aiResult, Msg error) {
         Document doc = documents.findById(documentId).orElse(null);
         if (doc == null) {
             return; // während der Verarbeitung gelöscht
@@ -136,10 +144,10 @@ public class DocumentProcessor {
         }
         if (error != null) {
             doc.setStatus(DocumentStatus.FAILED);
-            doc.setErrorMessage(clip(error, 2000));
+            doc.setErrorMessage(MsgCodec.encode(error));
         } else {
             doc.setStatus(aiResult != null ? DocumentStatus.INDEXED : DocumentStatus.TEXT_ONLY);
-            doc.setErrorMessage(aiResult != null ? aiResult.note() : null);
+            doc.setErrorMessage(aiResult != null ? MsgCodec.encode(aiResult.notes()) : null);
         }
         doc.setProcessedAt(Instant.now());
         if (fullText != null) {

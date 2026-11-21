@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Gem",
+    "cancel": "Annuller",
+    "close": "Luk",
+    "edit": "Rediger",
+    "delete": "Slet",
+    "remove": "Fjern",
+    "add": "Tilføj",
+    "back": "Tilbage",
+    "retry": "Prøv igen",
+    "loading": "Indlæser",
+    "language": "Sprog",
+    "testConnection": "Test forbindelse",
+    "saveFirst": "Gem først",
+    "username": "Brugernavn",
+    "usernameHint": "3–50 tegn: bogstaver, tal, punktum, bindestreg, understregning, @",
+    "password": "Adgangskode",
+    "newPassword": "Ny adgangskode",
+    "passwordHint": "Mindst 8 tegn",
+    "passwordMismatch": "Adgangskoderne er ikke ens.",
+    "justNow": "lige nu",
+    "documentCount_one": "{{count, number}} dokument",
+    "documentCount_other": "{{count, number}} dokumenter",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Bruger"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Ingen forbindelse til serveren",
+    "server": "Serveren melder en fejl ({{status}}).",
+    "forbidden": "Du har ikke tilladelse til dette.",
+    "unreachable": "Serveren kan ikke nås.",
+    "unexpected": "Uventet fejl.",
+    "languageLoad": "Sproget kunne ikke indlæses."
+  },
+  "auth": {
+    "login": {
+      "title": "Velkommen tilbage",
+      "subtitle": "Log ind for at få adgang til dine dokumenter.",
+      "submit": "Log ind"
+    },
+    "setup": {
+      "title": "Sæt AIDocuments op",
+      "subtitle": "Opret først administratorkontoen. Bagefter kan du tilføje flere brugere under indstillingerne.",
+      "adminAccount": "Administratorkonto",
+      "repeatPassword": "Gentag adgangskode",
+      "submit": "Opret konto og kom i gang",
+      "features": {
+        "import": "PDF’er fra din postkasse og importmappe",
+        "ai": "AI opsummerer og tagger dem",
+        "search": "Fuldtekstsøgning helt ind i dokumentet"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Upload",
+    "theme": {
+      "light": "Lyst tema",
+      "dark": "Mørkt tema"
+    },
+    "search": {
+      "placeholder": "Søg i dokumenter, tags, indhold …",
+      "label": "Søg i dokumenter",
+      "clear": "Ryd søgning"
+    },
+    "userMenu": {
+      "label": "Brugermenu ({{name}})",
+      "aiActive": "AI aktiv",
+      "aiNotConfigured": "AI ikke sat op",
+      "changePassword": "Skift adgangskode",
+      "logout": "Log ud"
+    },
+    "passwordDialog": {
+      "current": "Nuværende adgangskode",
+      "repeat": "Gentag ny adgangskode",
+      "changed": "Adgangskode ændret"
+    },
+    "dropzone": {
+      "title": "Slip PDF’er her",
+      "hint": "Du kan slippe flere filer på én gang. De bliver gemt, analyseret og tagget."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Kun PDF-filer kan tilføjes.",
+    "uploadingFile": "Uploader ”{{name}}” …",
+    "uploadingFiles_one": "Uploader {{count, number}} PDF …",
+    "uploadingFiles_other": "Uploader {{count, number}} PDF’er …",
+    "created_one": "{{count, number}} dokument tilføjet",
+    "created_other": "{{count, number}} dokumenter tilføjet",
+    "processingInBackground": "Behandlingen fortsætter i baggrunden.",
+    "duplicates_one": "{{count, number}} findes allerede",
+    "duplicates_other": "{{count, number}} findes allerede",
+    "rejected_one": "{{count, number}} fil er ikke en gyldig PDF",
+    "rejected_other": "{{count, number}} filer er ikke gyldige PDF’er",
+    "onlyDuplicates_one": "Dette dokument findes allerede.",
+    "onlyDuplicates_other": "Disse dokumenter findes allerede.",
+    "noneValid": "Ingen af filerne er en gyldig PDF.",
+    "failed": "Upload mislykkedes"
+  },
+  "documents": {
+    "status": {
+      "pending": "Venter",
+      "processing": "Analyseres",
+      "failed": "Fejl",
+      "textOnly": "Uden AI"
+    },
+    "ocrBadge": "Tekstgenkendelse",
+    "aiNotice": {
+      "text": "AI’en er ikke sat op endnu. Nye dokumenter kan søges frem via deres tekst, men de bliver ikke opsummeret eller tagget.",
+      "action": "Sæt op nu"
+    },
+    "searchResults_one": "<count>{{count, number}} resultat</count> <query>for ”{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} resultater</count> <query>for ”{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} i gang",
+      "inProgressHint": "Venter på AI-analyse eller bliver analyseret lige nu",
+      "remaining": "ca. {{duration}} tilbage",
+      "remainingLessThan": "under {{duration}} tilbage",
+      "finishHint": "Forventes færdig: kl. {{time}} – anslået ud fra tempoet for de senest behandlede dokumenter"
+    },
+    "sort": {
+      "label": "Sortering",
+      "relevance": "Bedste resultater",
+      "newest": "Nyeste først",
+      "date": "Efter dokumentdato"
+    },
+    "view": {
+      "grid": "Gittervisning",
+      "list": "Listevisning"
+    },
+    "pageSize": {
+      "label": "Antal viste dokumenter",
+      "all": "Alle"
+    },
+    "filters": {
+      "title": "Filtre",
+      "titleWithCount": "Filtre ({{active, number}})",
+      "apply": "Vis",
+      "hint": "Når dokumenter er blevet analyseret, vises dokumenttyper, tags og afsendere her som filtre.",
+      "dateFrom": "fra",
+      "dateTo": "til",
+      "status": "Status",
+      "failed": "Mislykket",
+      "showAll": "Vis alle",
+      "showLess": "Vis færre",
+      "activeFrom": "fra {{date}}",
+      "activeTo": "til {{date}}",
+      "removeOne": "Fjern filteret ”{{label}}”",
+      "removeAll": "Fjern alle filtre",
+      "clear": "Fjern filtre"
+    },
+    "empty": {
+      "libraryTitle": "Ingen dokumenter endnu",
+      "libraryHint": "Træk blot PDF-filer ind i dette vindue, eller brug ”Upload”.",
+      "libraryHintAdmin": "Træk blot PDF-filer ind i dette vindue, eller brug ”Upload”. Under indstillingerne kan du sætte en postkasse eller en importmappe op, som nye PDF’er automatisk importeres fra.",
+      "noResultsTitle": "Intet fundet",
+      "noResultsSearch": "Ingen dokumenter matcher denne søgning. Søgningen finder også dele af ord – prøv et kortere søgeord eller færre ord.",
+      "noResultsFilters": "Ingen dokumenter matcher de valgte filtre."
+    },
+    "loadingAll_one": "{{loaded, number}} af {{count, number}} dokument indlæst …",
+    "loadingAll_other": "{{loaded, number}} af {{count, number}} dokumenter indlæst …",
+    "loadMore": "Indlæs flere ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Tilbage til oversigten",
+    "download": "Download",
+    "reprocess": "Analysér igen",
+    "reprocessHint": "Læs PDF’en igen, og lad AI’en analysere den",
+    "reprocessStarted": "Dokumentet bliver analyseret igen.",
+    "deleted": "Dokument slettet",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Åbn i ny fane",
+    "processingNotice": "Dokumentet bliver behandlet. Resuméet og tags vises her, så snart analysen er færdig.",
+    "textOnlyNotice": "Indekseret uden AI: Dokumentet kan søges frem via sin tekst, men det har intet resumé og ingen automatiske tags.",
+    "tabs": {
+      "overview": "Oversigt",
+      "text": "Fuldtekst"
+    },
+    "fields": {
+      "title": "Titel",
+      "category": "Dokumenttype",
+      "documentDate": "Dokumentdato",
+      "correspondent": "Afsender",
+      "tags": "Tags",
+      "summary": "Resumé"
+    },
+    "tags": {
+      "allWith": "Alle dokumenter med tagget ”{{tag}}”",
+      "none": "Ingen tags. <add>Tilføj</add>",
+      "inputHint": "Bekræft med Enter eller komma. Forslagene er tags, der allerede er i brug.",
+      "inputPlaceholder": "Indtast et tag …",
+      "remove": "Fjern tagget ”{{tag}}”"
+    },
+    "keyFacts": "Nøgleoplysninger",
+    "details": {
+      "title": "Detaljer",
+      "file": "Fil",
+      "size": "Omfang",
+      "pageCount_one": "{{count, number}} side",
+      "pageCount_other": "{{count, number}} sider",
+      "language": "Sprog",
+      "source": "Kilde",
+      "mailSubject": "Emne",
+      "mailFrom": "Fra",
+      "mailReceived": "Modtaget",
+      "added": "Tilføjet",
+      "text": "Tekst"
+    },
+    "source": {
+      "MAIL": "E-mailpostkasse",
+      "FOLDER": "Importmappe",
+      "UPLOAD": "Uploadet"
+    },
+    "noText": "Der findes ingen tekst til dette dokument – det er sandsynligvis en scanning uden tekstlag. Når AI’en er sat op, og tekstgenkendelse er slået til, bliver indholdet transskriberet under analysen.",
+    "edit": {
+      "title": "Rediger dokument",
+      "saved": "Ændringer gemt"
+    },
+    "delete": {
+      "title": "Slet dokument?",
+      "text": "”{{title}}” bliver slettet sammen med PDF-filen, fuldteksten og tags. Dette kan ikke fortrydes.",
+      "confirm": "Slet permanent"
+    }
+  },
+  "settings": {
+    "title": "Indstillinger",
+    "mailboxes": {
+      "title": "Postkasser",
+      "navHint": "IMAP-servere, som vedhæftede PDF’er importeres fra",
+      "intro": "Vedhæftede PDF’er importeres automatisk fra disse IMAP-postkasser. Postkasserne bliver kun læst – e-mails forbliver uændrede og ulæste.",
+      "add": "Tilføj postkasse",
+      "emptyTitle": "Ingen postkasse sat op endnu",
+      "emptyText": "Indtast loginoplysningerne til en IMAP-postkasse – for eksempel den postkasse, din scanner sender dokumenter til.",
+      "paused": "På pause",
+      "syncNow": "Tjek nu",
+      "syncing": "Tjekker postkasse …",
+      "neverSynced": "Ikke tjekket endnu.",
+      "saved": "Postkasse gemt",
+      "added": "Postkasse tilføjet",
+      "firstSyncRunning": "Det første tjek er allerede i gang.",
+      "removed": "Postkasse fjernet",
+      "delete": {
+        "title": "Fjern postkasse?",
+        "text": "”{{name}}” bliver ikke længere tjekket. Dokumenter, der allerede er importeret, bevares."
+      },
+      "dialog": {
+        "editTitle": "Rediger postkasse",
+        "description": "Loginoplysningerne får du fra din e-mailudbyder. Adgangskoden gemmes krypteret.",
+        "name": "Navn",
+        "nameHint": "Valgfrit, f.eks. ”Scanner” eller ”Fakturaer”",
+        "namePlaceholder": "Scanner",
+        "host": "IMAP-server",
+        "port": "Port",
+        "security": "Kryptering",
+        "securityNone": "Ingen",
+        "securityNoneWarning": "Uden kryptering sendes brugernavn og adgangskode i klartekst.",
+        "passwordKeepHint": "Lad feltet stå tomt for at beholde den gemte adgangskode",
+        "folder": "Mappe",
+        "folderHint": "Som regel {{folder}} (indbakken)",
+        "since": "Kun e-mails fra",
+        "sinceHint": "Valgfrit – ældre e-mails springes over",
+        "enabled": "Tjek automatisk",
+        "enabledHint": "Postkassen tjekkes for nye PDF’er med det indstillede interval."
+      }
+    },
+    "import": {
+      "title": "Tidsplan & importmappe",
+      "navHint": "Tjekinterval og overvåget mappe",
+      "intro": "Bestemmer, hvor ofte programmet leder efter nye PDF-filer – i postkasserne og i importmappen.",
+      "saved": "Indstillinger gemt",
+      "interval": {
+        "title": "Tjekinterval",
+        "text": "Så ofte tjekker programmet alle postkasser og importmappen for nye PDF’er.",
+        "label": "Med … minutters mellemrum",
+        "nextRun": "Næste automatiske tjek {{when}}."
+      },
+      "folder": {
+        "title": "Importmappe",
+        "text": "En mappe på serveren, som overvåges for nye PDF-filer – for eksempel den mappe, en netværksscanner gemmer i. Undermapper gennemsøges også.",
+        "enable": "Overvåg importmappe",
+        "path": "Sti på serveren",
+        "pathHint": "Absolut sti. I Docker-containeren er det den monterede mappe, som regel {{path}}.",
+        "afterImport": "Efter import",
+        "keep": "Lad filen ligge",
+        "move": "Flyt til ”{{folder}}”",
+        "keepHint": "Filerne forbliver uændrede. Programmet husker, hvad det allerede har importeret.",
+        "moveHint": "Importerede filer flyttes til undermappen ”{{folder}}” – så forbliver importmappen ryddelig.",
+        "scanning": "Tjekker mappe …",
+        "neverScanned": "Ikke tjekket endnu.",
+        "scanNow": "Tjek nu",
+        "scanStarted": "Importmappen bliver tjekket."
+      }
+    },
+    "ai": {
+      "title": "AI",
+      "navHint": "LLM-server, model og tekstgenkendelse",
+      "intro": "AI’en læser hver ny PDF, opsummerer den, tildeler en dokumenttype og tags og uddrager nøgleoplysninger som beløb eller frister.",
+      "configured": "Sat op",
+      "notConfigured": "Ikke sat op",
+      "saved": "AI-indstillinger gemt",
+      "server": {
+        "title": "LLM-server",
+        "provider": "Udbyder",
+        "baseUrl": "Serveradresse",
+        "model": "Model",
+        "modelPlaceholder": "Model-id",
+        "compatibilityMode": "Kompatibilitetstilstand til lokale modeller",
+        "compatibilityModeHint": "Til servere, der taler Anthropic-grænsefladen, men hverken understøtter PDF-input eller strukturerede output: Dokumentet sendes til modellen som tekst eller, ved scanninger, som sidebilleder. Lad dette være slået fra til Claude API.",
+        "testIncomplete": "Indstillingerne er ikke komplette endnu"
+      },
+      "privacy": {
+        "title": "Med {{provider}} forlader dine dokumenter denne computer",
+        "text": "Til analysen sendes indholdet af hver PDF til serverne hos {{provider}} på internettet og behandles dér – også fakturaer, kontrakter, lægebreve og post fra myndigheder.",
+        "recommendation": "<emphasis>Anbefaling:</emphasis> Brug en lokal AI. Med <lmStudio>LM Studio</lmStudio> eller en <compatible>OpenAI-kompatibel server</compatible> på dit eget netværk bliver alt indhold hos dig."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Claude API fra Anthropic. Ændr kun dette, hvis du har din egen gateway foran.",
+          "modelHint": "Claude Opus 5.5 er det anbefalede valg; Sonnet og Haiku er hurtigere og billigere."
+        },
+        "OPENAI": {
+          "urlHint": "API’et fra OpenAI. Ændr kun dette, hvis du har din egen gateway foran.",
+          "modelHint": "Model-id’et, som OpenAI kalder det. Når du har gemt nøglen, vises de tilgængelige modeller her."
+        },
+        "MOONSHOT": {
+          "urlHint": "API’et fra Moonshot AI (Kimi). Til konti på den kinesiske platform: {{url}}",
+          "modelHint": "Model-id’et, som Moonshot kalder det. Når du har gemt nøglen, vises de tilgængelige modeller her."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Den lokale server i LM Studio (start den i LM Studio under ”Developer”). Hvis AIDocuments kører i Docker: {{url}}",
+          "modelHint": "Id’et på den model, der er indlæst i LM Studio. Scanninger kræver en model med billedinput, analysen kræver en med Tool Use."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adressen på en server, der taler OpenAI-grænsefladen – slutter som regel på /v1, f.eks. {{url}}",
+          "modelHint": "Model-id’et, som serveren kalder det. Når du har gemt, vises her de modeller, den tilbyder."
+        }
+      },
+      "apiKey": {
+        "label": "API-nøgle",
+        "labelOptional": "API-nøgle (valgfri)",
+        "placeholderStored": "{{mask}} (gemt)",
+        "placeholderPreset": "{{mask}} (forudindstillet)",
+        "placeholderNotNeeded": "ikke nødvendig",
+        "placeholderIfRequired": "kun hvis serveren kræver en",
+        "hintShown": "Forudindstillet fra serverkonfigurationen.",
+        "hintRemoving": "Den gemte nøgle fjernes, når du gemmer.",
+        "hintStored": "En nøgle er gemt krypteret. Lad feltet stå tomt for at beholde den – <remove>fjern nøgle</remove>",
+        "hintEnvironment": "Nøglen kommer i øjeblikket fra serverkonfigurationen (miljøvariabel eller konfigurationsfil). En nøgle, der indtastes her, har forrang.",
+        "hintPreset": "Der er forudindstillet en nøgle til denne udbyder i serverkonfigurationen. Lad feltet stå tomt for at bruge den.",
+        "hintDiscardedOnSwitch": "Den hidtil gemte nøgle hører til {{previous}} og kasseres, når du skifter.",
+        "hintPresetOtherProvider": "Den forudindstillede nøgle gælder kun for {{previous}}. Indtast en særskilt nøgle til {{provider}}.",
+        "hintRequired": "Gemmes krypteret og vises aldrig igen.",
+        "hintLocal": "Lokale servere behøver som regel ingen nøgle."
+      },
+      "analysis": {
+        "title": "Analyse",
+        "effort": "Grundighed",
+        "effortLevels": {
+          "low": "Hurtig",
+          "medium": "Afbalanceret",
+          "high": "Grundig"
+        },
+        "effortHint": "Mere grundig betyder omhyggeligere resultater, men er langsommere og dyrere pr. dokument.",
+        "outputLanguage": "Resultaternes sprog",
+        "outputLanguageHint": "AI’en skriver titel, resumé og tags på dette sprog.",
+        "ocr": "Tekstgenkendelse til scanninger",
+        "ocrHint": "Programmet lader AI’en transskribere scannede PDF’er uden tekstlag – først da kan de findes med fuldtekstsøgning. Hver scanning tager længere tid og koster mere."
+      },
+      "unanalyzed_one": "{{count, number}} dokument er endnu ikke analyseret af AI’en.",
+      "unanalyzed_other": "{{count, number}} dokumenter er endnu ikke analyseret af AI’en.",
+      "analyzeNow": "Analysér nu",
+      "analysisStarted_one": "{{count, number}} dokument bliver nu analyseret.",
+      "analysisStarted_other": "{{count, number}} dokumenter bliver nu analyseret."
+    },
+    "users": {
+      "title": "Brugere",
+      "navHint": "Konti og roller",
+      "intro": "Hver person logger ind med sin egen konto. Administratorer administrerer programmet, brugere arbejder med dokumenterne.",
+      "add": "Opret bruger",
+      "you": "Dig",
+      "disabled": "Deaktiveret",
+      "lastLogin": "Senest logget ind {{when}}",
+      "neverLoggedIn": "Aldrig logget ind",
+      "editUser": "Rediger {{name}}",
+      "deleteUser": "Slet {{name}}",
+      "saved": "Bruger gemt",
+      "created": "Bruger oprettet",
+      "deleted": "Bruger slettet",
+      "delete": {
+        "title": "Slet bruger?",
+        "text": "Kontoen ”{{name}}” bliver slettet og logget ud med det samme. Dokumenter bevares."
+      },
+      "dialog": {
+        "selfNotice": "Dette er din egen konto. Når du har gemt, skal du logge ind igen.",
+        "passwordKeepHint": "Lad feltet stå tomt for at beholde den nuværende adgangskode. Ellers mindst 8 tegn.",
+        "role": "Rolle",
+        "roleHints": {
+          "ADMIN": "Må alt – også ændre indstillinger, administrere brugere og slette dokumenter.",
+          "USER": "Må se, søge i og uploade dokumenter og redigere deres oplysninger."
+        },
+        "active": "Konto aktiv",
+        "activeHint": "Deaktiverede konti kan ikke logge ind; aktive sessioner afsluttes med det samme.",
+        "create": "Opret"
+      }
+    }
+  }
+}

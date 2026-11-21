@@ -24,6 +24,10 @@ public class Document {
     private DocumentSource source;
     @Indexed
     private DocumentStatus status;
+    /**
+     * Fehlermeldung oder Hinweis der Verarbeitung – sprachneutral abgelegt (siehe MsgCodec) und beim Ausliefern
+     * übersetzt. Dokumente aus älteren Versionen enthalten hier deutschen Klartext; der bleibt, wie er ist.
+     */
     private String errorMessage;
     private String title;
     private String summary;

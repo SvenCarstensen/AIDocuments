@@ -5,6 +5,9 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 import de.aidocuments.document.Document;
 import de.aidocuments.document.DocumentRepository;
+import de.aidocuments.i18n.Messages;
+import de.aidocuments.i18n.Msg;
+import de.aidocuments.i18n.MsgCodec;
 import de.aidocuments.mail.MailDtos.MailAccountDto;
 import de.aidocuments.mail.MailDtos.MailAccountRequest;
 import de.aidocuments.security.SecretCipher;
@@ -25,9 +28,11 @@ public class MailAccountService {
     private final DocumentRepository documents;
     private final SecretCipher cipher;
     private final MongoTemplate mongo;
+    private final Messages messages;
 
     public MailAccountService(MailAccountRepository accounts, DocumentRepository documents, SecretCipher cipher,
-                              MongoTemplate mongo) {
+                              MongoTemplate mongo, Messages messages) {
+        this.messages = messages;
         this.accounts = accounts;
         this.documents = documents;
         this.cipher = cipher;
@@ -42,12 +47,12 @@ public class MailAccountService {
     }
 
     public MailAccount require(String id) {
-        return accounts.findById(id).orElseThrow(() -> ApiException.notFound("Das Postfach"));
+        return accounts.findById(id).orElseThrow(() -> ApiException.notFound("error.mailbox.notFound"));
     }
 
     public MailAccountDto create(MailAccountRequest request) {
         if (request.password() == null || request.password().isBlank()) {
-            throw ApiException.badRequest("Bitte ein Passwort angeben.");
+            throw ApiException.badRequest("error.mailbox.passwordRequired");
         }
         MailAccount account = new MailAccount(UUID.randomUUID().toString());
         apply(account, request);
@@ -91,10 +96,14 @@ public class MailAccountService {
                 new Update().set("uidValidity", uidValidity).set("lastUid", lastUid), MailAccount.class);
     }
 
-    void markFinished(String id, MailAccount.SyncStatus status, String message) {
+    /**
+     * @param result das Ergebnis als sprachneutrale Sätze – der Abruf läuft im Hintergrund, ohne Leser;
+     *               übersetzt wird beim Ausliefern (siehe {@link #toDto})
+     */
+    void markFinished(String id, MailAccount.SyncStatus status, List<Msg> result) {
         mongo.updateFirst(query(where("_id").is(id)), new Update()
                 .set("lastSyncStatus", status)
-                .set("lastSyncMessage", message)
+                .set("lastSyncMessage", MsgCodec.encode(result))
                 .set("lastSyncAt", Instant.now()), MailAccount.class);
     }
 
@@ -115,6 +124,7 @@ public class MailAccountService {
     private MailAccountDto toDto(MailAccount a) {
         return new MailAccountDto(a.getId(), a.getName(), a.getHost(), a.getPort(), a.getSecurity(),
                 a.getUsername(), a.getFolder(), a.getImportSince(), a.isEnabled(), a.getLastSyncAt(),
-                a.getLastSyncStatus(), a.getLastSyncMessage(), documents.countByMailAccountId(a.getId()));
+                a.getLastSyncStatus(), messages.localize(a.getLastSyncMessage()),
+                documents.countByMailAccountId(a.getId()));
     }
 }

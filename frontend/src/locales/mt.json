@@ -1,0 +1,447 @@
+{
+  "common": {
+    "save": "Issejvja",
+    "cancel": "Ikkanċella",
+    "close": "Agħlaq",
+    "edit": "Editja",
+    "delete": "Ħassar",
+    "remove": "Neħħi",
+    "add": "Żid",
+    "back": "Lura",
+    "retry": "Erġa’ pprova",
+    "loading": "Qed jillowdja",
+    "language": "Lingwa",
+    "testConnection": "Ittestja l-konnessjoni",
+    "saveFirst": "Issejvja l-ewwel",
+    "username": "Isem tal-utent",
+    "usernameHint": "3–50 karattru: ittri, ċifri, tikka, sing, sing baxx, @",
+    "password": "Password",
+    "newPassword": "Password ġdida",
+    "passwordHint": "Mill-inqas 8 karattri",
+    "passwordMismatch": "Il-passwords ma jaqblux.",
+    "justNow": "eżatt issa",
+    "documentCount_one": "{{count, number}} dokument",
+    "documentCount_two": "{{count, number}} dokumenti",
+    "documentCount_few": "{{count, number}} dokumenti",
+    "documentCount_many": "{{count, number}}-il dokument",
+    "documentCount_other": "{{count, number}} dokument",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Utent"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Ma tistax issir konnessjoni mas-server",
+    "server": "Is-server irrapporta żball ({{status}}).",
+    "forbidden": "M’għandekx permess tagħmel dan.",
+    "unreachable": "Is-server ma jistax jintlaħaq.",
+    "unexpected": "Żball mhux mistenni.",
+    "languageLoad": "Il-lingwa ma setgħetx tiġi llowdjata."
+  },
+  "auth": {
+    "login": {
+      "title": "Merħba lura",
+      "subtitle": "Idħol biex taċċessa d-dokumenti tiegħek.",
+      "submit": "Idħol"
+    },
+    "setup": {
+      "title": "Issettja AIDocuments",
+      "subtitle": "Ibda billi toħloq il-kont tal-amministratur. Wara tista’ żżid aktar utenti fis-settings.",
+      "adminAccount": "Kont tal-amministratur",
+      "repeatPassword": "Irrepeti l-password",
+      "submit": "Oħloq il-kont u ibda",
+      "features": {
+        "import": "PDFs mill-kaxxa postali tiegħek u mill-folder tal-importazzjoni",
+        "ai": "L-IA tagħmel sommarju tagħhom u tagħtihom tikketti",
+        "search": "Tfittxija fit-test sħiħ sa ġewwa d-dokument"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Tella’",
+    "theme": {
+      "light": "Tema ċara",
+      "dark": "Tema skura"
+    },
+    "search": {
+      "placeholder": "Fittex dokumenti, tikketti, kontenut…",
+      "label": "Fittex dokumenti",
+      "clear": "Ikklerja t-tfittxija"
+    },
+    "userMenu": {
+      "label": "Menu tal-utent ({{name}})",
+      "aiActive": "IA attiva",
+      "aiNotConfigured": "IA mhux issettjata",
+      "changePassword": "Ibdel il-password",
+      "logout": "Oħroġ"
+    },
+    "passwordDialog": {
+      "current": "Password attwali",
+      "repeat": "Irrepeti l-password il-ġdida",
+      "changed": "Il-password inbidlet"
+    },
+    "dropzone": {
+      "title": "Itlaq il-PDFs hawn",
+      "hint": "Tista’ titlaq diversi fajls f’daqqa. Dawn jinħażnu, jiġu analizzati u jingħataw tikketti."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Jistgħu jiżdiedu biss fajls PDF.",
+    "uploadingFile": "Qed jittella’ “{{name}}”…",
+    "uploadingFiles_one": "Qed jittella’ {{count, number}} PDF…",
+    "uploadingFiles_two": "Qed jittellgħu {{count, number}} PDFs…",
+    "uploadingFiles_few": "Qed jittellgħu {{count, number}} PDFs…",
+    "uploadingFiles_many": "Qed jittellgħu {{count, number}}-il PDF…",
+    "uploadingFiles_other": "Qed jittellgħu {{count, number}} PDF…",
+    "created_one": "Żdied {{count, number}} dokument",
+    "created_two": "Żdiedu {{count, number}} dokumenti",
+    "created_few": "Żdiedu {{count, number}} dokumenti",
+    "created_many": "Żdiedu {{count, number}}-il dokument",
+    "created_other": "Żdiedu {{count, number}} dokument",
+    "processingInBackground": "L-ipproċessar ikompli fl-isfond.",
+    "duplicates_one": "{{count, number}} diġà jeżisti",
+    "duplicates_two": "{{count, number}} diġà jeżistu",
+    "duplicates_few": "{{count, number}} diġà jeżistu",
+    "duplicates_many": "{{count, number}} diġà jeżistu",
+    "duplicates_other": "{{count, number}} diġà jeżistu",
+    "rejected_one": "{{count, number}} fajl mhuwiex PDF validu",
+    "rejected_two": "{{count, number}} fajls mhumiex PDFs validi",
+    "rejected_few": "{{count, number}} fajls mhumiex PDFs validi",
+    "rejected_many": "{{count, number}}-il fajl mhumiex PDFs validi",
+    "rejected_other": "{{count, number}} fajl mhumiex PDFs validi",
+    "onlyDuplicates_one": "Dan id-dokument diġà jeżisti.",
+    "onlyDuplicates_two": "Dawn id-dokumenti diġà jeżistu.",
+    "onlyDuplicates_few": "Dawn id-dokumenti diġà jeżistu.",
+    "onlyDuplicates_many": "Dawn id-dokumenti diġà jeżistu.",
+    "onlyDuplicates_other": "Dawn id-dokumenti diġà jeżistu.",
+    "noneValid": "L-ebda wieħed mill-fajls mhu PDF validu.",
+    "failed": "It-tlugħ falla"
+  },
+  "documents": {
+    "status": {
+      "pending": "Qed jistenna",
+      "processing": "Qed jiġi analizzat",
+      "failed": "Żball",
+      "textOnly": "Mingħajr IA"
+    },
+    "ocrBadge": "Rikonoxximent tat-test",
+    "aiNotice": {
+      "text": "L-IA għadha mhix issettjata. Dokumenti ġodda jistgħu jiġu mfittxija permezz tat-test tagħhom, iżda ma jsirilhomx sommarju u ma jingħatawx tikketti.",
+      "action": "Issettja issa"
+    },
+    "searchResults_one": "<count>{{count, number}} riżultat</count> <query>għal “{{query}}”</query>",
+    "searchResults_two": "<count>{{count, number}} riżultati</count> <query>għal “{{query}}”</query>",
+    "searchResults_few": "<count>{{count, number}} riżultati</count> <query>għal “{{query}}”</query>",
+    "searchResults_many": "<count>{{count, number}}-il riżultat</count> <query>għal “{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} riżultat</count> <query>għal “{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} fil-proċess",
+      "inProgressHint": "Qed jistennew l-analiżi tal-IA jew qed jiġu analizzati bħalissa",
+      "remaining": "fadal madwar {{duration}}",
+      "remainingLessThan": "fadal inqas minn {{duration}}",
+      "finishHint": "Mistenni jitlesta: {{time}} – stmat mir-ritmu tal-aħħar dokumenti pproċessati"
+    },
+    "sort": {
+      "label": "Ordni tal-issortjar",
+      "relevance": "L-aħjar riżultati",
+      "newest": "L-aktar ġodda l-ewwel",
+      "date": "Skont id-data tad-dokument"
+    },
+    "view": {
+      "grid": "Veduta ta’ grilja",
+      "list": "Veduta ta’ lista"
+    },
+    "pageSize": {
+      "label": "Numru ta’ dokumenti murija",
+      "all": "Kollha"
+    },
+    "filters": {
+      "title": "Filtri",
+      "titleWithCount": "Filtri ({{active, number}})",
+      "apply": "Uri",
+      "hint": "Ladarba d-dokumenti jkunu ġew analizzati, it-tipi ta’ dokumenti, it-tikketti u l-mittenti jidhru hawn bħala filtri.",
+      "dateFrom": "minn",
+      "dateTo": "sa",
+      "status": "Status",
+      "failed": "Ma rnexxewx",
+      "showAll": "Uri kollha",
+      "showLess": "Uri inqas",
+      "activeFrom": "minn {{date}}",
+      "activeTo": "sa {{date}}",
+      "removeOne": "Neħħi l-filtru “{{label}}”",
+      "removeAll": "Neħħi l-filtri kollha",
+      "clear": "Neħħi l-filtri"
+    },
+    "empty": {
+      "libraryTitle": "Għad m’hemmx dokumenti",
+      "libraryHint": "Sempliċiment kaxkar fajls PDF f’din it-tieqa jew uża “Tella’”.",
+      "libraryHintAdmin": "Sempliċiment kaxkar fajls PDF f’din it-tieqa jew uża “Tella’”. Fis-settings tista’ tissettja kaxxa postali jew folder tal-importazzjoni li minnhom jiġu importati PDFs ġodda awtomatikament.",
+      "noResultsTitle": "Ma nstab xejn",
+      "noResultsSearch": "L-ebda dokument ma jaqbel ma’ din it-tfittxija. It-tfittxija ssib ukoll partijiet minn kliem – ipprova terminu iqsar jew inqas kliem.",
+      "noResultsFilters": "L-ebda dokument ma jaqbel mal-filtri magħżula."
+    },
+    "loadingAll_one": "Dokumenti llowdjati: {{loaded, number}} minn {{count, number}}…",
+    "loadingAll_two": "Dokumenti llowdjati: {{loaded, number}} minn {{count, number}}…",
+    "loadingAll_few": "Dokumenti llowdjati: {{loaded, number}} minn {{count, number}}…",
+    "loadingAll_many": "Dokumenti llowdjati: {{loaded, number}} minn {{count, number}}…",
+    "loadingAll_other": "Dokumenti llowdjati: {{loaded, number}} minn {{count, number}}…",
+    "loadMore": "Illowdja aktar ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Lura għad-dokumenti",
+    "download": "Niżżel",
+    "reprocess": "Erġa’ analizza",
+    "reprocessHint": "Erġa’ aqra l-PDF u ħalli l-IA tanalizzah",
+    "reprocessStarted": "Id-dokument qed jerġa’ jiġi analizzat.",
+    "deleted": "Id-dokument tħassar",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Iftaħ f’tab ġdida",
+    "processingNotice": "Id-dokument qed jiġi pproċessat. Is-sommarju u t-tikketti jidhru hawn hekk kif titlesta l-analiżi.",
+    "textOnlyNotice": "Indiċizzat mingħajr IA: id-dokument jista’ jiġi mfittex permezz tat-test tiegħu, iżda m’għandux sommarju u lanqas tikketti awtomatiċi.",
+    "tabs": {
+      "overview": "Ħarsa ġenerali",
+      "text": "Test sħiħ"
+    },
+    "fields": {
+      "title": "Titlu",
+      "category": "Tip ta’ dokument",
+      "documentDate": "Data tad-dokument",
+      "correspondent": "Mittent",
+      "tags": "Tikketti",
+      "summary": "Sommarju"
+    },
+    "tags": {
+      "allWith": "Id-dokumenti kollha bit-tikketta “{{tag}}”",
+      "none": "L-ebda tikketta. <add>Żid tikketti</add>",
+      "inputHint": "Ikkonferma b’Enter jew b’virgola. Is-suġġerimenti huma tikketti li diġà qed jintużaw.",
+      "inputPlaceholder": "Daħħal tikketta…",
+      "remove": "Neħħi t-tikketta “{{tag}}”"
+    },
+    "keyFacts": "Fatti ewlenin",
+    "details": {
+      "title": "Dettalji",
+      "file": "Fajl",
+      "size": "Daqs",
+      "pageCount_one": "{{count, number}} paġna",
+      "pageCount_two": "{{count, number}} paġni",
+      "pageCount_few": "{{count, number}} paġni",
+      "pageCount_many": "{{count, number}}-il paġna",
+      "pageCount_other": "{{count, number}} paġna",
+      "language": "Lingwa",
+      "source": "Sors",
+      "mailSubject": "Suġġett",
+      "mailFrom": "Minn",
+      "mailReceived": "Waslet",
+      "added": "Miżjud",
+      "text": "Test"
+    },
+    "source": {
+      "MAIL": "Kaxxa postali",
+      "FOLDER": "Folder tal-importazzjoni",
+      "UPLOAD": "Imtella’"
+    },
+    "noText": "M’hemm l-ebda test għal dan id-dokument – x’aktarx huwa skan mingħajr saff ta’ test. Jekk l-IA tkun issettjata u r-rikonoxximent tat-test ikun attivat, il-kontenut jiġi traskritt waqt l-analiżi.",
+    "edit": {
+      "title": "Editja d-dokument",
+      "saved": "Il-bidliet ġew issejvjati"
+    },
+    "delete": {
+      "title": "Tħassar id-dokument?",
+      "text": "“{{title}}” se jitħassar flimkien mal-fajl PDF, it-test sħiħ u t-tikketti tiegħu. Dan ma jistax jitreġġa’ lura.",
+      "confirm": "Ħassar għal dejjem"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "mailboxes": {
+      "title": "Kaxex postali",
+      "navHint": "Servers IMAP li minnhom jiġu importati l-annessi PDF",
+      "intro": "L-annessi PDF jiġu importati awtomatikament minn dawn il-kaxex postali IMAP. Il-kaxex postali jinqraw biss – l-emails jibqgħu mhux mibdula u mhux moqrija.",
+      "add": "Żid kaxxa postali",
+      "emptyTitle": "Għad m’hemm l-ebda kaxxa postali ssettjata",
+      "emptyText": "Daħħal il-kredenzjali ta’ kaxxa postali IMAP – pereżempju l-kaxxa postali li l-iskaner tiegħek jibgħatilha d-dokumenti.",
+      "paused": "Sospiża",
+      "syncNow": "Iċċekkja issa",
+      "syncing": "Qed tiġi ċċekkjata l-kaxxa postali…",
+      "neverSynced": "Għadha ma ġietx iċċekkjata.",
+      "saved": "Il-kaxxa postali ġiet issejvjata",
+      "added": "Il-kaxxa postali żdiedet",
+      "firstSyncRunning": "L-ewwel iċċekkjar diġà għaddej.",
+      "removed": "Il-kaxxa postali tneħħiet",
+      "delete": {
+        "title": "Tneħħi l-kaxxa postali?",
+        "text": "“{{name}}” mhux se tibqa’ tiġi ċċekkjata. Id-dokumenti li diġà ġew importati jinżammu."
+      },
+      "dialog": {
+        "editTitle": "Editja l-kaxxa postali",
+        "description": "Il-kredenzjali tiksibhom mingħand il-fornitur tal-email tiegħek. Il-password tinħażen kriptata.",
+        "name": "Isem",
+        "nameHint": "Kwalunkwe isem, eż. “Skaner” jew “Fatturi”",
+        "namePlaceholder": "Skaner",
+        "host": "Server IMAP",
+        "port": "Port",
+        "security": "Kriptaġġ",
+        "securityNone": "Mingħajr kriptaġġ",
+        "securityNoneWarning": "Mingħajr kriptaġġ, l-isem tal-utent u l-password jintbagħtu bħala test sempliċi.",
+        "passwordKeepHint": "Ħallih vojt biex iżżomm il-password maħżuna",
+        "folder": "Folder",
+        "folderHint": "Normalment {{folder}} (l-inbox)",
+        "since": "Emails minn din id-data biss",
+        "sinceHint": "Mhux obbligatorju – emails eqdem jinqabżu",
+        "enabled": "Iċċekkja awtomatikament",
+        "enabledHint": "Il-kaxxa postali tiġi ċċekkjata għal PDFs ġodda fl-intervall issettjat."
+      }
+    },
+    "import": {
+      "title": "Skeda u folder tal-importazzjoni",
+      "navHint": "Intervall tal-iċċekkjar u direttorju ssorveljat",
+      "intro": "Jiddefinixxi kemm ta’ spiss l-applikazzjoni tfittex fajls PDF ġodda – fil-kaxex postali u fil-folder tal-importazzjoni.",
+      "saved": "Is-settings ġew issejvjati",
+      "interval": {
+        "title": "Intervall tal-iċċekkjar",
+        "text": "Dan huwa kemm ta’ spiss l-applikazzjoni tiċċekkja l-kaxex postali kollha u l-folder tal-importazzjoni għal PDFs ġodda.",
+        "label": "Kull … minuti",
+        "nextRun": "L-iċċekkjar awtomatiku li jmiss {{when}}."
+      },
+      "folder": {
+        "title": "Folder tal-importazzjoni",
+        "text": "Direttorju fuq is-server li jiġi ssorveljat għal fajls PDF ġodda – pereżempju d-destinazzjoni ta’ skaner tan-netwerk. Jiġu mfittxija wkoll is-subfolders.",
+        "enable": "Issorvelja l-folder tal-importazzjoni",
+        "path": "Mogħdija fuq is-server",
+        "pathHint": "Mogħdija assoluta. Fil-kontenitur Docker dan huwa l-folder immuntat, normalment {{path}}.",
+        "afterImport": "Wara l-importazzjoni",
+        "keep": "Ħalli l-fajl fejn hu",
+        "move": "Ċaqlaq lejn “{{folder}}”",
+        "keepHint": "Il-fajls jibqgħu mhux mibdula. L-applikazzjoni tiftakar x’importat diġà.",
+        "moveHint": "Il-fajls importati jiċċaqilqu lejn is-subfolder “{{folder}}” – il-folder tal-importazzjoni jibqa’ pulit.",
+        "scanning": "Qed jiġi ċċekkjat il-folder…",
+        "neverScanned": "Għadu ma ġiex iċċekkjat.",
+        "scanNow": "Iċċekkja issa",
+        "scanStarted": "Il-folder tal-importazzjoni qed jiġi ċċekkjat."
+      }
+    },
+    "ai": {
+      "title": "IA",
+      "navHint": "Server LLM, mudell u rikonoxximent tat-test",
+      "intro": "L-IA taqra kull PDF ġdid, tagħmel sommarju tiegħu, tassenjalu tip ta’ dokument u tikketti, u tiġbed minnu fatti ewlenin bħal ammonti jew skadenzi.",
+      "configured": "Issettjata",
+      "notConfigured": "Mhux issettjata",
+      "saved": "Is-settings tal-IA ġew issejvjati",
+      "server": {
+        "title": "Server LLM",
+        "provider": "Fornitur",
+        "baseUrl": "Indirizz tas-server",
+        "model": "Mudell",
+        "modelPlaceholder": "ID tal-mudell",
+        "compatibilityMode": "Modalità ta’ kompatibbiltà għal mudelli lokali",
+        "compatibilityModeHint": "Għal servers li jitkellmu l-interfaċċja ta’ Anthropic iżda la jappoġġjaw input ta’ PDF u lanqas outputs strutturati: id-dokument jintbagħat lill-mudell bħala test jew, għal skans, bħala stampi tal-paġni. Ħalliha mitfija għall-Claude API.",
+        "testIncomplete": "Is-settings għadhom mhumiex kompluti"
+      },
+      "privacy": {
+        "title": "Ma’ {{provider}}, id-dokumenti tiegħek joħorġu minn dan il-kompjuter",
+        "text": "Għall-analiżi, il-kontenut ta’ kull PDF jintbagħat lis-servers ta’ {{provider}} fuq l-internet u jiġi pproċessat hemmhekk – inklużi fatturi, kuntratti, ittri mediċi u korrispondenza uffiċjali.",
+        "recommendation": "<emphasis>Rakkomandazzjoni:</emphasis> uża IA lokali. Permezz ta’ <lmStudio>LM Studio</lmStudio> jew ta’ <compatible>server kompatibbli ma’ OpenAI</compatible> fuq in-netwerk tiegħek stess, il-kontenut kollu jibqa’ għandek."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Il-Claude API ta’ Anthropic. Ibdel dan biss jekk għandek gateway tiegħek quddiemha.",
+          "modelHint": "Claude Opus 5.5 huwa l-għażla rakkomandata; Sonnet u Haiku huma aktar veloċi u orħos."
+        },
+        "OPENAI": {
+          "urlHint": "L-API ta’ OpenAI. Ibdel dan biss jekk għandek gateway tiegħek quddiemha.",
+          "modelHint": "L-ID tal-mudell kif isejjaħlu OpenAI. Wara li tissejvja ċ-ċavetta, il-mudelli disponibbli jidhru hawn."
+        },
+        "MOONSHOT": {
+          "urlHint": "L-API ta’ Moonshot AI (Kimi). Għal kontijiet fuq il-pjattaforma Ċiniża: {{url}}",
+          "modelHint": "L-ID tal-mudell kif isejjaħlu Moonshot. Wara li tissejvja ċ-ċavetta, il-mudelli disponibbli jidhru hawn."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Is-server lokali ta’ LM Studio (ibdih f’LM Studio taħt “Developer”). Jekk AIDocuments qed jaħdem f’Docker: {{url}}",
+          "modelHint": "L-ID tal-mudell illowdjat f’LM Studio. L-iskans jeħtieġu mudell b’input ta’ stampi, l-analiżi teħtieġ wieħed b’użu ta’ għodod (tool use)."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Indirizz ta’ server li jitkellem l-interfaċċja ta’ OpenAI – normalment bi /v1 fl-aħħar, eż. {{url}}",
+          "modelHint": "L-ID tal-mudell kif isejjaħlu s-server. Wara li tissejvja, il-mudelli li joffri jidhru hawn."
+        }
+      },
+      "apiKey": {
+        "label": "Ċavetta tal-API",
+        "labelOptional": "Ċavetta tal-API (mhux obbligatorja)",
+        "placeholderStored": "{{mask}} (maħżuna)",
+        "placeholderPreset": "{{mask}} (predefinita)",
+        "placeholderNotNeeded": "mhux meħtieġa",
+        "placeholderIfRequired": "biss jekk is-server jeħtieġ waħda",
+        "hintShown": "Predefinita mill-konfigurazzjoni tas-server.",
+        "hintRemoving": "Iċ-ċavetta maħżuna se titneħħa meta tissejvja.",
+        "hintStored": "Hemm ċavetta maħżuna f’forma kriptata. Ħallih vojt biex iżżommha – <remove>neħħi ċ-ċavetta</remove>",
+        "hintEnvironment": "Bħalissa ċ-ċavetta ġejja mill-konfigurazzjoni tas-server (varjabbli ambjentali jew fajl tal-konfigurazzjoni). Ċavetta mdaħħla hawn tieħu preċedenza.",
+        "hintPreset": "Fil-konfigurazzjoni tas-server hemm ċavetta predefinita għal dan il-fornitur. Ħallih vojt biex tużaha.",
+        "hintDiscardedOnSwitch": "Iċ-ċavetta maħżuna s’issa tappartjeni lil {{previous}} u se tintrema meta taqleb.",
+        "hintPresetOtherProvider": "Iċ-ċavetta predefinita hija valida biss għal {{previous}}. Jekk jogħġbok daħħal waħda separata għal {{provider}}.",
+        "hintRequired": "Tinħażen f’forma kriptata u qatt ma terġa’ tintwera.",
+        "hintLocal": "Is-servers lokali normalment ma jeħtiġux ċavetta."
+      },
+      "analysis": {
+        "title": "Analiżi",
+        "effort": "Reqqa",
+        "effortLevels": {
+          "low": "Veloċi",
+          "medium": "Bilanċjata",
+          "high": "Bir-reqqa"
+        },
+        "effortHint": "Aktar reqqa tfisser riżultati aktar akkurati, iżda analiżi aktar bil-mod u aktar għalja għal kull dokument.",
+        "outputLanguage": "Lingwa tar-riżultati",
+        "outputLanguageHint": "L-IA tikteb it-titlu, is-sommarju u t-tikketti b’din il-lingwa.",
+        "ocr": "Rikonoxximent tat-test għal skans",
+        "ocrHint": "L-applikazzjoni tħalli lill-IA tittraskrivi PDFs skennjati mingħajr saff ta’ test – hekk biss jistgħu jinstabu bit-tfittxija fit-test sħiħ. Kull skan jieħu aktar ħin u jiswa aktar."
+      },
+      "unanalyzed_one": "{{count, number}} dokument għadu ma ġiex analizzat mill-IA.",
+      "unanalyzed_two": "{{count, number}} dokumenti għadhom ma ġewx analizzati mill-IA.",
+      "unanalyzed_few": "{{count, number}} dokumenti għadhom ma ġewx analizzati mill-IA.",
+      "unanalyzed_many": "{{count, number}}-il dokument għadhom ma ġewx analizzati mill-IA.",
+      "unanalyzed_other": "{{count, number}} dokument għadhom ma ġewx analizzati mill-IA.",
+      "analyzeNow": "Analizza issa",
+      "analysisStarted_one": "{{count, number}} dokument qed jiġi analizzat issa.",
+      "analysisStarted_two": "{{count, number}} dokumenti qed jiġu analizzati issa.",
+      "analysisStarted_few": "{{count, number}} dokumenti qed jiġu analizzati issa.",
+      "analysisStarted_many": "{{count, number}}-il dokument qed jiġu analizzati issa.",
+      "analysisStarted_other": "{{count, number}} dokument qed jiġu analizzati issa."
+    },
+    "users": {
+      "title": "Utenti",
+      "navHint": "Kontijiet u rwoli",
+      "intro": "Kull persuna tidħol bil-kont tagħha. L-amministraturi jimmaniġġjaw l-applikazzjoni, l-utenti jaħdmu bid-dokumenti.",
+      "add": "Oħloq utent",
+      "you": "Int",
+      "disabled": "Diżattivat",
+      "lastLogin": "L-aħħar dħul {{when}}",
+      "neverLoggedIn": "Qatt ma sar dħul",
+      "editUser": "Editja lil {{name}}",
+      "deleteUser": "Ħassar lil {{name}}",
+      "saved": "L-utent ġie ssejvjat",
+      "created": "L-utent inħoloq",
+      "deleted": "L-utent tħassar",
+      "delete": {
+        "title": "Tħassar l-utent?",
+        "text": "Il-kont “{{name}}” se jitħassar u s-sessjonijiet tiegħu jintemmu minnufih. Id-dokumenti jinżammu."
+      },
+      "dialog": {
+        "selfNotice": "Dan huwa l-kont tiegħek stess. Wara li tissejvja jkollok terġa’ tidħol.",
+        "passwordKeepHint": "Ħallih vojt biex iżżomm il-password attwali. Inkella mill-inqas 8 karattri.",
+        "role": "Rwol",
+        "roleHints": {
+          "ADMIN": "Jista’ jagħmel kollox – inkluż li jibdel is-settings, jimmaniġġja l-utenti u jħassar id-dokumenti.",
+          "USER": "Jista’ jara, ifittex u jtella’ dokumenti u jeditja d-dettalji tagħhom."
+        },
+        "active": "Kont attiv",
+        "activeHint": "Kontijiet diżattivati ma jistgħux jidħlu; is-sessjonijiet attivi jintemmu minnufih.",
+        "create": "Oħloq"
+      }
+    }
+  }
+}

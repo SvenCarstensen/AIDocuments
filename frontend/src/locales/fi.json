@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "close": "Sulje",
+    "edit": "Muokkaa",
+    "delete": "Poista",
+    "remove": "Poista",
+    "add": "Lisää",
+    "back": "Takaisin",
+    "retry": "Yritä uudelleen",
+    "loading": "Ladataan",
+    "language": "Kieli",
+    "testConnection": "Testaa yhteys",
+    "saveFirst": "Tallenna ensin",
+    "username": "Käyttäjätunnus",
+    "usernameHint": "3–50 merkkiä: kirjaimia, numeroita, piste, yhdysmerkki, alaviiva, @",
+    "password": "Salasana",
+    "newPassword": "Uusi salasana",
+    "passwordHint": "Vähintään 8 merkkiä",
+    "passwordMismatch": "Salasanat eivät täsmää.",
+    "justNow": "juuri äsken",
+    "documentCount_one": "{{count, number}} asiakirja",
+    "documentCount_other": "{{count, number}} asiakirjaa",
+    "role": {
+      "ADMIN": "Ylläpitäjä",
+      "USER": "Käyttäjä"
+    },
+    "fileSize": {
+      "bytes": "{{value}} t",
+      "kilobytes": "{{value}} kt",
+      "megabytes": "{{value}} Mt"
+    }
+  },
+  "errors": {
+    "noConnection": "Ei yhteyttä palvelimeen",
+    "server": "Palvelin ilmoitti virheestä ({{status}}).",
+    "forbidden": "Sinulla ei ole oikeutta tähän.",
+    "unreachable": "Palvelimeen ei saada yhteyttä.",
+    "unexpected": "Odottamaton virhe.",
+    "languageLoad": "Kielen lataaminen epäonnistui."
+  },
+  "auth": {
+    "login": {
+      "title": "Tervetuloa takaisin",
+      "subtitle": "Kirjaudu sisään, niin pääset asiakirjoihisi.",
+      "submit": "Kirjaudu sisään"
+    },
+    "setup": {
+      "title": "AIDocumentsin käyttöönotto",
+      "subtitle": "Luo ensin ylläpitäjän tili. Voit lisätä muita käyttäjiä myöhemmin asetuksissa.",
+      "adminAccount": "Ylläpitäjän tili",
+      "repeatPassword": "Toista salasana",
+      "submit": "Luo tili ja aloita",
+      "features": {
+        "import": "PDF-tiedostot postilaatikosta ja tuontikansiosta",
+        "ai": "Tekoäly tiivistää ja lisää tunnisteet",
+        "search": "Kokotekstihaku asiakirjojen sisällöstä"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Lähetä",
+    "theme": {
+      "light": "Vaalea teema",
+      "dark": "Tumma teema"
+    },
+    "search": {
+      "placeholder": "Hae asiakirjoja, tunnisteita, sisältöä…",
+      "label": "Hae asiakirjoja",
+      "clear": "Tyhjennä haku"
+    },
+    "userMenu": {
+      "label": "Käyttäjävalikko ({{name}})",
+      "aiActive": "Tekoäly käytössä",
+      "aiNotConfigured": "Tekoälyä ei ole määritetty",
+      "changePassword": "Vaihda salasana",
+      "logout": "Kirjaudu ulos"
+    },
+    "passwordDialog": {
+      "current": "Nykyinen salasana",
+      "repeat": "Toista uusi salasana",
+      "changed": "Salasana vaihdettu"
+    },
+    "dropzone": {
+      "title": "Pudota PDF-tiedostot tähän",
+      "hint": "Voit pudottaa useita tiedostoja kerralla. Ne tallennetaan ja analysoidaan, ja niille lisätään tunnisteet."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Vain PDF-tiedostoja voi lisätä.",
+    "uploadingFile": "Lähetetään ”{{name}}”…",
+    "uploadingFiles_one": "Lähetetään {{count, number}} PDF-tiedosto…",
+    "uploadingFiles_other": "Lähetetään {{count, number}} PDF-tiedostoa…",
+    "created_one": "{{count, number}} asiakirja lisätty",
+    "created_other": "{{count, number}} asiakirjaa lisätty",
+    "processingInBackground": "Käsittely jatkuu taustalla.",
+    "duplicates_one": "{{count, number}} on jo olemassa",
+    "duplicates_other": "{{count, number}} on jo olemassa",
+    "rejected_one": "{{count, number}} tiedosto ei ole kelvollinen PDF",
+    "rejected_other": "{{count, number}} tiedostoa ei ole kelvollisia PDF-tiedostoja",
+    "onlyDuplicates_one": "Tämä asiakirja on jo olemassa.",
+    "onlyDuplicates_other": "Nämä asiakirjat ovat jo olemassa.",
+    "noneValid": "Yksikään tiedostoista ei ole kelvollinen PDF.",
+    "failed": "Lähetys epäonnistui"
+  },
+  "documents": {
+    "status": {
+      "pending": "Odottaa",
+      "processing": "Analysoidaan",
+      "failed": "Virhe",
+      "textOnly": "Ilman tekoälyä"
+    },
+    "ocrBadge": "Tekstintunnistus",
+    "aiNotice": {
+      "text": "Tekoälyä ei ole vielä määritetty. Uusista asiakirjoista voi hakea niiden tekstin perusteella, mutta niitä ei tiivistetä eikä niille lisätä tunnisteita.",
+      "action": "Määritä nyt"
+    },
+    "searchResults_one": "<count>{{count, number}} tulos</count> <query>haulla ”{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} tulosta</count> <query>haulla ”{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} käsittelyssä",
+      "inProgressHint": "Odottavat tekoälyanalyysia tai ovat parhaillaan analysoitavina",
+      "remaining": "noin {{duration}} jäljellä",
+      "remainingLessThan": "alle {{duration}} jäljellä",
+      "finishHint": "Arvioitu valmistumisaika: {{time}} – arvio perustuu viimeksi käsiteltyjen asiakirjojen tahtiin"
+    },
+    "sort": {
+      "label": "Järjestys",
+      "relevance": "Osuvimmat ensin",
+      "newest": "Uusimmat ensin",
+      "date": "Asiakirjan päiväyksen mukaan"
+    },
+    "view": {
+      "grid": "Ruudukkonäkymä",
+      "list": "Luettelonäkymä"
+    },
+    "pageSize": {
+      "label": "Näytettävien asiakirjojen määrä",
+      "all": "Kaikki"
+    },
+    "filters": {
+      "title": "Suodattimet",
+      "titleWithCount": "Suodattimet ({{active, number}})",
+      "apply": "Näytä",
+      "hint": "Kun asiakirjoja on analysoitu, asiakirjatyypit, tunnisteet ja lähettäjät näkyvät tässä suodattimina.",
+      "dateFrom": "alkaen",
+      "dateTo": "päättyen",
+      "status": "Tila",
+      "failed": "Epäonnistuneet",
+      "showAll": "Näytä kaikki",
+      "showLess": "Näytä vähemmän",
+      "activeFrom": "{{date}} alkaen",
+      "activeTo": "{{date}} asti",
+      "removeOne": "Poista suodatin ”{{label}}”",
+      "removeAll": "Poista kaikki suodattimet",
+      "clear": "Poista suodattimet"
+    },
+    "empty": {
+      "libraryTitle": "Ei vielä asiakirjoja",
+      "libraryHint": "Vedä PDF-tiedostot tähän ikkunaan tai valitse ”Lähetä”.",
+      "libraryHintAdmin": "Vedä PDF-tiedostot tähän ikkunaan tai valitse ”Lähetä”. Asetuksissa voit määrittää postilaatikon tai tuontikansion, josta uudet PDF-tiedostot tuodaan automaattisesti.",
+      "noResultsTitle": "Mitään ei löytynyt",
+      "noResultsSearch": "Yksikään asiakirja ei vastaa tätä hakua. Haku löytää myös sanojen osia – kokeile lyhyempää hakusanaa tai harvempia sanoja.",
+      "noResultsFilters": "Yksikään asiakirja ei vastaa valittuja suodattimia."
+    },
+    "loadingAll_one": "Ladattu {{loaded, number}}/{{count, number}} asiakirjasta…",
+    "loadingAll_other": "Ladattu {{loaded, number}}/{{count, number}} asiakirjasta…",
+    "loadMore": "Lataa lisää ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Takaisin luetteloon",
+    "download": "Lataa",
+    "reprocess": "Analysoi uudelleen",
+    "reprocessHint": "Lue PDF uudelleen ja anna tekoälyn analysoida se",
+    "reprocessStarted": "Asiakirja analysoidaan uudelleen.",
+    "deleted": "Asiakirja poistettu",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Avaa uudessa välilehdessä",
+    "processingNotice": "Asiakirjaa käsitellään. Tiivistelmä ja tunnisteet ilmestyvät tähän heti, kun analyysi on valmis.",
+    "textOnlyNotice": "Indeksoitu ilman tekoälyä: asiakirjasta voi hakea sen tekstin perusteella, mutta sillä ei ole tiivistelmää eikä automaattisia tunnisteita.",
+    "tabs": {
+      "overview": "Yleiskatsaus",
+      "text": "Koko teksti"
+    },
+    "fields": {
+      "title": "Otsikko",
+      "category": "Asiakirjatyyppi",
+      "documentDate": "Asiakirjan päiväys",
+      "correspondent": "Lähettäjä",
+      "tags": "Tunnisteet",
+      "summary": "Tiivistelmä"
+    },
+    "tags": {
+      "allWith": "Kaikki asiakirjat, joilla on tunniste ”{{tag}}”",
+      "none": "Ei tunnisteita. <add>Lisää</add>",
+      "inputHint": "Vahvista Enterillä tai pilkulla. Ehdotukset ovat jo käytössä olevia tunnisteita.",
+      "inputPlaceholder": "Kirjoita tunniste…",
+      "remove": "Poista tunniste ”{{tag}}”"
+    },
+    "keyFacts": "Keskeiset tiedot",
+    "details": {
+      "title": "Tiedot",
+      "file": "Tiedosto",
+      "size": "Koko",
+      "pageCount_one": "{{count, number}} sivu",
+      "pageCount_other": "{{count, number}} sivua",
+      "language": "Kieli",
+      "source": "Lähde",
+      "mailSubject": "Aihe",
+      "mailFrom": "Lähettäjä",
+      "mailReceived": "Vastaanotettu",
+      "added": "Lisätty",
+      "text": "Teksti"
+    },
+    "source": {
+      "MAIL": "Postilaatikko",
+      "FOLDER": "Tuontikansio",
+      "UPLOAD": "Lähetetty"
+    },
+    "noText": "Tälle asiakirjalle ei ole tekstiä – se on todennäköisesti skannaus, jossa ei ole tekstitasoa. Kun tekoäly on määritetty ja tekstintunnistus on käytössä, sisältö litteroidaan analyysin yhteydessä.",
+    "edit": {
+      "title": "Muokkaa asiakirjaa",
+      "saved": "Muutokset tallennettu"
+    },
+    "delete": {
+      "title": "Poistetaanko asiakirja?",
+      "text": "”{{title}}” poistetaan PDF-tiedostoineen, teksteineen ja tunnisteineen. Tätä ei voi kumota.",
+      "confirm": "Poista pysyvästi"
+    }
+  },
+  "settings": {
+    "title": "Asetukset",
+    "mailboxes": {
+      "title": "Postilaatikot",
+      "navHint": "IMAP-palvelimet, joilta PDF-liitteet tuodaan",
+      "intro": "Näistä IMAP-postilaatikoista tuodaan PDF-liitteet automaattisesti. Postilaatikoita vain luetaan – viestit säilyvät muuttumattomina ja lukemattomina.",
+      "add": "Lisää postilaatikko",
+      "emptyTitle": "Postilaatikoita ei ole vielä määritetty",
+      "emptyText": "Anna IMAP-postilaatikon kirjautumistiedot – esimerkiksi sen postilaatikon, johon skannerisi lähettää asiakirjat.",
+      "paused": "Keskeytetty",
+      "syncNow": "Tarkista nyt",
+      "syncing": "Tarkistetaan postilaatikkoa…",
+      "neverSynced": "Ei vielä tarkistettu.",
+      "saved": "Postilaatikko tallennettu",
+      "added": "Postilaatikko lisätty",
+      "firstSyncRunning": "Ensimmäinen tarkistus on jo käynnissä.",
+      "removed": "Postilaatikko poistettu",
+      "delete": {
+        "title": "Poistetaanko postilaatikko?",
+        "text": "Postilaatikkoa ”{{name}}” ei enää tarkisteta. Jo tuodut asiakirjat säilyvät."
+      },
+      "dialog": {
+        "editTitle": "Muokkaa postilaatikkoa",
+        "description": "Saat kirjautumistiedot sähköpostipalvelusi tarjoajalta. Salasana tallennetaan salattuna.",
+        "name": "Nimi",
+        "nameHint": "Vapaasti valittava, esim. ”Skanneri” tai ”Laskut”",
+        "namePlaceholder": "Skanneri",
+        "host": "IMAP-palvelin",
+        "port": "Portti",
+        "security": "Salaus",
+        "securityNone": "Ei salausta",
+        "securityNoneWarning": "Ilman salausta käyttäjätunnus ja salasana lähetetään selväkielisinä.",
+        "passwordKeepHint": "Jätä tyhjäksi, jos haluat säilyttää tallennetun salasanan",
+        "folder": "Kansio",
+        "folderHint": "Yleensä {{folder}} (saapuneet)",
+        "since": "Vain viestit alkaen",
+        "sinceHint": "Valinnainen – vanhemmat viestit ohitetaan",
+        "enabled": "Tarkista automaattisesti",
+        "enabledHint": "Postilaatikosta tarkistetaan uudet PDF-tiedostot määritetyin välein."
+      }
+    },
+    "import": {
+      "title": "Aikataulu ja tuontikansio",
+      "navHint": "Tarkistusväli ja valvottu kansio",
+      "intro": "Määrittää, kuinka usein sovellus etsii uusia PDF-tiedostoja – postilaatikoista ja tuontikansiosta.",
+      "saved": "Asetukset tallennettu",
+      "interval": {
+        "title": "Tarkistusväli",
+        "text": "Näin usein sovellus tarkistaa kaikki postilaatikot ja tuontikansion uusien PDF-tiedostojen varalta.",
+        "label": "… minuutin välein",
+        "nextRun": "Seuraava automaattinen tarkistus {{when}}."
+      },
+      "folder": {
+        "title": "Tuontikansio",
+        "text": "Palvelimella oleva kansio, jota valvotaan uusien PDF-tiedostojen varalta – esimerkiksi verkkoskannerin kohdekansio. Myös alikansiot käydään läpi.",
+        "enable": "Valvo tuontikansiota",
+        "path": "Polku palvelimella",
+        "pathHint": "Absoluuttinen polku. Docker-kontissa tämä on liitetty kansio, yleensä {{path}}.",
+        "afterImport": "Tuonnin jälkeen",
+        "keep": "Jätä tiedosto paikalleen",
+        "move": "Siirrä kansioon ”{{folder}}”",
+        "keepHint": "Tiedostot säilyvät muuttumattomina. Sovellus muistaa, mitä se on jo tuonut.",
+        "moveHint": "Tuodut tiedostot siirretään alikansioon ”{{folder}}” – tuontikansio pysyy siistinä.",
+        "scanning": "Tarkistetaan kansiota…",
+        "neverScanned": "Ei vielä tarkistettu.",
+        "scanNow": "Tarkista nyt",
+        "scanStarted": "Tuontikansiota tarkistetaan."
+      }
+    },
+    "ai": {
+      "title": "Tekoäly",
+      "navHint": "LLM-palvelin, malli ja tekstintunnistus",
+      "intro": "Tekoäly lukee jokaisen uuden PDF-tiedoston, tiivistää sen, määrittää asiakirjatyypin ja tunnisteet sekä poimii keskeiset tiedot, kuten summat ja määräajat.",
+      "configured": "Määritetty",
+      "notConfigured": "Ei määritetty",
+      "saved": "Tekoälyasetukset tallennettu",
+      "server": {
+        "title": "LLM-palvelin",
+        "provider": "Palveluntarjoaja",
+        "baseUrl": "Palvelimen osoite",
+        "model": "Malli",
+        "modelPlaceholder": "Mallin tunnus",
+        "compatibilityMode": "Yhteensopivuustila paikallisille malleille",
+        "compatibilityModeHint": "Palvelimille, jotka käyttävät Anthropicin rajapintaa mutta eivät tue PDF-syötettä eivätkä jäsenneltyjä tulosteita: asiakirja lähetetään mallille tekstinä tai, jos kyseessä on skannaus, sivujen kuvina. Pidä pois päältä, kun käytät Claude API:a.",
+        "testIncomplete": "Asetukset ovat vielä puutteelliset"
+      },
+      "privacy": {
+        "title": "Kun käytössä on {{provider}}, asiakirjasi poistuvat tältä tietokoneelta",
+        "text": "Analyysia varten jokaisen PDF-tiedoston sisältö lähetetään internetin kautta palveluntarjoajan {{provider}} palvelimille ja käsitellään siellä – myös laskut, sopimukset, lääkärinlausunnot ja viranomaisposti.",
+        "recommendation": "<emphasis>Suositus:</emphasis> käytä paikallista tekoälyä. Kun käytössä on <lmStudio>LM Studio</lmStudio> tai omassa verkossasi toimiva <compatible>OpenAI-yhteensopiva palvelin</compatible>, kaikki sisältö pysyy sinulla."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Anthropicin Claude API. Muuta vain, jos sen edessä on oma yhdyskäytäväsi.",
+          "modelHint": "Suositeltu valinta on Claude Opus 5.5; Sonnet ja Haiku ovat nopeampia ja edullisempia."
+        },
+        "OPENAI": {
+          "urlHint": "OpenAI:n API. Muuta vain, jos sen edessä on oma yhdyskäytäväsi.",
+          "modelHint": "Mallin tunnus sellaisena kuin OpenAI sen nimeää. Kun olet tallentanut avaimen, käytettävissä olevat mallit näkyvät tässä."
+        },
+        "MOONSHOT": {
+          "urlHint": "Moonshot AI:n (Kimi) API. Kiinalaisen alustan tileille: {{url}}",
+          "modelHint": "Mallin tunnus sellaisena kuin Moonshot sen nimeää. Kun olet tallentanut avaimen, käytettävissä olevat mallit näkyvät tässä."
+        },
+        "LM_STUDIO": {
+          "urlHint": "LM Studion paikallinen palvelin (käynnistä se LM Studiossa kohdasta ”Developer”). Jos AIDocuments toimii Dockerissa: {{url}}",
+          "modelHint": "LM Studioon ladatun mallin tunnus. Skannaukset vaativat mallin, joka tukee kuvasyötettä, ja analyysi mallin, joka tukee työkalujen käyttöä (Tool Use)."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "OpenAI-rajapintaa käyttävän palvelimen osoite – päättyy yleensä osaan /v1, esim. {{url}}",
+          "modelHint": "Mallin tunnus sellaisena kuin palvelin sen nimeää. Tallennuksen jälkeen palvelimen tarjoamat mallit näkyvät tässä."
+        }
+      },
+      "apiKey": {
+        "label": "API-avain",
+        "labelOptional": "API-avain (valinnainen)",
+        "placeholderStored": "{{mask}} (tallennettu)",
+        "placeholderPreset": "{{mask}} (esiasetettu)",
+        "placeholderNotNeeded": "ei tarvita",
+        "placeholderIfRequired": "vain jos palvelin vaatii avaimen",
+        "hintShown": "Esiasetettu palvelimen määrityksissä.",
+        "hintRemoving": "Tallennettu avain poistetaan tallennettaessa.",
+        "hintStored": "Avain on tallennettu salattuna. Jätä tyhjäksi, jos haluat säilyttää sen – <remove>poista avain</remove>",
+        "hintEnvironment": "Avain tulee tällä hetkellä palvelimen määrityksistä (ympäristömuuttujasta tai määritystiedostosta). Tähän annettu avain on etusijalla.",
+        "hintPreset": "Tälle palveluntarjoajalle on esiasetettu avain palvelimen määrityksissä. Jätä tyhjäksi, jos haluat käyttää sitä.",
+        "hintDiscardedOnSwitch": "Tähän asti tallennettu avain kuuluu palveluntarjoajalle {{previous}}, ja se hylätään vaihdon yhteydessä.",
+        "hintPresetOtherProvider": "Esiasetettu avain kelpaa vain palveluntarjoajalle {{previous}}. Anna palveluntarjoajalle {{provider}} oma avain.",
+        "hintRequired": "Tallennetaan salattuna, eikä sitä näytetä enää koskaan.",
+        "hintLocal": "Paikalliset palvelimet eivät yleensä tarvitse avainta."
+      },
+      "analysis": {
+        "title": "Analyysi",
+        "effort": "Perusteellisuus",
+        "effortLevels": {
+          "low": "Nopea",
+          "medium": "Tasapainoinen",
+          "high": "Perusteellinen"
+        },
+        "effortHint": "Perusteellisempi tarkoittaa huolellisempia tuloksia, mutta se on hitaampi ja kalliimpi asiakirjaa kohden.",
+        "outputLanguage": "Tulosten kieli",
+        "outputLanguageHint": "Tekoäly kirjoittaa otsikon, tiivistelmän ja tunnisteet tällä kielellä.",
+        "ocr": "Skannausten tekstintunnistus",
+        "ocrHint": "Sovellus antaa tekoälyn litteroida skannatut PDF-tiedostot, joissa ei ole tekstitasoa – vasta sitten ne löytyvät kokotekstihaulla. Jokainen skannaus vie enemmän aikaa ja maksaa enemmän."
+      },
+      "unanalyzed_one": "{{count, number}} asiakirja on vielä analysoimatta tekoälyllä.",
+      "unanalyzed_other": "{{count, number}} asiakirjaa on vielä analysoimatta tekoälyllä.",
+      "analyzeNow": "Analysoi nyt",
+      "analysisStarted_one": "{{count, number}} asiakirjan analysointi on aloitettu.",
+      "analysisStarted_other": "{{count, number}} asiakirjan analysointi on aloitettu."
+    },
+    "users": {
+      "title": "Käyttäjät",
+      "navHint": "Tilit ja roolit",
+      "intro": "Jokainen kirjautuu sisään omalla tilillään. Ylläpitäjät hallinnoivat sovellusta, käyttäjät työskentelevät asiakirjojen parissa.",
+      "add": "Luo käyttäjä",
+      "you": "Sinä",
+      "disabled": "Poistettu käytöstä",
+      "lastLogin": "Kirjautunut viimeksi {{when}}",
+      "neverLoggedIn": "Ei ole kirjautunut koskaan",
+      "editUser": "Muokkaa käyttäjää {{name}}",
+      "deleteUser": "Poista käyttäjä {{name}}",
+      "saved": "Käyttäjä tallennettu",
+      "created": "Käyttäjä luotu",
+      "deleted": "Käyttäjä poistettu",
+      "delete": {
+        "title": "Poistetaanko käyttäjä?",
+        "text": "Tili ”{{name}}” poistetaan ja kirjataan heti ulos. Asiakirjat säilyvät."
+      },
+      "dialog": {
+        "selfNotice": "Tämä on oma tilisi. Tallennuksen jälkeen sinun on kirjauduttava uudelleen sisään.",
+        "passwordKeepHint": "Jätä tyhjäksi, jos haluat säilyttää nykyisen salasanan. Muussa tapauksessa vähintään 8 merkkiä.",
+        "role": "Rooli",
+        "roleHints": {
+          "ADMIN": "Saa tehdä kaiken – myös muuttaa asetuksia, hallita käyttäjiä ja poistaa asiakirjoja.",
+          "USER": "Saa katsella ja hakea asiakirjoja, lähettää niitä palveluun ja muokata niiden tietoja."
+        },
+        "active": "Tili käytössä",
+        "activeHint": "Käytöstä poistetuilla tileillä ei voi kirjautua sisään; avoimet istunnot päättyvät heti.",
+        "create": "Luo"
+      }
+    }
+  }
+}

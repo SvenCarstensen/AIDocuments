@@ -1,0 +1,436 @@
+{
+  "common": {
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "edit": "Upravit",
+    "delete": "Smazat",
+    "remove": "Odebrat",
+    "add": "Přidat",
+    "back": "Zpět",
+    "retry": "Zkusit znovu",
+    "loading": "Načítání",
+    "language": "Jazyk",
+    "testConnection": "Vyzkoušet připojení",
+    "saveFirst": "Nejprve uložte",
+    "username": "Uživatelské jméno",
+    "usernameHint": "3–50 znaků: písmena, číslice, tečka, pomlčka, podtržítko, @",
+    "password": "Heslo",
+    "newPassword": "Nové heslo",
+    "passwordHint": "Alespoň 8 znaků",
+    "passwordMismatch": "Hesla se neshodují.",
+    "justNow": "právě teď",
+    "documentCount_one": "{{count, number}} dokument",
+    "documentCount_few": "{{count, number}} dokumenty",
+    "documentCount_many": "{{count, number}} dokumentu",
+    "documentCount_other": "{{count, number}} dokumentů",
+    "role": {
+      "ADMIN": "Správce",
+      "USER": "Uživatel"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Nelze se připojit k serveru",
+    "server": "Server ohlásil chybu ({{status}}).",
+    "forbidden": "K této akci nemáte oprávnění.",
+    "unreachable": "Server není dostupný.",
+    "unexpected": "Neočekávaná chyba.",
+    "languageLoad": "Jazyk se nepodařilo načíst."
+  },
+  "auth": {
+    "login": {
+      "title": "Vítejte zpět",
+      "subtitle": "Přihlaste se a získejte přístup ke svým dokumentům.",
+      "submit": "Přihlásit se"
+    },
+    "setup": {
+      "title": "Nastavení AIDocuments",
+      "subtitle": "Začněte vytvořením účtu správce. Další uživatele můžete později přidat v nastavení.",
+      "adminAccount": "Účet správce",
+      "repeatPassword": "Heslo znovu",
+      "submit": "Vytvořit účet a začít",
+      "features": {
+        "import": "Soubory PDF z vaší e-mailové schránky a složky pro import",
+        "ai": "AI je shrne a opatří štítky",
+        "search": "Fulltextové vyhledávání až do obsahu dokumentu"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Nahrát",
+    "theme": {
+      "light": "Světlý motiv",
+      "dark": "Tmavý motiv"
+    },
+    "search": {
+      "placeholder": "Hledat v dokumentech, štítcích, obsahu …",
+      "label": "Hledat dokumenty",
+      "clear": "Vymazat hledání"
+    },
+    "userMenu": {
+      "label": "Nabídka uživatele ({{name}})",
+      "aiActive": "AI aktivní",
+      "aiNotConfigured": "AI není nastavena",
+      "changePassword": "Změnit heslo",
+      "logout": "Odhlásit se"
+    },
+    "passwordDialog": {
+      "current": "Současné heslo",
+      "repeat": "Nové heslo znovu",
+      "changed": "Heslo bylo změněno"
+    },
+    "dropzone": {
+      "title": "Přetáhněte sem soubory PDF",
+      "hint": "Můžete přetáhnout několik souborů najednou. Uloží se, analyzují a opatří štítky."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Přidat lze pouze soubory PDF.",
+    "uploadingFile": "Nahrávání „{{name}}“ …",
+    "uploadingFiles_one": "Nahrává se {{count, number}} soubor PDF …",
+    "uploadingFiles_few": "Nahrávají se {{count, number}} soubory PDF …",
+    "uploadingFiles_many": "Nahrává se {{count, number}} souboru PDF …",
+    "uploadingFiles_other": "Nahrává se {{count, number}} souborů PDF …",
+    "created_one": "Přidán {{count, number}} dokument",
+    "created_few": "Přidány {{count, number}} dokumenty",
+    "created_many": "Přidáno {{count, number}} dokumentu",
+    "created_other": "Přidáno {{count, number}} dokumentů",
+    "processingInBackground": "Zpracování pokračuje na pozadí.",
+    "duplicates_one": "{{count, number}} dokument již existuje",
+    "duplicates_few": "{{count, number}} dokumenty již existují",
+    "duplicates_many": "{{count, number}} dokumentu již existuje",
+    "duplicates_other": "{{count, number}} dokumentů již existuje",
+    "rejected_one": "{{count, number}} soubor není platný PDF",
+    "rejected_few": "{{count, number}} soubory nejsou platné PDF",
+    "rejected_many": "{{count, number}} souboru není platný PDF",
+    "rejected_other": "{{count, number}} souborů není platných PDF",
+    "onlyDuplicates_one": "Tento dokument již existuje.",
+    "onlyDuplicates_few": "Tyto dokumenty již existují.",
+    "onlyDuplicates_many": "Tyto dokumenty již existují.",
+    "onlyDuplicates_other": "Tyto dokumenty již existují.",
+    "noneValid": "Žádný ze souborů není platný PDF.",
+    "failed": "Nahrávání se nezdařilo"
+  },
+  "documents": {
+    "status": {
+      "pending": "Čeká",
+      "processing": "Analýza",
+      "failed": "Chyba",
+      "textOnly": "Bez AI"
+    },
+    "ocrBadge": "Rozpoznávání textu",
+    "aiNotice": {
+      "text": "AI zatím není nastavena. Nové dokumenty lze prohledávat podle jejich textu, ale nejsou shrnuty ani opatřeny štítky.",
+      "action": "Nastavit nyní"
+    },
+    "searchResults_one": "<count>{{count, number}} výsledek</count> <query>pro „{{query}}“</query>",
+    "searchResults_few": "<count>{{count, number}} výsledky</count> <query>pro „{{query}}“</query>",
+    "searchResults_many": "<count>{{count, number}} výsledku</count> <query>pro „{{query}}“</query>",
+    "searchResults_other": "<count>{{count, number}} výsledků</count> <query>pro „{{query}}“</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} se zpracovává",
+      "inProgressHint": "Čeká na analýzu pomocí AI nebo se právě analyzuje",
+      "remaining": "zbývá přibližně {{duration}}",
+      "remainingLessThan": "zbývá méně než {{duration}}",
+      "finishHint": "Předpokládané dokončení: {{time}} – odhad podle tempa naposledy zpracovaných dokumentů"
+    },
+    "sort": {
+      "label": "Řazení",
+      "relevance": "Nejlepší shoda",
+      "newest": "Nejnovější první",
+      "date": "Podle data dokumentu"
+    },
+    "view": {
+      "grid": "Zobrazení mřížky",
+      "list": "Zobrazení seznamu"
+    },
+    "pageSize": {
+      "label": "Počet zobrazených dokumentů",
+      "all": "Všechny"
+    },
+    "filters": {
+      "title": "Filtry",
+      "titleWithCount": "Filtry ({{active, number}})",
+      "apply": "Zobrazit",
+      "hint": "Jakmile budou dokumenty analyzovány, objeví se zde jako filtry typy dokumentů, štítky a odesílatelé.",
+      "dateFrom": "od",
+      "dateTo": "do",
+      "status": "Stav",
+      "failed": "Neúspěšné",
+      "showAll": "Zobrazit vše",
+      "showLess": "Zobrazit méně",
+      "activeFrom": "od {{date}}",
+      "activeTo": "do {{date}}",
+      "removeOne": "Odebrat filtr „{{label}}“",
+      "removeAll": "Odebrat všechny filtry",
+      "clear": "Odebrat filtry"
+    },
+    "empty": {
+      "libraryTitle": "Zatím žádné dokumenty",
+      "libraryHint": "Stačí přetáhnout soubory PDF do tohoto okna nebo použít „Nahrát“.",
+      "libraryHintAdmin": "Stačí přetáhnout soubory PDF do tohoto okna nebo použít „Nahrát“. V nastavení můžete nastavit e-mailovou schránku nebo složku pro import, ze které se nové soubory PDF importují automaticky.",
+      "noResultsTitle": "Nic nenalezeno",
+      "noResultsSearch": "Tomuto hledání neodpovídá žádný dokument. Hledání najde i části slov – zkuste kratší výraz nebo méně slov.",
+      "noResultsFilters": "Vybraným filtrům neodpovídá žádný dokument."
+    },
+    "loadingAll_one": "Načteno {{loaded, number}} z {{count, number}} dokumentu …",
+    "loadingAll_few": "Načteno {{loaded, number}} z {{count, number}} dokumentů …",
+    "loadingAll_many": "Načteno {{loaded, number}} z {{count, number}} dokumentu …",
+    "loadingAll_other": "Načteno {{loaded, number}} z {{count, number}} dokumentů …",
+    "loadMore": "Načíst další ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Zpět na přehled",
+    "download": "Stáhnout",
+    "reprocess": "Analyzovat znovu",
+    "reprocessHint": "Znovu přečíst PDF a nechat jej analyzovat pomocí AI",
+    "reprocessStarted": "Dokument se analyzuje znovu.",
+    "deleted": "Dokument byl smazán",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Otevřít na nové kartě",
+    "processingNotice": "Dokument se zpracovává. Shrnutí a štítky se zde zobrazí, jakmile bude analýza dokončena.",
+    "textOnlyNotice": "Indexováno bez AI: dokument lze prohledávat podle jeho textu, ale nemá shrnutí ani automatické štítky.",
+    "tabs": {
+      "overview": "Přehled",
+      "text": "Celý text"
+    },
+    "fields": {
+      "title": "Název",
+      "category": "Typ dokumentu",
+      "documentDate": "Datum dokumentu",
+      "correspondent": "Odesílatel",
+      "tags": "Štítky",
+      "summary": "Shrnutí"
+    },
+    "tags": {
+      "allWith": "Všechny dokumenty se štítkem „{{tag}}“",
+      "none": "Žádné štítky. <add>Přidat štítky</add>",
+      "inputHint": "Potvrďte klávesou Enter nebo čárkou. Návrhy jsou štítky, které se již používají.",
+      "inputPlaceholder": "Zadejte štítek …",
+      "remove": "Odebrat štítek „{{tag}}“"
+    },
+    "keyFacts": "Klíčové údaje",
+    "details": {
+      "title": "Podrobnosti",
+      "file": "Soubor",
+      "size": "Velikost",
+      "pageCount_one": "{{count, number}} strana",
+      "pageCount_few": "{{count, number}} strany",
+      "pageCount_many": "{{count, number}} strany",
+      "pageCount_other": "{{count, number}} stran",
+      "language": "Jazyk",
+      "source": "Zdroj",
+      "mailSubject": "Předmět",
+      "mailFrom": "Od",
+      "mailReceived": "Přijato",
+      "added": "Přidáno",
+      "text": "Text"
+    },
+    "source": {
+      "MAIL": "E-mailová schránka",
+      "FOLDER": "Složka pro import",
+      "UPLOAD": "Nahráno"
+    },
+    "noText": "Pro tento dokument není k dispozici žádný text – pravděpodobně jde o sken bez textové vrstvy. Pokud je AI nastavena a rozpoznávání textu zapnuto, obsah se při analýze přepíše.",
+    "edit": {
+      "title": "Upravit dokument",
+      "saved": "Změny byly uloženy"
+    },
+    "delete": {
+      "title": "Smazat dokument?",
+      "text": "Dokument „{{title}}“ bude smazán včetně souboru PDF, celého textu a štítků. Tuto akci nelze vrátit zpět.",
+      "confirm": "Smazat trvale"
+    }
+  },
+  "settings": {
+    "title": "Nastavení",
+    "mailboxes": {
+      "title": "E-mailové schránky",
+      "navHint": "Servery IMAP, ze kterých se importují přílohy PDF",
+      "intro": "Přílohy PDF se z těchto schránek IMAP importují automaticky. Schránky se pouze čtou – e-maily zůstávají beze změny a nepřečtené.",
+      "add": "Přidat schránku",
+      "emptyTitle": "Zatím není nastavena žádná schránka",
+      "emptyText": "Zadejte přihlašovací údaje schránky IMAP – například té, kam váš skener posílá dokumenty.",
+      "paused": "Pozastaveno",
+      "syncNow": "Zkontrolovat nyní",
+      "syncing": "Kontrola schránky …",
+      "neverSynced": "Zatím nekontrolováno.",
+      "saved": "Schránka byla uložena",
+      "added": "Schránka byla přidána",
+      "firstSyncRunning": "První kontrola již probíhá.",
+      "removed": "Schránka byla odebrána",
+      "delete": {
+        "title": "Odebrat schránku?",
+        "text": "Schránka „{{name}}“ již nebude kontrolována. Již importované dokumenty zůstanou zachovány."
+      },
+      "dialog": {
+        "editTitle": "Upravit schránku",
+        "description": "Přihlašovací údaje získáte od svého poskytovatele e-mailu. Heslo se ukládá zašifrované.",
+        "name": "Název",
+        "nameHint": "Libovolný, např. „Skener“ nebo „Faktury“",
+        "namePlaceholder": "Skener",
+        "host": "Server IMAP",
+        "port": "Port",
+        "security": "Šifrování",
+        "securityNone": "Žádné",
+        "securityNoneWarning": "Bez šifrování se uživatelské jméno a heslo přenášejí jako prostý text.",
+        "passwordKeepHint": "Nechte prázdné, chcete-li ponechat uložené heslo",
+        "folder": "Složka",
+        "folderHint": "Obvykle {{folder}} (doručená pošta)",
+        "since": "Pouze e-maily od",
+        "sinceHint": "Volitelné – starší e-maily se přeskočí",
+        "enabled": "Kontrolovat automaticky",
+        "enabledHint": "Schránka se v nastaveném intervalu kontroluje, zda neobsahuje nové soubory PDF."
+      }
+    },
+    "import": {
+      "title": "Plán a složka pro import",
+      "navHint": "Interval kontroly a sledovaný adresář",
+      "intro": "Určuje, jak často aplikace hledá nové soubory PDF – ve schránkách i ve složce pro import.",
+      "saved": "Nastavení bylo uloženo",
+      "interval": {
+        "title": "Interval kontroly",
+        "text": "Takto často aplikace kontroluje všechny schránky a složku pro import, zda neobsahují nové soubory PDF.",
+        "label": "Každých … minut",
+        "nextRun": "Další automatická kontrola {{when}}."
+      },
+      "folder": {
+        "title": "Složka pro import",
+        "text": "Adresář na serveru, který se sleduje kvůli novým souborům PDF – například cíl síťového skeneru. Prohledávají se i podsložky.",
+        "enable": "Sledovat složku pro import",
+        "path": "Cesta na serveru",
+        "pathHint": "Absolutní cesta. V kontejneru Docker je to připojená složka, obvykle {{path}}.",
+        "afterImport": "Po importu",
+        "keep": "Ponechat soubor na místě",
+        "move": "Přesunout do „{{folder}}“",
+        "keepHint": "Soubory zůstanou beze změny. Aplikace si pamatuje, co již importovala.",
+        "moveHint": "Importované soubory se přesunou do podsložky „{{folder}}“ – složka pro import zůstane přehledná.",
+        "scanning": "Kontrola složky …",
+        "neverScanned": "Zatím nekontrolováno.",
+        "scanNow": "Zkontrolovat nyní",
+        "scanStarted": "Složka pro import se kontroluje."
+      }
+    },
+    "ai": {
+      "title": "AI",
+      "navHint": "Server LLM, model a rozpoznávání textu",
+      "intro": "AI přečte každý nový soubor PDF, shrne jej, přiřadí typ dokumentu a štítky a vyextrahuje klíčové údaje, například částky nebo termíny.",
+      "configured": "Nastaveno",
+      "notConfigured": "Nenastaveno",
+      "saved": "Nastavení AI bylo uloženo",
+      "server": {
+        "title": "Server LLM",
+        "provider": "Poskytovatel",
+        "baseUrl": "Adresa serveru",
+        "model": "Model",
+        "modelPlaceholder": "ID modelu",
+        "compatibilityMode": "Režim kompatibility pro lokální modely",
+        "compatibilityModeHint": "Pro servery, které používají rozhraní Anthropic, ale nepodporují ani vstup PDF, ani strukturované výstupy: dokument se modelu pošle jako text, nebo u skenů jako obrázky stránek. Pro Claude API nechte vypnuto.",
+        "testIncomplete": "Nastavení zatím není úplné"
+      },
+      "privacy": {
+        "title": "S poskytovatelem {{provider}} vaše dokumenty opouštějí tento počítač",
+        "text": "Pro analýzu se obsah každého souboru PDF přenáší přes internet na servery poskytovatele {{provider}} a tam se zpracovává – včetně faktur, smluv, lékařských zpráv a úřední korespondence.",
+        "recommendation": "<emphasis>Doporučení:</emphasis> používejte lokální AI. S <lmStudio>LM Studio</lmStudio> nebo <compatible>serverem kompatibilním s OpenAI</compatible> ve vlastní síti zůstává veškerý obsah u vás."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Claude API společnosti Anthropic. Měňte jen tehdy, pokud před ním máte vlastní bránu.",
+          "modelHint": "Doporučená je volba Claude Opus 5.5; Sonnet a Haiku jsou rychlejší a levnější."
+        },
+        "OPENAI": {
+          "urlHint": "API společnosti OpenAI. Měňte jen tehdy, pokud před ním máte vlastní bránu.",
+          "modelHint": "ID modelu tak, jak jej uvádí OpenAI. Po uložení klíče se zde zobrazí dostupné modely."
+        },
+        "MOONSHOT": {
+          "urlHint": "API společnosti Moonshot AI (Kimi). Pro účty na čínské platformě: {{url}}",
+          "modelHint": "ID modelu tak, jak jej uvádí Moonshot. Po uložení klíče se zde zobrazí dostupné modely."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Lokální server LM Studio (spusťte jej v LM Studio v části „Developer“). Pokud AIDocuments běží v Dockeru: {{url}}",
+          "modelHint": "ID modelu načteného v LM Studio. Skeny vyžadují model se vstupem obrázků, analýza model s podporou Tool Use."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adresa serveru, který používá rozhraní OpenAI – obvykle končí na /v1, např. {{url}}",
+          "modelHint": "ID modelu tak, jak jej uvádí server. Po uložení se zde zobrazí modely, které nabízí."
+        }
+      },
+      "apiKey": {
+        "label": "Klíč API",
+        "labelOptional": "Klíč API (volitelné)",
+        "placeholderStored": "{{mask}} (uložen)",
+        "placeholderPreset": "{{mask}} (předvolen)",
+        "placeholderNotNeeded": "není potřeba",
+        "placeholderIfRequired": "pouze pokud ho server vyžaduje",
+        "hintShown": "Předvoleno v konfiguraci serveru.",
+        "hintRemoving": "Uložený klíč bude při uložení odebrán.",
+        "hintStored": "Klíč je uložen v zašifrované podobě. Nechte prázdné, chcete-li jej ponechat – <remove>odebrat klíč</remove>",
+        "hintEnvironment": "Klíč aktuálně pochází z konfigurace serveru (proměnná prostředí nebo konfigurační soubor). Zde zadaný klíč má přednost.",
+        "hintPreset": "Klíč pro tohoto poskytovatele je předvolen v konfiguraci serveru. Nechte prázdné, chcete-li jej použít.",
+        "hintDiscardedOnSwitch": "Dosud uložený klíč patří poskytovateli {{previous}} a při přepnutí bude zahozen.",
+        "hintPresetOtherProvider": "Předvolený klíč platí pouze pro poskytovatele {{previous}}. Zadejte prosím samostatný klíč pro poskytovatele {{provider}}.",
+        "hintRequired": "Uloženo v zašifrované podobě a už se nikdy nezobrazí.",
+        "hintLocal": "Lokální servery obvykle klíč nepotřebují."
+      },
+      "analysis": {
+        "title": "Analýza",
+        "effort": "Důkladnost",
+        "effortLevels": {
+          "low": "Rychlá",
+          "medium": "Vyvážená",
+          "high": "Důkladná"
+        },
+        "effortHint": "Větší důkladnost znamená pečlivější výsledky, ale pomalejší a dražší zpracování každého dokumentu.",
+        "outputLanguage": "Jazyk výsledků",
+        "outputLanguageHint": "AI v tomto jazyce píše název, shrnutí a štítky.",
+        "ocr": "Rozpoznávání textu u skenů",
+        "ocrHint": "Aplikace nechá AI přepsat naskenované soubory PDF bez textové vrstvy – jen tak je lze najít fulltextovým vyhledáváním. Každý sken zabere více času a stojí více."
+      },
+      "unanalyzed_one": "{{count, number}} dokument ještě nebyl analyzován pomocí AI.",
+      "unanalyzed_few": "{{count, number}} dokumenty ještě nebyly analyzovány pomocí AI.",
+      "unanalyzed_many": "{{count, number}} dokumentu ještě nebylo analyzováno pomocí AI.",
+      "unanalyzed_other": "{{count, number}} dokumentů ještě nebylo analyzováno pomocí AI.",
+      "analyzeNow": "Analyzovat nyní",
+      "analysisStarted_one": "Probíhá analýza {{count, number}} dokumentu.",
+      "analysisStarted_few": "Probíhá analýza {{count, number}} dokumentů.",
+      "analysisStarted_many": "Probíhá analýza {{count, number}} dokumentu.",
+      "analysisStarted_other": "Probíhá analýza {{count, number}} dokumentů."
+    },
+    "users": {
+      "title": "Uživatelé",
+      "navHint": "Účty a role",
+      "intro": "Každý se přihlašuje vlastním účtem. Správci spravují aplikaci, uživatelé pracují s dokumenty.",
+      "add": "Vytvořit uživatele",
+      "you": "Vy",
+      "disabled": "Zakázán",
+      "lastLogin": "Naposledy přihlášen {{when}}",
+      "neverLoggedIn": "Nikdy nepřihlášen",
+      "editUser": "Upravit uživatele {{name}}",
+      "deleteUser": "Smazat uživatele {{name}}",
+      "saved": "Uživatel byl uložen",
+      "created": "Uživatel byl vytvořen",
+      "deleted": "Uživatel byl smazán",
+      "delete": {
+        "title": "Smazat uživatele?",
+        "text": "Účet „{{name}}“ bude smazán a okamžitě odhlášen. Dokumenty zůstanou zachovány."
+      },
+      "dialog": {
+        "selfNotice": "Toto je váš vlastní účet. Po uložení se budete muset přihlásit znovu.",
+        "passwordKeepHint": "Nechte prázdné, chcete-li ponechat současné heslo. Jinak alespoň 8 znaků.",
+        "role": "Role",
+        "roleHints": {
+          "ADMIN": "Smí vše – včetně změny nastavení, správy uživatelů a mazání dokumentů.",
+          "USER": "Smí dokumenty zobrazovat, vyhledávat a nahrávat a upravovat jejich údaje."
+        },
+        "active": "Účet je aktivní",
+        "activeHint": "Zakázané účty se nemohou přihlásit; aktivní relace se okamžitě ukončí.",
+        "create": "Vytvořit"
+      }
+    }
+  }
+}

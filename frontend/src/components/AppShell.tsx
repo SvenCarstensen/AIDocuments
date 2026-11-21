@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { FileUp, KeyRound, LogOut, Moon, Search, Settings, Sun, Upload, X } from 'lucide-react'
 import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { api, errorMessage } from '../lib/api'
@@ -8,9 +9,11 @@ import { useAuth } from '../lib/auth'
 import { cx } from '../lib/format'
 import { useTheme } from '../lib/theme'
 import { useUpload } from '../lib/upload'
+import { LanguageSwitcher } from './LanguageSwitcher'
 import { Alert, Badge, Button, Field, IconButton, Input, Logo, Modal } from './ui'
 
 export function AppShell() {
+  const { t } = useTranslation()
   const { isAdmin } = useAuth()
   const upload = useUpload()
   const fileInput = useRef<HTMLInputElement>(null)
@@ -34,7 +37,7 @@ export function AppShell() {
               onClick={() => fileInput.current?.click()}
               className="mr-1 max-sm:w-10 max-sm:px-0"
             >
-              <span className="max-sm:sr-only">Hochladen</span>
+              <span className="max-sm:sr-only">{t('shell.upload')}</span>
             </Button>
             <input
               ref={fileInput}
@@ -49,7 +52,7 @@ export function AppShell() {
               }}
             />
             {isAdmin && (
-              <NavLink to="/settings" aria-label="Einstellungen" title="Einstellungen">
+              <NavLink to="/settings" aria-label={t('settings.title')} title={t('settings.title')}>
                 {({ isActive }) => (
                   <span
                     className={cx(
@@ -62,7 +65,7 @@ export function AppShell() {
                 )}
               </NavLink>
             )}
-            <IconButton label={dark ? 'Helles Design' : 'Dunkles Design'} onClick={toggle}>
+            <IconButton label={dark ? t('shell.theme.light') : t('shell.theme.dark')} onClick={toggle}>
               {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
             </IconButton>
             <UserMenu />
@@ -81,6 +84,7 @@ export function AppShell() {
 
 /** Suchfeld der Kopfleiste. Der Suchbegriff steht in der Adresse (?q=…), damit Suchen teilbar und per Zurück erreichbar sind. */
 function SearchBox() {
+  const { t } = useTranslation()
   const [params] = useSearchParams()
   const location = useLocation()
   const navigate = useNavigate()
@@ -148,8 +152,8 @@ function SearchBox() {
             input.current?.blur()
           }
         }}
-        placeholder="Dokumente, Schlagworte, Inhalte durchsuchen …"
-        aria-label="Dokumente durchsuchen"
+        placeholder={t('shell.search.placeholder')}
+        aria-label={t('shell.search.label')}
         className={cx(
           'h-11 w-full rounded-xl border border-line bg-raised pr-11 pl-10.5 text-[15px] text-ink',
           'placeholder:text-subtle transition-all',
@@ -159,7 +163,7 @@ function SearchBox() {
       {text ? (
         <button
           type="button"
-          aria-label="Suche leeren"
+          aria-label={t('shell.search.clear')}
           onClick={() => {
             setText('')
             input.current?.focus()
@@ -178,6 +182,7 @@ function SearchBox() {
 }
 
 function UserMenu() {
+  const { t } = useTranslation()
   const { user, isAdmin, logout } = useAuth()
   const [open, setOpen] = useState(false)
   const [passwordOpen, setPasswordOpen] = useState(false)
@@ -206,7 +211,7 @@ function UserMenu() {
         type="button"
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label={`Benutzermenü (${user.username})`}
+        aria-label={t('shell.userMenu.label', { name: user.username })}
         onClick={() => setOpen((value) => !value)}
         className="flex size-9 items-center justify-center rounded-full bg-brand-soft text-sm font-semibold text-brand-ink uppercase ring-brand/30 transition-shadow hover:ring-3"
       >
@@ -220,15 +225,17 @@ function UserMenu() {
           <div className="px-3 py-2.5">
             <div className="flex items-center gap-2">
               <span className="truncate text-sm font-semibold">{user.username}</span>
-              <Badge tone={isAdmin ? 'brand' : 'neutral'}>{isAdmin ? 'Admin' : 'Benutzer'}</Badge>
+              <Badge tone={isAdmin ? 'brand' : 'neutral'}>{t(`common.role.${user.role}`)}</Badge>
             </div>
             {system.data && (
               <p className="mt-1 text-xs text-muted">
-                {system.data.documents.toLocaleString('de-DE')} Dokumente ·{' '}
-                {system.data.aiEnabled ? 'KI aktiv' : 'KI nicht eingerichtet'}
+                {t('common.documentCount', { count: system.data.documents })} ·{' '}
+                {system.data.aiEnabled ? t('shell.userMenu.aiActive') : t('shell.userMenu.aiNotConfigured')}
               </p>
             )}
           </div>
+          <div className="my-1 h-px bg-line" />
+          <LanguageSwitcher className="px-3 py-1.5" />
           <div className="my-1 h-px bg-line" />
           <MenuItem
             icon={<KeyRound className="size-4" />}
@@ -237,13 +244,13 @@ function UserMenu() {
               setPasswordOpen(true)
             }}
           >
-            Passwort ändern
+            {t('shell.userMenu.changePassword')}
           </MenuItem>
           <MenuItem
             icon={<LogOut className="size-4" />}
             onClick={() => logout().catch((e) => toast.error(errorMessage(e)))}
           >
-            Abmelden
+            {t('shell.userMenu.logout')}
           </MenuItem>
         </div>
       )}
@@ -267,6 +274,7 @@ function MenuItem({ icon, onClick, children }: { icon: ReactNode; onClick: () =>
 }
 
 function ChangePasswordDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { t } = useTranslation()
   const [current, setCurrent] = useState('')
   const [next, setNext] = useState('')
   const [repeat, setRepeat] = useState('')
@@ -290,7 +298,7 @@ function ChangePasswordDialog({ open, onClose }: { open: boolean; onClose: () =>
     setError(null)
     try {
       await api.changePassword(current, next)
-      toast.success('Passwort geändert')
+      toast.success(t('shell.passwordDialog.changed'))
       onClose()
     } catch (e) {
       setError(errorMessage(e))
@@ -300,28 +308,28 @@ function ChangePasswordDialog({ open, onClose }: { open: boolean; onClose: () =>
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Passwort ändern" size="sm">
+    <Modal open={open} onClose={onClose} title={t('shell.userMenu.changePassword')} size="sm">
       <form onSubmit={submit} className="flex flex-col gap-4">
         {error && <Alert tone="danger">{error}</Alert>}
-        <Field label="Aktuelles Passwort">
+        <Field label={t('shell.passwordDialog.current')}>
           {(id) => (
             <Input id={id} type="password" value={current} onChange={(e) => setCurrent(e.target.value)} autoComplete="current-password" required autoFocus />
           )}
         </Field>
-        <Field label="Neues Passwort" hint="Mindestens 8 Zeichen">
+        <Field label={t('common.newPassword')} hint={t('common.passwordHint')}>
           {(id) => (
             <Input id={id} type="password" value={next} onChange={(e) => setNext(e.target.value)} autoComplete="new-password" minLength={8} required />
           )}
         </Field>
-        <Field label="Neues Passwort wiederholen" error={mismatch ? 'Die Passwörter stimmen nicht überein.' : null}>
+        <Field label={t('shell.passwordDialog.repeat')} error={mismatch ? t('common.passwordMismatch') : null}>
           {(id) => (
             <Input id={id} type="password" value={repeat} onChange={(e) => setRepeat(e.target.value)} autoComplete="new-password" required />
           )}
         </Field>
         <div className="mt-1 flex justify-end gap-2">
-          <Button onClick={onClose}>Abbrechen</Button>
+          <Button onClick={onClose}>{t('common.cancel')}</Button>
           <Button type="submit" variant="primary" loading={busy} disabled={mismatch}>
-            Speichern
+            {t('common.save')}
           </Button>
         </div>
       </form>
@@ -331,6 +339,7 @@ function ChangePasswordDialog({ open, onClose }: { open: boolean; onClose: () =>
 
 /** Fängt Dateien ab, die irgendwo ins Fenster gezogen werden, und zeigt dabei eine Ablagefläche. */
 function DropOverlay({ onFiles }: { onFiles: (files: File[]) => void }) {
+  const { t } = useTranslation()
   const [active, setActive] = useState(false)
   const depth = useRef(0)
 
@@ -379,10 +388,8 @@ function DropOverlay({ onFiles }: { onFiles: (files: File[]) => void }) {
         <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-brand-soft text-brand-ink">
           <FileUp className="size-8" aria-hidden />
         </div>
-        <p className="text-xl font-semibold">PDFs hier ablegen</p>
-        <p className="mt-1.5 text-sm text-muted">
-          Mehrere Dateien auf einmal sind möglich. Sie werden gespeichert, analysiert und verschlagwortet.
-        </p>
+        <p className="text-xl font-semibold">{t('shell.dropzone.title')}</p>
+        <p className="mt-1.5 text-sm text-muted">{t('shell.dropzone.hint')}</p>
       </div>
     </div>
   )

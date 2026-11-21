@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Ruaj",
+    "cancel": "Anulo",
+    "close": "Mbyll",
+    "edit": "Ndrysho",
+    "delete": "Fshi",
+    "remove": "Hiq",
+    "add": "Shto",
+    "back": "Prapa",
+    "retry": "Provo sërish",
+    "loading": "Po ngarkohet",
+    "language": "Gjuha",
+    "testConnection": "Testo lidhjen",
+    "saveFirst": "Ruaje më parë",
+    "username": "Emri i përdoruesit",
+    "usernameHint": "3–50 karaktere: shkronja, shifra, pikë, vizë, nënvizë, @",
+    "password": "Fjalëkalimi",
+    "newPassword": "Fjalëkalimi i ri",
+    "passwordHint": "Të paktën 8 karaktere",
+    "passwordMismatch": "Fjalëkalimet nuk përputhen.",
+    "justNow": "sapo",
+    "documentCount_one": "{{count, number}} dokument",
+    "documentCount_other": "{{count, number}} dokumente",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Përdorues"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Nuk ka lidhje me serverin",
+    "server": "Serveri raportoi një gabim ({{status}}).",
+    "forbidden": "Nuk ke leje për këtë veprim.",
+    "unreachable": "Serveri nuk është i arritshëm.",
+    "unexpected": "Gabim i papritur.",
+    "languageLoad": "Gjuha nuk u ngarkua dot."
+  },
+  "auth": {
+    "login": {
+      "title": "Mirë se u ktheve",
+      "subtitle": "Hyr që të kesh qasje te dokumentet e tua.",
+      "submit": "Hyr"
+    },
+    "setup": {
+      "title": "Konfiguro AIDocuments",
+      "subtitle": "Fillo duke krijuar llogarinë e administratorit. Më pas mund të shtosh përdorues të tjerë te cilësimet.",
+      "adminAccount": "Llogaria e administratorit",
+      "repeatPassword": "Përsërit fjalëkalimin",
+      "submit": "Krijo llogarinë dhe fillo",
+      "features": {
+        "import": "Skedarë PDF nga kutia postare dhe dosja e importit",
+        "ai": "IA i përmbledh dhe i etiketon",
+        "search": "Kërkim në tekstin e plotë, deri brenda dokumentit"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Ngarko",
+    "theme": {
+      "light": "Tema e çelët",
+      "dark": "Tema e errët"
+    },
+    "search": {
+      "placeholder": "Kërko dokumente, etiketa, përmbajtje…",
+      "label": "Kërko dokumente",
+      "clear": "Pastro kërkimin"
+    },
+    "userMenu": {
+      "label": "Menyja e përdoruesit ({{name}})",
+      "aiActive": "IA aktive",
+      "aiNotConfigured": "IA e pakonfiguruar",
+      "changePassword": "Ndrysho fjalëkalimin",
+      "logout": "Dil"
+    },
+    "passwordDialog": {
+      "current": "Fjalëkalimi aktual",
+      "repeat": "Përsërit fjalëkalimin e ri",
+      "changed": "Fjalëkalimi u ndryshua"
+    },
+    "dropzone": {
+      "title": "Lësho skedarët PDF këtu",
+      "hint": "Mund të lëshosh disa skedarë njëherësh. Ata ruhen, analizohen dhe etiketohen."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Mund të shtohen vetëm skedarë PDF.",
+    "uploadingFile": "Po ngarkohet „{{name}}“…",
+    "uploadingFiles_one": "Po ngarkohet {{count, number}} skedar PDF…",
+    "uploadingFiles_other": "Po ngarkohen {{count, number}} skedarë PDF…",
+    "created_one": "U shtua {{count, number}} dokument",
+    "created_other": "U shtuan {{count, number}} dokumente",
+    "processingInBackground": "Përpunimi vazhdon në sfond.",
+    "duplicates_one": "{{count, number}} ekziston tashmë",
+    "duplicates_other": "{{count, number}} ekzistojnë tashmë",
+    "rejected_one": "{{count, number}} skedar nuk është PDF i vlefshëm",
+    "rejected_other": "{{count, number}} skedarë nuk janë PDF të vlefshëm",
+    "onlyDuplicates_one": "Ky dokument ekziston tashmë.",
+    "onlyDuplicates_other": "Këto dokumente ekzistojnë tashmë.",
+    "noneValid": "Asnjë nga skedarët nuk është PDF i vlefshëm.",
+    "failed": "Ngarkimi dështoi"
+  },
+  "documents": {
+    "status": {
+      "pending": "Në pritje",
+      "processing": "Po analizohet",
+      "failed": "Gabim",
+      "textOnly": "Pa IA"
+    },
+    "ocrBadge": "Njohje teksti",
+    "aiNotice": {
+      "text": "IA nuk është konfiguruar ende. Dokumentet e reja mund të kërkohen sipas tekstit, por nuk përmblidhen dhe nuk etiketohen.",
+      "action": "Konfiguro tani"
+    },
+    "searchResults_one": "<count>{{count, number}} rezultat</count> <query>për „{{query}}“</query>",
+    "searchResults_other": "<count>{{count, number}} rezultate</count> <query>për „{{query}}“</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} në përpunim",
+      "inProgressHint": "Në pritje të analizës nga IA ose duke u analizuar",
+      "remaining": "edhe rreth {{duration}}",
+      "remainingLessThan": "edhe më pak se {{duration}}",
+      "finishHint": "Përfundimi i pritshëm: {{time}} – vlerësuar sipas ritmit të dokumenteve të përpunuara së fundi"
+    },
+    "sort": {
+      "label": "Renditja",
+      "relevance": "Përputhjet më të mira",
+      "newest": "Më të rejat në fillim",
+      "date": "Sipas datës së dokumentit"
+    },
+    "view": {
+      "grid": "Pamje rrjetë",
+      "list": "Pamje listë"
+    },
+    "pageSize": {
+      "label": "Numri i dokumenteve të shfaqura",
+      "all": "Të gjitha"
+    },
+    "filters": {
+      "title": "Filtrat",
+      "titleWithCount": "Filtrat ({{active, number}})",
+      "apply": "Shfaq",
+      "hint": "Pasi dokumentet të jenë analizuar, llojet e dokumenteve, etiketat dhe dërguesit do të shfaqen këtu si filtra.",
+      "dateFrom": "nga",
+      "dateTo": "deri",
+      "status": "Gjendja",
+      "failed": "Të dështuara",
+      "showAll": "Shfaq të gjitha",
+      "showLess": "Shfaq më pak",
+      "activeFrom": "nga {{date}}",
+      "activeTo": "deri më {{date}}",
+      "removeOne": "Hiq filtrin „{{label}}“",
+      "removeAll": "Hiq të gjithë filtrat",
+      "clear": "Hiq filtrat"
+    },
+    "empty": {
+      "libraryTitle": "Ende asnjë dokument",
+      "libraryHint": "Thjesht tërhiq skedarë PDF në këtë dritare ose përdor „Ngarko“.",
+      "libraryHintAdmin": "Thjesht tërhiq skedarë PDF në këtë dritare ose përdor „Ngarko“. Te cilësimet mund të konfigurosh një kuti postare ose një dosje importi, nga të cilat skedarët e rinj PDF importohen automatikisht.",
+      "noResultsTitle": "Nuk u gjet asgjë",
+      "noResultsSearch": "Asnjë dokument nuk përputhet me këtë kërkim. Kërkimi gjen edhe pjesë fjalësh – provo një term më të shkurtër ose më pak fjalë.",
+      "noResultsFilters": "Asnjë dokument nuk përputhet me filtrat e zgjedhur."
+    },
+    "loadingAll_one": "U ngarkua {{loaded, number}} nga {{count, number}} dokument…",
+    "loadingAll_other": "U ngarkuan {{loaded, number}} nga {{count, number}} dokumente…",
+    "loadMore": "Shfaq më shumë ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Kthehu te pasqyra",
+    "download": "Shkarko",
+    "reprocess": "Analizo sërish",
+    "reprocessHint": "Lexo sërish skedarin PDF dhe analizoje me IA",
+    "reprocessStarted": "Dokumenti po analizohet sërish.",
+    "deleted": "Dokumenti u fshi",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Hap në skedë të re",
+    "processingNotice": "Dokumenti po përpunohet. Përmbledhja dhe etiketat do të shfaqen këtu sapo të përfundojë analiza.",
+    "textOnlyNotice": "I indeksuar pa IA: dokumenti mund të kërkohet sipas tekstit, por nuk ka përmbledhje dhe as etiketa automatike.",
+    "tabs": {
+      "overview": "Pasqyrë",
+      "text": "Teksti i plotë"
+    },
+    "fields": {
+      "title": "Titulli",
+      "category": "Lloji i dokumentit",
+      "documentDate": "Data e dokumentit",
+      "correspondent": "Dërguesi",
+      "tags": "Etiketat",
+      "summary": "Përmbledhja"
+    },
+    "tags": {
+      "allWith": "Të gjitha dokumentet me etiketën „{{tag}}“",
+      "none": "Asnjë etiketë. <add>Shto</add>",
+      "inputHint": "Konfirmo me Enter ose me presje. Sugjerimet janë etiketa që janë tashmë në përdorim.",
+      "inputPlaceholder": "Shkruaj një etiketë…",
+      "remove": "Hiq etiketën „{{tag}}“"
+    },
+    "keyFacts": "Të dhënat kryesore",
+    "details": {
+      "title": "Detaje",
+      "file": "Skedari",
+      "size": "Madhësia",
+      "pageCount_one": "{{count, number}} faqe",
+      "pageCount_other": "{{count, number}} faqe",
+      "language": "Gjuha",
+      "source": "Burimi",
+      "mailSubject": "Subjekti",
+      "mailFrom": "Nga",
+      "mailReceived": "Marrë",
+      "added": "Shtuar",
+      "text": "Teksti"
+    },
+    "source": {
+      "MAIL": "Kuti postare",
+      "FOLDER": "Dosje importi",
+      "UPLOAD": "Ngarkuar"
+    },
+    "noText": "Për këtë dokument nuk ka tekst – ka gjasa të jetë një skanim pa shtresë teksti. Kur IA është konfiguruar dhe njohja e tekstit është aktivizuar, përmbajtja transkriptohet gjatë analizës.",
+    "edit": {
+      "title": "Ndrysho dokumentin",
+      "saved": "Ndryshimet u ruajtën"
+    },
+    "delete": {
+      "title": "Të fshihet dokumenti?",
+      "text": "Dokumenti „{{title}}“ do të fshihet bashkë me skedarin PDF, tekstin e plotë dhe etiketat. Ky veprim nuk mund të zhbëhet.",
+      "confirm": "Fshi përgjithmonë"
+    }
+  },
+  "settings": {
+    "title": "Cilësimet",
+    "mailboxes": {
+      "title": "Kutitë postare",
+      "navHint": "Serverë IMAP nga të cilët importohen bashkëngjitjet PDF",
+      "intro": "Bashkëngjitjet PDF importohen automatikisht nga këto kuti postare IMAP. Kutitë postare vetëm lexohen – email-et mbeten të pandryshuara dhe të palexuara.",
+      "add": "Shto kuti postare",
+      "emptyTitle": "Ende asnjë kuti postare e konfiguruar",
+      "emptyText": "Shkruaj kredencialet e një kutie postare IMAP – për shembull të asaj ku skaneri yt dërgon dokumentet.",
+      "paused": "Në pauzë",
+      "syncNow": "Kontrollo tani",
+      "syncing": "Po kontrollohet kutia postare…",
+      "neverSynced": "Ende e pakontrolluar.",
+      "saved": "Kutia postare u ruajt",
+      "added": "Kutia postare u shtua",
+      "firstSyncRunning": "Kontrolli i parë është tashmë në vazhdim.",
+      "removed": "Kutia postare u hoq",
+      "delete": {
+        "title": "Të hiqet kutia postare?",
+        "text": "Kutia postare „{{name}}“ nuk do të kontrollohet më. Dokumentet e importuara tashmë ruhen."
+      },
+      "dialog": {
+        "editTitle": "Ndrysho kutinë postare",
+        "description": "Kredencialet i merr nga ofruesi yt i email-it. Fjalëkalimi ruhet i enkriptuar.",
+        "name": "Emri",
+        "nameHint": "Sipas dëshirës, p.sh. „Skaneri“ ose „Faturat“",
+        "namePlaceholder": "Skaneri",
+        "host": "Serveri IMAP",
+        "port": "Porta",
+        "security": "Enkriptimi",
+        "securityNone": "Pa enkriptim",
+        "securityNoneWarning": "Pa enkriptim, emri i përdoruesit dhe fjalëkalimi transmetohen si tekst i thjeshtë.",
+        "passwordKeepHint": "Lëre bosh për të mbajtur fjalëkalimin e ruajtur",
+        "folder": "Dosja",
+        "folderHint": "Zakonisht {{folder}} (kutia hyrëse)",
+        "since": "Vetëm email-et nga data",
+        "sinceHint": "Opsionale – email-et më të vjetra anashkalohen",
+        "enabled": "Kontrollo automatikisht",
+        "enabledHint": "Kutia postare kontrollohet për skedarë të rinj PDF sipas intervalit të caktuar."
+      }
+    },
+    "import": {
+      "title": "Orari dhe dosja e importit",
+      "navHint": "Intervali i kontrollit dhe direktoria e mbikëqyrur",
+      "intro": "Përcakton sa shpesh aplikacioni kërkon skedarë të rinj PDF – në kutitë postare dhe në dosjen e importit.",
+      "saved": "Cilësimet u ruajtën",
+      "interval": {
+        "title": "Intervali i kontrollit",
+        "text": "Kaq shpesh aplikacioni kontrollon të gjitha kutitë postare dhe dosjen e importit për skedarë të rinj PDF.",
+        "label": "Çdo … minuta",
+        "nextRun": "Kontrolli tjetër automatik {{when}}."
+      },
+      "folder": {
+        "title": "Dosja e importit",
+        "text": "Një direktori në server që mbikëqyret për skedarë të rinj PDF – për shembull destinacioni i një skaneri rrjeti. Kërkohet edhe në nëndosje.",
+        "enable": "Mbikëqyr dosjen e importit",
+        "path": "Shtegu në server",
+        "pathHint": "Shteg absolut. Në kontejnerin Docker kjo është dosja e montuar, zakonisht {{path}}.",
+        "afterImport": "Pas importit",
+        "keep": "Lëre skedarin aty ku është",
+        "move": "Zhvendose te „{{folder}}“",
+        "keepHint": "Skedarët mbeten të pandryshuar. Aplikacioni mban mend çfarë ka importuar tashmë.",
+        "moveHint": "Skedarët e importuar zhvendosen në nëndosjen „{{folder}}“ – dosja e importit mbetet e rregullt.",
+        "scanning": "Po kontrollohet dosja…",
+        "neverScanned": "Ende e pakontrolluar.",
+        "scanNow": "Kontrollo tani",
+        "scanStarted": "Dosja e importit po kontrollohet."
+      }
+    },
+    "ai": {
+      "title": "IA",
+      "navHint": "Serveri LLM, modeli dhe njohja e tekstit",
+      "intro": "IA lexon çdo skedar të ri PDF, e përmbledh, i cakton llojin e dokumentit dhe etiketat, si dhe nxjerr të dhënat kryesore, si shumat ose afatet.",
+      "configured": "E konfiguruar",
+      "notConfigured": "E pakonfiguruar",
+      "saved": "Cilësimet e IA-së u ruajtën",
+      "server": {
+        "title": "Serveri LLM",
+        "provider": "Ofruesi",
+        "baseUrl": "Adresa e serverit",
+        "model": "Modeli",
+        "modelPlaceholder": "ID-ja e modelit",
+        "compatibilityMode": "Modaliteti i përputhshmërisë për modele lokale",
+        "compatibilityModeHint": "Për serverë që përdorin ndërfaqen e Anthropic, por nuk mbështesin as hyrjen PDF, as daljet e strukturuara: dokumenti i dërgohet modelit si tekst ose, për skanimet, si imazhe faqesh. Lëre të çaktivizuar për Claude API.",
+        "testIncomplete": "Cilësimet nuk janë ende të plota"
+      },
+      "privacy": {
+        "title": "Me {{provider}}, dokumentet e tua dalin nga ky kompjuter",
+        "text": "Për analizën, përmbajtja e çdo skedari PDF u dërgohet serverëve të {{provider}} në internet dhe përpunohet atje – përfshirë faturat, kontratat, dokumentet mjekësore dhe korrespondencën zyrtare.",
+        "recommendation": "<emphasis>Rekomandim:</emphasis> përdor një IA lokale. Me <lmStudio>LM Studio</lmStudio> ose me një <compatible>server të përputhshëm me OpenAI</compatible> në rrjetin tënd, e gjithë përmbajtja mbetet te ti."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Claude API e Anthropic. Ndryshoje vetëm nëse ke një gateway tëndin përpara saj.",
+          "modelHint": "Claude Opus 5.5 është zgjedhja e rekomanduar; Sonnet dhe Haiku janë më të shpejtë dhe më të lirë."
+        },
+        "OPENAI": {
+          "urlHint": "API-ja e OpenAI. Ndryshoje vetëm nëse ke një gateway tëndin përpara saj.",
+          "modelHint": "ID-ja e modelit, siç e quan OpenAI. Pasi të ruash çelësin, këtu shfaqen modelet e disponueshme."
+        },
+        "MOONSHOT": {
+          "urlHint": "API-ja e Moonshot AI (Kimi). Për llogaritë në platformën kineze: {{url}}",
+          "modelHint": "ID-ja e modelit, siç e quan Moonshot. Pasi të ruash çelësin, këtu shfaqen modelet e disponueshme."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Serveri lokal i LM Studio (nise në LM Studio te „Developer“). Nëse AIDocuments ekzekutohet në Docker: {{url}}",
+          "modelHint": "ID-ja e modelit të ngarkuar në LM Studio. Skanimet kërkojnë një model me hyrje imazhesh, analiza kërkon një model me thirrje mjetesh (Tool Use)."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adresa e një serveri që përdor ndërfaqen e OpenAI – zakonisht mbaron me /v1, p.sh. {{url}}",
+          "modelHint": "ID-ja e modelit, siç e quan serveri. Pas ruajtjes, këtu shfaqen modelet që ofron ai."
+        }
+      },
+      "apiKey": {
+        "label": "Çelësi API",
+        "labelOptional": "Çelësi API (opsional)",
+        "placeholderStored": "{{mask}} (i ruajtur)",
+        "placeholderPreset": "{{mask}} (i paracaktuar)",
+        "placeholderNotNeeded": "nuk nevojitet",
+        "placeholderIfRequired": "vetëm nëse e kërkon serveri",
+        "hintShown": "I paracaktuar nga konfigurimi i serverit.",
+        "hintRemoving": "Çelësi i ruajtur do të hiqet kur të ruash.",
+        "hintStored": "Një çelës është ruajtur i enkriptuar. Lëre bosh për ta mbajtur – <remove>hiq çelësin</remove>",
+        "hintEnvironment": "Çelësi vjen aktualisht nga konfigurimi i serverit (variabël mjedisi ose skedar konfigurimi). Një çelës i shkruar këtu ka përparësi.",
+        "hintPreset": "Për këtë ofrues ka një çelës të paracaktuar në konfigurimin e serverit. Lëre bosh për ta përdorur.",
+        "hintDiscardedOnSwitch": "Çelësi i ruajtur deri tani i përket {{previous}} dhe do të hidhet poshtë kur të ndërrosh ofruesin.",
+        "hintPresetOtherProvider": "Çelësi i paracaktuar vlen vetëm për {{previous}}. Për {{provider}} shkruaj një çelës tjetër.",
+        "hintRequired": "Ruhet i enkriptuar dhe nuk shfaqet më kurrë.",
+        "hintLocal": "Serverët lokalë zakonisht nuk kanë nevojë për çelës."
+      },
+      "analysis": {
+        "title": "Analiza",
+        "effort": "Përpikëria",
+        "effortLevels": {
+          "low": "E shpejtë",
+          "medium": "E balancuar",
+          "high": "E përpiktë"
+        },
+        "effortHint": "Më e përpiktë do të thotë rezultate më të kujdesshme, por më ngadalë dhe më shtrenjtë për çdo dokument.",
+        "outputLanguage": "Gjuha e rezultateve",
+        "outputLanguageHint": "IA e shkruan titullin, përmbledhjen dhe etiketat në këtë gjuhë.",
+        "ocr": "Njohje teksti për skanimet",
+        "ocrHint": "IA i transkripton skedarët PDF të skanuar pa shtresë teksti – vetëm atëherë ata mund të gjenden me kërkimin në tekstin e plotë. Çdo skanim kërkon më shumë kohë dhe kushton më shumë."
+      },
+      "unanalyzed_one": "{{count, number}} dokument nuk është analizuar ende nga IA.",
+      "unanalyzed_other": "{{count, number}} dokumente nuk janë analizuar ende nga IA.",
+      "analyzeNow": "Analizo tani",
+      "analysisStarted_one": "{{count, number}} dokument po analizohet tani.",
+      "analysisStarted_other": "{{count, number}} dokumente po analizohen tani."
+    },
+    "users": {
+      "title": "Përdoruesit",
+      "navHint": "Llogaritë dhe rolet",
+      "intro": "Secili hyn me llogarinë e vet. Administratorët menaxhojnë aplikacionin, përdoruesit punojnë me dokumentet.",
+      "add": "Krijo përdorues",
+      "you": "Ti",
+      "disabled": "Çaktivizuar",
+      "lastLogin": "Hyrja e fundit {{when}}",
+      "neverLoggedIn": "Asnjë hyrje deri tani",
+      "editUser": "Ndrysho {{name}}",
+      "deleteUser": "Fshi {{name}}",
+      "saved": "Përdoruesi u ruajt",
+      "created": "Përdoruesi u krijua",
+      "deleted": "Përdoruesi u fshi",
+      "delete": {
+        "title": "Të fshihet përdoruesi?",
+        "text": "Llogaria „{{name}}“ do të fshihet dhe do të dalë menjëherë nga sistemi. Dokumentet ruhen."
+      },
+      "dialog": {
+        "selfNotice": "Kjo është llogaria jote. Pas ruajtjes do të duhet të hysh sërish.",
+        "passwordKeepHint": "Lëre bosh për të mbajtur fjalëkalimin aktual. Përndryshe, të paktën 8 karaktere.",
+        "role": "Roli",
+        "roleHints": {
+          "ADMIN": "Mund të bëjë gjithçka – përfshirë ndryshimin e cilësimeve, menaxhimin e përdoruesve dhe fshirjen e dokumenteve.",
+          "USER": "Mund të shohë, të kërkojë e të ngarkojë dokumente dhe të ndryshojë të dhënat e tyre."
+        },
+        "active": "Llogari aktive",
+        "activeHint": "Llogaritë e çaktivizuara nuk mund të hyjnë; sesionet aktive mbyllen menjëherë.",
+        "create": "Krijo"
+      }
+    }
+  }
+}

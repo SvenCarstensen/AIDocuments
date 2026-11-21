@@ -1,0 +1,425 @@
+{
+  "common": {
+    "save": "Spremi",
+    "cancel": "Odustani",
+    "close": "Zatvori",
+    "edit": "Uredi",
+    "delete": "Izbriši",
+    "remove": "Ukloni",
+    "add": "Dodaj",
+    "back": "Natrag",
+    "retry": "Pokušaj ponovno",
+    "loading": "Učitavanje",
+    "language": "Jezik",
+    "testConnection": "Testiraj vezu",
+    "saveFirst": "Prvo spremite",
+    "username": "Korisničko ime",
+    "usernameHint": "3–50 znakova: slova, znamenke, točka, crtica, donja crta, @",
+    "password": "Lozinka",
+    "newPassword": "Nova lozinka",
+    "passwordHint": "Najmanje 8 znakova",
+    "passwordMismatch": "Lozinke se ne podudaraju.",
+    "justNow": "upravo sada",
+    "documentCount_one": "{{count, number}} dokument",
+    "documentCount_few": "{{count, number}} dokumenta",
+    "documentCount_other": "{{count, number}} dokumenata",
+    "role": {
+      "ADMIN": "Administrator",
+      "USER": "Korisnik"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Nije moguće povezati se s poslužiteljem",
+    "server": "Poslužitelj je prijavio pogrešku ({{status}}).",
+    "forbidden": "Nemate dopuštenje za ovu radnju.",
+    "unreachable": "Poslužitelj nije dostupan.",
+    "unexpected": "Neočekivana pogreška.",
+    "languageLoad": "Jezik se nije mogao učitati."
+  },
+  "auth": {
+    "login": {
+      "title": "Dobro došli natrag",
+      "subtitle": "Prijavite se za pristup svojim dokumentima.",
+      "submit": "Prijava"
+    },
+    "setup": {
+      "title": "Postavljanje aplikacije AIDocuments",
+      "subtitle": "Počnite izradom administratorskog računa. Dodatne korisnike možete kasnije dodati u postavkama.",
+      "adminAccount": "Administratorski račun",
+      "repeatPassword": "Ponovite lozinku",
+      "submit": "Izradi račun i započni",
+      "features": {
+        "import": "PDF-ovi iz vašeg poštanskog sandučića i mape za uvoz",
+        "ai": "UI ih sažima i označava oznakama",
+        "search": "Pretraživanje cijelog teksta sve do sadržaja dokumenta"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Učitaj",
+    "theme": {
+      "light": "Svijetla tema",
+      "dark": "Tamna tema"
+    },
+    "search": {
+      "placeholder": "Pretraži dokumente, oznake, sadržaj …",
+      "label": "Pretraži dokumente",
+      "clear": "Očisti pretraživanje"
+    },
+    "userMenu": {
+      "label": "Korisnički izbornik ({{name}})",
+      "aiActive": "UI je aktivan",
+      "aiNotConfigured": "UI nije postavljen",
+      "changePassword": "Promijeni lozinku",
+      "logout": "Odjava"
+    },
+    "passwordDialog": {
+      "current": "Trenutačna lozinka",
+      "repeat": "Ponovite novu lozinku",
+      "changed": "Lozinka je promijenjena"
+    },
+    "dropzone": {
+      "title": "Ispustite PDF-ove ovdje",
+      "hint": "Možete ispustiti više datoteka odjednom. Bit će pohranjene, analizirane i označene oznakama."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Mogu se dodavati samo PDF datoteke.",
+    "uploadingFile": "Učitavanje „{{name}}” …",
+    "uploadingFiles_one": "Učitavanje {{count, number}} PDF datoteke …",
+    "uploadingFiles_few": "Učitavanje {{count, number}} PDF datoteke …",
+    "uploadingFiles_other": "Učitavanje {{count, number}} PDF datoteka …",
+    "created_one": "Dodan {{count, number}} dokument",
+    "created_few": "Dodana {{count, number}} dokumenta",
+    "created_other": "Dodano {{count, number}} dokumenata",
+    "processingInBackground": "Obrada se nastavlja u pozadini.",
+    "duplicates_one": "{{count, number}} dokument već postoji",
+    "duplicates_few": "{{count, number}} dokumenta već postoje",
+    "duplicates_other": "{{count, number}} dokumenata već postoji",
+    "rejected_one": "{{count, number}} datoteka nije valjan PDF",
+    "rejected_few": "{{count, number}} datoteke nisu valjani PDF-ovi",
+    "rejected_other": "{{count, number}} datoteka nije valjan PDF",
+    "onlyDuplicates_one": "Ovaj dokument već postoji.",
+    "onlyDuplicates_few": "Ovi dokumenti već postoje.",
+    "onlyDuplicates_other": "Ovi dokumenti već postoje.",
+    "noneValid": "Nijedna datoteka nije valjan PDF.",
+    "failed": "Učitavanje nije uspjelo"
+  },
+  "documents": {
+    "status": {
+      "pending": "Na čekanju",
+      "processing": "Analiza",
+      "failed": "Pogreška",
+      "textOnly": "Bez UI-ja"
+    },
+    "ocrBadge": "Prepoznavanje teksta",
+    "aiNotice": {
+      "text": "UI još nije postavljen. Novi dokumenti mogu se pretraživati po tekstu, ali nisu sažeti niti označeni oznakama.",
+      "action": "Postavi sada"
+    },
+    "searchResults_one": "<count>{{count, number}} rezultat</count> <query>za „{{query}}”</query>",
+    "searchResults_few": "<count>{{count, number}} rezultata</count> <query>za „{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} rezultata</count> <query>za „{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} u obradi",
+      "inProgressHint": "Čeka analizu pomoću UI-ja ili se upravo analizira",
+      "remaining": "preostalo oko {{duration}}",
+      "remainingLessThan": "preostalo manje od {{duration}}",
+      "finishHint": "Očekivani završetak: {{time}} – procjena prema brzini nedavno obrađenih dokumenata"
+    },
+    "sort": {
+      "label": "Redoslijed",
+      "relevance": "Najbolje podudaranje",
+      "newest": "Najnovije prvo",
+      "date": "Po datumu dokumenta"
+    },
+    "view": {
+      "grid": "Prikaz rešetke",
+      "list": "Prikaz popisa"
+    },
+    "pageSize": {
+      "label": "Broj prikazanih dokumenata",
+      "all": "Svi"
+    },
+    "filters": {
+      "title": "Filtri",
+      "titleWithCount": "Filtri ({{active, number}})",
+      "apply": "Prikaži",
+      "hint": "Nakon što dokumenti budu analizirani, ovdje će se kao filtri pojaviti vrste dokumenata, oznake i pošiljatelji.",
+      "dateFrom": "od",
+      "dateTo": "do",
+      "status": "Status",
+      "failed": "Neuspjelo",
+      "showAll": "Prikaži sve",
+      "showLess": "Prikaži manje",
+      "activeFrom": "od {{date}}",
+      "activeTo": "do {{date}}",
+      "removeOne": "Ukloni filtar „{{label}}”",
+      "removeAll": "Ukloni sve filtre",
+      "clear": "Ukloni filtre"
+    },
+    "empty": {
+      "libraryTitle": "Još nema dokumenata",
+      "libraryHint": "Jednostavno povucite PDF datoteke u ovaj prozor ili upotrijebite „Učitaj”.",
+      "libraryHintAdmin": "Jednostavno povucite PDF datoteke u ovaj prozor ili upotrijebite „Učitaj”. U postavkama možete postaviti poštanski sandučić ili mapu za uvoz iz koje se novi PDF-ovi uvoze automatski.",
+      "noResultsTitle": "Ništa nije pronađeno",
+      "noResultsSearch": "Nijedan dokument ne odgovara ovom pretraživanju. Pretraživanje pronalazi i dijelove riječi – pokušajte s kraćim pojmom ili manje riječi.",
+      "noResultsFilters": "Nijedan dokument ne odgovara odabranim filtrima."
+    },
+    "loadingAll_one": "Učitano {{loaded, number}} od {{count, number}} dokumenta …",
+    "loadingAll_few": "Učitano {{loaded, number}} od {{count, number}} dokumenata …",
+    "loadingAll_other": "Učitano {{loaded, number}} od {{count, number}} dokumenata …",
+    "loadMore": "Učitaj još ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Natrag na pregled",
+    "download": "Preuzmi",
+    "reprocess": "Analiziraj ponovno",
+    "reprocessHint": "Ponovno pročitaj PDF i daj ga na analizu UI-ju",
+    "reprocessStarted": "Dokument se ponovno analizira.",
+    "deleted": "Dokument je izbrisan",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Otvori u novoj kartici",
+    "processingNotice": "Dokument se obrađuje. Sažetak i oznake pojavit će se ovdje čim analiza završi.",
+    "textOnlyNotice": "Indeksirano bez UI-ja: dokument se može pretraživati po tekstu, ali nema sažetak ni automatske oznake.",
+    "tabs": {
+      "overview": "Pregled",
+      "text": "Cijeli tekst"
+    },
+    "fields": {
+      "title": "Naslov",
+      "category": "Vrsta dokumenta",
+      "documentDate": "Datum dokumenta",
+      "correspondent": "Pošiljatelj",
+      "tags": "Oznake",
+      "summary": "Sažetak"
+    },
+    "tags": {
+      "allWith": "Svi dokumenti s oznakom „{{tag}}”",
+      "none": "Nema oznaka. <add>Dodaj oznake</add>",
+      "inputHint": "Potvrdite tipkom Enter ili zarezom. Prijedlozi su oznake koje se već koriste.",
+      "inputPlaceholder": "Unesite oznaku …",
+      "remove": "Ukloni oznaku „{{tag}}”"
+    },
+    "keyFacts": "Ključni podaci",
+    "details": {
+      "title": "Pojedinosti",
+      "file": "Datoteka",
+      "size": "Veličina",
+      "pageCount_one": "{{count, number}} stranica",
+      "pageCount_few": "{{count, number}} stranice",
+      "pageCount_other": "{{count, number}} stranica",
+      "language": "Jezik",
+      "source": "Izvor",
+      "mailSubject": "Predmet",
+      "mailFrom": "Od",
+      "mailReceived": "Primljeno",
+      "added": "Dodano",
+      "text": "Tekst"
+    },
+    "source": {
+      "MAIL": "Poštanski sandučić",
+      "FOLDER": "Mapa za uvoz",
+      "UPLOAD": "Učitano"
+    },
+    "noText": "Za ovaj dokument nema teksta – vjerojatno je riječ o skeniranom dokumentu bez tekstualnog sloja. Ako je UI postavljen i prepoznavanje teksta uključeno, sadržaj se tijekom analize prepisuje.",
+    "edit": {
+      "title": "Uredi dokument",
+      "saved": "Promjene su spremljene"
+    },
+    "delete": {
+      "title": "Izbrisati dokument?",
+      "text": "Dokument „{{title}}” bit će izbrisan zajedno s PDF datotekom, cijelim tekstom i oznakama. Ovu radnju nije moguće poništiti.",
+      "confirm": "Izbriši trajno"
+    }
+  },
+  "settings": {
+    "title": "Postavke",
+    "mailboxes": {
+      "title": "Poštanski sandučići",
+      "navHint": "IMAP poslužitelji iz kojih se uvoze PDF privitci",
+      "intro": "PDF privitci uvoze se automatski iz ovih IMAP sandučića. Sandučići se samo čitaju – e-poruke ostaju nepromijenjene i nepročitane.",
+      "add": "Dodaj sandučić",
+      "emptyTitle": "Još nije postavljen nijedan sandučić",
+      "emptyText": "Unesite pristupne podatke IMAP sandučića – na primjer onoga na koji vaš skener šalje dokumente.",
+      "paused": "Pauzirano",
+      "syncNow": "Provjeri sada",
+      "syncing": "Provjera sandučića …",
+      "neverSynced": "Još nije provjereno.",
+      "saved": "Sandučić je spremljen",
+      "added": "Sandučić je dodan",
+      "firstSyncRunning": "Prva provjera već je u tijeku.",
+      "removed": "Sandučić je uklonjen",
+      "delete": {
+        "title": "Ukloniti sandučić?",
+        "text": "Sandučić „{{name}}” više se neće provjeravati. Već uvezeni dokumenti ostaju."
+      },
+      "dialog": {
+        "editTitle": "Uredi sandučić",
+        "description": "Pristupne podatke dobivate od svog pružatelja e-pošte. Lozinka se pohranjuje šifrirana.",
+        "name": "Naziv",
+        "nameHint": "Po želji, npr. „Skener” ili „Računi”",
+        "namePlaceholder": "Skener",
+        "host": "IMAP poslužitelj",
+        "port": "Priključak",
+        "security": "Šifriranje",
+        "securityNone": "Nema",
+        "securityNoneWarning": "Bez šifriranja korisničko ime i lozinka prenose se običnim tekstom.",
+        "passwordKeepHint": "Ostavite prazno da zadržite pohranjenu lozinku",
+        "folder": "Mapa",
+        "folderHint": "Obično {{folder}} (dolazna pošta)",
+        "since": "Samo e-poruke od",
+        "sinceHint": "Neobavezno – starije e-poruke se preskaču",
+        "enabled": "Provjeravaj automatski",
+        "enabledHint": "Sandučić se u postavljenom intervalu provjerava ima li novih PDF-ova."
+      }
+    },
+    "import": {
+      "title": "Raspored i mapa za uvoz",
+      "navHint": "Interval provjere i nadzirani direktorij",
+      "intro": "Određuje koliko često aplikacija traži nove PDF datoteke – u poštanskim sandučićima i u mapi za uvoz.",
+      "saved": "Postavke su spremljene",
+      "interval": {
+        "title": "Interval provjere",
+        "text": "Toliko često aplikacija provjerava sve poštanske sandučiće i mapu za uvoz ima li novih PDF-ova.",
+        "label": "Svakih … minuta",
+        "nextRun": "Sljedeća automatska provjera {{when}}."
+      },
+      "folder": {
+        "title": "Mapa za uvoz",
+        "text": "Direktorij na poslužitelju koji se nadzire radi novih PDF datoteka – na primjer odredište mrežnog skenera. Pretražuju se i podmape.",
+        "enable": "Nadziri mapu za uvoz",
+        "path": "Putanja na poslužitelju",
+        "pathHint": "Apsolutna putanja. U Docker spremniku to je montirana mapa, obično {{path}}.",
+        "afterImport": "Nakon uvoza",
+        "keep": "Ostavi datoteku na mjestu",
+        "move": "Premjesti u „{{folder}}”",
+        "keepHint": "Datoteke ostaju nepromijenjene. Aplikacija pamti što je već uvezla.",
+        "moveHint": "Uvezene datoteke premještaju se u podmapu „{{folder}}” – mapa za uvoz ostaje uredna.",
+        "scanning": "Provjera mape …",
+        "neverScanned": "Još nije provjereno.",
+        "scanNow": "Provjeri sada",
+        "scanStarted": "Mapa za uvoz se provjerava."
+      }
+    },
+    "ai": {
+      "title": "UI",
+      "navHint": "LLM poslužitelj, model i prepoznavanje teksta",
+      "intro": "UI čita svaki novi PDF, sažima ga, dodjeljuje vrstu dokumenta i oznake te izdvaja ključne podatke, primjerice iznose ili rokove.",
+      "configured": "Postavljeno",
+      "notConfigured": "Nije postavljeno",
+      "saved": "Postavke UI-ja su spremljene",
+      "server": {
+        "title": "LLM poslužitelj",
+        "provider": "Pružatelj",
+        "baseUrl": "Adresa poslužitelja",
+        "model": "Model",
+        "modelPlaceholder": "ID modela",
+        "compatibilityMode": "Način kompatibilnosti za lokalne modele",
+        "compatibilityModeHint": "Za poslužitelje koji govore Anthropic sučelje, ali ne podržavaju ni PDF ulaz ni strukturirane izlaze: dokument se modelu šalje kao tekst ili, kod skeniranih dokumenata, kao slike stranica. Za Claude API ostavite isključeno.",
+        "testIncomplete": "Postavke još nisu potpune"
+      },
+      "privacy": {
+        "title": "S pružateljem {{provider}} vaši dokumenti napuštaju ovo računalo",
+        "text": "Za analizu se sadržaj svakog PDF-a prenosi internetom na poslužitelje pružatelja {{provider}} i ondje obrađuje – uključujući račune, ugovore, liječničke nalaze i službenu korespondenciju.",
+        "recommendation": "<emphasis>Preporuka:</emphasis> koristite lokalni UI. S <lmStudio>LM Studiom</lmStudio> ili <compatible>poslužiteljem kompatibilnim s OpenAI-jem</compatible> u vlastitoj mreži sav sadržaj ostaje kod vas."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Claude API tvrtke Anthropic. Mijenjajte samo ako imate vlastiti pristupnik ispred njega.",
+          "modelHint": "Preporučuje se Claude Opus 5.5; Sonnet i Haiku brži su i jeftiniji."
+        },
+        "OPENAI": {
+          "urlHint": "API tvrtke OpenAI. Mijenjajte samo ako imate vlastiti pristupnik ispred njega.",
+          "modelHint": "ID modela kako ga naziva OpenAI. Nakon što spremite ključ, ovdje će se pojaviti dostupni modeli."
+        },
+        "MOONSHOT": {
+          "urlHint": "API tvrtke Moonshot AI (Kimi). Za račune na kineskoj platformi: {{url}}",
+          "modelHint": "ID modela kako ga naziva Moonshot. Nakon što spremite ključ, ovdje će se pojaviti dostupni modeli."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Lokalni poslužitelj LM Studija (pokrenite ga u LM Studiju pod „Developer”). Ako AIDocuments radi u Dockeru: {{url}}",
+          "modelHint": "ID modela učitanog u LM Studiju. Skenirani dokumenti trebaju model s ulazom slika, analiza model s podrškom za Tool Use."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adresa poslužitelja koji govori OpenAI sučelje – obično završava s /v1, npr. {{url}}",
+          "modelHint": "ID modela kako ga naziva poslužitelj. Nakon spremanja ovdje će se pojaviti modeli koje nudi."
+        }
+      },
+      "apiKey": {
+        "label": "API ključ",
+        "labelOptional": "API ključ (neobavezno)",
+        "placeholderStored": "{{mask}} (pohranjen)",
+        "placeholderPreset": "{{mask}} (unaprijed postavljen)",
+        "placeholderNotNeeded": "nije potreban",
+        "placeholderIfRequired": "samo ako ga poslužitelj traži",
+        "hintShown": "Unaprijed postavljeno u konfiguraciji poslužitelja.",
+        "hintRemoving": "Pohranjeni ključ bit će uklonjen pri spremanju.",
+        "hintStored": "Ključ je pohranjen u šifriranom obliku. Ostavite prazno da ga zadržite – <remove>ukloni ključ</remove>",
+        "hintEnvironment": "Ključ trenutačno dolazi iz konfiguracije poslužitelja (varijabla okruženja ili konfiguracijska datoteka). Ovdje unesen ključ ima prednost.",
+        "hintPreset": "Ključ za ovog pružatelja unaprijed je postavljen u konfiguraciji poslužitelja. Ostavite prazno da ga koristite.",
+        "hintDiscardedOnSwitch": "Dosad pohranjeni ključ pripada pružatelju {{previous}} i bit će odbačen pri prebacivanju.",
+        "hintPresetOtherProvider": "Unaprijed postavljeni ključ vrijedi samo za pružatelja {{previous}}. Unesite zaseban ključ za pružatelja {{provider}}.",
+        "hintRequired": "Pohranjeno u šifriranom obliku i nikad se više ne prikazuje.",
+        "hintLocal": "Lokalni poslužitelji obično ne trebaju ključ."
+      },
+      "analysis": {
+        "title": "Analiza",
+        "effort": "Temeljitost",
+        "effortLevels": {
+          "low": "Brza",
+          "medium": "Uravnotežena",
+          "high": "Temeljita"
+        },
+        "effortHint": "Veća temeljitost znači pažljivije rezultate, ali sporiju i skuplju obradu svakog dokumenta.",
+        "outputLanguage": "Jezik rezultata",
+        "outputLanguageHint": "UI na ovom jeziku piše naslov, sažetak i oznake.",
+        "ocr": "Prepoznavanje teksta kod skenova",
+        "ocrHint": "Aplikacija daje UI-ju da prepiše skenirane PDF-ove bez tekstualnog sloja – samo ih tako možete pronaći pretraživanjem cijelog teksta. Svaki sken traje dulje i košta više."
+      },
+      "unanalyzed_one": "{{count, number}} dokument UI još nije analizirao.",
+      "unanalyzed_few": "{{count, number}} dokumenta UI još nije analizirao.",
+      "unanalyzed_other": "{{count, number}} dokumenata UI još nije analizirao.",
+      "analyzeNow": "Analiziraj sada",
+      "analysisStarted_one": "Analiza {{count, number}} dokumenta je u tijeku.",
+      "analysisStarted_few": "Analiza {{count, number}} dokumenata je u tijeku.",
+      "analysisStarted_other": "Analiza {{count, number}} dokumenata je u tijeku."
+    },
+    "users": {
+      "title": "Korisnici",
+      "navHint": "Računi i uloge",
+      "intro": "Svaka osoba prijavljuje se vlastitim računom. Administratori upravljaju aplikacijom, korisnici rade s dokumentima.",
+      "add": "Izradi korisnika",
+      "you": "Vi",
+      "disabled": "Onemogućen",
+      "lastLogin": "Zadnja prijava {{when}}",
+      "neverLoggedIn": "Nikad prijavljen",
+      "editUser": "Uredi korisnika {{name}}",
+      "deleteUser": "Izbriši korisnika {{name}}",
+      "saved": "Korisnik je spremljen",
+      "created": "Korisnik je izrađen",
+      "deleted": "Korisnik je izbrisan",
+      "delete": {
+        "title": "Izbrisati korisnika?",
+        "text": "Račun „{{name}}” bit će izbrisan i odmah odjavljen. Dokumenti ostaju."
+      },
+      "dialog": {
+        "selfNotice": "Ovo je vaš vlastiti račun. Nakon spremanja morat ćete se ponovno prijaviti.",
+        "passwordKeepHint": "Ostavite prazno da zadržite trenutačnu lozinku. Inače najmanje 8 znakova.",
+        "role": "Uloga",
+        "roleHints": {
+          "ADMIN": "Smije sve – uključujući promjenu postavki, upravljanje korisnicima i brisanje dokumenata.",
+          "USER": "Smije pregledavati, pretraživati i učitavati dokumente te uređivati njihove podatke."
+        },
+        "active": "Račun je aktivan",
+        "activeHint": "Onemogućeni računi ne mogu se prijaviti; aktivne sesije odmah završavaju.",
+        "create": "Izradi"
+      }
+    }
+  }
+}

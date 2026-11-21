@@ -1,0 +1,425 @@
+{
+  "common": {
+    "save": "Desa",
+    "cancel": "Cancel·la",
+    "close": "Tanca",
+    "edit": "Edita",
+    "delete": "Elimina",
+    "remove": "Treu",
+    "add": "Afegeix",
+    "back": "Enrere",
+    "retry": "Torna-ho a provar",
+    "loading": "S’està carregant",
+    "language": "Idioma",
+    "testConnection": "Prova la connexió",
+    "saveFirst": "Desa primer",
+    "username": "Nom d’usuari",
+    "usernameHint": "De 3 a 50 caràcters: lletres, xifres, punt, guionet, guió baix, @",
+    "password": "Contrasenya",
+    "newPassword": "Contrasenya nova",
+    "passwordHint": "Almenys 8 caràcters",
+    "passwordMismatch": "Les contrasenyes no coincideixen.",
+    "justNow": "ara mateix",
+    "documentCount_one": "{{count, number}} document",
+    "documentCount_many": "{{count, number}} de documents",
+    "documentCount_other": "{{count, number}} documents",
+    "role": {
+      "ADMIN": "Admin.",
+      "USER": "Usuari"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "No es pot connectar amb el servidor",
+    "server": "El servidor ha notificat un error ({{status}}).",
+    "forbidden": "No tens permís per fer-ho.",
+    "unreachable": "No es pot accedir al servidor.",
+    "unexpected": "Error inesperat.",
+    "languageLoad": "No s’ha pogut carregar l’idioma."
+  },
+  "auth": {
+    "login": {
+      "title": "Et donem la benvinguda de nou",
+      "subtitle": "Inicia la sessió per accedir als teus documents.",
+      "submit": "Inicia la sessió"
+    },
+    "setup": {
+      "title": "Configura AIDocuments",
+      "subtitle": "Comença creant el compte d’administrador. Després podràs afegir més usuaris a la configuració.",
+      "adminAccount": "Compte d’administrador",
+      "repeatPassword": "Repeteix la contrasenya",
+      "submit": "Crea el compte i comença",
+      "features": {
+        "import": "PDF de la teva bústia de correu i de la carpeta d’importació",
+        "ai": "La IA els resumeix i els etiqueta",
+        "search": "Cerca de text complet fins a l’interior del document"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Puja",
+    "theme": {
+      "light": "Tema clar",
+      "dark": "Tema fosc"
+    },
+    "search": {
+      "placeholder": "Cerca documents, etiquetes, continguts …",
+      "label": "Cerca documents",
+      "clear": "Esborra la cerca"
+    },
+    "userMenu": {
+      "label": "Menú d’usuari ({{name}})",
+      "aiActive": "IA activa",
+      "aiNotConfigured": "IA sense configurar",
+      "changePassword": "Canvia la contrasenya",
+      "logout": "Tanca la sessió"
+    },
+    "passwordDialog": {
+      "current": "Contrasenya actual",
+      "repeat": "Repeteix la contrasenya nova",
+      "changed": "Contrasenya canviada"
+    },
+    "dropzone": {
+      "title": "Deixa anar els PDF aquí",
+      "hint": "Pots deixar anar diversos fitxers alhora. Es desen, s’analitzen i s’etiqueten."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Només es poden afegir fitxers PDF.",
+    "uploadingFile": "S’està pujant «{{name}}» …",
+    "uploadingFiles_one": "S’està pujant {{count, number}} PDF …",
+    "uploadingFiles_many": "S’estan pujant {{count, number}} de PDF …",
+    "uploadingFiles_other": "S’estan pujant {{count, number}} PDF …",
+    "created_one": "{{count, number}} document afegit",
+    "created_many": "{{count, number}} de documents afegits",
+    "created_other": "{{count, number}} documents afegits",
+    "processingInBackground": "El processament continua en segon pla.",
+    "duplicates_one": "{{count, number}} ja existeix",
+    "duplicates_many": "{{count, number}} ja existeixen",
+    "duplicates_other": "{{count, number}} ja existeixen",
+    "rejected_one": "{{count, number}} fitxer no és un PDF vàlid",
+    "rejected_many": "{{count, number}} de fitxers no són PDF vàlids",
+    "rejected_other": "{{count, number}} fitxers no són PDF vàlids",
+    "onlyDuplicates_one": "Aquest document ja existeix.",
+    "onlyDuplicates_many": "Aquests documents ja existeixen.",
+    "onlyDuplicates_other": "Aquests documents ja existeixen.",
+    "noneValid": "Cap dels fitxers és un PDF vàlid.",
+    "failed": "Error en pujar"
+  },
+  "documents": {
+    "status": {
+      "pending": "En espera",
+      "processing": "S’està analitzant",
+      "failed": "Error",
+      "textOnly": "Sense IA"
+    },
+    "ocrBadge": "Reconeixement de text",
+    "aiNotice": {
+      "text": "La IA encara no està configurada. Els documents nous es poden cercar pel text, però no es resumeixen ni s’etiqueten.",
+      "action": "Configura-la ara"
+    },
+    "searchResults_one": "<count>{{count, number}} resultat</count> <query>per a «{{query}}»</query>",
+    "searchResults_many": "<count>{{count, number}} de resultats</count> <query>per a «{{query}}»</query>",
+    "searchResults_other": "<count>{{count, number}} resultats</count> <query>per a «{{query}}»</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} en curs",
+      "inProgressHint": "Esperant l’anàlisi de la IA o analitzant-se ara mateix",
+      "remaining": "falten uns {{duration}}",
+      "remainingLessThan": "falten menys de {{duration}}",
+      "finishHint": "Finalització prevista: {{time}} – calculada segons el ritme dels últims documents processats"
+    },
+    "sort": {
+      "label": "Ordre",
+      "relevance": "Millors coincidències",
+      "newest": "Més recents primer",
+      "date": "Per data del document"
+    },
+    "view": {
+      "grid": "Vista de graella",
+      "list": "Vista de llista"
+    },
+    "pageSize": {
+      "label": "Nombre de documents mostrats",
+      "all": "Tots"
+    },
+    "filters": {
+      "title": "Filtres",
+      "titleWithCount": "Filtres ({{active, number}})",
+      "apply": "Mostra",
+      "hint": "Quan els documents s’hagin analitzat, aquí apareixeran com a filtres els tipus de document, les etiquetes i els remitents.",
+      "dateFrom": "des de",
+      "dateTo": "fins a",
+      "status": "Estat",
+      "failed": "Amb error",
+      "showAll": "Mostra-ho tot",
+      "showLess": "Mostra’n menys",
+      "activeFrom": "des del {{date}}",
+      "activeTo": "fins al {{date}}",
+      "removeOne": "Treu el filtre «{{label}}»",
+      "removeAll": "Treu tots els filtres",
+      "clear": "Treu els filtres"
+    },
+    "empty": {
+      "libraryTitle": "Encara no hi ha cap document",
+      "libraryHint": "Arrossega fitxers PDF a aquesta finestra o fes servir «Puja».",
+      "libraryHintAdmin": "Arrossega fitxers PDF a aquesta finestra o fes servir «Puja». A la configuració pots configurar una bústia de correu o una carpeta d’importació des de les quals els PDF nous s’importen automàticament.",
+      "noResultsTitle": "No s’ha trobat res",
+      "noResultsSearch": "Cap document coincideix amb aquesta cerca. La cerca també troba parts de paraules: prova amb un terme més curt o amb menys paraules.",
+      "noResultsFilters": "Cap document coincideix amb els filtres seleccionats."
+    },
+    "loadingAll_one": "{{loaded, number}} de {{count, number}} document carregat …",
+    "loadingAll_many": "{{loaded, number}} de {{count, number}} de documents carregats …",
+    "loadingAll_other": "{{loaded, number}} de {{count, number}} documents carregats …",
+    "loadMore": "Carrega’n més ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Torna a la vista general",
+    "download": "Baixa",
+    "reprocess": "Analitza de nou",
+    "reprocessHint": "Torna a llegir el PDF i fes que la IA l’analitzi",
+    "reprocessStarted": "El document s’està tornant a analitzar.",
+    "deleted": "Document eliminat",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Obre en una pestanya nova",
+    "processingNotice": "El document s’està processant. El resum i les etiquetes apareixeran aquí tan bon punt acabi l’anàlisi.",
+    "textOnlyNotice": "Indexat sense IA: el document es pot cercar pel text, però no té resum ni etiquetes automàtiques.",
+    "tabs": {
+      "overview": "Vista general",
+      "text": "Text complet"
+    },
+    "fields": {
+      "title": "Títol",
+      "category": "Tipus de document",
+      "documentDate": "Data del document",
+      "correspondent": "Remitent",
+      "tags": "Etiquetes",
+      "summary": "Resum"
+    },
+    "tags": {
+      "allWith": "Tots els documents amb l’etiqueta «{{tag}}»",
+      "none": "Sense etiquetes. <add>Afegeix-ne</add>",
+      "inputHint": "Confirma amb Retorn o amb una coma. Els suggeriments són etiquetes que ja s’utilitzen.",
+      "inputPlaceholder": "Escriu una etiqueta …",
+      "remove": "Treu l’etiqueta «{{tag}}»"
+    },
+    "keyFacts": "Dades clau",
+    "details": {
+      "title": "Detalls",
+      "file": "Fitxer",
+      "size": "Mida",
+      "pageCount_one": "{{count, number}} pàgina",
+      "pageCount_many": "{{count, number}} de pàgines",
+      "pageCount_other": "{{count, number}} pàgines",
+      "language": "Idioma",
+      "source": "Origen",
+      "mailSubject": "Assumpte",
+      "mailFrom": "De",
+      "mailReceived": "Rebut",
+      "added": "Afegit",
+      "text": "Text"
+    },
+    "source": {
+      "MAIL": "Bústia de correu",
+      "FOLDER": "Carpeta d’importació",
+      "UPLOAD": "Pujat"
+    },
+    "noText": "Aquest document no té text: probablement és un escaneig sense capa de text. Amb la IA configurada i el reconeixement de text activat, el contingut es transcriu durant l’anàlisi.",
+    "edit": {
+      "title": "Edita el document",
+      "saved": "Canvis desats"
+    },
+    "delete": {
+      "title": "Vols eliminar el document?",
+      "text": "«{{title}}» s’eliminarà juntament amb el fitxer PDF, el text complet i les etiquetes. Aquesta acció no es pot desfer.",
+      "confirm": "Elimina’l definitivament"
+    }
+  },
+  "settings": {
+    "title": "Configuració",
+    "mailboxes": {
+      "title": "Bústies de correu",
+      "navHint": "Servidors IMAP des dels quals s’importen els adjunts PDF",
+      "intro": "Els adjunts PDF s’importen automàticament d’aquestes bústies de correu IMAP. Les bústies només es llegeixen: els correus es mantenen sense canvis i sense llegir.",
+      "add": "Afegeix una bústia de correu",
+      "emptyTitle": "Encara no hi ha cap bústia configurada",
+      "emptyText": "Introdueix les dades d’accés d’una bústia IMAP, per exemple la bústia a la qual l’escàner envia els documents.",
+      "paused": "En pausa",
+      "syncNow": "Comprova ara",
+      "syncing": "S’està comprovant la bústia …",
+      "neverSynced": "Encara no s’ha comprovat.",
+      "saved": "Bústia desada",
+      "added": "Bústia afegida",
+      "firstSyncRunning": "La primera comprovació ja està en curs.",
+      "removed": "Bústia treta",
+      "delete": {
+        "title": "Vols treure la bústia?",
+        "text": "«{{name}}» deixarà de comprovar-se. Els documents que ja s’han importat es conserven."
+      },
+      "dialog": {
+        "editTitle": "Edita la bústia de correu",
+        "description": "Les dades d’accés te les facilita el teu proveïdor de correu. La contrasenya es desa xifrada.",
+        "name": "Nom",
+        "nameHint": "El que vulguis, p. ex. «Escàner» o «Factures»",
+        "namePlaceholder": "Escàner",
+        "host": "Servidor IMAP",
+        "port": "Port",
+        "security": "Xifratge",
+        "securityNone": "Cap",
+        "securityNoneWarning": "Sense xifratge, el nom d’usuari i la contrasenya es transmeten en text pla.",
+        "passwordKeepHint": "Deixa-ho en blanc per conservar la contrasenya desada",
+        "folder": "Carpeta",
+        "folderHint": "Normalment {{folder}} (la safata d’entrada)",
+        "since": "Només correus des del",
+        "sinceHint": "Opcional: els correus més antics s’ometen",
+        "enabled": "Comprova automàticament",
+        "enabledHint": "La bústia es comprova a la recerca de PDF nous amb l’interval configurat."
+      }
+    },
+    "import": {
+      "title": "Programació i carpeta d’importació",
+      "navHint": "Interval de comprovació i carpeta vigilada",
+      "intro": "Defineix amb quina freqüència l’aplicació cerca fitxers PDF nous: a les bústies de correu i a la carpeta d’importació.",
+      "saved": "Configuració desada",
+      "interval": {
+        "title": "Interval de comprovació",
+        "text": "Amb aquesta freqüència l’aplicació comprova totes les bústies de correu i la carpeta d’importació a la recerca de PDF nous.",
+        "label": "Cada … minuts",
+        "nextRun": "Propera comprovació automàtica {{when}}."
+      },
+      "folder": {
+        "title": "Carpeta d’importació",
+        "text": "Un directori del servidor que es vigila a la recerca de fitxers PDF nous, per exemple la destinació d’un escàner de xarxa. També es cerca a les subcarpetes.",
+        "enable": "Vigila la carpeta d’importació",
+        "path": "Ruta al servidor",
+        "pathHint": "Ruta absoluta. Al contenidor Docker és la carpeta muntada, normalment {{path}}.",
+        "afterImport": "Després d’importar",
+        "keep": "Deixa el fitxer on és",
+        "move": "Mou a «{{folder}}»",
+        "keepHint": "Els fitxers es mantenen sense canvis. L’aplicació recorda el que ja ha importat.",
+        "moveHint": "Els fitxers importats es mouen a la subcarpeta «{{folder}}»: la carpeta d’importació es manté endreçada.",
+        "scanning": "S’està comprovant la carpeta …",
+        "neverScanned": "Encara no s’ha comprovat.",
+        "scanNow": "Comprova ara",
+        "scanStarted": "S’està comprovant la carpeta d’importació."
+      }
+    },
+    "ai": {
+      "title": "IA",
+      "navHint": "Servidor LLM, model i reconeixement de text",
+      "intro": "La IA llegeix cada PDF nou, el resumeix, li assigna un tipus de document i etiquetes, i n’extreu dades clau com ara imports o terminis.",
+      "configured": "Configurada",
+      "notConfigured": "Sense configurar",
+      "saved": "Configuració de la IA desada",
+      "server": {
+        "title": "Servidor LLM",
+        "provider": "Proveïdor",
+        "baseUrl": "Adreça del servidor",
+        "model": "Model",
+        "modelPlaceholder": "ID del model",
+        "compatibilityMode": "Mode de compatibilitat per a models locals",
+        "compatibilityModeHint": "Per a servidors que parlen la interfície d’Anthropic però no admeten ni l’entrada de PDF ni les sortides estructurades: el document s’envia al model com a text o, en el cas dels escanejos, com a imatges de les pàgines. Deixa-ho desactivat per a l’API de Claude.",
+        "testIncomplete": "La configuració encara no és completa"
+      },
+      "privacy": {
+        "title": "Amb {{provider}}, els teus documents surten d’aquest ordinador",
+        "text": "Per a l’anàlisi, el contingut de cada PDF es transmet als servidors de {{provider}} a internet i s’hi processa, incloses factures, contractes, informes mèdics i correspondència oficial.",
+        "recommendation": "<emphasis>Recomanació:</emphasis> fes servir una IA local. Amb <lmStudio>LM Studio</lmStudio> o un <compatible>servidor compatible amb OpenAI</compatible> a la teva pròpia xarxa, tot el contingut es queda amb tu."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "L’API de Claude d’Anthropic. Canvia-la només si tens una passarel·la pròpia al davant.",
+          "modelHint": "Claude Opus 5.5 és l’opció recomanada; Sonnet i Haiku són més ràpids i més barats."
+        },
+        "OPENAI": {
+          "urlHint": "L’API d’OpenAI. Canvia-la només si tens una passarel·la pròpia al davant.",
+          "modelHint": "L’ID del model tal com el anomena OpenAI. Quan desis la clau, aquí apareixeran els models disponibles."
+        },
+        "MOONSHOT": {
+          "urlHint": "L’API de Moonshot AI (Kimi). Per a comptes de la plataforma xinesa: {{url}}",
+          "modelHint": "L’ID del model tal com el anomena Moonshot. Quan desis la clau, aquí apareixeran els models disponibles."
+        },
+        "LM_STUDIO": {
+          "urlHint": "El servidor local de LM Studio (inicia’l a LM Studio, a «Developer»). Si AIDocuments s’executa a Docker: {{url}}",
+          "modelHint": "L’ID del model carregat a LM Studio. Els escanejos necessiten un model amb entrada d’imatges; l’anàlisi, un amb ús d’eines."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adreça d’un servidor que parla la interfície d’OpenAI, normalment acabada en /v1, p. ex. {{url}}",
+          "modelHint": "L’ID del model tal com el anomena el servidor. Després de desar, aquí apareixeran els models que ofereix."
+        }
+      },
+      "apiKey": {
+        "label": "Clau d’API",
+        "labelOptional": "Clau d’API (opcional)",
+        "placeholderStored": "{{mask}} (desada)",
+        "placeholderPreset": "{{mask}} (predefinida)",
+        "placeholderNotNeeded": "no cal",
+        "placeholderIfRequired": "només si el servidor en demana una",
+        "hintShown": "Predefinida a la configuració del servidor.",
+        "hintRemoving": "La clau desada se suprimirà en desar.",
+        "hintStored": "Hi ha una clau desada de forma xifrada. Deixa-ho en blanc per conservar-la – <remove>suprimeix la clau</remove>",
+        "hintEnvironment": "Ara la clau prové de la configuració del servidor (variable d’entorn o fitxer de configuració). Una clau introduïda aquí té prioritat.",
+        "hintPreset": "A la configuració del servidor hi ha una clau predefinida per a aquest proveïdor. Deixa-ho en blanc per fer-la servir.",
+        "hintDiscardedOnSwitch": "La clau desada fins ara pertany a {{previous}} i es descartarà si canvies de proveïdor.",
+        "hintPresetOtherProvider": "La clau predefinida només és vàlida per a {{previous}}. Introdueix-ne una altra per a {{provider}}.",
+        "hintRequired": "Es desa xifrada i no es torna a mostrar mai més.",
+        "hintLocal": "Els servidors locals normalment no necessiten clau."
+      },
+      "analysis": {
+        "title": "Anàlisi",
+        "effort": "Nivell de detall",
+        "effortLevels": {
+          "low": "Ràpid",
+          "medium": "Equilibrat",
+          "high": "Minuciós"
+        },
+        "effortHint": "Més minuciós vol dir resultats més acurats, però més lents i més cars per document.",
+        "outputLanguage": "Idioma dels resultats",
+        "outputLanguageHint": "La IA escriu el títol, el resum i les etiquetes en aquest idioma.",
+        "ocr": "Reconeixement de text per a escanejos",
+        "ocrHint": "L’aplicació fa que la IA transcrigui els PDF escanejats sense capa de text: només així es poden trobar amb la cerca de text complet. Cada escaneig requereix més temps i costa més."
+      },
+      "unanalyzed_one": "{{count, number}} document encara no ha estat analitzat per la IA.",
+      "unanalyzed_many": "{{count, number}} de documents encara no han estat analitzats per la IA.",
+      "unanalyzed_other": "{{count, number}} documents encara no han estat analitzats per la IA.",
+      "analyzeNow": "Analitza ara",
+      "analysisStarted_one": "S’està analitzant {{count, number}} document.",
+      "analysisStarted_many": "S’estan analitzant {{count, number}} de documents.",
+      "analysisStarted_other": "S’estan analitzant {{count, number}} documents."
+    },
+    "users": {
+      "title": "Usuaris",
+      "navHint": "Comptes i rols",
+      "intro": "Cada persona inicia la sessió amb el seu propi compte. Els administradors gestionen l’aplicació; els usuaris treballen amb els documents.",
+      "add": "Crea un usuari",
+      "you": "Tu",
+      "disabled": "Desactivat",
+      "lastLogin": "Última sessió iniciada {{when}}",
+      "neverLoggedIn": "Mai no ha iniciat la sessió",
+      "editUser": "Edita {{name}}",
+      "deleteUser": "Elimina {{name}}",
+      "saved": "Usuari desat",
+      "created": "Usuari creat",
+      "deleted": "Usuari eliminat",
+      "delete": {
+        "title": "Vols eliminar l’usuari?",
+        "text": "El compte «{{name}}» s’eliminarà i se’n tancarà la sessió immediatament. Els documents es conserven."
+      },
+      "dialog": {
+        "selfNotice": "Aquest és el teu propi compte. Després de desar hauràs de tornar a iniciar la sessió.",
+        "passwordKeepHint": "Deixa-ho en blanc per conservar la contrasenya actual. Si no, almenys 8 caràcters.",
+        "role": "Rol",
+        "roleHints": {
+          "ADMIN": "Ho pot fer tot, també canviar la configuració, gestionar usuaris i eliminar documents.",
+          "USER": "Pot veure, cercar i pujar documents i editar-ne els detalls."
+        },
+        "active": "Compte actiu",
+        "activeHint": "Els comptes desactivats no poden iniciar la sessió; les sessions actives acaben immediatament.",
+        "create": "Crea"
+      }
+    }
+  }
+}

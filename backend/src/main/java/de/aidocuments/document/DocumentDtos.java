@@ -1,5 +1,8 @@
 package de.aidocuments.document;
 
+import static de.aidocuments.i18n.ValidationMessages.SIZE;
+
+import de.aidocuments.i18n.Messages;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -36,13 +39,14 @@ public final class DocumentDtos {
             /* Trefferausschnitt aus dem Volltext; U+E000/U+E001 markieren Anfang und Ende eines Treffers. */
             String snippet) {
 
-        static DocumentDto of(Document d, String snippet) {
+        /** Die am Dokument gespeicherte Meldung wird hier in die Sprache des Lesers übersetzt. */
+        static DocumentDto of(Document d, String snippet, Messages messages) {
             return new DocumentDto(
                     d.getId(),
                     d.getTitle() != null ? d.getTitle() : d.getOriginalFilename(),
                     d.getOriginalFilename(),
                     d.getStatus(),
-                    d.getErrorMessage(),
+                    messages.localize(d.getErrorMessage()),
                     d.getCategory(),
                     d.getCorrespondent(),
                     d.getDocumentDate(),
@@ -68,12 +72,12 @@ public final class DocumentDtos {
     }
 
     public record UpdateDocumentRequest(
-            @Size(max = 500) String title,
-            @Size(max = 4000) String summary,
-            @Size(max = 100) String category,
-            @Size(max = 255) String correspondent,
+            @Size(max = 500, message = SIZE) String title,
+            @Size(max = 4000, message = SIZE) String summary,
+            @Size(max = 100, message = SIZE) String category,
+            @Size(max = 255, message = SIZE) String correspondent,
             LocalDate documentDate,
-            @Size(max = 30) List<@Size(min = 1, max = 100) String> tags) {
+            @Size(max = 30, message = SIZE) List<@Size(min = 1, max = 100, message = SIZE) String> tags) {
     }
 
     public record FacetsDto(

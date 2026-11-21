@@ -6,6 +6,7 @@ import de.aidocuments.document.DocumentDtos.PageDto;
 import de.aidocuments.document.DocumentDtos.TextDto;
 import de.aidocuments.document.DocumentDtos.UpdateDocumentRequest;
 import de.aidocuments.document.DocumentDtos.UploadResultDto;
+import de.aidocuments.i18n.Messages;
 import de.aidocuments.search.SearchIndex;
 import de.aidocuments.web.ApiException;
 import jakarta.validation.Valid;
@@ -47,8 +48,11 @@ public class DocumentController {
     private final DocumentService service;
     private final DocumentFacets facets;
     private final FileStorage storage;
+    private final Messages messages;
 
-    public DocumentController(DocumentService service, DocumentFacets facets, FileStorage storage) {
+    public DocumentController(DocumentService service, DocumentFacets facets, FileStorage storage,
+                              Messages messages) {
+        this.messages = messages;
         this.service = service;
         this.facets = facets;
         this.storage = storage;
@@ -101,7 +105,7 @@ public class DocumentController {
         Document doc = service.require(id);
         Path path = storage.resolve(doc.getStoragePath());
         if (!Files.exists(path)) {
-            throw ApiException.notFound("Die PDF-Datei");
+            throw ApiException.notFound("error.document.fileNotFound");
         }
         ContentDisposition disposition = (download ? ContentDisposition.attachment() : ContentDisposition.inline())
                 .filename(doc.getOriginalFilename(), StandardCharsets.UTF_8)
@@ -118,7 +122,7 @@ public class DocumentController {
         service.require(id);
         Path path = storage.thumbnailPath(id);
         if (!Files.exists(path)) {
-            throw ApiException.notFound("Das Vorschaubild");
+            throw ApiException.notFound("error.document.thumbnailNotFound");
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
@@ -134,10 +138,11 @@ public class DocumentController {
             try (InputStream in = file.getInputStream()) {
                 DocumentService.IngestResult result = service.ingest(in, name, DocumentSource.UPLOAD, null);
                 results.add(new UploadResultDto(name, result.outcome().name(),
-                        result.document() != null ? result.document().getId() : null, result.message()));
+                        result.document() != null ? result.document().getId() : null,
+                        result.message() != null ? messages.render(result.message()) : null));
             } catch (IOException e) {
                 results.add(new UploadResultDto(name, DocumentService.Outcome.REJECTED.name(), null,
-                        "Die Datei konnte nicht gespeichert werden."));
+                        messages.get("upload.storeFailed")));
             }
         }
         return results;

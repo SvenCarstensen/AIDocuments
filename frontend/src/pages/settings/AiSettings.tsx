@@ -1,47 +1,30 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Bot, ScanText, ShieldAlert } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Alert, Badge, Button, Card, Field, Input, Segmented, Select, Spinner, Switch } from '../../components/ui'
-import { api, errorMessage, type LlmProvider, type LlmProviderInfo, type TestResult } from '../../lib/api'
-import { plural } from '../../lib/format'
+import { type AiSettings, api, errorMessage, type LlmProvider, type LlmProviderInfo, type TestResult } from '../../lib/api'
 import { SectionHeader } from './SectionHeader'
 
 const claudeModels = ['claude-opus-5-5', 'claude-sonnet-5-5', 'claude-haiku-5-5', 'claude-fable-5-2']
-const efforts = [
-  { value: 'low', label: 'Schnell' },
-  { value: 'medium', label: 'Ausgewogen' },
-  { value: 'high', label: 'Gründlich' },
-]
+/** Stufen der Gründlichkeit; die Bezeichnungen stehen unter settings.ai.analysis.effortLevels.<Stufe>. */
+const efforts = ['low', 'medium', 'high'] as const
 
-/** Was beim jeweiligen Anbieter in den Feldern steht bzw. als Hinweis darunter. */
-const providerHints: Record<LlmProvider, { url: string; model: string; key: string }> = {
-  ANTHROPIC: {
-    url: 'Die Claude API von Anthropic. Nur ändern, wenn ein eigenes Gateway davorsteht.',
-    model: 'Claude Opus 5.5 ist die empfohlene Wahl; Sonnet und Haiku sind schneller und günstiger.',
-    key: 'sk-ant-…',
-  },
-  OPENAI: {
-    url: 'Die API von OpenAI. Nur ändern, wenn ein eigenes Gateway davorsteht.',
-    model: 'Die Modell-ID, wie OpenAI sie nennt. Nach dem Speichern des Schlüssels erscheinen hier die verfügbaren Modelle.',
-    key: 'sk-…',
-  },
-  MOONSHOT: {
-    url: 'Die API von Moonshot AI (Kimi). Für Konten der chinesischen Plattform: https://api.moonshot.cn/v1',
-    model: 'Die Modell-ID, wie Moonshot sie nennt. Nach dem Speichern des Schlüssels erscheinen hier die verfügbaren Modelle.',
-    key: 'sk-…',
-  },
-  LM_STUDIO: {
-    url: 'Der lokale Server von LM Studio (in LM Studio unter „Developer“ starten). Läuft AIDocuments in Docker: http://host.docker.internal:1234/v1',
-    model: 'Die ID des in LM Studio geladenen Modells. Für Scans braucht es ein Modell mit Bildeingabe, für die Erschließung eines mit Werkzeugaufrufen (Tool Use).',
-    key: 'nicht nötig',
-  },
-  OPENAI_COMPATIBLE: {
-    url: 'Adresse eines Servers, der die OpenAI-Schnittstelle spricht – üblicherweise mit /v1 am Ende, z. B. http://192.168.1.10:8000/v1',
-    model: 'Die Modell-ID, wie der Server sie nennt. Nach dem Speichern erscheinen hier die Modelle, die er anbietet.',
-    key: 'nur falls der Server einen verlangt',
-  },
+/**
+ * Was je Anbieter nicht übersetzt wird: die Beispieladresse im Hinweis zur Server-Adresse und das Muster des
+ * Schlüssels. Die Hinweistexte selbst stehen unter settings.ai.providers.<Anbieter>.
+ */
+const providerExamples: Record<LlmProvider, { url: string; key: string | null }> = {
+  ANTHROPIC: { url: '', key: 'sk-ant-…' },
+  OPENAI: { url: '', key: 'sk-…' },
+  MOONSHOT: { url: 'https://api.moonshot.cn/v1', key: 'sk-…' },
+  LM_STUDIO: { url: 'http://host.docker.internal:1234/v1', key: null },
+  OPENAI_COMPATIBLE: { url: 'http://192.168.1.10:8000/v1', key: null },
 }
+
+/** Platzhalter im Schlüsselfeld, solange ein gespeicherter oder vorbelegter Schlüssel gilt. */
+const KEY_MASK = '••••••••••••••••'
 
 /**
  * Zeigt die Adresse auf diesen Rechner oder ins eigene Netz? Dann bleiben die Inhalte im Haus –
@@ -66,7 +49,18 @@ function isLocalAddress(url: string): boolean {
   }
 }
 
+/**
+ * Der Schlüssel, der für diesen Anbieter aus der Server-Konfiguration gilt und im Formular gezeigt werden darf.
+ * Leer, wenn es keinen gibt, wenn in der Oberfläche ein eigener gespeichert ist oder wenn der Server ihn –
+ * wie im Auslieferungszustand – nicht herausgibt.
+ */
+function visibleConfigKey(settings: AiSettings, provider: LlmProvider): string {
+  if (provider === settings.provider && settings.apiKeySource === 'SETTINGS') return ''
+  return settings.providers.find((p) => p.id === provider)?.presetApiKey ?? ''
+}
+
 export function AiSettingsSection() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const settings = useQuery({ queryKey: ['settings', 'ai'], queryFn: api.aiSettings })
   const system = useQuery({ queryKey: ['system'], queryFn: api.system })
@@ -94,11 +88,11 @@ export function AiSettingsSection() {
     if (!data) return
     setProvider(data.provider)
     setBaseUrl(data.baseUrl)
-    setApiKey('')
+    setApiKey(visibleConfigKey(data, data.provider))
     setRemoveKey(false)
     setModel(data.model)
     setCompatibilityMode(data.compatibilityMode)
-    setEffort(efforts.some((e) => e.value === data.effort) ? data.effort : 'high')
+    setEffort(efforts.some((e) => e === data.effort) ? data.effort : 'high')
     setOutputLanguage(data.outputLanguage)
     setOcr(data.ocr)
   }, [data])
@@ -109,7 +103,8 @@ export function AiSettingsSection() {
         provider,
         baseUrl: baseUrl.trim(),
         // null = gespeicherten Schlüssel behalten, '' = entfernen
-        apiKey: removeKey ? '' : apiKey.trim() || null,
+        // Ein unverändert vorbelegter Schlüssel wird nicht mitgeschickt: Er gilt ohnehin, solange kein anderer gespeichert ist.
+        apiKey: removeKey ? '' : apiKey.trim() === visibleConfigKey(data!, provider) ? null : apiKey.trim() || null,
         model: model.trim(),
         effort,
         outputLanguage: outputLanguage.trim(),
@@ -123,7 +118,7 @@ export function AiSettingsSection() {
         queryClient.invalidateQueries({ queryKey: ['settings', 'ai', 'models'] }),
       ])
       setTest(null)
-      toast.success('KI-Einstellungen gespeichert')
+      toast.success(t('settings.ai.saved'))
     },
   })
   const runTest = useMutation({
@@ -135,7 +130,7 @@ export function AiSettingsSection() {
   const reprocess = useMutation({
     mutationFn: api.reprocessUnanalyzed,
     onSuccess: async ({ count }) => {
-      toast.success(`${plural(count, 'Dokument wird', 'Dokumente werden')} jetzt analysiert.`)
+      toast.success(t('settings.ai.analysisStarted', { count }))
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['system'] }),
         queryClient.invalidateQueries({ queryKey: ['documents'] }),
@@ -155,14 +150,19 @@ export function AiSettingsSection() {
 
   const info = (id: LlmProvider): LlmProviderInfo => data.providers.find((p) => p.id === id) ?? data.providers[0]
   const current = info(provider)
-  const hints = providerHints[provider]
+  const examples = providerExamples[provider]
   const providerChanged = provider !== data.provider
   // Ein gespeicherter Schlüssel gehört zum gespeicherten Anbieter – beim Wechsel zählt er nicht mehr.
   const keyStored = data.apiKeySet && !providerChanged
+  // Für den neu gewählten Anbieter kann die Server-Konfiguration einen Schlüssel vorbelegen.
+  const keyPreset = providerChanged && current.presetApiKeySet
+  // In der Entwicklungsumgebung steht der vorbelegte Schlüssel sichtbar im Feld; das zählt nicht als Änderung.
+  const initialKey = visibleConfigKey(data, provider)
+  const keyShown = initialKey !== '' && apiKey === initialKey
   const dirty =
     providerChanged ||
     baseUrl.trim() !== data.baseUrl ||
-    apiKey.trim() !== '' ||
+    apiKey.trim() !== initialKey ||
     removeKey ||
     model.trim() !== data.model ||
     effort !== data.effort ||
@@ -179,10 +179,12 @@ export function AiSettingsSection() {
     // Zurück zum gespeicherten Anbieter: dessen gespeicherte Angaben wiederherstellen.
     const restoring = next === data!.provider
     setProvider(next)
-    setBaseUrl(restoring ? data!.baseUrl : info(next).defaultBaseUrl)
-    setModel(restoring ? data!.model : next === 'ANTHROPIC' ? claudeModels[0] : '')
+    // Sonst: die Vorbelegung aus der Server-Konfiguration, ersatzweise die Standardwerte des Anbieters.
+    const target = info(next)
+    setBaseUrl(restoring ? data!.baseUrl : target.presetBaseUrl || target.defaultBaseUrl)
+    setModel(restoring ? data!.model : target.presetModel || (next === 'ANTHROPIC' ? claudeModels[0] : ''))
     setCompatibilityMode(restoring ? data!.compatibilityMode : false)
-    setApiKey('')
+    setApiKey(visibleConfigKey(data!, next))
     setRemoveKey(false)
     setTest(null)
   }
@@ -202,11 +204,10 @@ export function AiSettingsSection() {
   return (
     <form onSubmit={submit}>
       <SectionHeader
-        title="KI"
-        action={<Badge tone={data.enabled ? 'ok' : 'warn'}>{data.enabled ? 'Eingerichtet' : 'Nicht eingerichtet'}</Badge>}
+        title={t('settings.ai.title')}
+        action={<Badge tone={data.enabled ? 'ok' : 'warn'}>{data.enabled ? t('settings.ai.configured') : t('settings.ai.notConfigured')}</Badge>}
       >
-        Die KI liest jedes neue PDF, fasst es zusammen, vergibt Dokumentart und Schlagworte und zieht Kerndaten wie
-        Beträge oder Fristen heraus.
+        {t('settings.ai.intro')}
       </SectionHeader>
       {save.isError && (
         <Alert tone="danger" className="mb-4">
@@ -216,10 +217,10 @@ export function AiSettingsSection() {
 
       <Card className="p-5">
         <h3 className="flex items-center gap-2 font-semibold">
-          <Bot className="size-[18px] text-muted" aria-hidden /> LLM-Server
+          <Bot className="size-[18px] text-muted" aria-hidden /> {t('settings.ai.server.title')}
         </h3>
         <div className="mt-4 flex flex-col gap-4">
-          <Field label="Anbieter" className="max-w-xs">
+          <Field label={t('settings.ai.server.provider')} className="max-w-xs">
             {(id) => (
               <Select id={id} value={provider} onChange={(e) => changeProvider(e.target.value as LlmProvider)}>
                 {data.providers.map((p) => (
@@ -235,27 +236,24 @@ export function AiSettingsSection() {
             <div role="note" className="flex items-start gap-3 rounded-lg border border-warn/40 bg-warn-soft px-4 py-3.5">
               <ShieldAlert className="mt-0.5 size-5 shrink-0 text-warn" aria-hidden />
               <div className="text-sm leading-relaxed">
-                <p className="font-semibold text-ink">Deine Dokumente verlassen bei {current.label} diesen Rechner</p>
-                <p className="mt-1 text-muted">
-                  Zur Analyse wird der Inhalt jedes PDFs an die Server von {current.label} im Internet übertragen und
-                  dort verarbeitet – auch Rechnungen, Verträge, Arztbriefe und Behördenpost.
-                </p>
+                <p className="font-semibold text-ink">{t('settings.ai.privacy.title', { provider: current.label })}</p>
+                <p className="mt-1 text-muted">{t('settings.ai.privacy.text', { provider: current.label })}</p>
                 <p className="mt-2 text-muted">
-                  <span className="font-medium text-ink">Empfehlung:</span> eine lokale KI verwenden. Mit{' '}
-                  <button type="button" onClick={() => changeProvider('LM_STUDIO')} className="font-medium text-brand-ink underline underline-offset-2">
-                    LM Studio
-                  </button>{' '}
-                  oder einem{' '}
-                  <button type="button" onClick={() => changeProvider('OPENAI_COMPATIBLE')} className="font-medium text-brand-ink underline underline-offset-2">
-                    OpenAI-kompatiblen Server
-                  </button>{' '}
-                  im eigenen Netz bleiben alle Inhalte bei dir.
+                  {/* Ein zusammenhängender Satz mit zwei Schaltflächen mittendrin – die Wortstellung bestimmt die Übersetzung. */}
+                  <Trans
+                    i18nKey="settings.ai.privacy.recommendation"
+                    components={{
+                      emphasis: <span className="font-medium text-ink" />,
+                      lmStudio: <button type="button" onClick={() => changeProvider('LM_STUDIO')} className="font-medium text-brand-ink underline underline-offset-2" />,
+                      compatible: <button type="button" onClick={() => changeProvider('OPENAI_COMPATIBLE')} className="font-medium text-brand-ink underline underline-offset-2" />,
+                    }}
+                  />
                 </p>
               </div>
             </div>
           )}
 
-          <Field label="Server-Adresse" hint={hints.url}>
+          <Field label={t('settings.ai.server.baseUrl')} hint={t(`settings.ai.providers.${provider}.urlHint`, { url: examples.url })}>
             {(id) => (
               <Input
                 id={id}
@@ -270,27 +268,35 @@ export function AiSettingsSection() {
             )}
           </Field>
           <Field
-            label={current.requiresApiKey ? 'API-Schlüssel' : 'API-Schlüssel (optional)'}
+            label={current.requiresApiKey ? t('settings.ai.apiKey.label') : t('settings.ai.apiKey.labelOptional')}
             hint={
-              keyStored && data.apiKeySource === 'SETTINGS' ? (
+              keyShown ? (
+                t('settings.ai.apiKey.hintShown')
+              ) : keyStored && data.apiKeySource === 'SETTINGS' ? (
                 removeKey ? (
-                  'Der gespeicherte Schlüssel wird beim Speichern entfernt.'
+                  t('settings.ai.apiKey.hintRemoving')
                 ) : (
-                  <>
-                    Ein Schlüssel ist verschlüsselt gespeichert. Leer lassen, um ihn zu behalten –{' '}
-                    <button type="button" onClick={() => setRemoveKey(true)} className="font-medium text-danger hover:underline">
-                      Schlüssel entfernen
-                    </button>
-                  </>
+                  <Trans
+                    i18nKey="settings.ai.apiKey.hintStored"
+                    components={{
+                      remove: <button type="button" onClick={() => setRemoveKey(true)} className="font-medium text-danger hover:underline" />,
+                    }}
+                  />
                 )
               ) : keyStored && data.apiKeySource === 'ENVIRONMENT' ? (
-                'Der Schlüssel kommt derzeit aus der Server-Konfiguration (Umgebungsvariable bzw. Konfigurationsdatei). Ein hier eingetragener Schlüssel hat Vorrang.'
+                t('settings.ai.apiKey.hintEnvironment')
+              ) : keyPreset ? (
+                t('settings.ai.apiKey.hintPreset')
               ) : providerChanged && data.apiKeySet ? (
-                `Der bisher gespeicherte Schlüssel gehört zu ${info(data.provider).label} und wird beim Wechsel verworfen.`
+                data.apiKeySource === 'SETTINGS' ? (
+                  t('settings.ai.apiKey.hintDiscardedOnSwitch', { previous: info(data.provider).label })
+                ) : (
+                  t('settings.ai.apiKey.hintPresetOtherProvider', { previous: info(data.provider).label, provider: current.label })
+                )
               ) : current.requiresApiKey ? (
-                'Wird verschlüsselt gespeichert und nie wieder angezeigt.'
+                t('settings.ai.apiKey.hintRequired')
               ) : (
-                'Lokale Server brauchen meist keinen Schlüssel.'
+                t('settings.ai.apiKey.hintLocal')
               )
             }
           >
@@ -303,18 +309,25 @@ export function AiSettingsSection() {
                   setApiKey(e.target.value)
                   setRemoveKey(false)
                 }}
-                placeholder={keyStored && !removeKey ? '•••••••••••••••• (gespeichert)' : hints.key}
-                required={current.requiresApiKey && !keyStored}
+                placeholder={
+                  keyStored && !removeKey
+                    ? t('settings.ai.apiKey.placeholderStored', { mask: KEY_MASK })
+                    : keyPreset
+                      ? t('settings.ai.apiKey.placeholderPreset', { mask: KEY_MASK })
+                      : (examples.key ??
+                        (provider === 'LM_STUDIO' ? t('settings.ai.apiKey.placeholderNotNeeded') : t('settings.ai.apiKey.placeholderIfRequired')))
+                }
+                required={current.requiresApiKey && !keyStored && !keyPreset}
                 autoComplete="off"
                 spellCheck={false}
                 className="font-mono !text-[13px]"
               />
             )}
           </Field>
-          <Field label="Modell" hint={hints.model}>
+          <Field label={t('settings.ai.server.model')} hint={t(`settings.ai.providers.${provider}.modelHint`)}>
             {(id) => (
               <>
-                <Input id={id} value={model} onChange={(e) => setModel(e.target.value)} list={`${id}-models`} placeholder="Modell-ID" spellCheck={false} required className="font-mono !text-[13px]" />
+                <Input id={id} value={model} onChange={(e) => setModel(e.target.value)} list={`${id}-models`} placeholder={t('settings.ai.server.modelPlaceholder')} spellCheck={false} required className="font-mono !text-[13px]" />
                 <datalist id={`${id}-models`}>
                   {modelSuggestions.map((name) => (
                     <option key={name} value={name} />
@@ -346,8 +359,8 @@ export function AiSettingsSection() {
             <Switch
               checked={compatibilityMode}
               onChange={setCompatibilityMode}
-              label="Kompatibilitätsmodus für lokale Modelle"
-              description="Für Server, die zwar die Anthropic-Schnittstelle sprechen, aber keine PDF-Eingabe und keine strukturierten Ausgaben kennen: Das Dokument geht als Text bzw. bei Scans als Seitenbilder an das Modell. Bei der Claude API ausgeschaltet lassen."
+              label={t('settings.ai.server.compatibilityMode')}
+              description={t('settings.ai.server.compatibilityModeHint')}
             />
           )}
 
@@ -357,9 +370,9 @@ export function AiSettingsSection() {
               onClick={() => runTest.mutate()}
               loading={runTest.isPending}
               disabled={dirty || !data.enabled}
-              title={dirty ? 'Bitte zuerst speichern' : !data.enabled ? 'Die Angaben sind noch nicht vollständig' : undefined}
+              title={dirty ? t('common.saveFirst') : !data.enabled ? t('settings.ai.server.testIncomplete') : undefined}
             >
-              Verbindung testen
+              {t('common.testConnection')}
             </Button>
           </div>
         </div>
@@ -367,31 +380,36 @@ export function AiSettingsSection() {
 
       <Card className="mt-4 p-5">
         <h3 className="flex items-center gap-2 font-semibold">
-          <ScanText className="size-[18px] text-muted" aria-hidden /> Analyse
+          <ScanText className="size-[18px] text-muted" aria-hidden /> {t('settings.ai.analysis.title')}
         </h3>
         <div className="mt-4 flex flex-col gap-5">
           {provider === 'ANTHROPIC' && (
             <div className="flex flex-col gap-1.5">
-              <span className="text-[13px] font-medium">Gründlichkeit</span>
-              <Segmented label="Gründlichkeit" value={effort} onChange={setEffort} options={efforts} />
-              <p className="text-[13px] text-muted">Gründlicher bedeutet: sorgfältigere Ergebnisse, aber langsamer und teurer je Dokument.</p>
+              <span className="text-[13px] font-medium">{t('settings.ai.analysis.effort')}</span>
+              <Segmented
+                label={t('settings.ai.analysis.effort')}
+                value={effort}
+                onChange={setEffort}
+                options={efforts.map((level) => ({ value: level as string, label: t(`settings.ai.analysis.effortLevels.${level}`) }))}
+              />
+              <p className="text-[13px] text-muted">{t('settings.ai.analysis.effortHint')}</p>
             </div>
           )}
-          <Field label="Sprache der Ergebnisse" hint="In dieser Sprache schreibt die KI Titel, Zusammenfassung und Schlagworte." className="max-w-xs">
+          <Field label={t('settings.ai.analysis.outputLanguage')} hint={t('settings.ai.analysis.outputLanguageHint')} className="max-w-xs">
             {(id) => <Input id={id} value={outputLanguage} onChange={(e) => setOutputLanguage(e.target.value)} maxLength={50} required />}
           </Field>
           <Switch
             checked={ocr}
             onChange={setOcr}
-            label="Texterkennung für Scans"
-            description="Gescannte PDFs ohne Textebene lässt die Anwendung von der KI transkribieren – erst dadurch werden sie im Volltext durchsuchbar. Braucht je Scan mehr Zeit bzw. Kosten."
+            label={t('settings.ai.analysis.ocr')}
+            description={t('settings.ai.analysis.ocrHint')}
           />
         </div>
       </Card>
 
       <div className="mt-5 flex justify-end">
         <Button type="submit" variant="primary" loading={save.isPending} disabled={!dirty}>
-          Speichern
+          {t('common.save')}
         </Button>
       </div>
 
@@ -401,11 +419,11 @@ export function AiSettingsSection() {
           className="mt-6"
           action={
             <Button size="sm" onClick={() => reprocess.mutate()} loading={reprocess.isPending} className="shrink-0">
-              Jetzt analysieren
+              {t('settings.ai.analyzeNow')}
             </Button>
           }
         >
-          {plural(waiting, 'Dokument ist', 'Dokumente sind')} noch nicht von der KI erschlossen.
+          {t('settings.ai.unanalyzed', { count: waiting })}
         </Alert>
       )}
     </form>

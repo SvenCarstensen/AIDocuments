@@ -1,0 +1,436 @@
+{
+  "common": {
+    "save": "Išsaugoti",
+    "cancel": "Atšaukti",
+    "close": "Uždaryti",
+    "edit": "Redaguoti",
+    "delete": "Ištrinti",
+    "remove": "Pašalinti",
+    "add": "Pridėti",
+    "back": "Atgal",
+    "retry": "Bandyti dar kartą",
+    "loading": "Įkeliama",
+    "language": "Kalba",
+    "testConnection": "Tikrinti ryšį",
+    "saveFirst": "Pirmiausia išsaugokite",
+    "username": "Naudotojo vardas",
+    "usernameHint": "3–50 simbolių: raidės, skaitmenys, taškas, brūkšnelis, pabraukimo brūkšnys, @",
+    "password": "Slaptažodis",
+    "newPassword": "Naujas slaptažodis",
+    "passwordHint": "Bent 8 simboliai",
+    "passwordMismatch": "Slaptažodžiai nesutampa.",
+    "justNow": "ką tik",
+    "documentCount_one": "{{count, number}} dokumentas",
+    "documentCount_few": "{{count, number}} dokumentai",
+    "documentCount_many": "{{count, number}} dokumento",
+    "documentCount_other": "{{count, number}} dokumentų",
+    "role": {
+      "ADMIN": "Administratorius",
+      "USER": "Naudotojas"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} kB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Nėra ryšio su serveriu",
+    "server": "Serveris pranešė apie klaidą ({{status}}).",
+    "forbidden": "Neturite teisės atlikti šio veiksmo.",
+    "unreachable": "Serveris nepasiekiamas.",
+    "unexpected": "Netikėta klaida.",
+    "languageLoad": "Nepavyko įkelti kalbos."
+  },
+  "auth": {
+    "login": {
+      "title": "Sveiki sugrįžę",
+      "subtitle": "Prisijunkite, kad pasiektumėte savo dokumentus.",
+      "submit": "Prisijungti"
+    },
+    "setup": {
+      "title": "AIDocuments sąranka",
+      "subtitle": "Pirmiausia sukurkite administratoriaus paskyrą. Daugiau naudotojų galėsite pridėti vėliau nustatymuose.",
+      "adminAccount": "Administratoriaus paskyra",
+      "repeatPassword": "Pakartokite slaptažodį",
+      "submit": "Sukurti paskyrą ir pradėti",
+      "features": {
+        "import": "PDF failai iš pašto dėžutės ir importavimo aplanko",
+        "ai": "DI juos apibendrina ir priskiria žymas",
+        "search": "Viso teksto paieška pačiuose dokumentuose"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Įkelti",
+    "theme": {
+      "light": "Šviesi tema",
+      "dark": "Tamsi tema"
+    },
+    "search": {
+      "placeholder": "Ieškoti dokumentų, žymų, turinio…",
+      "label": "Ieškoti dokumentų",
+      "clear": "Išvalyti paiešką"
+    },
+    "userMenu": {
+      "label": "Naudotojo meniu ({{name}})",
+      "aiActive": "DI aktyvus",
+      "aiNotConfigured": "DI nesukonfigūruotas",
+      "changePassword": "Keisti slaptažodį",
+      "logout": "Atsijungti"
+    },
+    "passwordDialog": {
+      "current": "Dabartinis slaptažodis",
+      "repeat": "Pakartokite naują slaptažodį",
+      "changed": "Slaptažodis pakeistas"
+    },
+    "dropzone": {
+      "title": "Nutempkite PDF failus čia",
+      "hint": "Vienu metu galima nutempti kelis failus. Jie išsaugomi, analizuojami ir jiems priskiriamos žymos."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Galima pridėti tik PDF failus.",
+    "uploadingFile": "Įkeliama „{{name}}“…",
+    "uploadingFiles_one": "Įkeliamas {{count, number}} PDF failas…",
+    "uploadingFiles_few": "Įkeliami {{count, number}} PDF failai…",
+    "uploadingFiles_many": "Įkeliama {{count, number}} PDF failo…",
+    "uploadingFiles_other": "Įkeliama {{count, number}} PDF failų…",
+    "created_one": "Pridėtas {{count, number}} dokumentas",
+    "created_few": "Pridėti {{count, number}} dokumentai",
+    "created_many": "Pridėta {{count, number}} dokumento",
+    "created_other": "Pridėta {{count, number}} dokumentų",
+    "processingInBackground": "Apdorojimas tęsiamas fone.",
+    "duplicates_one": "{{count, number}} jau yra",
+    "duplicates_few": "{{count, number}} jau yra",
+    "duplicates_many": "{{count, number}} jau yra",
+    "duplicates_other": "{{count, number}} jau yra",
+    "rejected_one": "{{count, number}} failas nėra tinkamas PDF",
+    "rejected_few": "{{count, number}} failai nėra tinkami PDF",
+    "rejected_many": "{{count, number}} failo nėra tinkami PDF",
+    "rejected_other": "{{count, number}} failų nėra tinkami PDF",
+    "onlyDuplicates_one": "Tai, ką įkėlėte, jau yra.",
+    "onlyDuplicates_few": "Šie dokumentai jau yra.",
+    "onlyDuplicates_many": "Šie dokumentai jau yra.",
+    "onlyDuplicates_other": "Šie dokumentai jau yra.",
+    "noneValid": "Nė vienas iš failų nėra tinkamas PDF.",
+    "failed": "Įkelti nepavyko"
+  },
+  "documents": {
+    "status": {
+      "pending": "Laukia",
+      "processing": "Analizuojama",
+      "failed": "Klaida",
+      "textOnly": "Be DI"
+    },
+    "ocrBadge": "Teksto atpažinimas",
+    "aiNotice": {
+      "text": "DI dar nesukonfigūruotas. Naujų dokumentų galima ieškoti pagal jų tekstą, tačiau jie neapibendrinami ir jiems nepriskiriamos žymos.",
+      "action": "Konfigūruoti dabar"
+    },
+    "searchResults_one": "<count>{{count, number}} rezultatas</count> <query>pagal užklausą „{{query}}“</query>",
+    "searchResults_few": "<count>{{count, number}} rezultatai</count> <query>pagal užklausą „{{query}}“</query>",
+    "searchResults_many": "<count>{{count, number}} rezultato</count> <query>pagal užklausą „{{query}}“</query>",
+    "searchResults_other": "<count>{{count, number}} rezultatų</count> <query>pagal užklausą „{{query}}“</query>",
+    "progress": {
+      "inProgress": "Apdorojama: {{documents, number}}",
+      "inProgressHint": "Laukia DI analizės arba šiuo metu analizuojami",
+      "remaining": "liko apie {{duration}}",
+      "remainingLessThan": "liko mažiau nei {{duration}}",
+      "finishHint": "Numatoma pabaiga: {{time}} – įvertinta pagal paskutinių apdorotų dokumentų tempą"
+    },
+    "sort": {
+      "label": "Rikiavimas",
+      "relevance": "Geriausi atitikmenys",
+      "newest": "Naujausi viršuje",
+      "date": "Pagal dokumento datą"
+    },
+    "view": {
+      "grid": "Tinklelio rodinys",
+      "list": "Sąrašo rodinys"
+    },
+    "pageSize": {
+      "label": "Rodomų dokumentų skaičius",
+      "all": "Visi"
+    },
+    "filters": {
+      "title": "Filtrai",
+      "titleWithCount": "Filtrai ({{active, number}})",
+      "apply": "Rodyti",
+      "hint": "Kai dokumentai bus išanalizuoti, čia kaip filtrai atsiras dokumentų tipai, žymos ir siuntėjai.",
+      "dateFrom": "nuo",
+      "dateTo": "iki",
+      "status": "Būsena",
+      "failed": "Nepavyko",
+      "showAll": "Rodyti visus",
+      "showLess": "Rodyti mažiau",
+      "activeFrom": "nuo {{date}}",
+      "activeTo": "iki {{date}}",
+      "removeOne": "Pašalinti filtrą „{{label}}“",
+      "removeAll": "Pašalinti visus filtrus",
+      "clear": "Pašalinti filtrus"
+    },
+    "empty": {
+      "libraryTitle": "Dokumentų dar nėra",
+      "libraryHint": "Tiesiog nutempkite PDF failus į šį langą arba spustelėkite „Įkelti“.",
+      "libraryHintAdmin": "Tiesiog nutempkite PDF failus į šį langą arba spustelėkite „Įkelti“. Nustatymuose galite sukonfigūruoti pašto dėžutę arba importavimo aplanką, iš kurio nauji PDF failai bus importuojami automatiškai.",
+      "noResultsTitle": "Nieko nerasta",
+      "noResultsSearch": "Šios paieškos neatitinka joks dokumentas. Paieška randa ir žodžių dalis – pabandykite trumpesnį žodį arba mažiau žodžių.",
+      "noResultsFilters": "Pasirinktų filtrų neatitinka joks dokumentas."
+    },
+    "loadingAll_one": "Įkelta {{loaded, number}} iš {{count, number}} dokumento…",
+    "loadingAll_few": "Įkelta {{loaded, number}} iš {{count, number}} dokumentų…",
+    "loadingAll_many": "Įkelta {{loaded, number}} iš {{count, number}} dokumento…",
+    "loadingAll_other": "Įkelta {{loaded, number}} iš {{count, number}} dokumentų…",
+    "loadMore": "Įkelti daugiau ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Atgal į apžvalgą",
+    "download": "Atsisiųsti",
+    "reprocess": "Analizuoti iš naujo",
+    "reprocessHint": "Iš naujo nuskaityti PDF ir pateikti DI analizuoti",
+    "reprocessStarted": "Dokumentas analizuojamas iš naujo.",
+    "deleted": "Dokumentas ištrintas",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Atidaryti naujame skirtuke",
+    "processingNotice": "Dokumentas apdorojamas. Santrauka ir žymos atsiras čia, kai tik analizė bus baigta.",
+    "textOnlyNotice": "Indeksuota be DI: dokumento galima ieškoti pagal jo tekstą, tačiau jis neturi santraukos ir automatinių žymų.",
+    "tabs": {
+      "overview": "Apžvalga",
+      "text": "Visas tekstas"
+    },
+    "fields": {
+      "title": "Pavadinimas",
+      "category": "Dokumento tipas",
+      "documentDate": "Dokumento data",
+      "correspondent": "Siuntėjas",
+      "tags": "Žymos",
+      "summary": "Santrauka"
+    },
+    "tags": {
+      "allWith": "Visi dokumentai su žyma „{{tag}}“",
+      "none": "Žymų nėra. <add>Pridėti</add>",
+      "inputHint": "Patvirtinkite klavišu „Enter“ arba kableliu. Siūlomos jau naudojamos žymos.",
+      "inputPlaceholder": "Įveskite žymą…",
+      "remove": "Pašalinti žymą „{{tag}}“"
+    },
+    "keyFacts": "Pagrindiniai duomenys",
+    "details": {
+      "title": "Išsami informacija",
+      "file": "Failas",
+      "size": "Apimtis",
+      "pageCount_one": "{{count, number}} puslapis",
+      "pageCount_few": "{{count, number}} puslapiai",
+      "pageCount_many": "{{count, number}} puslapio",
+      "pageCount_other": "{{count, number}} puslapių",
+      "language": "Kalba",
+      "source": "Šaltinis",
+      "mailSubject": "Tema",
+      "mailFrom": "Nuo",
+      "mailReceived": "Gauta",
+      "added": "Pridėta",
+      "text": "Tekstas"
+    },
+    "source": {
+      "MAIL": "Pašto dėžutė",
+      "FOLDER": "Importavimo aplankas",
+      "UPLOAD": "Įkelta"
+    },
+    "noText": "Šis dokumentas neturi teksto – tikriausiai tai skenuota kopija be teksto sluoksnio. Kai DI sukonfigūruotas ir įjungtas teksto atpažinimas, turinys transkribuojamas analizės metu.",
+    "edit": {
+      "title": "Redaguoti dokumentą",
+      "saved": "Pakeitimai išsaugoti"
+    },
+    "delete": {
+      "title": "Ištrinti dokumentą?",
+      "text": "„{{title}}“ bus ištrintas kartu su PDF failu, visu tekstu ir žymomis. Šio veiksmo anuliuoti negalima.",
+      "confirm": "Ištrinti visam laikui"
+    }
+  },
+  "settings": {
+    "title": "Nustatymai",
+    "mailboxes": {
+      "title": "Pašto dėžutės",
+      "navHint": "IMAP serveriai, iš kurių importuojami PDF priedai",
+      "intro": "Iš šių IMAP pašto dėžučių PDF priedai importuojami automatiškai. Pašto dėžutės tik skaitomos – el. laiškai lieka nepakeisti ir neskaityti.",
+      "add": "Pridėti pašto dėžutę",
+      "emptyTitle": "Dar nesukonfigūruota nė viena pašto dėžutė",
+      "emptyText": "Įveskite IMAP pašto dėžutės prisijungimo duomenis – pavyzdžiui, dėžutės, į kurią jūsų skeneris siunčia dokumentus.",
+      "paused": "Pristabdyta",
+      "syncNow": "Tikrinti dabar",
+      "syncing": "Tikrinama pašto dėžutė…",
+      "neverSynced": "Dar netikrinta.",
+      "saved": "Pašto dėžutė išsaugota",
+      "added": "Pašto dėžutė pridėta",
+      "firstSyncRunning": "Pirmasis tikrinimas jau vyksta.",
+      "removed": "Pašto dėžutė pašalinta",
+      "delete": {
+        "title": "Pašalinti pašto dėžutę?",
+        "text": "„{{name}}“ nebebus tikrinama. Jau importuoti dokumentai išliks."
+      },
+      "dialog": {
+        "editTitle": "Redaguoti pašto dėžutę",
+        "description": "Prisijungimo duomenis gausite iš savo el. pašto paslaugų teikėjo. Slaptažodis saugomas užšifruotas.",
+        "name": "Pavadinimas",
+        "nameHint": "Bet koks, pvz., „Skeneris“ arba „Sąskaitos“",
+        "namePlaceholder": "Skeneris",
+        "host": "IMAP serveris",
+        "port": "Prievadas",
+        "security": "Šifravimas",
+        "securityNone": "Nėra",
+        "securityNoneWarning": "Be šifravimo naudotojo vardas ir slaptažodis perduodami atviruoju tekstu.",
+        "passwordKeepHint": "Palikite tuščią, jei norite palikti išsaugotą slaptažodį",
+        "folder": "Aplankas",
+        "folderHint": "Dažniausiai {{folder}} (gautieji)",
+        "since": "Tik el. laiškai nuo",
+        "sinceHint": "Neprivaloma – senesni el. laiškai praleidžiami",
+        "enabled": "Tikrinti automatiškai",
+        "enabledHint": "Nustatytu intervalu tikrinama, ar pašto dėžutėje yra naujų PDF failų."
+      }
+    },
+    "import": {
+      "title": "Tvarkaraštis ir importavimo aplankas",
+      "navHint": "Tikrinimo intervalas ir stebimas aplankas",
+      "intro": "Nustato, kaip dažnai programa ieško naujų PDF failų – pašto dėžutėse ir importavimo aplanke.",
+      "saved": "Nustatymai išsaugoti",
+      "interval": {
+        "title": "Tikrinimo intervalas",
+        "text": "Taip dažnai programa tikrina, ar visose pašto dėžutėse ir importavimo aplanke yra naujų PDF failų.",
+        "label": "Kas … min.",
+        "nextRun": "Kitas automatinis tikrinimas {{when}}."
+      },
+      "folder": {
+        "title": "Importavimo aplankas",
+        "text": "Serverio aplankas, kuriame stebima, ar atsirado naujų PDF failų – pavyzdžiui, tinklo skenerio paskirties aplankas. Ieškoma ir poaplankiuose.",
+        "enable": "Stebėti importavimo aplanką",
+        "path": "Kelias serveryje",
+        "pathHint": "Absoliutusis kelias. Docker konteineryje tai prijungtas aplankas, dažniausiai {{path}}.",
+        "afterImport": "Po importavimo",
+        "keep": "Palikti failą vietoje",
+        "move": "Perkelti į „{{folder}}“",
+        "keepHint": "Failai lieka nepakeisti. Programa įsimena, ką jau importavo.",
+        "moveHint": "Importuoti failai perkeliami į poaplankį „{{folder}}“ – importavimo aplankas lieka tvarkingas.",
+        "scanning": "Tikrinamas aplankas…",
+        "neverScanned": "Dar netikrinta.",
+        "scanNow": "Tikrinti dabar",
+        "scanStarted": "Importavimo aplankas tikrinamas."
+      }
+    },
+    "ai": {
+      "title": "DI",
+      "navHint": "LLM serveris, modelis ir teksto atpažinimas",
+      "intro": "Dirbtinis intelektas (DI) perskaito kiekvieną naują PDF failą, jį apibendrina, priskiria dokumento tipą bei žymas ir išrenka pagrindinius duomenis, pavyzdžiui, sumas ar terminus.",
+      "configured": "Sukonfigūruota",
+      "notConfigured": "Nesukonfigūruota",
+      "saved": "DI nustatymai išsaugoti",
+      "server": {
+        "title": "LLM serveris",
+        "provider": "Teikėjas",
+        "baseUrl": "Serverio adresas",
+        "model": "Modelis",
+        "modelPlaceholder": "Modelio ID",
+        "compatibilityMode": "Suderinamumo režimas vietiniams modeliams",
+        "compatibilityModeHint": "Skirta serveriams, kurie naudoja Anthropic sąsają, bet nepalaiko nei PDF įvesties, nei struktūrizuotų išvesčių: dokumentas modeliui siunčiamas kaip tekstas arba, jei tai skenuota kopija, kaip puslapių vaizdai. Naudodami Claude API palikite išjungtą.",
+        "testIncomplete": "Nustatymai dar neišsamūs"
+      },
+      "privacy": {
+        "title": "Naudojant {{provider}}, jūsų dokumentai palieka šį kompiuterį",
+        "text": "Analizei kiekvieno PDF failo turinys perduodamas į {{provider}} serverius internete ir ten apdorojamas – įskaitant sąskaitas, sutartis, gydytojų išrašus ir institucijų raštus.",
+        "recommendation": "<emphasis>Rekomendacija:</emphasis> naudokite vietinį DI. Su <lmStudio>LM Studio</lmStudio> arba <compatible>su OpenAI suderinamu serveriu</compatible> savo tinkle visas turinys lieka pas jus."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Anthropic Claude API. Keiskite tik tada, jei prieš ją naudojate savo tinklų sietuvą.",
+          "modelHint": "Rekomenduojamas pasirinkimas – Claude Opus 5.5; Sonnet ir Haiku yra greitesni ir pigesni."
+        },
+        "OPENAI": {
+          "urlHint": "OpenAI API. Keiskite tik tada, jei prieš ją naudojate savo tinklų sietuvą.",
+          "modelHint": "Modelio ID, kaip jį vadina OpenAI. Išsaugojus raktą, čia atsiras galimi modeliai."
+        },
+        "MOONSHOT": {
+          "urlHint": "Moonshot AI (Kimi) API. Kinijos platformos paskyroms: {{url}}",
+          "modelHint": "Modelio ID, kaip jį vadina Moonshot. Išsaugojus raktą, čia atsiras galimi modeliai."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Vietinis LM Studio serveris (paleiskite jį LM Studio skiltyje „Developer“). Jei AIDocuments veikia Docker aplinkoje: {{url}}",
+          "modelHint": "Į LM Studio įkelto modelio ID. Skenuotoms kopijoms reikia modelio su vaizdų įvestimi, analizei – modelio, palaikančio įrankių naudojimą (Tool Use)."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Serverio, naudojančio OpenAI sąsają, adresas – dažniausiai baigiasi /v1, pvz., {{url}}",
+          "modelHint": "Modelio ID, kaip jį vadina serveris. Išsaugojus čia atsiras jo siūlomi modeliai."
+        }
+      },
+      "apiKey": {
+        "label": "API raktas",
+        "labelOptional": "API raktas (neprivalomas)",
+        "placeholderStored": "{{mask}} (išsaugotas)",
+        "placeholderPreset": "{{mask}} (iš anksto nustatytas)",
+        "placeholderNotNeeded": "nereikalingas",
+        "placeholderIfRequired": "tik jei serveris jo reikalauja",
+        "hintShown": "Iš anksto nustatytas serverio konfigūracijoje.",
+        "hintRemoving": "Išsaugotas raktas bus pašalintas išsaugant.",
+        "hintStored": "Raktas saugomas užšifruotas. Palikite tuščią, jei norite jį palikti – <remove>pašalinti raktą</remove>",
+        "hintEnvironment": "Raktas šiuo metu imamas iš serverio konfigūracijos (aplinkos kintamojo arba konfigūracijos failo). Čia įvestas raktas turi pirmenybę.",
+        "hintPreset": "Šio teikėjo raktas iš anksto nustatytas serverio konfigūracijoje. Palikite tuščią, jei norite jį naudoti.",
+        "hintDiscardedOnSwitch": "Iki šiol saugotas raktas priklauso teikėjui {{previous}} ir keičiant teikėją bus atmestas.",
+        "hintPresetOtherProvider": "Iš anksto nustatytas raktas galioja tik teikėjui {{previous}}. Teikėjui {{provider}} įveskite atskirą raktą.",
+        "hintRequired": "Saugomas užšifruotas ir daugiau niekada nerodomas.",
+        "hintLocal": "Vietiniams serveriams rakto dažniausiai nereikia."
+      },
+      "analysis": {
+        "title": "Analizė",
+        "effort": "Kruopštumas",
+        "effortLevels": {
+          "low": "Greitai",
+          "medium": "Subalansuotai",
+          "high": "Kruopščiai"
+        },
+        "effortHint": "Kruopščiau reiškia tikslesnius rezultatus, bet lėčiau ir brangiau vienam dokumentui.",
+        "outputLanguage": "Rezultatų kalba",
+        "outputLanguageHint": "Šia kalba DI rašo pavadinimą, santrauką ir žymas.",
+        "ocr": "Skenuotų kopijų teksto atpažinimas",
+        "ocrHint": "Programa paveda DI transkribuoti skenuotus PDF failus be teksto sluoksnio – tik tada juos galima rasti viso teksto paieška. Kiekviena skenuota kopija užtrunka ilgiau ir kainuoja daugiau."
+      },
+      "unanalyzed_one": "DI dar neišanalizavo {{count, number}} dokumento.",
+      "unanalyzed_few": "DI dar neišanalizavo {{count, number}} dokumentų.",
+      "unanalyzed_many": "DI dar neišanalizavo {{count, number}} dokumento.",
+      "unanalyzed_other": "DI dar neišanalizavo {{count, number}} dokumentų.",
+      "analyzeNow": "Analizuoti dabar",
+      "analysisStarted_one": "Dabar analizuojamas {{count, number}} dokumentas.",
+      "analysisStarted_few": "Dabar analizuojami {{count, number}} dokumentai.",
+      "analysisStarted_many": "Dabar analizuojama {{count, number}} dokumento.",
+      "analysisStarted_other": "Dabar analizuojama {{count, number}} dokumentų."
+    },
+    "users": {
+      "title": "Naudotojai",
+      "navHint": "Paskyros ir vaidmenys",
+      "intro": "Kiekvienas asmuo prisijungia su savo paskyra. Administratoriai valdo programą, naudotojai dirba su dokumentais.",
+      "add": "Sukurti naudotoją",
+      "you": "Jūs",
+      "disabled": "Išjungta",
+      "lastLogin": "Paskutinį kartą prisijungta {{when}}",
+      "neverLoggedIn": "Dar niekada neprisijungta",
+      "editUser": "Redaguoti naudotoją {{name}}",
+      "deleteUser": "Ištrinti naudotoją {{name}}",
+      "saved": "Naudotojas išsaugotas",
+      "created": "Naudotojas sukurtas",
+      "deleted": "Naudotojas ištrintas",
+      "delete": {
+        "title": "Ištrinti naudotoją?",
+        "text": "Paskyra „{{name}}“ bus ištrinta ir iškart atjungta. Dokumentai išliks."
+      },
+      "dialog": {
+        "selfNotice": "Tai jūsų paskyra. Išsaugojus reikės prisijungti iš naujo.",
+        "passwordKeepHint": "Palikite tuščią, jei nenorite keisti slaptažodžio. Kitu atveju – bent 8 simboliai.",
+        "role": "Vaidmuo",
+        "roleHints": {
+          "ADMIN": "Gali viską – taip pat keisti nustatymus, valdyti naudotojus ir trinti dokumentus.",
+          "USER": "Gali peržiūrėti dokumentus, jų ieškoti, juos įkelti ir redaguoti jų duomenis."
+        },
+        "active": "Paskyra aktyvi",
+        "activeHint": "Su išjungtomis paskyromis prisijungti negalima; aktyvūs seansai nutraukiami iškart.",
+        "create": "Sukurti"
+      }
+    }
+  }
+}

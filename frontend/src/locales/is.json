@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Vista",
+    "cancel": "Hætta við",
+    "close": "Loka",
+    "edit": "Breyta",
+    "delete": "Eyða",
+    "remove": "Fjarlægja",
+    "add": "Bæta við",
+    "back": "Til baka",
+    "retry": "Reyna aftur",
+    "loading": "Hleð inn",
+    "language": "Tungumál",
+    "testConnection": "Prófa tengingu",
+    "saveFirst": "Vistaðu fyrst",
+    "username": "Notandanafn",
+    "usernameHint": "3–50 stafir: bókstafir, tölustafir, punktur, bandstrik, undirstrik, @",
+    "password": "Lykilorð",
+    "newPassword": "Nýtt lykilorð",
+    "passwordHint": "Að minnsta kosti 8 stafir",
+    "passwordMismatch": "Lykilorðin eru ekki eins.",
+    "justNow": "rétt í þessu",
+    "documentCount_one": "{{count, number}} skjal",
+    "documentCount_other": "{{count, number}} skjöl",
+    "role": {
+      "ADMIN": "Stjórnandi",
+      "USER": "Notandi"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Ekkert samband við þjóninn",
+    "server": "Þjónninn skilaði villu ({{status}}).",
+    "forbidden": "Þú hefur ekki heimild til þess.",
+    "unreachable": "Ekki næst samband við þjóninn.",
+    "unexpected": "Óvænt villa.",
+    "languageLoad": "Ekki tókst að hlaða inn tungumálinu."
+  },
+  "auth": {
+    "login": {
+      "title": "Velkomin aftur",
+      "subtitle": "Skráðu þig inn til að nálgast skjölin þín.",
+      "submit": "Skrá inn"
+    },
+    "setup": {
+      "title": "Setja upp AIDocuments",
+      "subtitle": "Byrjaðu á að stofna stjórnandaaðganginn. Síðan geturðu bætt við fleiri notendum í stillingunum.",
+      "adminAccount": "Stjórnandaaðgangur",
+      "repeatPassword": "Endurtaka lykilorð",
+      "submit": "Stofna aðgang og byrja",
+      "features": {
+        "import": "PDF-skrár úr pósthólfi og innflutningsmöppu",
+        "ai": "Gervigreind tekur saman og bætir við efnisorðum",
+        "search": "Heildartextaleit sem nær inn í skjölin"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Hlaða upp",
+    "theme": {
+      "light": "Ljóst þema",
+      "dark": "Dökkt þema"
+    },
+    "search": {
+      "placeholder": "Leita í skjölum, efnisorðum, efni …",
+      "label": "Leita í skjölum",
+      "clear": "Hreinsa leit"
+    },
+    "userMenu": {
+      "label": "Notandavalmynd ({{name}})",
+      "aiActive": "Gervigreind virk",
+      "aiNotConfigured": "Gervigreind ekki uppsett",
+      "changePassword": "Breyta lykilorði",
+      "logout": "Skrá út"
+    },
+    "passwordDialog": {
+      "current": "Núverandi lykilorð",
+      "repeat": "Endurtaka nýtt lykilorð",
+      "changed": "Lykilorði breytt"
+    },
+    "dropzone": {
+      "title": "Slepptu PDF-skrám hér",
+      "hint": "Þú getur sleppt mörgum skrám í einu. Þær eru vistaðar, greindar og fá efnisorð."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Aðeins er hægt að bæta við PDF-skrám.",
+    "uploadingFile": "Hleð upp „{{name}}“ …",
+    "uploadingFiles_one": "Hleð upp {{count, number}} PDF-skrá …",
+    "uploadingFiles_other": "Hleð upp {{count, number}} PDF-skrám …",
+    "created_one": "{{count, number}} skjali bætt við",
+    "created_other": "{{count, number}} skjölum bætt við",
+    "processingInBackground": "Vinnslan heldur áfram í bakgrunni.",
+    "duplicates_one": "{{count, number}} er þegar til",
+    "duplicates_other": "{{count, number}} eru þegar til",
+    "rejected_one": "{{count, number}} skrá er ekki gild PDF-skrá",
+    "rejected_other": "{{count, number}} skrár eru ekki gildar PDF-skrár",
+    "onlyDuplicates_one": "Ekkert nýtt – þetta er þegar til.",
+    "onlyDuplicates_other": "Þessi skjöl eru þegar til.",
+    "noneValid": "Engin skránna er gild PDF-skrá.",
+    "failed": "Upphleðsla mistókst"
+  },
+  "documents": {
+    "status": {
+      "pending": "Í bið",
+      "processing": "Í greiningu",
+      "failed": "Villa",
+      "textOnly": "Án gervigreindar"
+    },
+    "ocrBadge": "Ljóslestur",
+    "aiNotice": {
+      "text": "Gervigreindin hefur ekki verið sett upp enn. Hægt er að leita í texta nýrra skjala, en þau fá hvorki samantekt né efnisorð.",
+      "action": "Setja upp núna"
+    },
+    "searchResults_one": "<count>{{count, number}} niðurstaða</count> <query>fyrir „{{query}}“</query>",
+    "searchResults_other": "<count>{{count, number}} niðurstöður</count> <query>fyrir „{{query}}“</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} í vinnslu",
+      "inProgressHint": "Bíða eftir greiningu gervigreindar eða eru í greiningu núna",
+      "remaining": "um {{duration}} eftir",
+      "remainingLessThan": "innan við {{duration}} eftir",
+      "finishHint": "Áætluð verklok: kl. {{time}} – metið út frá hraða síðustu skjala sem unnið var úr"
+    },
+    "sort": {
+      "label": "Röðun",
+      "relevance": "Bestu niðurstöður",
+      "newest": "Nýjast fyrst",
+      "date": "Eftir dagsetningu skjals"
+    },
+    "view": {
+      "grid": "Flísasýn",
+      "list": "Listasýn"
+    },
+    "pageSize": {
+      "label": "Fjöldi skjala sem birtast",
+      "all": "Öll"
+    },
+    "filters": {
+      "title": "Síur",
+      "titleWithCount": "Síur ({{active, number}})",
+      "apply": "Sýna",
+      "hint": "Þegar skjöl hafa verið greind birtast skjalategundir, efnisorð og sendendur hér sem síur.",
+      "dateFrom": "frá",
+      "dateTo": "til",
+      "status": "Staða",
+      "failed": "Mistókst",
+      "showAll": "Sýna allt",
+      "showLess": "Sýna minna",
+      "activeFrom": "frá {{date}}",
+      "activeTo": "til {{date}}",
+      "removeOne": "Fjarlægja síuna „{{label}}“",
+      "removeAll": "Fjarlægja allar síur",
+      "clear": "Fjarlægja síur"
+    },
+    "empty": {
+      "libraryTitle": "Engin skjöl enn",
+      "libraryHint": "Dragðu einfaldlega PDF-skrár inn í þennan glugga eða notaðu „Hlaða upp“.",
+      "libraryHintAdmin": "Dragðu einfaldlega PDF-skrár inn í þennan glugga eða notaðu „Hlaða upp“. Í stillingunum geturðu sett upp pósthólf eða innflutningsmöppu sem nýjar PDF-skrár eru fluttar sjálfkrafa inn úr.",
+      "noResultsTitle": "Ekkert fannst",
+      "noResultsSearch": "Ekkert skjal passar við þessa leit. Leitin finnur einnig orðhluta – prófaðu styttra leitarorð eða færri orð.",
+      "noResultsFilters": "Ekkert skjal passar við valdar síur."
+    },
+    "loadingAll_one": "{{loaded, number}} af {{count, number}} skjali sótt …",
+    "loadingAll_other": "{{loaded, number}} af {{count, number}} skjölum sótt …",
+    "loadMore": "Sækja fleiri ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Til baka í yfirlit",
+    "download": "Hlaða niður",
+    "reprocess": "Greina aftur",
+    "reprocessHint": "Lesa PDF-skrána aftur og láta gervigreindina greina hana",
+    "reprocessStarted": "Verið er að greina skjalið aftur.",
+    "deleted": "Skjali eytt",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Opna í nýjum flipa",
+    "processingNotice": "Verið er að vinna úr skjalinu. Samantektin og efnisorðin birtast hér um leið og greiningu lýkur.",
+    "textOnlyNotice": "Skráð án gervigreindar: hægt er að leita í texta skjalsins, en það hefur enga samantekt og engin sjálfvirk efnisorð.",
+    "tabs": {
+      "overview": "Yfirlit",
+      "text": "Heildartexti"
+    },
+    "fields": {
+      "title": "Titill",
+      "category": "Skjalategund",
+      "documentDate": "Dagsetning skjals",
+      "correspondent": "Sendandi",
+      "tags": "Efnisorð",
+      "summary": "Samantekt"
+    },
+    "tags": {
+      "allWith": "Öll skjöl með efnisorðinu „{{tag}}“",
+      "none": "Engin efnisorð. <add>Bæta við</add>",
+      "inputHint": "Staðfestu með Enter eða kommu. Tillögurnar eru efnisorð sem þegar eru í notkun.",
+      "inputPlaceholder": "Sláðu inn efnisorð …",
+      "remove": "Fjarlægja efnisorðið „{{tag}}“"
+    },
+    "keyFacts": "Lykilupplýsingar",
+    "details": {
+      "title": "Nánar",
+      "file": "Skrá",
+      "size": "Umfang",
+      "pageCount_one": "{{count, number}} síða",
+      "pageCount_other": "{{count, number}} síður",
+      "language": "Tungumál",
+      "source": "Uppruni",
+      "mailSubject": "Efni",
+      "mailFrom": "Frá",
+      "mailReceived": "Móttekið",
+      "added": "Bætt við",
+      "text": "Texti"
+    },
+    "source": {
+      "MAIL": "Pósthólf",
+      "FOLDER": "Innflutningsmappa",
+      "UPLOAD": "Hlaðið upp"
+    },
+    "noText": "Enginn texti er til fyrir þetta skjal – líklega er það skönnun án textalags. Þegar gervigreindin hefur verið sett upp og ljóslestur er virkur er efnið skrifað upp við greiningu.",
+    "edit": {
+      "title": "Breyta skjali",
+      "saved": "Breytingar vistaðar"
+    },
+    "delete": {
+      "title": "Eyða skjali?",
+      "text": "„{{title}}“ verður eytt ásamt PDF-skránni, heildartextanum og efnisorðunum. Ekki er hægt að afturkalla þetta.",
+      "confirm": "Eyða varanlega"
+    }
+  },
+  "settings": {
+    "title": "Stillingar",
+    "mailboxes": {
+      "title": "Pósthólf",
+      "navHint": "IMAP-þjónar sem PDF-viðhengi eru sótt frá",
+      "intro": "PDF-viðhengi eru flutt sjálfkrafa inn úr þessum IMAP-pósthólfum. Pósthólfin eru aðeins lesin – tölvupóstar haldast óbreyttir og ólesnir.",
+      "add": "Bæta við pósthólfi",
+      "emptyTitle": "Ekkert pósthólf hefur verið sett upp enn",
+      "emptyText": "Sláðu inn aðgangsupplýsingar IMAP-pósthólfs – til dæmis pósthólfsins sem skanninn þinn sendir skjöl í.",
+      "paused": "Í hléi",
+      "syncNow": "Athuga núna",
+      "syncing": "Athuga pósthólf …",
+      "neverSynced": "Ekki athugað enn.",
+      "saved": "Pósthólf vistað",
+      "added": "Pósthólfi bætt við",
+      "firstSyncRunning": "Fyrsta athugun er þegar í gangi.",
+      "removed": "Pósthólf fjarlægt",
+      "delete": {
+        "title": "Fjarlægja pósthólf?",
+        "text": "„{{name}}“ verður ekki lengur athugað. Skjöl sem þegar hafa verið flutt inn haldast."
+      },
+      "dialog": {
+        "editTitle": "Breyta pósthólfi",
+        "description": "Aðgangsupplýsingarnar færðu hjá tölvupóstþjónustunni þinni. Lykilorðið er geymt dulkóðað.",
+        "name": "Heiti",
+        "nameHint": "Að eigin vali, t.d. „Skanni“ eða „Reikningar“",
+        "namePlaceholder": "Skanni",
+        "host": "IMAP-þjónn",
+        "port": "Gátt",
+        "security": "Dulkóðun",
+        "securityNone": "Engin",
+        "securityNoneWarning": "Án dulkóðunar eru notandanafn og lykilorð send sem ódulkóðaður texti.",
+        "passwordKeepHint": "Skildu eftir autt til að halda vistaða lykilorðinu",
+        "folder": "Mappa",
+        "folderHint": "Yfirleitt {{folder}} (innhólfið)",
+        "since": "Aðeins tölvupóstar frá",
+        "sinceHint": "Valfrjálst – eldri tölvupóstum er sleppt",
+        "enabled": "Athuga sjálfkrafa",
+        "enabledHint": "Leitað er að nýjum PDF-skrám í pósthólfinu með stilltu millibili."
+      }
+    },
+    "import": {
+      "title": "Áætlun og innflutningsmappa",
+      "navHint": "Athugunarbil og vöktuð mappa",
+      "intro": "Ákvarðar hversu oft forritið leitar að nýjum PDF-skrám – í pósthólfunum og í innflutningsmöppunni.",
+      "saved": "Stillingar vistaðar",
+      "interval": {
+        "title": "Athugunarbil",
+        "text": "Svona oft leitar forritið að nýjum PDF-skrám í öllum pósthólfum og innflutningsmöppunni.",
+        "label": "Á … mínútna fresti",
+        "nextRun": "Næsta sjálfvirka athugun {{when}}."
+      },
+      "folder": {
+        "title": "Innflutningsmappa",
+        "text": "Mappa á þjóninum þar sem fylgst er með nýjum PDF-skrám – til dæmis mappan sem netskanni vistar í. Einnig er leitað í undirmöppum.",
+        "enable": "Vakta innflutningsmöppu",
+        "path": "Slóð á þjóninum",
+        "pathHint": "Algild slóð. Í Docker-gámnum er þetta tengda mappan, yfirleitt {{path}}.",
+        "afterImport": "Eftir innflutning",
+        "keep": "Láta skrána vera",
+        "move": "Færa í „{{folder}}“",
+        "keepHint": "Skrárnar haldast óbreyttar. Forritið man hvað það hefur þegar flutt inn.",
+        "moveHint": "Innfluttar skrár eru færðar í undirmöppuna „{{folder}}“ – þannig helst innflutningsmappan snyrtileg.",
+        "scanning": "Athuga möppu …",
+        "neverScanned": "Ekki athugað enn.",
+        "scanNow": "Athuga núna",
+        "scanStarted": "Verið er að athuga innflutningsmöppuna."
+      }
+    },
+    "ai": {
+      "title": "Gervigreind",
+      "navHint": "LLM-þjónn, líkan og ljóslestur",
+      "intro": "Gervigreindin les hverja nýja PDF-skrá, tekur hana saman, úthlutar skjalategund og efnisorðum og dregur fram lykilupplýsingar á borð við upphæðir eða fresti.",
+      "configured": "Uppsett",
+      "notConfigured": "Ekki uppsett",
+      "saved": "Stillingar gervigreindar vistaðar",
+      "server": {
+        "title": "LLM-þjónn",
+        "provider": "Þjónustuveita",
+        "baseUrl": "Vistfang þjóns",
+        "model": "Líkan",
+        "modelPlaceholder": "Auðkenni líkans",
+        "compatibilityMode": "Samhæfnihamur fyrir staðbundin líkön",
+        "compatibilityModeHint": "Fyrir þjóna sem nota Anthropic-viðmótið en styðja hvorki PDF-inntak né formfast úttak: skjalið er sent líkaninu sem texti eða, ef um skönnun er að ræða, sem myndir af síðum. Hafðu slökkt á þessu fyrir Claude API.",
+        "testIncomplete": "Stillingarnar eru ekki fullkláraðar enn"
+      },
+      "privacy": {
+        "title": "Með {{provider}} fara skjölin þín út af þessari tölvu",
+        "text": "Við greiningu er efni hverrar PDF-skrár sent til þjóna hjá {{provider}} á netinu og unnið þar – einnig reikningar, samningar, læknabréf og bréf frá hinu opinbera.",
+        "recommendation": "<emphasis>Ráðlegging:</emphasis> notaðu staðbundna gervigreind. Með <lmStudio>LM Studio</lmStudio> eða <compatible>OpenAI-samhæfðum þjóni</compatible> á þínu eigin neti helst allt efni hjá þér."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Claude API frá Anthropic. Breyttu þessu aðeins ef þú notar eigin milliþjón.",
+          "modelHint": "Mælt er með Claude Opus 5.5; Sonnet og Haiku eru hraðari og ódýrari."
+        },
+        "OPENAI": {
+          "urlHint": "API frá OpenAI. Breyttu þessu aðeins ef þú notar eigin milliþjón.",
+          "modelHint": "Auðkenni líkansins eins og OpenAI nefnir það. Þegar þú hefur vistað lykilinn birtast tiltæk líkön hér."
+        },
+        "MOONSHOT": {
+          "urlHint": "API frá Moonshot AI (Kimi). Fyrir aðganga á kínverska vettvanginum: {{url}}",
+          "modelHint": "Auðkenni líkansins eins og Moonshot nefnir það. Þegar þú hefur vistað lykilinn birtast tiltæk líkön hér."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Staðbundinn þjónn LM Studio (ræstu hann í LM Studio undir „Developer“). Ef AIDocuments keyrir í Docker: {{url}}",
+          "modelHint": "Auðkenni líkansins sem hlaðið er í LM Studio. Skannanir þurfa líkan með myndinntaki, greiningin þarf líkan með Tool Use."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Vistfang þjóns sem notar OpenAI-viðmótið – endar yfirleitt á /v1, t.d. {{url}}",
+          "modelHint": "Auðkenni líkansins eins og þjónninn nefnir það. Eftir vistun birtast hér þau líkön sem hann býður upp á."
+        }
+      },
+      "apiKey": {
+        "label": "API-lykill",
+        "labelOptional": "API-lykill (valfrjálst)",
+        "placeholderStored": "{{mask}} (vistaður)",
+        "placeholderPreset": "{{mask}} (forstilltur)",
+        "placeholderNotNeeded": "óþarfur",
+        "placeholderIfRequired": "aðeins ef þjónninn krefst lykils",
+        "hintShown": "Forstilltur í stillingum þjónsins.",
+        "hintRemoving": "Vistaði lykillinn verður fjarlægður þegar þú vistar.",
+        "hintStored": "Lykill er vistaður dulkóðaður. Skildu eftir autt til að halda honum – <remove>fjarlægja lykil</remove>",
+        "hintEnvironment": "Lykillinn kemur sem stendur úr stillingum þjónsins (umhverfisbreytu eða stillingaskrá). Lykill sem er sleginn inn hér hefur forgang.",
+        "hintPreset": "Lykill fyrir þessa þjónustuveitu er forstilltur í stillingum þjónsins. Skildu eftir autt til að nota hann.",
+        "hintDiscardedOnSwitch": "Lykillinn sem er vistaður núna tilheyrir {{previous}} og fellur niður þegar þú skiptir.",
+        "hintPresetOtherProvider": "Forstillti lykillinn gildir aðeins fyrir {{previous}}. Sláðu inn sérstakan lykil fyrir {{provider}}.",
+        "hintRequired": "Geymdur dulkóðaður og aldrei sýndur aftur.",
+        "hintLocal": "Staðbundnir þjónar þurfa yfirleitt engan lykil."
+      },
+      "analysis": {
+        "title": "Greining",
+        "effort": "Vandvirkni",
+        "effortLevels": {
+          "low": "Hröð",
+          "medium": "Í jafnvægi",
+          "high": "Ítarleg"
+        },
+        "effortHint": "Meiri vandvirkni skilar vandaðri niðurstöðum en er hægari og dýrari fyrir hvert skjal.",
+        "outputLanguage": "Tungumál niðurstaðna",
+        "outputLanguageHint": "Gervigreindin skrifar titil, samantekt og efnisorð á þessu tungumáli.",
+        "ocr": "Ljóslestur skannaðra skjala",
+        "ocrHint": "Forritið lætur gervigreindina skrifa upp skannaðar PDF-skrár án textalags – aðeins þannig finnast þær í heildartextaleit. Hver skönnun tekur lengri tíma og kostar meira."
+      },
+      "unanalyzed_one": "Gervigreindin hefur ekki enn greint {{count, number}} skjal.",
+      "unanalyzed_other": "Gervigreindin hefur ekki enn greint {{count, number}} skjöl.",
+      "analyzeNow": "Greina núna",
+      "analysisStarted_one": "Nú er verið að greina {{count, number}} skjal.",
+      "analysisStarted_other": "Nú er verið að greina {{count, number}} skjöl."
+    },
+    "users": {
+      "title": "Notendur",
+      "navHint": "Aðgangar og hlutverk",
+      "intro": "Hver og einn skráir sig inn með eigin aðgangi. Stjórnendur sjá um forritið, notendur vinna með skjölin.",
+      "add": "Stofna notanda",
+      "you": "Þú",
+      "disabled": "Óvirkur",
+      "lastLogin": "Síðasta innskráning {{when}}",
+      "neverLoggedIn": "Hefur aldrei skráð sig inn",
+      "editUser": "Breyta {{name}}",
+      "deleteUser": "Eyða {{name}}",
+      "saved": "Notandi vistaður",
+      "created": "Notandi stofnaður",
+      "deleted": "Notanda eytt",
+      "delete": {
+        "title": "Eyða notanda?",
+        "text": "Aðganginum „{{name}}“ verður eytt og hann skráður út samstundis. Skjöl haldast."
+      },
+      "dialog": {
+        "selfNotice": "Þetta er þinn eigin aðgangur. Eftir vistun þarftu að skrá þig inn aftur.",
+        "passwordKeepHint": "Skildu eftir autt til að halda núverandi lykilorði. Annars að minnsta kosti 8 stafir.",
+        "role": "Hlutverk",
+        "roleHints": {
+          "ADMIN": "Má allt – einnig breyta stillingum, sjá um notendur og eyða skjölum.",
+          "USER": "Má skoða skjöl, leita í þeim, hlaða þeim upp og breyta upplýsingum um þau."
+        },
+        "active": "Aðgangur virkur",
+        "activeHint": "Ekki er hægt að skrá sig inn með óvirkum aðgangi; virkum lotum lýkur samstundis.",
+        "create": "Stofna"
+      }
+    }
+  }
+}

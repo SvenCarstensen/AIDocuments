@@ -3,6 +3,9 @@ package de.aidocuments;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,7 +22,10 @@ import de.aidocuments.document.Document;
 import de.aidocuments.document.DocumentRepository;
 import de.aidocuments.document.DocumentSource;
 import de.aidocuments.document.DocumentStatus;
+import de.aidocuments.i18n.Msg;
+import de.aidocuments.i18n.MsgCodec;
 import de.aidocuments.importer.FolderImportService;
+import de.aidocuments.mail.MailAccount;
 import de.aidocuments.mail.MailAccountRepository;
 import de.aidocuments.mail.MailSyncService;
 import jakarta.activation.DataHandler;
@@ -39,12 +45,14 @@ import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -54,6 +62,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
@@ -88,6 +99,26 @@ class ApplicationFlowTest {
     static final MockHttpSession adminSession = new MockHttpSession();
     static final MockHttpSession userSession = new MockHttpSession();
 
+    /**
+     * Der Server selbst „spricht“ in diesem Test Deutsch. Trotzdem muss jede Antwort ohne passenden
+     * Accept-Language-Header englisch sein: Die Sprache des Servers darf nie durchschlagen.
+     */
+    static final Locale systemLocale = Locale.getDefault();
+    /**
+     * Eine Sprache, für die es keine messages_xx.properties gibt. Bewusst keine europäische: Deren Dateien
+     * kommen nach und nach hinzu, und dieser Test soll davon unberührt bleiben. (tlh = Klingonisch)
+     */
+    static final String UNTRANSLATED = "tlh";
+
+    static {
+        Locale.setDefault(Locale.GERMANY);
+    }
+
+    @AfterAll
+    static void restoreSystemLocale() {
+        Locale.setDefault(systemLocale);
+    }
+
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
         registry.add("app.data-dir", dataDir::toString);
@@ -96,6 +127,14 @@ class ApplicationFlowTest {
         registry.add("app.ai.base-url", () -> "");
         registry.add("app.ai.api-key", () -> "");
         registry.add("app.ai.model", () -> "claude-opus-5-5");
+        registry.add("app.ai.reveal-preset-keys", () -> "false");
+        // Vorbelegung, wie sie eine Entwicklungsumgebung für ihren lokalen Server mitbringt
+        registry.add("app.ai.presets.lm-studio.base-url", () -> "http://127.0.0.1:9");
+        registry.add("app.ai.presets.lm-studio.api-key", () -> "vorbelegter-testschluessel");
+        registry.add("app.ai.presets.lm-studio.model", () -> "vorbelegtes-modell");
+        registry.add("app.ai.presets.openai-compatible.base-url", () -> "");
+        registry.add("app.ai.presets.openai-compatible.api-key", () -> "");
+        registry.add("app.ai.presets.openai-compatible.model", () -> "");
     }
 
     @Autowired
@@ -108,6 +147,8 @@ class ApplicationFlowTest {
     MailSyncService mailSync;
     @Autowired
     FolderImportService folderImport;
+    @Autowired
+    MongoTemplate mongoTemplate;
 
     @Test
     @Order(1)
@@ -284,9 +325,13 @@ class ApplicationFlowTest {
                 .formatted(greenMail.getImap().getPort());
 
         mvc.perform(post("/api/mail-accounts/test").with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de")
                         .contentType(MediaType.APPLICATION_JSON).content("{\"account\":" + body + "}"))
                 .andExpect(jsonPath("$.ok").value(true))
-                .andExpect(jsonPath("$.message", containsString("2 E-Mails")));
+                .andExpect(jsonPath("$.message").value("Verbindung erfolgreich – E-Mails im Ordner „INBOX“: 2."));
+        mvc.perform(post("/api/mail-accounts/test").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"account\":" + body + "}"))
+                .andExpect(jsonPath("$.message").value("Connection successful – e-mails in folder “INBOX”: 2."));
         mvc.perform(post("/api/mail-accounts/test").with(csrf()).session(adminSession)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"account\":" + body.replace("imap-test-secret", "falsches-passwort") + "}"))
@@ -309,16 +354,23 @@ class ApplicationFlowTest {
         assertThat(scan.getOriginalFilename()).isEqualTo("Scan_0001.pdf");
         assertThat(scan.getMailSubject()).isEqualTo("Scan vom Kopierer");
         assertThat(scan.getMailFrom()).contains("kopierer@example.test");
-        mvc.perform(get("/api/mail-accounts").session(adminSession))
+        // Das Ergebnis entstand im Hintergrund, ohne Leser – es liegt sprachneutral in der Datenbank und wird
+        // jedem in seiner Sprache ausgeliefert.
+        assertThat(mailAccounts.findById(accountId).orElseThrow().getLastSyncMessage()).startsWith("i18n:");
+        mvc.perform(get("/api/mail-accounts").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
                 .andExpect(jsonPath("$[0].lastSyncStatus").value("OK"))
-                .andExpect(jsonPath("$[0].lastSyncMessage", containsString("1 PDF übernommen")))
+                .andExpect(jsonPath("$[0].lastSyncMessage").value("Neue E-Mails geprüft: 2. PDFs übernommen: 1."))
                 .andExpect(jsonPath("$[0].documentCount").value(1));
+        mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andExpect(jsonPath("$[0].lastSyncMessage").value("New e-mails checked: 2. PDFs imported: 1."));
         mvc.perform(get("/api/documents").param("q", "Kostenplan").session(userSession))
                 .andExpect(jsonPath("$.total").value(1));
 
         // zweiter Abruf: nichts Neues; danach kommt eine weitere E-Mail
         mailSync.sync(accountId);
         assertThat(documents.count()).isEqualTo(3);
+        mvc.perform(get("/api/mail-accounts").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$[0].lastSyncMessage").value("Keine neuen E-Mails."));
         mailbox.deliver(mailWithPdf("Noch ein Scan", "Scan_0002.pdf", pdf("Kfz-Steuerbescheid 2025")));
         mailSync.sync(accountId);
         awaitProcessed(4);
@@ -359,7 +411,12 @@ class ApplicationFlowTest {
 
         folderImport.scan();
         awaitProcessed(5);
-        assertThat(folderImport.status().message()).contains("1 neues PDF übernommen");
+        assertThat(folderImport.status().message()).startsWith("i18n:");
+        mvc.perform(get("/api/settings/import").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$.folderStatus.ok").value(true))
+                .andExpect(jsonPath("$.folderStatus.message").value("Neue PDFs übernommen: 1."));
+        mvc.perform(get("/api/settings/import").session(adminSession))
+                .andExpect(jsonPath("$.folderStatus.message").value("New PDFs imported: 1."));
         assertThat(file).exists();
         mvc.perform(get("/api/documents").param("q", "Bruttolohn").session(userSession))
                 .andExpect(jsonPath("$.total").value(1))
@@ -367,7 +424,8 @@ class ApplicationFlowTest {
 
         // unveränderte Dateien werden kein zweites Mal angefasst
         folderImport.scan();
-        assertThat(folderImport.status().message()).isEqualTo("Keine neuen Dateien.");
+        mvc.perform(get("/api/settings/import").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$.folderStatus.message").value("Keine neuen Dateien."));
 
         // Modus "verschieben": die übernommene Datei wandert nach importiert/
         Path second = inbox.resolve("Bescheid.pdf");
@@ -448,11 +506,186 @@ class ApplicationFlowTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.baseUrl").value("http://127.0.0.1:9/v1"))
                 .andExpect(jsonPath("$.enabled").value(true));
-        mvc.perform(post("/api/settings/ai/test").with(csrf()).session(adminSession))
+        mvc.perform(post("/api/settings/ai/test").with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
                 .andExpect(jsonPath("$.ok").value(false))
                 .andExpect(jsonPath("$.message", containsString("nicht erreichbar")));
+        mvc.perform(post("/api/settings/ai/test").with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$.ok").value(false))
+                .andExpect(jsonPath("$.message", containsString("cannot be reached")));
         mvc.perform(get("/api/settings/ai/models").session(adminSession))
                 .andExpect(jsonPath("$", hasSize(0)));
+
+        // Vorbelegung aus der Konfiguration: Adresse und Modell stehen für die Oberfläche bereit,
+        // der Schlüssel wird nur als "vorhanden" gemeldet und nie ausgeliefert.
+        MvcResult settings = mvc.perform(get("/api/settings/ai").session(adminSession))
+                .andExpect(jsonPath("$.providers[?(@.id == 'LM_STUDIO')].presetBaseUrl").value("http://127.0.0.1:9/v1"))
+                .andExpect(jsonPath("$.providers[?(@.id == 'LM_STUDIO')].presetModel").value("vorbelegtes-modell"))
+                .andExpect(jsonPath("$.providers[?(@.id == 'LM_STUDIO')].presetApiKeySet").value(true))
+                .andExpect(jsonPath("$.providers[?(@.id == 'OPENAI_COMPATIBLE')].presetBaseUrl").value(""))
+                .andExpect(jsonPath("$.providers[?(@.id == 'OPENAI')].presetApiKeySet").value(false))
+                .andReturn();
+        assertThat(settings.getResponse().getContentAsString()).doesNotContain("vorbelegter-testschluessel");
+
+        // So speichert die Oberfläche nach dem Auswählen: vorbelegte Werte, kein Schlüssel im Formular
+        mvc.perform(put("/api/settings/ai").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"provider\":\"LM_STUDIO\",\"baseUrl\":\"http://127.0.0.1:9/v1\","
+                                + "\"model\":\"vorbelegtes-modell\"," + rest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.apiKeySet").value(true))
+                .andExpect(jsonPath("$.apiKeySource").value("ENVIRONMENT"))
+                .andExpect(jsonPath("$.enabled").value(true));
+        // Wer danach bewusst die Standardadresse speichert, bekommt nicht wieder die Vorbelegung untergeschoben
+        mvc.perform(put("/api/settings/ai").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"provider\":\"LM_STUDIO\",\"baseUrl\":\"http://localhost:1234/v1\","
+                                + "\"model\":\"anderes-modell\"," + rest))
+                .andExpect(jsonPath("$.baseUrl").value("http://localhost:1234/v1"))
+                .andExpect(jsonPath("$.model").value("anderes-modell"));
+    }
+
+    @Test
+    @Order(9)
+    void errorsAndValidationAnswerInTheLanguageOfTheRequest() throws Exception {
+        String missing = "/api/documents/gibt-es-nicht";
+        // ohne Angabe: Englisch – obwohl der Server selbst auf Deutsch eingestellt ist
+        mvc.perform(get(missing).session(adminSession))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").value("The document was not found."));
+        mvc.perform(get(missing).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").value("Das Dokument wurde nicht gefunden."));
+        mvc.perform(get(missing).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de-AT,de;q=0.9,en;q=0.8"))
+                .andExpect(jsonPath("$.detail").value("Das Dokument wurde nicht gefunden."));
+        // eine Sprache ohne Übersetzungsdatei: Englisch
+        mvc.perform(get(missing).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, UNTRANSLATED))
+                .andExpect(jsonPath("$.detail").value("The document was not found."));
+        mvc.perform(get(missing).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, UNTRANSLATED + "-AQ," + UNTRANSLATED + ";q=0.9"))
+                .andExpect(jsonPath("$.detail").value("The document was not found."));
+        // … es sei denn, der Leser nennt dahinter eine, die es gibt
+        mvc.perform(get(missing).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, UNTRANSLATED + ",de;q=0.5"))
+                .andExpect(jsonPath("$.detail").value("Das Dokument wurde nicht gefunden."));
+        // Unverständliches: Englisch
+        mvc.perform(get(missing).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "*"))
+                .andExpect(jsonPath("$.detail").value("The document was not found."));
+        mvc.perform(get(missing).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "%%%"))
+                .andExpect(jsonPath("$.detail").value("The document was not found."));
+
+        // Meldungen mit Argument
+        String duplicate = "{\"username\":\"chef\",\"password\":\"test-Passwort-5\",\"role\":\"USER\"}";
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(duplicate))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.detail").value("The username “chef” is already taken."));
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                        .contentType(MediaType.APPLICATION_JSON).content(duplicate))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.detail").value("Der Benutzername „chef“ ist bereits vergeben."));
+
+        // Eingabeprüfung: eigene Meldung, Standardprüfung und Prüfung mit Grenzwert
+        String invalid = "{\"username\":\"neu\",\"password\":\"kurz\"}";
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(invalid))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", containsString("password: at least 8 characters")))
+                .andExpect(jsonPath("$.detail", containsString("role: must not be null")));
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                        .contentType(MediaType.APPLICATION_JSON).content(invalid))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail", containsString("password: mindestens 8 Zeichen")))
+                .andExpect(jsonPath("$.detail", containsString("role: darf nicht null sein")));
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, UNTRANSLATED)
+                        .contentType(MediaType.APPLICATION_JSON).content(invalid))
+                .andExpect(jsonPath("$.detail", containsString("role: must not be null")));
+        String tooLong = "{\"title\":\"" + "x".repeat(501) + "\"}";
+        String anyId = documents.findAll().getFirst().getId();
+        mvc.perform(put("/api/documents/" + anyId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(tooLong))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value("title: size must be between 0 and 500"));
+        mvc.perform(put("/api/documents/" + anyId).with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                        .contentType(MediaType.APPLICATION_JSON).content(tooLong))
+                .andExpect(jsonPath("$.detail").value("title: Größe muss zwischen 0 und 500 sein"));
+
+        // Ergebnis eines Uploads
+        MockMultipartFile noPdf = new MockMultipartFile("files", "brief.pdf", "application/pdf", "kein PDF".getBytes());
+        mvc.perform(multipart("/api/documents").file(noPdf).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].message").value("The file is not a PDF."));
+        mvc.perform(multipart("/api/documents").file(noPdf).with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$[0].message").value("Die Datei ist kein PDF."));
+
+        // Übersetzbare Bezeichnung in den Einstellungen
+        mvc.perform(get("/api/settings/ai").session(adminSession))
+                .andExpect(jsonPath("$.providers[?(@.id == 'OPENAI_COMPATIBLE')].label").value("OpenAI-compatible"));
+        mvc.perform(get("/api/settings/ai").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$.providers[?(@.id == 'OPENAI_COMPATIBLE')].label").value("OpenAI Kompatibel"));
+    }
+
+    @Test
+    @Order(10)
+    void messagesStoredInTheBackgroundAreDeliveredInTheLanguageOfTheReader() throws Exception {
+        // Die Pipeline scheitert im Hintergrund an einem kaputten PDF – wer das später liest, steht da noch nicht fest.
+        long before = documents.count();
+        MockMultipartFile broken = new MockMultipartFile("files", "kaputt.pdf", "application/pdf",
+                "%PDF-1.7\nhier endet die Datei".getBytes());
+        MvcResult uploaded = mvc.perform(multipart("/api/documents").file(broken).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED"))
+                .andReturn();
+        String brokenId = jsonValue(uploaded, "$[0].documentId");
+        awaitProcessed((int) before + 1);
+
+        Document failed = documents.findById(brokenId).orElseThrow();
+        assertThat(failed.getStatus()).isEqualTo(DocumentStatus.FAILED);
+        assertThat(failed.getErrorMessage()).startsWith("i18n:").contains("document.error.corrupt");
+        mvc.perform(get("/api/documents/" + brokenId).session(adminSession))
+                .andExpect(jsonPath("$.errorMessage", startsWith("The PDF is damaged or not a valid PDF: ")));
+        mvc.perform(get("/api/documents/" + brokenId).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$.errorMessage", startsWith("Das PDF ist beschädigt oder kein gültiges PDF: ")));
+        mvc.perform(get("/api/documents/" + brokenId).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, UNTRANSLATED))
+                .andExpect(jsonPath("$.errorMessage", startsWith("The PDF is damaged or not a valid PDF: ")));
+        // auch in der Liste
+        mvc.perform(get("/api/documents").param("status", "FAILED").session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$.items[0].errorMessage", startsWith("Das PDF ist beschädigt")));
+
+        // Eine gescheiterte KI-Analyse: der Fehler der KI steckt als eigene Meldung in der des Dokuments
+        failed.setErrorMessage(MsgCodec.encode(Msg.of("document.error.aiFailed", Msg.of("ai.error.unauthorized"))));
+        documents.save(failed);
+        mvc.perform(get("/api/documents/" + brokenId).session(adminSession))
+                .andExpect(jsonPath("$.errorMessage")
+                        .value("AI analysis failed: The API key was rejected by the AI server."));
+        mvc.perform(get("/api/documents/" + brokenId).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$.errorMessage")
+                        .value("KI-Analyse fehlgeschlagen: Der API-Schlüssel wurde vom KI-Server abgelehnt."));
+
+        // Bestand aus der Zeit vor der Mehrsprachigkeit: deutscher Klartext bleibt, wie er ist – für jeden Leser
+        String legacy = "KI-Analyse fehlgeschlagen: Der KI-Server meldet einen Fehler (HTTP 503).";
+        failed.setErrorMessage(legacy);
+        documents.save(failed);
+        mvc.perform(get("/api/documents/" + brokenId).session(adminSession))
+                .andExpect(jsonPath("$.errorMessage").value(legacy));
+        mvc.perform(get("/api/documents/" + brokenId).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$.errorMessage").value(legacy));
+
+        String accountId = mailAccounts.findAll().getFirst().getId();
+        mongoTemplate.updateFirst(query(where("_id").is(accountId)),
+                new Update().set("lastSyncMessage", "3 neue E-Mails geprüft, 1 PDF übernommen."), MailAccount.class);
+        mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andExpect(jsonPath("$[0].lastSyncMessage").value("3 neue E-Mails geprüft, 1 PDF übernommen."));
+
+        // Ein Postfach-Abruf, der scheitert: bekannte Ursachen übersetzt, …
+        mongoTemplate.updateFirst(query(where("_id").is(accountId)),
+                new Update().set("folder", "Gibt es nicht"), MailAccount.class);
+        mailSync.sync(accountId);
+        mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andExpect(jsonPath("$[0].lastSyncStatus").value("ERROR"))
+                .andExpect(jsonPath("$[0].lastSyncMessage").value("The folder “Gibt es nicht” does not exist."));
+        mvc.perform(get("/api/mail-accounts").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$[0].lastSyncMessage").value("Der Ordner „Gibt es nicht“ existiert nicht."));
     }
 
     // --- Hilfen ---

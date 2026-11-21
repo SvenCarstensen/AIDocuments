@@ -1,0 +1,425 @@
+{
+  "common": {
+    "save": "Saglabāt",
+    "cancel": "Atcelt",
+    "close": "Aizvērt",
+    "edit": "Rediģēt",
+    "delete": "Dzēst",
+    "remove": "Noņemt",
+    "add": "Pievienot",
+    "back": "Atpakaļ",
+    "retry": "Mēģināt vēlreiz",
+    "loading": "Notiek ielāde",
+    "language": "Valoda",
+    "testConnection": "Pārbaudīt savienojumu",
+    "saveFirst": "Vispirms saglabājiet",
+    "username": "Lietotājvārds",
+    "usernameHint": "3–50 rakstzīmes: burti, cipari, punkts, defise, pasvītra, @",
+    "password": "Parole",
+    "newPassword": "Jauna parole",
+    "passwordHint": "Vismaz 8 rakstzīmes",
+    "passwordMismatch": "Paroles nesakrīt.",
+    "justNow": "tikko",
+    "documentCount_zero": "{{count, number}} dokumentu",
+    "documentCount_one": "{{count, number}} dokuments",
+    "documentCount_other": "{{count, number}} dokumenti",
+    "role": {
+      "ADMIN": "Administrators",
+      "USER": "Lietotājs"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} kB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Nav savienojuma ar serveri",
+    "server": "Serveris ziņoja par kļūdu ({{status}}).",
+    "forbidden": "Jums nav atļaujas veikt šo darbību.",
+    "unreachable": "Serveris nav sasniedzams.",
+    "unexpected": "Neparedzēta kļūda.",
+    "languageLoad": "Valodu neizdevās ielādēt."
+  },
+  "auth": {
+    "login": {
+      "title": "Laipni lūdzam atpakaļ",
+      "subtitle": "Pierakstieties, lai piekļūtu saviem dokumentiem.",
+      "submit": "Pierakstīties"
+    },
+    "setup": {
+      "title": "AIDocuments iestatīšana",
+      "subtitle": "Vispirms izveidojiet administratora kontu. Citus lietotājus vēlāk varēsiet pievienot iestatījumos.",
+      "adminAccount": "Administratora konts",
+      "repeatPassword": "Atkārtojiet paroli",
+      "submit": "Izveidot kontu un sākt",
+      "features": {
+        "import": "PDF faili no pastkastes un importa mapes",
+        "ai": "MI veido kopsavilkumus un piešķir atslēgvārdus",
+        "search": "Pilnteksta meklēšana dokumentu saturā"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Augšupielādēt",
+    "theme": {
+      "light": "Gaišais motīvs",
+      "dark": "Tumšais motīvs"
+    },
+    "search": {
+      "placeholder": "Meklēt dokumentus, atslēgvārdus, saturu…",
+      "label": "Meklēt dokumentus",
+      "clear": "Notīrīt meklēšanu"
+    },
+    "userMenu": {
+      "label": "Lietotāja izvēlne ({{name}})",
+      "aiActive": "MI aktīvs",
+      "aiNotConfigured": "MI nav iestatīts",
+      "changePassword": "Mainīt paroli",
+      "logout": "Izrakstīties"
+    },
+    "passwordDialog": {
+      "current": "Pašreizējā parole",
+      "repeat": "Atkārtojiet jauno paroli",
+      "changed": "Parole nomainīta"
+    },
+    "dropzone": {
+      "title": "Ievelciet PDF failus šeit",
+      "hint": "Var ievilkt vairākus failus vienlaikus. Tie tiek saglabāti, analizēti un papildināti ar atslēgvārdiem."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Var pievienot tikai PDF failus.",
+    "uploadingFile": "Notiek „{{name}}” augšupielāde…",
+    "uploadingFiles_zero": "Notiek {{count, number}} PDF failu augšupielāde…",
+    "uploadingFiles_one": "Notiek {{count, number}} PDF faila augšupielāde…",
+    "uploadingFiles_other": "Notiek {{count, number}} PDF failu augšupielāde…",
+    "created_zero": "Pievienots {{count, number}} dokumentu",
+    "created_one": "Pievienots {{count, number}} dokuments",
+    "created_other": "Pievienoti {{count, number}} dokumenti",
+    "processingInBackground": "Apstrāde turpinās fonā.",
+    "duplicates_zero": "{{count, number}} jau pastāv",
+    "duplicates_one": "{{count, number}} jau pastāv",
+    "duplicates_other": "{{count, number}} jau pastāv",
+    "rejected_zero": "{{count, number}} failu nav derīgi PDF",
+    "rejected_one": "{{count, number}} fails nav derīgs PDF",
+    "rejected_other": "{{count, number}} faili nav derīgi PDF",
+    "onlyDuplicates_zero": "Šie dokumenti jau pastāv.",
+    "onlyDuplicates_one": "Augšupielādētais jau pastāv.",
+    "onlyDuplicates_other": "Šie dokumenti jau pastāv.",
+    "noneValid": "Neviens no failiem nav derīgs PDF.",
+    "failed": "Augšupielāde neizdevās"
+  },
+  "documents": {
+    "status": {
+      "pending": "Gaida",
+      "processing": "Tiek analizēts",
+      "failed": "Kļūda",
+      "textOnly": "Bez MI"
+    },
+    "ocrBadge": "Teksta atpazīšana",
+    "aiNotice": {
+      "text": "MI vēl nav iestatīts. Jaunos dokumentus var meklēt pēc to teksta, taču tiem netiek veidots kopsavilkums un netiek piešķirti atslēgvārdi.",
+      "action": "Iestatīt tūlīt"
+    },
+    "searchResults_zero": "<count>{{count, number}} rezultātu</count> <query>vaicājumam „{{query}}”</query>",
+    "searchResults_one": "<count>{{count, number}} rezultāts</count> <query>vaicājumam „{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} rezultāti</count> <query>vaicājumam „{{query}}”</query>",
+    "progress": {
+      "inProgress": "Apstrādē: {{documents, number}}",
+      "inProgressHint": "Gaida MI analīzi vai pašlaik tiek analizēti",
+      "remaining": "vēl aptuveni {{duration}}",
+      "remainingLessThan": "vēl mazāk nekā {{duration}}",
+      "finishHint": "Paredzamās beigas: {{time}} – aprēķināts pēc pēdējo apstrādāto dokumentu tempa"
+    },
+    "sort": {
+      "label": "Kārtošana",
+      "relevance": "Labākās atbilstības",
+      "newest": "Jaunākie vispirms",
+      "date": "Pēc dokumenta datuma"
+    },
+    "view": {
+      "grid": "Režģa skats",
+      "list": "Saraksta skats"
+    },
+    "pageSize": {
+      "label": "Rādāmo dokumentu skaits",
+      "all": "Visi"
+    },
+    "filters": {
+      "title": "Filtri",
+      "titleWithCount": "Filtri ({{active, number}})",
+      "apply": "Rādīt",
+      "hint": "Kad dokumenti būs analizēti, šeit kā filtri parādīsies dokumentu veidi, atslēgvārdi un sūtītāji.",
+      "dateFrom": "no",
+      "dateTo": "līdz",
+      "status": "Statuss",
+      "failed": "Neizdevās",
+      "showAll": "Rādīt visus",
+      "showLess": "Rādīt mazāk",
+      "activeFrom": "no {{date}}",
+      "activeTo": "līdz {{date}}",
+      "removeOne": "Noņemt filtru „{{label}}”",
+      "removeAll": "Noņemt visus filtrus",
+      "clear": "Noņemt filtrus"
+    },
+    "empty": {
+      "libraryTitle": "Dokumentu vēl nav",
+      "libraryHint": "Vienkārši ievelciet PDF failus šajā logā vai izmantojiet pogu „Augšupielādēt”.",
+      "libraryHintAdmin": "Vienkārši ievelciet PDF failus šajā logā vai izmantojiet pogu „Augšupielādēt”. Iestatījumos varat iestatīt pastkasti vai importa mapi, no kuras jauni PDF faili tiks importēti automātiski.",
+      "noResultsTitle": "Nekas nav atrasts",
+      "noResultsSearch": "Šim meklējumam neatbilst neviens dokuments. Meklēšana atrod arī vārdu daļas – izmēģiniet īsāku vārdu vai mazāk vārdu.",
+      "noResultsFilters": "Izvēlētajiem filtriem neatbilst neviens dokuments."
+    },
+    "loadingAll_zero": "Ielādēts: {{loaded, number}} no {{count, number}} dokumentiem…",
+    "loadingAll_one": "Ielādēts: {{loaded, number}} no {{count, number}} dokumenta…",
+    "loadingAll_other": "Ielādēts: {{loaded, number}} no {{count, number}} dokumentiem…",
+    "loadMore": "Ielādēt vēl ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Atpakaļ uz pārskatu",
+    "download": "Lejupielādēt",
+    "reprocess": "Analizēt vēlreiz",
+    "reprocessHint": "Vēlreiz nolasīt PDF un likt MI to analizēt",
+    "reprocessStarted": "Dokuments tiek analizēts vēlreiz.",
+    "deleted": "Dokuments izdzēsts",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Atvērt jaunā cilnē",
+    "processingNotice": "Dokuments tiek apstrādāts. Kopsavilkums un atslēgvārdi parādīsies šeit, tiklīdz analīze būs pabeigta.",
+    "textOnlyNotice": "Indeksēts bez MI: dokumentu var meklēt pēc tā teksta, taču tam nav kopsavilkuma un automātisko atslēgvārdu.",
+    "tabs": {
+      "overview": "Pārskats",
+      "text": "Pilns teksts"
+    },
+    "fields": {
+      "title": "Nosaukums",
+      "category": "Dokumenta veids",
+      "documentDate": "Dokumenta datums",
+      "correspondent": "Sūtītājs",
+      "tags": "Atslēgvārdi",
+      "summary": "Kopsavilkums"
+    },
+    "tags": {
+      "allWith": "Visi dokumenti ar atslēgvārdu „{{tag}}”",
+      "none": "Nav atslēgvārdu. <add>Pievienot</add>",
+      "inputHint": "Apstipriniet ar taustiņu Enter vai komatu. Ieteikumos tiek rādīti jau izmantotie atslēgvārdi.",
+      "inputPlaceholder": "Ievadiet atslēgvārdu…",
+      "remove": "Noņemt atslēgvārdu „{{tag}}”"
+    },
+    "keyFacts": "Pamatdati",
+    "details": {
+      "title": "Informācija",
+      "file": "Fails",
+      "size": "Apjoms",
+      "pageCount_zero": "{{count, number}} lappušu",
+      "pageCount_one": "{{count, number}} lappuse",
+      "pageCount_other": "{{count, number}} lappuses",
+      "language": "Valoda",
+      "source": "Avots",
+      "mailSubject": "Tēma",
+      "mailFrom": "No",
+      "mailReceived": "Saņemts",
+      "added": "Pievienots",
+      "text": "Teksts"
+    },
+    "source": {
+      "MAIL": "Pastkaste",
+      "FOLDER": "Importa mape",
+      "UPLOAD": "Augšupielādēts"
+    },
+    "noText": "Šim dokumentam nav teksta – visticamāk, tas ir skenējums bez teksta slāņa. Ja MI ir iestatīts un teksta atpazīšana ir ieslēgta, saturs analīzes laikā tiek transkribēts.",
+    "edit": {
+      "title": "Rediģēt dokumentu",
+      "saved": "Izmaiņas saglabātas"
+    },
+    "delete": {
+      "title": "Vai dzēst dokumentu?",
+      "text": "„{{title}}” tiks izdzēsts kopā ar PDF failu, pilno tekstu un atslēgvārdiem. Šo darbību nevar atsaukt.",
+      "confirm": "Dzēst neatgriezeniski"
+    }
+  },
+  "settings": {
+    "title": "Iestatījumi",
+    "mailboxes": {
+      "title": "Pastkastes",
+      "navHint": "IMAP serveri, no kuriem tiek importēti PDF pielikumi",
+      "intro": "No šīm IMAP pastkastēm PDF pielikumi tiek importēti automātiski. Pastkastes tiek tikai lasītas – e-pasta ziņojumi paliek nemainīti un nelasīti.",
+      "add": "Pievienot pastkasti",
+      "emptyTitle": "Vēl nav iestatīta neviena pastkaste",
+      "emptyText": "Ievadiet IMAP pastkastes piekļuves datus – piemēram, tās pastkastes, uz kuru jūsu skeneris sūta dokumentus.",
+      "paused": "Apturēta",
+      "syncNow": "Pārbaudīt tūlīt",
+      "syncing": "Notiek pastkastes pārbaude…",
+      "neverSynced": "Vēl nav pārbaudīta.",
+      "saved": "Pastkaste saglabāta",
+      "added": "Pastkaste pievienota",
+      "firstSyncRunning": "Pirmā pārbaude jau notiek.",
+      "removed": "Pastkaste noņemta",
+      "delete": {
+        "title": "Vai noņemt pastkasti?",
+        "text": "„{{name}}” vairs netiks pārbaudīta. Jau importētie dokumenti tiks saglabāti."
+      },
+      "dialog": {
+        "editTitle": "Rediģēt pastkasti",
+        "description": "Piekļuves datus saņemsiet no sava e-pasta pakalpojumu sniedzēja. Parole tiek glabāta šifrētā veidā.",
+        "name": "Nosaukums",
+        "nameHint": "Pēc jūsu izvēles, piem., „Skeneris” vai „Rēķini”",
+        "namePlaceholder": "Skeneris",
+        "host": "IMAP serveris",
+        "port": "Ports",
+        "security": "Šifrēšana",
+        "securityNone": "Nav",
+        "securityNoneWarning": "Bez šifrēšanas lietotājvārds un parole tiek pārsūtīti atklāta teksta veidā.",
+        "passwordKeepHint": "Atstājiet tukšu, lai paturētu saglabāto paroli",
+        "folder": "Mape",
+        "folderHint": "Parasti {{folder}} (iesūtne)",
+        "since": "Tikai e-pasta ziņojumi no",
+        "sinceHint": "Neobligāti – vecāki e-pasta ziņojumi tiek izlaisti",
+        "enabled": "Pārbaudīt automātiski",
+        "enabledHint": "Pastkastē ar iestatīto intervālu tiek meklēti jauni PDF faili."
+      }
+    },
+    "import": {
+      "title": "Grafiks un importa mape",
+      "navHint": "Pārbaudes intervāls un uzraugāmā mape",
+      "intro": "Nosaka, cik bieži lietotne meklē jaunus PDF failus – pastkastēs un importa mapē.",
+      "saved": "Iestatījumi saglabāti",
+      "interval": {
+        "title": "Pārbaudes intervāls",
+        "text": "Tik bieži lietotne pārbauda, vai pastkastēs un importa mapē ir jauni PDF faili.",
+        "label": "Ik pēc … minūtēm",
+        "nextRun": "Nākamā automātiskā pārbaude {{when}}."
+      },
+      "folder": {
+        "title": "Importa mape",
+        "text": "Mape serverī, kas tiek uzraudzīta, lai pamanītu jaunus PDF failus, – piemēram, tīkla skenera mērķa mape. Tiek pārmeklētas arī apakšmapes.",
+        "enable": "Uzraudzīt importa mapi",
+        "path": "Ceļš serverī",
+        "pathHint": "Absolūtais ceļš. Docker konteinerā tā ir pievienotā mape, parasti {{path}}.",
+        "afterImport": "Pēc importēšanas",
+        "keep": "Atstāt failu uz vietas",
+        "move": "Pārvietot uz „{{folder}}”",
+        "keepHint": "Faili paliek nemainīti. Lietotne atceras, ko tā jau ir importējusi.",
+        "moveHint": "Importētie faili tiek pārvietoti uz apakšmapi „{{folder}}” – importa mape paliek sakārtota.",
+        "scanning": "Notiek mapes pārbaude…",
+        "neverScanned": "Vēl nav pārbaudīta.",
+        "scanNow": "Pārbaudīt tūlīt",
+        "scanStarted": "Importa mape tiek pārbaudīta."
+      }
+    },
+    "ai": {
+      "title": "MI",
+      "navHint": "LLM serveris, modelis un teksta atpazīšana",
+      "intro": "Mākslīgais intelekts (MI) izlasa katru jaunu PDF failu, izveido tā kopsavilkumu, piešķir dokumenta veidu un atslēgvārdus un izgūst pamatdatus, piemēram, summas vai termiņus.",
+      "configured": "Iestatīts",
+      "notConfigured": "Nav iestatīts",
+      "saved": "MI iestatījumi saglabāti",
+      "server": {
+        "title": "LLM serveris",
+        "provider": "Pakalpojumu sniedzējs",
+        "baseUrl": "Servera adrese",
+        "model": "Modelis",
+        "modelPlaceholder": "Modeļa ID",
+        "compatibilityMode": "Saderības režīms lokāliem modeļiem",
+        "compatibilityModeHint": "Serveriem, kas gan izmanto Anthropic saskarni, taču neatbalsta ne PDF ievadi, ne strukturētu izvadi: dokuments modelim tiek nosūtīts kā teksts vai, skenējumu gadījumā, kā lappušu attēli. Izmantojot Claude API, atstājiet izslēgtu.",
+        "testIncomplete": "Iestatījumi vēl nav pilnīgi"
+      },
+      "privacy": {
+        "title": "Izmantojot {{provider}}, jūsu dokumenti atstāj šo datoru",
+        "text": "Analīzei katra PDF faila saturs tiek pārsūtīts uz {{provider}} serveriem internetā un tur apstrādāts – arī rēķini, līgumi, ārstu vēstules un sarakste ar iestādēm.",
+        "recommendation": "<emphasis>Ieteikums:</emphasis> izmantojiet lokālu MI. Ar <lmStudio>LM Studio</lmStudio> vai <compatible>ar OpenAI saderīgu serveri</compatible> savā tīklā viss saturs paliek pie jums."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Anthropic Claude API. Mainiet tikai tad, ja tam priekšā ir jūsu pašu vārteja.",
+          "modelHint": "Ieteicamā izvēle ir Claude Opus 5.5; Sonnet un Haiku ir ātrāki un lētāki."
+        },
+        "OPENAI": {
+          "urlHint": "OpenAI API. Mainiet tikai tad, ja tam priekšā ir jūsu pašu vārteja.",
+          "modelHint": "Modeļa ID, kā to dēvē OpenAI. Pēc atslēgas saglabāšanas šeit parādīsies pieejamie modeļi."
+        },
+        "MOONSHOT": {
+          "urlHint": "Moonshot AI (Kimi) API. Ķīnas platformas kontiem: {{url}}",
+          "modelHint": "Modeļa ID, kā to dēvē Moonshot. Pēc atslēgas saglabāšanas šeit parādīsies pieejamie modeļi."
+        },
+        "LM_STUDIO": {
+          "urlHint": "LM Studio lokālais serveris (palaidiet to programmas LM Studio sadaļā „Developer”). Ja AIDocuments darbojas Docker vidē: {{url}}",
+          "modelHint": "Programmā LM Studio ielādētā modeļa ID. Skenējumiem nepieciešams modelis ar attēlu ievadi, analīzei – modelis ar rīku izmantošanas (Tool Use) atbalstu."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Tāda servera adrese, kas izmanto OpenAI saskarni, – parasti tā beidzas ar /v1, piem., {{url}}",
+          "modelHint": "Modeļa ID, kā to dēvē serveris. Pēc saglabāšanas šeit parādīsies tā piedāvātie modeļi."
+        }
+      },
+      "apiKey": {
+        "label": "API atslēga",
+        "labelOptional": "API atslēga (neobligāta)",
+        "placeholderStored": "{{mask}} (saglabāta)",
+        "placeholderPreset": "{{mask}} (iepriekš iestatīta)",
+        "placeholderNotNeeded": "nav nepieciešama",
+        "placeholderIfRequired": "tikai tad, ja serveris to pieprasa",
+        "hintShown": "Iepriekš iestatīta servera konfigurācijā.",
+        "hintRemoving": "Saglabātā atslēga tiks noņemta saglabājot.",
+        "hintStored": "Atslēga ir saglabāta šifrētā veidā. Atstājiet tukšu, lai to paturētu, – <remove>noņemt atslēgu</remove>",
+        "hintEnvironment": "Atslēga pašlaik tiek ņemta no servera konfigurācijas (vides mainīgā vai konfigurācijas faila). Šeit ievadītai atslēgai ir prioritāte.",
+        "hintPreset": "Šim pakalpojumu sniedzējam atslēga ir iepriekš iestatīta servera konfigurācijā. Atstājiet tukšu, lai to izmantotu.",
+        "hintDiscardedOnSwitch": "Līdz šim saglabātā atslēga pieder pakalpojumu sniedzējam {{previous}} un, to nomainot, tiks atmesta.",
+        "hintPresetOtherProvider": "Iepriekš iestatītā atslēga ir derīga tikai pakalpojumu sniedzējam {{previous}}. Pakalpojumu sniedzējam {{provider}} ievadiet atsevišķu atslēgu.",
+        "hintRequired": "Tiek saglabāta šifrētā veidā un vairs nekad netiek rādīta.",
+        "hintLocal": "Lokālajiem serveriem atslēga parasti nav nepieciešama."
+      },
+      "analysis": {
+        "title": "Analīze",
+        "effort": "Rūpīgums",
+        "effortLevels": {
+          "low": "Ātri",
+          "medium": "Līdzsvaroti",
+          "high": "Rūpīgi"
+        },
+        "effortHint": "Rūpīgāk nozīmē precīzākus rezultātus, taču lēnāk un dārgāk par katru dokumentu.",
+        "outputLanguage": "Rezultātu valoda",
+        "outputLanguageHint": "Šajā valodā MI raksta nosaukumu, kopsavilkumu un atslēgvārdus.",
+        "ocr": "Teksta atpazīšana skenējumiem",
+        "ocrHint": "Lietotne liek MI transkribēt skenētus PDF failus bez teksta slāņa – tikai tad tos var atrast pilnteksta meklēšanā. Katrs skenējums prasa vairāk laika un izmaksā vairāk."
+      },
+      "unanalyzed_zero": "MI vēl nav analizējis {{count, number}} dokumentu.",
+      "unanalyzed_one": "MI vēl nav analizējis {{count, number}} dokumentu.",
+      "unanalyzed_other": "MI vēl nav analizējis {{count, number}} dokumentus.",
+      "analyzeNow": "Analizēt tūlīt",
+      "analysisStarted_zero": "Sākta {{count, number}} dokumentu analīze.",
+      "analysisStarted_one": "Sākta {{count, number}} dokumenta analīze.",
+      "analysisStarted_other": "Sākta {{count, number}} dokumentu analīze."
+    },
+    "users": {
+      "title": "Lietotāji",
+      "navHint": "Konti un lomas",
+      "intro": "Katrs cilvēks pierakstās ar savu kontu. Administratori pārvalda lietotni, lietotāji strādā ar dokumentiem.",
+      "add": "Izveidot lietotāju",
+      "you": "Jūs",
+      "disabled": "Atspējots",
+      "lastLogin": "Pēdējā pierakstīšanās {{when}}",
+      "neverLoggedIn": "Vēl nav pierakstījies",
+      "editUser": "Rediģēt lietotāju {{name}}",
+      "deleteUser": "Dzēst lietotāju {{name}}",
+      "saved": "Lietotājs saglabāts",
+      "created": "Lietotājs izveidots",
+      "deleted": "Lietotājs izdzēsts",
+      "delete": {
+        "title": "Vai dzēst lietotāju?",
+        "text": "Konts „{{name}}” tiks izdzēsts un nekavējoties izrakstīts. Dokumenti tiks saglabāti."
+      },
+      "dialog": {
+        "selfNotice": "Šis ir jūsu konts. Pēc saglabāšanas jums būs jāpierakstās vēlreiz.",
+        "passwordKeepHint": "Atstājiet tukšu, lai paturētu pašreizējo paroli. Citādi – vismaz 8 rakstzīmes.",
+        "role": "Loma",
+        "roleHints": {
+          "ADMIN": "Drīkst visu – arī mainīt iestatījumus, pārvaldīt lietotājus un dzēst dokumentus.",
+          "USER": "Drīkst skatīt, meklēt un augšupielādēt dokumentus, kā arī rediģēt to datus."
+        },
+        "active": "Konts ir aktīvs",
+        "activeHint": "Ar atspējotiem kontiem nevar pierakstīties; aktīvās sesijas tiek nekavējoties izbeigtas.",
+        "create": "Izveidot"
+      }
+    }
+  }
+}

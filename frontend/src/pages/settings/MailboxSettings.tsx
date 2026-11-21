@@ -1,13 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CheckCircle2, Mail, Pencil, Plus, RefreshCw, Trash2, XCircle } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Alert, Badge, Button, Card, ConfirmDialog, EmptyState, Field, IconButton, Input, Modal, Segmented, Spinner, Switch } from '../../components/ui'
 import { api, errorMessage, type MailAccount, type MailAccountInput, type MailSecurity, type TestResult } from '../../lib/api'
-import { formatRelative, plural } from '../../lib/format'
+import { formatRelative } from '../../lib/format'
 import { SectionHeader } from './SectionHeader'
 
 export function MailboxSettings() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [editing, setEditing] = useState<MailAccount | 'new' | null>(null)
   const [deleting, setDeleting] = useState<MailAccount | null>(null)
@@ -28,7 +30,7 @@ export function MailboxSettings() {
     mutationFn: (id: string) => api.deleteMailAccount(id),
     onSuccess: async () => {
       setDeleting(null)
-      toast.success('Postfach entfernt')
+      toast.success(t('settings.mailboxes.removed'))
       await queryClient.invalidateQueries({ queryKey: ['mail-accounts'] })
     },
     onError: (e) => toast.error(errorMessage(e)),
@@ -37,15 +39,14 @@ export function MailboxSettings() {
   return (
     <section>
       <SectionHeader
-        title="Postfächer"
+        title={t('settings.mailboxes.title')}
         action={
           <Button variant="primary" icon={<Plus className="size-4" aria-hidden />} onClick={() => setEditing('new')}>
-            Postfach hinzufügen
+            {t('settings.mailboxes.add')}
           </Button>
         }
       >
-        Aus diesen IMAP-Postfächern werden PDF-Anhänge automatisch übernommen. Die Postfächer werden nur gelesen –
-        E-Mails bleiben unverändert und ungelesen.
+        {t('settings.mailboxes.intro')}
       </SectionHeader>
 
       {accounts.isPending ? (
@@ -58,15 +59,14 @@ export function MailboxSettings() {
         <Card>
           <EmptyState
             icon={<Mail className="size-7" />}
-            title="Noch kein Postfach eingerichtet"
+            title={t('settings.mailboxes.emptyTitle')}
             action={
               <Button variant="primary" icon={<Plus className="size-4" aria-hidden />} onClick={() => setEditing('new')}>
-                Postfach hinzufügen
+                {t('settings.mailboxes.add')}
               </Button>
             }
           >
-            Trage die Zugangsdaten eines IMAP-Postfachs ein – zum Beispiel das Postfach, an das dein Scanner
-            Dokumente schickt.
+            {t('settings.mailboxes.emptyText')}
           </EmptyState>
         </Card>
       ) : (
@@ -80,8 +80,8 @@ export function MailboxSettings() {
                 <div className="min-w-0 flex-1 basis-56">
                   <div className="flex flex-wrap items-center gap-2">
                     <h3 className="truncate font-semibold">{account.name}</h3>
-                    {!account.enabled && <Badge>Pausiert</Badge>}
-                    <Badge tone="neutral">{plural(account.documentCount, 'Dokument', 'Dokumente')}</Badge>
+                    {!account.enabled && <Badge>{t('settings.mailboxes.paused')}</Badge>}
+                    <Badge tone="neutral">{t('common.documentCount', { count: account.documentCount })}</Badge>
                   </div>
                   <p className="mt-0.5 truncate text-sm text-muted">
                     {account.username} · {account.host}:{account.port} · {account.folder}
@@ -95,12 +95,12 @@ export function MailboxSettings() {
                     loading={account.lastSyncStatus === 'RUNNING' || (sync.isPending && sync.variables === account.id)}
                     onClick={() => sync.mutate(account.id)}
                   >
-                    Jetzt abrufen
+                    {t('settings.mailboxes.syncNow')}
                   </Button>
-                  <IconButton label="Bearbeiten" onClick={() => setEditing(account)}>
+                  <IconButton label={t('common.edit')} onClick={() => setEditing(account)}>
                     <Pencil className="size-4" />
                   </IconButton>
-                  <IconButton label="Entfernen" onClick={() => setDeleting(account)} className="hover:!bg-danger-soft hover:!text-danger">
+                  <IconButton label={t('common.remove')} onClick={() => setDeleting(account)} className="hover:!bg-danger-soft hover:!text-danger">
                     <Trash2 className="size-4" />
                   </IconButton>
                 </div>
@@ -116,21 +116,22 @@ export function MailboxSettings() {
         onClose={() => setDeleting(null)}
         onConfirm={() => deleting && remove.mutate(deleting.id)}
         loading={remove.isPending}
-        title="Postfach entfernen?"
-        confirmLabel="Entfernen"
+        title={t('settings.mailboxes.delete.title')}
+        confirmLabel={t('common.remove')}
       >
-        „{deleting?.name}“ wird nicht mehr abgerufen. Bereits übernommene Dokumente bleiben erhalten.
+        {t('settings.mailboxes.delete.text', { name: deleting?.name ?? '' })}
       </ConfirmDialog>
     </section>
   )
 }
 
 function SyncState({ account }: { account: MailAccount }) {
+  const { t } = useTranslation()
   if (account.lastSyncStatus === 'RUNNING') {
-    return <p className="mt-2 text-[13px] text-brand-ink">Postfach wird abgerufen …</p>
+    return <p className="mt-2 text-[13px] text-brand-ink">{t('settings.mailboxes.syncing')}</p>
   }
   if (!account.lastSyncAt) {
-    return <p className="mt-2 text-[13px] text-muted">Noch nicht abgerufen.</p>
+    return <p className="mt-2 text-[13px] text-muted">{t('settings.mailboxes.neverSynced')}</p>
   }
   const failed = account.lastSyncStatus === 'ERROR'
   return (
@@ -143,14 +144,10 @@ function SyncState({ account }: { account: MailAccount }) {
   )
 }
 
-const securityOptions: Array<{ value: MailSecurity; label: string }> = [
-  { value: 'SSL', label: 'SSL/TLS' },
-  { value: 'STARTTLS', label: 'STARTTLS' },
-  { value: 'NONE', label: 'Keine' },
-]
 const defaultPorts: Record<MailSecurity, number> = { SSL: 993, STARTTLS: 143, NONE: 143 }
 
 function MailboxDialog({ account, onClose }: { account: MailAccount | null; onClose: () => void }) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [name, setName] = useState(account?.name ?? '')
   const [host, setHost] = useState(account?.host ?? '')
@@ -179,8 +176,8 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
     mutationFn: () => (account ? api.updateMailAccount(account.id, input()) : api.createMailAccount(input())),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['mail-accounts'] })
-      toast.success(account ? 'Postfach gespeichert' : 'Postfach hinzugefügt', {
-        description: !account && enabled ? 'Der erste Abruf läuft bereits.' : undefined,
+      toast.success(account ? t('settings.mailboxes.saved') : t('settings.mailboxes.added'), {
+        description: !account && enabled ? t('settings.mailboxes.firstSyncRunning') : undefined,
       })
       onClose()
     },
@@ -202,65 +199,71 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
     save.mutate()
   }
   const complete = host.trim() !== '' && username.trim() !== '' && (password !== '' || account !== null)
+  // SSL/TLS und STARTTLS sind Fachbegriffe und heißen in jeder Sprache so; nur "Keine" wird übersetzt.
+  const securityOptions: Array<{ value: MailSecurity; label: string }> = [
+    { value: 'SSL', label: 'SSL/TLS' },
+    { value: 'STARTTLS', label: 'STARTTLS' },
+    { value: 'NONE', label: t('settings.mailboxes.dialog.securityNone') },
+  ]
 
   return (
     <Modal
       open
       onClose={onClose}
       size="lg"
-      title={account ? 'Postfach bearbeiten' : 'Postfach hinzufügen'}
-      description="Die Zugangsdaten bekommst du von deinem E-Mail-Anbieter. Das Passwort wird verschlüsselt gespeichert."
+      title={account ? t('settings.mailboxes.dialog.editTitle') : t('settings.mailboxes.add')}
+      description={t('settings.mailboxes.dialog.description')}
     >
       <form onSubmit={submit} className="flex flex-col gap-4">
         {save.isError && <Alert tone="danger">{errorMessage(save.error)}</Alert>}
-        <Field label="Bezeichnung" hint="Frei wählbar, z. B. „Scanner“ oder „Rechnungen“">
-          {(id) => <Input id={id} value={name} onChange={(e) => setName(e.target.value)} maxLength={120} placeholder="Scanner" autoFocus />}
+        <Field label={t('settings.mailboxes.dialog.name')} hint={t('settings.mailboxes.dialog.nameHint')}>
+          {(id) => <Input id={id} value={name} onChange={(e) => setName(e.target.value)} maxLength={120} placeholder={t('settings.mailboxes.dialog.namePlaceholder')} autoFocus />}
         </Field>
         <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_7rem]">
-          <Field label="IMAP-Server">
+          <Field label={t('settings.mailboxes.dialog.host')}>
             {(id) => <Input id={id} value={host} onChange={(e) => setHost(e.target.value)} placeholder="imap.example.com" autoCapitalize="none" spellCheck={false} required />}
           </Field>
-          <Field label="Port">
+          <Field label={t('settings.mailboxes.dialog.port')}>
             {(id) => <Input id={id} type="number" min={1} max={65535} value={port} onChange={(e) => setPort(e.target.value)} required />}
           </Field>
         </div>
         <div className="flex flex-col gap-1.5">
-          <span className="text-[13px] font-medium">Verschlüsselung</span>
-          <Segmented label="Verschlüsselung" value={security} onChange={changeSecurity} options={securityOptions} />
+          <span className="text-[13px] font-medium">{t('settings.mailboxes.dialog.security')}</span>
+          <Segmented label={t('settings.mailboxes.dialog.security')} value={security} onChange={changeSecurity} options={securityOptions} />
           {security === 'NONE' && (
-            <p className="text-[13px] text-warn">Ohne Verschlüsselung werden Benutzername und Passwort im Klartext übertragen.</p>
+            <p className="text-[13px] text-warn">{t('settings.mailboxes.dialog.securityNoneWarning')}</p>
           )}
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Benutzername">
+          <Field label={t('common.username')}>
             {(id) => <Input id={id} value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} required />}
           </Field>
-          <Field label="Passwort" hint={account ? 'Leer lassen, um das gespeicherte Passwort zu behalten' : undefined}>
+          <Field label={t('common.password')} hint={account ? t('settings.mailboxes.dialog.passwordKeepHint') : undefined}>
             {(id) => (
               <Input id={id} type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" required={!account} placeholder={account ? '••••••••' : ''} />
             )}
           </Field>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Ordner" hint="Meist INBOX (Posteingang)">
+          <Field label={t('settings.mailboxes.dialog.folder')} hint={t('settings.mailboxes.dialog.folderHint', { folder: 'INBOX' })}>
             {(id) => <Input id={id} value={folder} onChange={(e) => setFolder(e.target.value)} spellCheck={false} required />}
           </Field>
-          <Field label="Nur E-Mails ab" hint="Optional – ältere E-Mails werden übersprungen">
+          <Field label={t('settings.mailboxes.dialog.since')} hint={t('settings.mailboxes.dialog.sinceHint')}>
             {(id) => <Input id={id} type="date" value={importSince} onChange={(e) => setImportSince(e.target.value)} />}
           </Field>
         </div>
-        <Switch checked={enabled} onChange={setEnabled} label="Automatisch abrufen" description="Das Postfach wird im eingestellten Intervall auf neue PDFs geprüft." />
+        <Switch checked={enabled} onChange={setEnabled} label={t('settings.mailboxes.dialog.enabled')} description={t('settings.mailboxes.dialog.enabledHint')} />
 
         {test && <Alert tone={test.ok ? 'ok' : 'danger'}>{test.message}</Alert>}
 
         <div className="mt-1 flex flex-wrap items-center gap-2">
           <Button onClick={() => runTest.mutate()} loading={runTest.isPending} disabled={!complete}>
-            Verbindung testen
+            {t('common.testConnection')}
           </Button>
           <div className="ml-auto flex gap-2">
-            <Button onClick={onClose}>Abbrechen</Button>
+            <Button onClick={onClose}>{t('common.cancel')}</Button>
             <Button type="submit" variant="primary" loading={save.isPending}>
-              {account ? 'Speichern' : 'Hinzufügen'}
+              {account ? t('common.save') : t('common.add')}
             </Button>
           </div>
         </div>

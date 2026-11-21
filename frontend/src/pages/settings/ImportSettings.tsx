@@ -1,15 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CheckCircle2, Clock, FolderSearch, XCircle } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Alert, Button, Card, Field, Input, Segmented, Spinner, Switch } from '../../components/ui'
 import { api, errorMessage, type FolderMode } from '../../lib/api'
-import { cx, formatRelative } from '../../lib/format'
+import { cx, formatDuration, formatRelative } from '../../lib/format'
 import { SectionHeader } from './SectionHeader'
 
 const presets = [1, 5, 15, 30, 60]
 
+/** So heißt der Unterordner, in den der Server übernommene Dateien verschiebt – ein fester Name, keine Übersetzung. */
+const IMPORTED_FOLDER = 'importiert'
+
 export function ImportSettingsSection() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const settings = useQuery({
     queryKey: ['settings', 'import'],
@@ -39,13 +44,13 @@ export function ImportSettingsSection() {
       api.updateImportSettings({ intervalMinutes: Number(interval), folderEnabled, folderPath: folderPath.trim(), folderMode }),
     onSuccess: (data) => {
       queryClient.setQueryData(['settings', 'import'], data)
-      toast.success('Einstellungen gespeichert')
+      toast.success(t('settings.import.saved'))
     },
   })
   const scan = useMutation({
     mutationFn: api.scanFolder,
     onSuccess: () => {
-      toast.success('Der Eingangsordner wird geprüft.')
+      toast.success(t('settings.import.folder.scanStarted'))
       setTimeout(() => queryClient.invalidateQueries({ queryKey: ['settings', 'import'] }), 600)
       setTimeout(() => queryClient.invalidateQueries({ queryKey: ['documents'] }), 2500)
     },
@@ -76,9 +81,7 @@ export function ImportSettingsSection() {
 
   return (
     <form onSubmit={submit}>
-      <SectionHeader title="Abruf & Eingangsordner">
-        Legt fest, wie oft nach neuen PDF-Dateien gesucht wird – in den Postfächern und im Eingangsordner.
-      </SectionHeader>
+      <SectionHeader title={t('settings.import.title')}>{t('settings.import.intro')}</SectionHeader>
       {save.isError && (
         <Alert tone="danger" className="mb-4">
           {errorMessage(save.error)}
@@ -87,11 +90,11 @@ export function ImportSettingsSection() {
 
       <Card className="p-5">
         <h3 className="flex items-center gap-2 font-semibold">
-          <Clock className="size-[18px] text-muted" aria-hidden /> Abrufintervall
+          <Clock className="size-[18px] text-muted" aria-hidden /> {t('settings.import.interval.title')}
         </h3>
-        <p className="mt-1 text-sm text-muted">So oft prüft die Anwendung alle Postfächer und den Eingangsordner auf neue PDFs.</p>
+        <p className="mt-1 text-sm text-muted">{t('settings.import.interval.text')}</p>
         <div className="mt-4 flex flex-wrap items-end gap-x-4 gap-y-3">
-          <Field label="Alle … Minuten" className="w-32">
+          <Field label={t('settings.import.interval.label')} className="w-32">
             {(id) => (
               <Input id={id} type="number" min={1} max={1440} value={interval} onChange={(e) => setIntervalMinutes(e.target.value)} required />
             )}
@@ -109,27 +112,24 @@ export function ImportSettingsSection() {
                     : 'border-line-strong text-muted hover:bg-raised hover:text-ink',
                 )}
               >
-                {minutes < 60 ? `${minutes} Min.` : '1 Std.'}
+                {minutes < 60 ? formatDuration(minutes, 'minute') : formatDuration(minutes / 60, 'hour')}
               </button>
             ))}
           </div>
         </div>
-        <p className="mt-3 text-[13px] text-muted">Nächster automatischer Abruf {formatRelative(data.nextRunAt)}.</p>
+        <p className="mt-3 text-[13px] text-muted">{t('settings.import.interval.nextRun', { when: formatRelative(data.nextRunAt) })}</p>
       </Card>
 
       <Card className="mt-4 p-5">
         <h3 className="flex items-center gap-2 font-semibold">
-          <FolderSearch className="size-[18px] text-muted" aria-hidden /> Eingangsordner
+          <FolderSearch className="size-[18px] text-muted" aria-hidden /> {t('settings.import.folder.title')}
         </h3>
-        <p className="mt-1 text-sm text-muted">
-          Ein Verzeichnis auf dem Server, das auf neue PDF-Dateien überwacht wird – etwa das Ziel eines Netzwerkscanners.
-          Unterordner werden mit durchsucht.
-        </p>
+        <p className="mt-1 text-sm text-muted">{t('settings.import.folder.text')}</p>
         <div className="mt-4 flex flex-col gap-4">
-          <Switch checked={folderEnabled} onChange={setFolderEnabled} label="Eingangsordner überwachen" />
+          <Switch checked={folderEnabled} onChange={setFolderEnabled} label={t('settings.import.folder.enable')} />
           <Field
-            label="Pfad auf dem Server"
-            hint="Absoluter Pfad. Im Docker-Container ist das der eingebundene Ordner, üblicherweise /import."
+            label={t('settings.import.folder.path')}
+            hint={t('settings.import.folder.pathHint', { path: '/import' })}
           >
             {(id) => (
               <Input
@@ -146,20 +146,20 @@ export function ImportSettingsSection() {
             )}
           </Field>
           <div className="flex flex-col gap-1.5">
-            <span className="text-[13px] font-medium">Nach der Übernahme</span>
+            <span className="text-[13px] font-medium">{t('settings.import.folder.afterImport')}</span>
             <Segmented
-              label="Nach der Übernahme"
+              label={t('settings.import.folder.afterImport')}
               value={folderMode}
               onChange={setFolderMode}
               options={[
-                { value: 'KEEP', label: 'Datei liegen lassen' },
-                { value: 'MOVE', label: 'In „importiert“ verschieben' },
+                { value: 'KEEP', label: t('settings.import.folder.keep') },
+                { value: 'MOVE', label: t('settings.import.folder.move', { folder: IMPORTED_FOLDER }) },
               ]}
             />
             <p className="text-[13px] leading-snug text-muted">
               {folderMode === 'KEEP'
-                ? 'Die Dateien bleiben unverändert. Die Anwendung merkt sich, was sie bereits übernommen hat.'
-                : 'Übernommene Dateien wandern in den Unterordner „importiert“ – der Eingangsordner bleibt aufgeräumt.'}
+                ? t('settings.import.folder.keepHint')
+                : t('settings.import.folder.moveHint', { folder: IMPORTED_FOLDER })}
             </p>
           </div>
 
@@ -168,7 +168,7 @@ export function ImportSettingsSection() {
               <p className={cx('flex min-w-0 flex-1 basis-60 items-start gap-1.5 text-[13px]', status.ok ? 'text-muted' : 'text-danger')}>
                 {status.running ? (
                   <>
-                    <Spinner className="mt-0.5 size-3.5" /> Ordner wird geprüft …
+                    <Spinner className="mt-0.5 size-3.5" /> {t('settings.import.folder.scanning')}
                   </>
                 ) : status.lastScanAt ? (
                   <>
@@ -182,11 +182,11 @@ export function ImportSettingsSection() {
                     </span>
                   </>
                 ) : (
-                  'Noch nicht geprüft.'
+                  t('settings.import.folder.neverScanned')
                 )}
               </p>
-              <Button size="sm" onClick={() => scan.mutate()} loading={scan.isPending || status.running} disabled={dirty} title={dirty ? 'Bitte zuerst speichern' : undefined}>
-                Jetzt prüfen
+              <Button size="sm" onClick={() => scan.mutate()} loading={scan.isPending || status.running} disabled={dirty} title={dirty ? t('common.saveFirst') : undefined}>
+                {t('settings.import.folder.scanNow')}
               </Button>
             </div>
           )}
@@ -195,7 +195,7 @@ export function ImportSettingsSection() {
 
       <div className="mt-5 flex justify-end">
         <Button type="submit" variant="primary" loading={save.isPending} disabled={!dirty}>
-          Speichern
+          {t('common.save')}
         </Button>
       </div>
     </form>

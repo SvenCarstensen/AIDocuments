@@ -2,6 +2,7 @@ package de.aidocuments.settings;
 
 import de.aidocuments.ai.AiAnalysisService;
 import de.aidocuments.ai.AiException;
+import de.aidocuments.i18n.Messages;
 import de.aidocuments.importer.FolderImportService;
 import de.aidocuments.importer.ImportScheduler;
 import de.aidocuments.importer.ImportSettings.FolderMode;
@@ -40,11 +41,13 @@ public class SettingsController {
     private final FolderImportService folderImport;
     private final ImportScheduler scheduler;
     private final ThreadPoolTaskExecutor executor;
+    private final Messages messages;
 
     public SettingsController(AiSettingsService aiSettings, AiAnalysisService aiService,
                               ImportSettingsService importSettings, FolderImportService folderImport,
                               ImportScheduler scheduler,
-                              @Qualifier("importExecutor") ThreadPoolTaskExecutor executor) {
+                              @Qualifier("importExecutor") ThreadPoolTaskExecutor executor, Messages messages) {
+        this.messages = messages;
         this.aiSettings = aiSettings;
         this.aiService = aiService;
         this.importSettings = importSettings;
@@ -67,9 +70,9 @@ public class SettingsController {
     @PostMapping("/ai/test")
     public TestResultDto testAi() {
         try {
-            return new TestResultDto(true, aiService.testConnection());
+            return new TestResultDto(true, messages.render(aiService.testConnection()));
         } catch (AiException e) {
-            return new TestResultDto(false, e.getMessage());
+            return new TestResultDto(false, messages.render(e.msg()));
         }
     }
 
@@ -99,7 +102,10 @@ public class SettingsController {
 
     private ImportSettingsDto importDto() {
         ImportSettingsService.Effective effective = importSettings.current();
+        // Der Stand des Eingangsordners entsteht im Hintergrund und wird erst hier übersetzt.
+        FolderImportService.Status status = folderImport.status();
         return new ImportSettingsDto(effective.intervalMinutes(), effective.folderEnabled(),
-                effective.folderPath(), effective.folderMode(), folderImport.status(), scheduler.nextRunAt());
+                effective.folderPath(), effective.folderMode(),
+                status.withMessage(messages.localize(status.message())), scheduler.nextRunAt());
     }
 }

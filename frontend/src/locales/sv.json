@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "close": "Stäng",
+    "edit": "Redigera",
+    "delete": "Radera",
+    "remove": "Ta bort",
+    "add": "Lägg till",
+    "back": "Tillbaka",
+    "retry": "Försök igen",
+    "loading": "Läser in",
+    "language": "Språk",
+    "testConnection": "Testa anslutning",
+    "saveFirst": "Spara först",
+    "username": "Användarnamn",
+    "usernameHint": "3–50 tecken: bokstäver, siffror, punkt, bindestreck, understreck, @",
+    "password": "Lösenord",
+    "newPassword": "Nytt lösenord",
+    "passwordHint": "Minst 8 tecken",
+    "passwordMismatch": "Lösenorden stämmer inte överens.",
+    "justNow": "nyss",
+    "documentCount_one": "{{count, number}} dokument",
+    "documentCount_other": "{{count, number}} dokument",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Användare"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Ingen anslutning till servern",
+    "server": "Servern rapporterar ett fel ({{status}}).",
+    "forbidden": "Du har inte behörighet att göra detta.",
+    "unreachable": "Servern kan inte nås.",
+    "unexpected": "Oväntat fel.",
+    "languageLoad": "Språket kunde inte läsas in."
+  },
+  "auth": {
+    "login": {
+      "title": "Välkommen tillbaka",
+      "subtitle": "Logga in för att komma åt dina dokument.",
+      "submit": "Logga in"
+    },
+    "setup": {
+      "title": "Konfigurera AIDocuments",
+      "subtitle": "Börja med att skapa administratörskontot. Sedan kan du lägga till fler användare i inställningarna.",
+      "adminAccount": "Administratörskonto",
+      "repeatPassword": "Upprepa lösenord",
+      "submit": "Skapa konto och kom igång",
+      "features": {
+        "import": "PDF-filer från din brevlåda och importmapp",
+        "ai": "AI sammanfattar och taggar dem",
+        "search": "Fulltextsökning ända in i dokumentet"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Ladda upp",
+    "theme": {
+      "light": "Ljust tema",
+      "dark": "Mörkt tema"
+    },
+    "search": {
+      "placeholder": "Sök i dokument, taggar, innehåll …",
+      "label": "Sök i dokument",
+      "clear": "Rensa sökning"
+    },
+    "userMenu": {
+      "label": "Användarmeny ({{name}})",
+      "aiActive": "AI aktiv",
+      "aiNotConfigured": "AI inte konfigurerad",
+      "changePassword": "Byt lösenord",
+      "logout": "Logga ut"
+    },
+    "passwordDialog": {
+      "current": "Nuvarande lösenord",
+      "repeat": "Upprepa nytt lösenord",
+      "changed": "Lösenordet har ändrats"
+    },
+    "dropzone": {
+      "title": "Släpp PDF-filer här",
+      "hint": "Du kan släppa flera filer samtidigt. De sparas, analyseras och taggas."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Endast PDF-filer kan läggas till.",
+    "uploadingFile": "Laddar upp ”{{name}}” …",
+    "uploadingFiles_one": "Laddar upp {{count, number}} PDF-fil …",
+    "uploadingFiles_other": "Laddar upp {{count, number}} PDF-filer …",
+    "created_one": "{{count, number}} dokument har lagts till",
+    "created_other": "{{count, number}} dokument har lagts till",
+    "processingInBackground": "Bearbetningen fortsätter i bakgrunden.",
+    "duplicates_one": "{{count, number}} finns redan",
+    "duplicates_other": "{{count, number}} finns redan",
+    "rejected_one": "{{count, number}} fil är inte en giltig PDF",
+    "rejected_other": "{{count, number}} filer är inte giltiga PDF-filer",
+    "onlyDuplicates_one": "Det här dokumentet finns redan.",
+    "onlyDuplicates_other": "De här dokumenten finns redan.",
+    "noneValid": "Ingen av filerna är en giltig PDF.",
+    "failed": "Uppladdningen misslyckades"
+  },
+  "documents": {
+    "status": {
+      "pending": "Väntar",
+      "processing": "Analyseras",
+      "failed": "Fel",
+      "textOnly": "Utan AI"
+    },
+    "ocrBadge": "Textigenkänning",
+    "aiNotice": {
+      "text": "AI:n är inte konfigurerad än. Nya dokument går att söka i via sin text, men de sammanfattas och taggas inte.",
+      "action": "Konfigurera nu"
+    },
+    "searchResults_one": "<count>{{count, number}} träff</count> <query>för ”{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} träffar</count> <query>för ”{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} pågår",
+      "inProgressHint": "Väntar på AI-analys eller analyseras just nu",
+      "remaining": "ca {{duration}} kvar",
+      "remainingLessThan": "mindre än {{duration}} kvar",
+      "finishHint": "Beräknas vara klart: kl. {{time}} – uppskattat utifrån takten för de senast bearbetade dokumenten"
+    },
+    "sort": {
+      "label": "Sortering",
+      "relevance": "Bästa träffar",
+      "newest": "Nyaste först",
+      "date": "Efter dokumentdatum"
+    },
+    "view": {
+      "grid": "Rutnätsvy",
+      "list": "Listvy"
+    },
+    "pageSize": {
+      "label": "Antal dokument som visas",
+      "all": "Alla"
+    },
+    "filters": {
+      "title": "Filter",
+      "titleWithCount": "Filter ({{active, number}})",
+      "apply": "Visa",
+      "hint": "När dokument har analyserats visas dokumenttyper, taggar och avsändare här som filter.",
+      "dateFrom": "från",
+      "dateTo": "till",
+      "status": "Status",
+      "failed": "Misslyckades",
+      "showAll": "Visa alla",
+      "showLess": "Visa färre",
+      "activeFrom": "fr.o.m. {{date}}",
+      "activeTo": "t.o.m. {{date}}",
+      "removeOne": "Ta bort filtret ”{{label}}”",
+      "removeAll": "Ta bort alla filter",
+      "clear": "Ta bort filter"
+    },
+    "empty": {
+      "libraryTitle": "Inga dokument än",
+      "libraryHint": "Dra helt enkelt PDF-filer till det här fönstret eller använd ”Ladda upp”.",
+      "libraryHintAdmin": "Dra helt enkelt PDF-filer till det här fönstret eller använd ”Ladda upp”. I inställningarna kan du konfigurera en brevlåda eller en importmapp som nya PDF-filer importeras från automatiskt.",
+      "noResultsTitle": "Inget hittades",
+      "noResultsSearch": "Inget dokument matchar den här sökningen. Sökningen hittar även delar av ord – prova ett kortare sökord eller färre ord.",
+      "noResultsFilters": "Inget dokument matchar de valda filtren."
+    },
+    "loadingAll_one": "{{loaded, number}} av {{count, number}} dokument har lästs in …",
+    "loadingAll_other": "{{loaded, number}} av {{count, number}} dokument har lästs in …",
+    "loadMore": "Läs in fler ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Tillbaka till översikten",
+    "download": "Ladda ned",
+    "reprocess": "Analysera igen",
+    "reprocessHint": "Läs in PDF-filen på nytt och låt AI:n analysera den",
+    "reprocessStarted": "Dokumentet analyseras igen.",
+    "deleted": "Dokumentet har raderats",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Öppna i ny flik",
+    "processingNotice": "Dokumentet bearbetas. Sammanfattningen och taggarna visas här så snart analysen är klar.",
+    "textOnlyNotice": "Indexerat utan AI: dokumentet går att söka i via sin text, men det har ingen sammanfattning och inga automatiska taggar.",
+    "tabs": {
+      "overview": "Översikt",
+      "text": "Fulltext"
+    },
+    "fields": {
+      "title": "Titel",
+      "category": "Dokumenttyp",
+      "documentDate": "Dokumentdatum",
+      "correspondent": "Avsändare",
+      "tags": "Taggar",
+      "summary": "Sammanfattning"
+    },
+    "tags": {
+      "allWith": "Alla dokument med taggen ”{{tag}}”",
+      "none": "Inga taggar. <add>Lägg till</add>",
+      "inputHint": "Bekräfta med Enter eller kommatecken. Förslagen är taggar som redan används.",
+      "inputPlaceholder": "Ange en tagg …",
+      "remove": "Ta bort taggen ”{{tag}}”"
+    },
+    "keyFacts": "Nyckeluppgifter",
+    "details": {
+      "title": "Detaljer",
+      "file": "Fil",
+      "size": "Omfång",
+      "pageCount_one": "{{count, number}} sida",
+      "pageCount_other": "{{count, number}} sidor",
+      "language": "Språk",
+      "source": "Källa",
+      "mailSubject": "Ämne",
+      "mailFrom": "Från",
+      "mailReceived": "Mottaget",
+      "added": "Tillagt",
+      "text": "Text"
+    },
+    "source": {
+      "MAIL": "E-postbrevlåda",
+      "FOLDER": "Importmapp",
+      "UPLOAD": "Uppladdat"
+    },
+    "noText": "Det finns ingen text för det här dokumentet – troligen är det en skanning utan textlager. Om AI:n är konfigurerad och textigenkänning är aktiverad transkriberas innehållet vid analysen.",
+    "edit": {
+      "title": "Redigera dokument",
+      "saved": "Ändringarna har sparats"
+    },
+    "delete": {
+      "title": "Radera dokumentet?",
+      "text": "”{{title}}” raderas tillsammans med PDF-filen, fulltexten och taggarna. Detta kan inte ångras.",
+      "confirm": "Radera permanent"
+    }
+  },
+  "settings": {
+    "title": "Inställningar",
+    "mailboxes": {
+      "title": "Brevlådor",
+      "navHint": "IMAP-servrar som PDF-bilagor importeras från",
+      "intro": "PDF-bilagor importeras automatiskt från de här IMAP-brevlådorna. Brevlådorna läses bara – e-postmeddelandena förblir oförändrade och olästa.",
+      "add": "Lägg till brevlåda",
+      "emptyTitle": "Ingen brevlåda har konfigurerats än",
+      "emptyText": "Ange inloggningsuppgifterna för en IMAP-brevlåda – till exempel den brevlåda som din skanner skickar dokument till.",
+      "paused": "Pausad",
+      "syncNow": "Kontrollera nu",
+      "syncing": "Kontrollerar brevlådan …",
+      "neverSynced": "Inte kontrollerad än.",
+      "saved": "Brevlådan har sparats",
+      "added": "Brevlådan har lagts till",
+      "firstSyncRunning": "Den första kontrollen pågår redan.",
+      "removed": "Brevlådan har tagits bort",
+      "delete": {
+        "title": "Ta bort brevlådan?",
+        "text": "”{{name}}” kommer inte längre att kontrolleras. Dokument som redan har importerats finns kvar."
+      },
+      "dialog": {
+        "editTitle": "Redigera brevlåda",
+        "description": "Inloggningsuppgifterna får du från din e-postleverantör. Lösenordet sparas krypterat.",
+        "name": "Namn",
+        "nameHint": "Valfritt, t.ex. ”Skanner” eller ”Fakturor”",
+        "namePlaceholder": "Skanner",
+        "host": "IMAP-server",
+        "port": "Port",
+        "security": "Kryptering",
+        "securityNone": "Ingen",
+        "securityNoneWarning": "Utan kryptering skickas användarnamn och lösenord i klartext.",
+        "passwordKeepHint": "Lämna tomt för att behålla det sparade lösenordet",
+        "folder": "Mapp",
+        "folderHint": "Vanligtvis {{folder}} (inkorgen)",
+        "since": "Endast e-post från och med",
+        "sinceHint": "Valfritt – äldre e-post hoppas över",
+        "enabled": "Kontrollera automatiskt",
+        "enabledHint": "Brevlådan kontrolleras efter nya PDF-filer med det inställda intervallet."
+      }
+    },
+    "import": {
+      "title": "Schema & importmapp",
+      "navHint": "Kontrollintervall och bevakad mapp",
+      "intro": "Anger hur ofta programmet letar efter nya PDF-filer – i brevlådorna och i importmappen.",
+      "saved": "Inställningarna har sparats",
+      "interval": {
+        "title": "Kontrollintervall",
+        "text": "Så här ofta kontrollerar programmet alla brevlådor och importmappen efter nya PDF-filer.",
+        "label": "Med … minuters mellanrum",
+        "nextRun": "Nästa automatiska kontroll {{when}}."
+      },
+      "folder": {
+        "title": "Importmapp",
+        "text": "En mapp på servern som bevakas efter nya PDF-filer – till exempel målmappen för en nätverksskanner. Undermappar genomsöks också.",
+        "enable": "Bevaka importmappen",
+        "path": "Sökväg på servern",
+        "pathHint": "Absolut sökväg. I Docker-containern är det den monterade mappen, vanligtvis {{path}}.",
+        "afterImport": "Efter importen",
+        "keep": "Låt filen ligga kvar",
+        "move": "Flytta till ”{{folder}}”",
+        "keepHint": "Filerna förblir oförändrade. Programmet kommer ihåg vad som redan har importerats.",
+        "moveHint": "Importerade filer flyttas till undermappen ”{{folder}}” – så hålls importmappen städad.",
+        "scanning": "Kontrollerar mappen …",
+        "neverScanned": "Inte kontrollerad än.",
+        "scanNow": "Kontrollera nu",
+        "scanStarted": "Importmappen kontrolleras."
+      }
+    },
+    "ai": {
+      "title": "AI",
+      "navHint": "LLM-server, modell och textigenkänning",
+      "intro": "AI:n läser varje ny PDF-fil, sammanfattar den, tilldelar dokumenttyp och taggar och plockar ut nyckeluppgifter som belopp eller tidsfrister.",
+      "configured": "Konfigurerad",
+      "notConfigured": "Inte konfigurerad",
+      "saved": "AI-inställningarna har sparats",
+      "server": {
+        "title": "LLM-server",
+        "provider": "Leverantör",
+        "baseUrl": "Serveradress",
+        "model": "Modell",
+        "modelPlaceholder": "Modell-ID",
+        "compatibilityMode": "Kompatibilitetsläge för lokala modeller",
+        "compatibilityModeHint": "För servrar som talar Anthropic-gränssnittet men varken stöder PDF-inmatning eller strukturerade utdata: dokumentet skickas till modellen som text eller, för skanningar, som sidbilder. Låt detta vara avstängt för Claude API.",
+        "testIncomplete": "Inställningarna är inte kompletta än"
+      },
+      "privacy": {
+        "title": "Med {{provider}} lämnar dina dokument den här datorn",
+        "text": "För analysen överförs innehållet i varje PDF-fil till servrarna hos {{provider}} på internet och bearbetas där – även fakturor, avtal, läkarbrev och myndighetspost.",
+        "recommendation": "<emphasis>Rekommendation:</emphasis> använd en lokal AI. Med <lmStudio>LM Studio</lmStudio> eller en <compatible>OpenAI-kompatibel server</compatible> i ditt eget nätverk stannar allt innehåll hos dig."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Claude API från Anthropic. Ändra bara detta om du har en egen gateway framför.",
+          "modelHint": "Claude Opus 5.5 är det rekommenderade valet; Sonnet och Haiku är snabbare och billigare."
+        },
+        "OPENAI": {
+          "urlHint": "API:et från OpenAI. Ändra bara detta om du har en egen gateway framför.",
+          "modelHint": "Modell-ID:t så som OpenAI anger det. När du har sparat nyckeln visas de tillgängliga modellerna här."
+        },
+        "MOONSHOT": {
+          "urlHint": "API:et från Moonshot AI (Kimi). För konton på den kinesiska plattformen: {{url}}",
+          "modelHint": "Modell-ID:t så som Moonshot anger det. När du har sparat nyckeln visas de tillgängliga modellerna här."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Den lokala servern i LM Studio (starta den i LM Studio under ”Developer”). Om AIDocuments körs i Docker: {{url}}",
+          "modelHint": "ID:t för den modell som är inläst i LM Studio. Skanningar kräver en modell med bildinmatning, analysen kräver en med Tool Use."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adressen till en server som talar OpenAI-gränssnittet – slutar vanligtvis på /v1, t.ex. {{url}}",
+          "modelHint": "Modell-ID:t så som servern anger det. När du har sparat visas här de modeller som servern erbjuder."
+        }
+      },
+      "apiKey": {
+        "label": "API-nyckel",
+        "labelOptional": "API-nyckel (valfritt)",
+        "placeholderStored": "{{mask}} (sparad)",
+        "placeholderPreset": "{{mask}} (förinställd)",
+        "placeholderNotNeeded": "behövs inte",
+        "placeholderIfRequired": "bara om servern kräver en",
+        "hintShown": "Förinställd från serverkonfigurationen.",
+        "hintRemoving": "Den sparade nyckeln tas bort när du sparar.",
+        "hintStored": "En nyckel är sparad i krypterad form. Lämna tomt för att behålla den – <remove>ta bort nyckeln</remove>",
+        "hintEnvironment": "Nyckeln kommer för närvarande från serverkonfigurationen (miljövariabel eller konfigurationsfil). En nyckel som anges här har företräde.",
+        "hintPreset": "En nyckel för den här leverantören är förinställd i serverkonfigurationen. Lämna tomt för att använda den.",
+        "hintDiscardedOnSwitch": "Den hittills sparade nyckeln hör till {{previous}} och kasseras när du byter.",
+        "hintPresetOtherProvider": "Den förinställda nyckeln gäller bara för {{previous}}. Ange en egen nyckel för {{provider}}.",
+        "hintRequired": "Sparas krypterat och visas aldrig igen.",
+        "hintLocal": "Lokala servrar behöver oftast ingen nyckel."
+      },
+      "analysis": {
+        "title": "Analys",
+        "effort": "Noggrannhet",
+        "effortLevels": {
+          "low": "Snabb",
+          "medium": "Balanserad",
+          "high": "Noggrann"
+        },
+        "effortHint": "Noggrannare ger mer omsorgsfulla resultat, men är långsammare och dyrare per dokument.",
+        "outputLanguage": "Resultatens språk",
+        "outputLanguageHint": "AI:n skriver titel, sammanfattning och taggar på det här språket.",
+        "ocr": "Textigenkänning för skanningar",
+        "ocrHint": "Programmet låter AI:n transkribera skannade PDF-filer utan textlager – först då kan de hittas med fulltextsökning. Varje skanning tar längre tid och kostar mer."
+      },
+      "unanalyzed_one": "{{count, number}} dokument har ännu inte analyserats av AI:n.",
+      "unanalyzed_other": "{{count, number}} dokument har ännu inte analyserats av AI:n.",
+      "analyzeNow": "Analysera nu",
+      "analysisStarted_one": "{{count, number}} dokument analyseras nu.",
+      "analysisStarted_other": "{{count, number}} dokument analyseras nu."
+    },
+    "users": {
+      "title": "Användare",
+      "navHint": "Konton och roller",
+      "intro": "Varje person loggar in med sitt eget konto. Administratörer hanterar programmet, användare arbetar med dokumenten.",
+      "add": "Skapa användare",
+      "you": "Du",
+      "disabled": "Inaktiverad",
+      "lastLogin": "Senast inloggad {{when}}",
+      "neverLoggedIn": "Aldrig inloggad",
+      "editUser": "Redigera {{name}}",
+      "deleteUser": "Radera {{name}}",
+      "saved": "Användaren har sparats",
+      "created": "Användaren har skapats",
+      "deleted": "Användaren har raderats",
+      "delete": {
+        "title": "Radera användaren?",
+        "text": "Kontot ”{{name}}” raderas och loggas ut omedelbart. Dokument finns kvar."
+      },
+      "dialog": {
+        "selfNotice": "Det här är ditt eget konto. När du har sparat måste du logga in igen.",
+        "passwordKeepHint": "Lämna tomt för att behålla det nuvarande lösenordet. Annars minst 8 tecken.",
+        "role": "Roll",
+        "roleHints": {
+          "ADMIN": "Får göra allt – även ändra inställningar, hantera användare och radera dokument.",
+          "USER": "Får visa, söka i och ladda upp dokument samt redigera deras uppgifter."
+        },
+        "active": "Kontot är aktivt",
+        "activeHint": "Inaktiverade konton kan inte logga in; aktiva sessioner avslutas omedelbart.",
+        "create": "Skapa"
+      }
+    }
+  }
+}

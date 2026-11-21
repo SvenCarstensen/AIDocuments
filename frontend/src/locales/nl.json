@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "remove": "Verwijderen",
+    "add": "Toevoegen",
+    "back": "Terug",
+    "retry": "Opnieuw proberen",
+    "loading": "Laden",
+    "language": "Taal",
+    "testConnection": "Verbinding testen",
+    "saveFirst": "Sla eerst op",
+    "username": "Gebruikersnaam",
+    "usernameHint": "3–50 tekens: letters, cijfers, punt, koppelteken, onderstrepingsteken, @",
+    "password": "Wachtwoord",
+    "newPassword": "Nieuw wachtwoord",
+    "passwordHint": "Minimaal 8 tekens",
+    "passwordMismatch": "De wachtwoorden komen niet overeen.",
+    "justNow": "zojuist",
+    "documentCount_one": "{{count, number}} document",
+    "documentCount_other": "{{count, number}} documenten",
+    "role": {
+      "ADMIN": "Beheerder",
+      "USER": "Gebruiker"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Geen verbinding met de server",
+    "server": "De server meldt een fout ({{status}}).",
+    "forbidden": "Je hebt hiervoor geen rechten.",
+    "unreachable": "De server is niet bereikbaar.",
+    "unexpected": "Onverwachte fout.",
+    "languageLoad": "De taal kon niet worden geladen."
+  },
+  "auth": {
+    "login": {
+      "title": "Welkom terug",
+      "subtitle": "Log in om bij je documenten te komen.",
+      "submit": "Inloggen"
+    },
+    "setup": {
+      "title": "AIDocuments instellen",
+      "subtitle": "Maak eerst het beheerdersaccount aan. Daarna kun je in de instellingen meer gebruikers toevoegen.",
+      "adminAccount": "Beheerdersaccount",
+      "repeatPassword": "Wachtwoord herhalen",
+      "submit": "Account aanmaken en beginnen",
+      "features": {
+        "import": "PDF’s uit je mailbox en importmap",
+        "ai": "AI vat ze samen en voorziet ze van tags",
+        "search": "Zoeken in de volledige tekst, tot in het document"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Uploaden",
+    "theme": {
+      "light": "Licht thema",
+      "dark": "Donker thema"
+    },
+    "search": {
+      "placeholder": "Zoek in documenten, tags, inhoud …",
+      "label": "Documenten doorzoeken",
+      "clear": "Zoekopdracht wissen"
+    },
+    "userMenu": {
+      "label": "Gebruikersmenu ({{name}})",
+      "aiActive": "AI actief",
+      "aiNotConfigured": "AI niet ingesteld",
+      "changePassword": "Wachtwoord wijzigen",
+      "logout": "Uitloggen"
+    },
+    "passwordDialog": {
+      "current": "Huidig wachtwoord",
+      "repeat": "Nieuw wachtwoord herhalen",
+      "changed": "Wachtwoord gewijzigd"
+    },
+    "dropzone": {
+      "title": "Sleep PDF’s hierheen",
+      "hint": "Je kunt meerdere bestanden tegelijk neerzetten. Ze worden opgeslagen, geanalyseerd en van tags voorzien."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Alleen PDF-bestanden kunnen worden toegevoegd.",
+    "uploadingFile": "“{{name}}” wordt geüpload …",
+    "uploadingFiles_one": "{{count, number}} PDF wordt geüpload …",
+    "uploadingFiles_other": "{{count, number}} PDF’s worden geüpload …",
+    "created_one": "{{count, number}} document toegevoegd",
+    "created_other": "{{count, number}} documenten toegevoegd",
+    "processingInBackground": "De verwerking gaat op de achtergrond door.",
+    "duplicates_one": "{{count, number}} bestaat al",
+    "duplicates_other": "{{count, number}} bestaan al",
+    "rejected_one": "{{count, number}} bestand is geen geldige PDF",
+    "rejected_other": "{{count, number}} bestanden zijn geen geldige PDF’s",
+    "onlyDuplicates_one": "Dit document bestaat al.",
+    "onlyDuplicates_other": "Deze documenten bestaan al.",
+    "noneValid": "Geen van de bestanden is een geldige PDF.",
+    "failed": "Uploaden mislukt"
+  },
+  "documents": {
+    "status": {
+      "pending": "Wacht",
+      "processing": "Wordt geanalyseerd",
+      "failed": "Fout",
+      "textOnly": "Zonder AI"
+    },
+    "ocrBadge": "Tekstherkenning",
+    "aiNotice": {
+      "text": "De AI is nog niet ingesteld. Nieuwe documenten zijn doorzoekbaar op hun tekst, maar worden niet samengevat en krijgen geen tags.",
+      "action": "Nu instellen"
+    },
+    "searchResults_one": "<count>{{count, number}} resultaat</count> <query>voor “{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} resultaten</count> <query>voor “{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} in verwerking",
+      "inProgressHint": "Wachten op de AI-analyse of worden nu geanalyseerd",
+      "remaining": "nog ca. {{duration}}",
+      "remainingLessThan": "nog minder dan {{duration}}",
+      "finishHint": "Verwacht klaar: {{time}} uur – geschat op basis van het tempo van de laatst verwerkte documenten"
+    },
+    "sort": {
+      "label": "Sortering",
+      "relevance": "Beste resultaten",
+      "newest": "Nieuwste eerst",
+      "date": "Op documentdatum"
+    },
+    "view": {
+      "grid": "Tegelweergave",
+      "list": "Lijstweergave"
+    },
+    "pageSize": {
+      "label": "Aantal getoonde documenten",
+      "all": "Alle"
+    },
+    "filters": {
+      "title": "Filters",
+      "titleWithCount": "Filters ({{active, number}})",
+      "apply": "Tonen",
+      "hint": "Zodra er documenten zijn geanalyseerd, verschijnen hier documenttypen, tags en afzenders als filters.",
+      "dateFrom": "van",
+      "dateTo": "t/m",
+      "status": "Status",
+      "failed": "Mislukt",
+      "showAll": "Alles tonen",
+      "showLess": "Minder tonen",
+      "activeFrom": "vanaf {{date}}",
+      "activeTo": "t/m {{date}}",
+      "removeOne": "Filter “{{label}}” verwijderen",
+      "removeAll": "Alle filters verwijderen",
+      "clear": "Filters verwijderen"
+    },
+    "empty": {
+      "libraryTitle": "Nog geen documenten",
+      "libraryHint": "Sleep PDF-bestanden gewoon naar dit venster of gebruik “Uploaden”.",
+      "libraryHintAdmin": "Sleep PDF-bestanden gewoon naar dit venster of gebruik “Uploaden”. In de instellingen kun je een mailbox of een importmap instellen waaruit nieuwe PDF’s automatisch worden geïmporteerd.",
+      "noResultsTitle": "Niets gevonden",
+      "noResultsSearch": "Geen enkel document past bij deze zoekopdracht. Er wordt ook op delen van woorden gezocht – probeer een kortere term of minder woorden.",
+      "noResultsFilters": "Geen enkel document voldoet aan de gekozen filters."
+    },
+    "loadingAll_one": "{{loaded, number}} van {{count, number}} document geladen …",
+    "loadingAll_other": "{{loaded, number}} van {{count, number}} documenten geladen …",
+    "loadMore": "Meer laden ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Terug naar overzicht",
+    "download": "Downloaden",
+    "reprocess": "Opnieuw analyseren",
+    "reprocessHint": "De PDF opnieuw inlezen en door de AI laten analyseren",
+    "reprocessStarted": "Het document wordt opnieuw geanalyseerd.",
+    "deleted": "Document verwijderd",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Openen in nieuw tabblad",
+    "processingNotice": "Het document wordt verwerkt. De samenvatting en de tags verschijnen hier zodra de analyse klaar is.",
+    "textOnlyNotice": "Geïndexeerd zonder AI: het document is doorzoekbaar op zijn tekst, maar heeft geen samenvatting en geen automatische tags.",
+    "tabs": {
+      "overview": "Overzicht",
+      "text": "Volledige tekst"
+    },
+    "fields": {
+      "title": "Titel",
+      "category": "Documenttype",
+      "documentDate": "Documentdatum",
+      "correspondent": "Afzender",
+      "tags": "Tags",
+      "summary": "Samenvatting"
+    },
+    "tags": {
+      "allWith": "Alle documenten met de tag “{{tag}}”",
+      "none": "Geen tags. <add>Toevoegen</add>",
+      "inputHint": "Bevestig met Enter of een komma. De suggesties zijn tags die al in gebruik zijn.",
+      "inputPlaceholder": "Tag invoeren …",
+      "remove": "Tag “{{tag}}” verwijderen"
+    },
+    "keyFacts": "Kerngegevens",
+    "details": {
+      "title": "Details",
+      "file": "Bestand",
+      "size": "Omvang",
+      "pageCount_one": "{{count, number}} pagina",
+      "pageCount_other": "{{count, number}} pagina’s",
+      "language": "Taal",
+      "source": "Herkomst",
+      "mailSubject": "Onderwerp",
+      "mailFrom": "Van",
+      "mailReceived": "Ontvangen",
+      "added": "Toegevoegd",
+      "text": "Tekst"
+    },
+    "source": {
+      "MAIL": "Mailbox",
+      "FOLDER": "Importmap",
+      "UPLOAD": "Geüpload"
+    },
+    "noText": "Er is geen tekst voor dit document – waarschijnlijk is het een scan zonder tekstlaag. Als de AI is ingesteld en tekstherkenning is ingeschakeld, wordt de inhoud tijdens de analyse getranscribeerd.",
+    "edit": {
+      "title": "Document bewerken",
+      "saved": "Wijzigingen opgeslagen"
+    },
+    "delete": {
+      "title": "Document verwijderen?",
+      "text": "“{{title}}” wordt verwijderd, samen met het PDF-bestand, de volledige tekst en de tags. Dit kan niet ongedaan worden gemaakt.",
+      "confirm": "Definitief verwijderen"
+    }
+  },
+  "settings": {
+    "title": "Instellingen",
+    "mailboxes": {
+      "title": "Mailboxen",
+      "navHint": "IMAP-servers waaruit PDF-bijlagen worden geïmporteerd",
+      "intro": "Uit deze IMAP-mailboxen worden PDF-bijlagen automatisch geïmporteerd. De mailboxen worden alleen gelezen – e-mails blijven ongewijzigd en ongelezen.",
+      "add": "Mailbox toevoegen",
+      "emptyTitle": "Nog geen mailbox ingesteld",
+      "emptyText": "Vul de inloggegevens van een IMAP-mailbox in – bijvoorbeeld de mailbox waar je scanner documenten naartoe stuurt.",
+      "paused": "Gepauzeerd",
+      "syncNow": "Nu controleren",
+      "syncing": "Mailbox wordt gecontroleerd …",
+      "neverSynced": "Nog niet gecontroleerd.",
+      "saved": "Mailbox opgeslagen",
+      "added": "Mailbox toegevoegd",
+      "firstSyncRunning": "De eerste controle loopt al.",
+      "removed": "Mailbox verwijderd",
+      "delete": {
+        "title": "Mailbox verwijderen?",
+        "text": "“{{name}}” wordt niet meer gecontroleerd. Documenten die al zijn geïmporteerd, blijven bewaard."
+      },
+      "dialog": {
+        "editTitle": "Mailbox bewerken",
+        "description": "De inloggegevens krijg je van je e-mailprovider. Het wachtwoord wordt versleuteld opgeslagen.",
+        "name": "Naam",
+        "nameHint": "Vrij te kiezen, bijv. “Scanner” of “Facturen”",
+        "namePlaceholder": "Scanner",
+        "host": "IMAP-server",
+        "port": "Poort",
+        "security": "Versleuteling",
+        "securityNone": "Geen",
+        "securityNoneWarning": "Zonder versleuteling worden gebruikersnaam en wachtwoord als leesbare tekst verzonden.",
+        "passwordKeepHint": "Laat leeg om het opgeslagen wachtwoord te behouden",
+        "folder": "Map",
+        "folderHint": "Meestal {{folder}} (de inbox)",
+        "since": "Alleen e-mails vanaf",
+        "sinceHint": "Optioneel – oudere e-mails worden overgeslagen",
+        "enabled": "Automatisch controleren",
+        "enabledHint": "De mailbox wordt met het ingestelde interval op nieuwe PDF’s gecontroleerd."
+      }
+    },
+    "import": {
+      "title": "Schema & importmap",
+      "navHint": "Controle-interval en bewaakte map",
+      "intro": "Bepaalt hoe vaak de toepassing naar nieuwe PDF-bestanden zoekt – in de mailboxen en in de importmap.",
+      "saved": "Instellingen opgeslagen",
+      "interval": {
+        "title": "Controle-interval",
+        "text": "Zo vaak controleert de toepassing alle mailboxen en de importmap op nieuwe PDF’s.",
+        "label": "Om de … minuten",
+        "nextRun": "Volgende automatische controle {{when}}."
+      },
+      "folder": {
+        "title": "Importmap",
+        "text": "Een map op de server die op nieuwe PDF-bestanden wordt bewaakt – bijvoorbeeld de doelmap van een netwerkscanner. Submappen worden ook doorzocht.",
+        "enable": "Importmap bewaken",
+        "path": "Pad op de server",
+        "pathHint": "Absoluut pad. In de Docker-container is dit de gekoppelde map, meestal {{path}}.",
+        "afterImport": "Na het importeren",
+        "keep": "Bestand laten staan",
+        "move": "Verplaatsen naar “{{folder}}”",
+        "keepHint": "De bestanden blijven ongewijzigd. De toepassing onthoudt wat er al is geïmporteerd.",
+        "moveHint": "Geïmporteerde bestanden worden naar de submap “{{folder}}” verplaatst – zo blijft de importmap opgeruimd.",
+        "scanning": "Map wordt gecontroleerd …",
+        "neverScanned": "Nog niet gecontroleerd.",
+        "scanNow": "Nu controleren",
+        "scanStarted": "De importmap wordt gecontroleerd."
+      }
+    },
+    "ai": {
+      "title": "AI",
+      "navHint": "LLM-server, model en tekstherkenning",
+      "intro": "De AI leest elke nieuwe PDF, vat die samen, kent een documenttype en tags toe en haalt er kerngegevens zoals bedragen of termijnen uit.",
+      "configured": "Ingesteld",
+      "notConfigured": "Niet ingesteld",
+      "saved": "AI-instellingen opgeslagen",
+      "server": {
+        "title": "LLM-server",
+        "provider": "Aanbieder",
+        "baseUrl": "Serveradres",
+        "model": "Model",
+        "modelPlaceholder": "Model-ID",
+        "compatibilityMode": "Compatibiliteitsmodus voor lokale modellen",
+        "compatibilityModeHint": "Voor servers die wel de Anthropic-interface spreken, maar geen PDF-invoer en geen gestructureerde uitvoer ondersteunen: het document wordt als tekst of, bij scans, als pagina-afbeeldingen naar het model gestuurd. Laat dit uitgeschakeld voor de Claude API.",
+        "testIncomplete": "De instellingen zijn nog niet volledig"
+      },
+      "privacy": {
+        "title": "Met {{provider}} verlaten je documenten deze computer",
+        "text": "Voor de analyse wordt de inhoud van elke PDF naar de servers van {{provider}} op internet verzonden en daar verwerkt – ook facturen, contracten, medische brieven en post van de overheid.",
+        "recommendation": "<emphasis>Aanbeveling:</emphasis> gebruik een lokale AI. Met <lmStudio>LM Studio</lmStudio> of een <compatible>OpenAI-compatibele server</compatible> in je eigen netwerk blijft alle inhoud bij jou."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "De Claude API van Anthropic. Wijzig dit alleen als je er een eigen gateway voor hebt staan.",
+          "modelHint": "Claude Opus 5.5 is de aanbevolen keuze; Sonnet en Haiku zijn sneller en goedkoper."
+        },
+        "OPENAI": {
+          "urlHint": "De API van OpenAI. Wijzig dit alleen als je er een eigen gateway voor hebt staan.",
+          "modelHint": "De model-ID zoals OpenAI die noemt. Nadat je de sleutel hebt opgeslagen, verschijnen hier de beschikbare modellen."
+        },
+        "MOONSHOT": {
+          "urlHint": "De API van Moonshot AI (Kimi). Voor accounts op het Chinese platform: {{url}}",
+          "modelHint": "De model-ID zoals Moonshot die noemt. Nadat je de sleutel hebt opgeslagen, verschijnen hier de beschikbare modellen."
+        },
+        "LM_STUDIO": {
+          "urlHint": "De lokale server van LM Studio (start die in LM Studio onder “Developer”). Als AIDocuments in Docker draait: {{url}}",
+          "modelHint": "De ID van het model dat in LM Studio is geladen. Voor scans is een model met beeldinvoer nodig, voor de analyse een model met Tool Use."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adres van een server die de OpenAI-interface spreekt – meestal eindigend op /v1, bijv. {{url}}",
+          "modelHint": "De model-ID zoals de server die noemt. Na het opslaan verschijnen hier de modellen die de server aanbiedt."
+        }
+      },
+      "apiKey": {
+        "label": "API-sleutel",
+        "labelOptional": "API-sleutel (optioneel)",
+        "placeholderStored": "{{mask}} (opgeslagen)",
+        "placeholderPreset": "{{mask}} (vooraf ingesteld)",
+        "placeholderNotNeeded": "niet nodig",
+        "placeholderIfRequired": "alleen als de server er een vereist",
+        "hintShown": "Vooraf ingesteld via de serverconfiguratie.",
+        "hintRemoving": "De opgeslagen sleutel wordt bij het opslaan verwijderd.",
+        "hintStored": "Er is een sleutel versleuteld opgeslagen. Laat leeg om die te behouden – <remove>sleutel verwijderen</remove>",
+        "hintEnvironment": "De sleutel komt momenteel uit de serverconfiguratie (omgevingsvariabele of configuratiebestand). Een sleutel die je hier invult, heeft voorrang.",
+        "hintPreset": "Voor deze aanbieder is in de serverconfiguratie een sleutel vooraf ingesteld. Laat leeg om die te gebruiken.",
+        "hintDiscardedOnSwitch": "De tot nu toe opgeslagen sleutel hoort bij {{previous}} en vervalt als je overstapt.",
+        "hintPresetOtherProvider": "De vooraf ingestelde sleutel geldt alleen voor {{previous}}. Vul voor {{provider}} een eigen sleutel in.",
+        "hintRequired": "Wordt versleuteld opgeslagen en daarna nooit meer getoond.",
+        "hintLocal": "Lokale servers hebben meestal geen sleutel nodig."
+      },
+      "analysis": {
+        "title": "Analyse",
+        "effort": "Grondigheid",
+        "effortLevels": {
+          "low": "Snel",
+          "medium": "Gebalanceerd",
+          "high": "Grondig"
+        },
+        "effortHint": "Grondiger betekent zorgvuldigere resultaten, maar ook trager en duurder per document.",
+        "outputLanguage": "Taal van de resultaten",
+        "outputLanguageHint": "In deze taal schrijft de AI de titel, de samenvatting en de tags.",
+        "ocr": "Tekstherkenning voor scans",
+        "ocrHint": "De toepassing laat gescande PDF’s zonder tekstlaag door de AI transcriberen – pas dan zijn ze te vinden via zoeken in de volledige tekst. Elke scan kost meer tijd en geld."
+      },
+      "unanalyzed_one": "{{count, number}} document is nog niet door de AI geanalyseerd.",
+      "unanalyzed_other": "{{count, number}} documenten zijn nog niet door de AI geanalyseerd.",
+      "analyzeNow": "Nu analyseren",
+      "analysisStarted_one": "{{count, number}} document wordt nu geanalyseerd.",
+      "analysisStarted_other": "{{count, number}} documenten worden nu geanalyseerd."
+    },
+    "users": {
+      "title": "Gebruikers",
+      "navHint": "Accounts en rollen",
+      "intro": "Iedereen logt in met een eigen account. Beheerders beheren de toepassing, gebruikers werken met de documenten.",
+      "add": "Gebruiker aanmaken",
+      "you": "Jij",
+      "disabled": "Uitgeschakeld",
+      "lastLogin": "Laatst ingelogd {{when}}",
+      "neverLoggedIn": "Nooit ingelogd",
+      "editUser": "{{name}} bewerken",
+      "deleteUser": "{{name}} verwijderen",
+      "saved": "Gebruiker opgeslagen",
+      "created": "Gebruiker aangemaakt",
+      "deleted": "Gebruiker verwijderd",
+      "delete": {
+        "title": "Gebruiker verwijderen?",
+        "text": "Het account “{{name}}” wordt verwijderd en direct uitgelogd. Documenten blijven bewaard."
+      },
+      "dialog": {
+        "selfNotice": "Dit is je eigen account. Na het opslaan moet je opnieuw inloggen.",
+        "passwordKeepHint": "Laat leeg om het huidige wachtwoord te behouden. Anders minimaal 8 tekens.",
+        "role": "Rol",
+        "roleHints": {
+          "ADMIN": "Mag alles – ook instellingen wijzigen, gebruikers beheren en documenten verwijderen.",
+          "USER": "Mag documenten bekijken, doorzoeken en uploaden en de gegevens ervan bewerken."
+        },
+        "active": "Account actief",
+        "activeHint": "Uitgeschakelde accounts kunnen niet inloggen; actieve sessies eindigen direct.",
+        "create": "Aanmaken"
+      }
+    }
+  }
+}

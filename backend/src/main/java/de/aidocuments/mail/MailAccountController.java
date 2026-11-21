@@ -1,5 +1,6 @@
 package de.aidocuments.mail;
 
+import de.aidocuments.i18n.Messages;
 import de.aidocuments.mail.MailDtos.ConnectionTestDto;
 import de.aidocuments.mail.MailDtos.ConnectionTestRequest;
 import de.aidocuments.mail.MailDtos.MailAccountDto;
@@ -28,9 +29,11 @@ public class MailAccountController {
     private final MailAccountService service;
     private final MailSyncService syncService;
     private final ThreadPoolTaskExecutor executor;
+    private final Messages messages;
 
     public MailAccountController(MailAccountService service, MailSyncService syncService,
-                                 @Qualifier("importExecutor") ThreadPoolTaskExecutor executor) {
+                                 @Qualifier("importExecutor") ThreadPoolTaskExecutor executor, Messages messages) {
+        this.messages = messages;
         this.service = service;
         this.syncService = syncService;
         this.executor = executor;
@@ -68,7 +71,7 @@ public class MailAccountController {
     public void sync(@PathVariable String id) {
         service.require(id);
         if (syncService.isRunning(id)) {
-            throw ApiException.conflict("Dieses Postfach wird gerade abgerufen.");
+            throw ApiException.conflict("error.mailbox.syncRunning");
         }
         service.markRunning(id);
         executor.execute(() -> syncService.sync(id));
@@ -88,8 +91,9 @@ public class MailAccountController {
             password = service.password(service.require(request.accountId()));
         }
         if (password == null || password.isBlank()) {
-            return new ConnectionTestDto(false, "Bitte ein Passwort angeben.");
+            return new ConnectionTestDto(false, messages.get("error.mailbox.passwordRequired"));
         }
-        return syncService.test(probe, password);
+        MailSyncService.TestResult result = syncService.test(probe, password);
+        return new ConnectionTestDto(result.ok(), messages.render(result.message()));
     }
 }

@@ -1,5 +1,9 @@
 package de.aidocuments.user;
 
+import static de.aidocuments.i18n.ValidationMessages.NOT_BLANK;
+import static de.aidocuments.i18n.ValidationMessages.NOT_NULL;
+import static de.aidocuments.i18n.ValidationMessages.SIZE;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -12,9 +16,9 @@ public final class UserDtos {
     }
 
     public static final String USERNAME_PATTERN = "^[A-Za-z0-9._@-]{3,50}$";
-    public static final String USERNAME_MESSAGE =
-            "3–50 Zeichen; erlaubt sind Buchstaben, Ziffern, Punkt, Bindestrich, Unterstrich und @";
-    public static final String PASSWORD_MESSAGE = "mindestens 8 Zeichen";
+    /** Schlüssel in messages.properties; Bean Validation löst sie in der Sprache der Anfrage auf. */
+    public static final String USERNAME_MESSAGE = "{validation.username}";
+    public static final String PASSWORD_MESSAGE = "{validation.password}";
 
     public record UserDto(String id, String username, Role role, boolean enabled, Instant createdAt,
                           Instant lastLoginAt) {
@@ -26,29 +30,30 @@ public final class UserDtos {
     }
 
     public record CredentialsRequest(
-            @NotBlank @Pattern(regexp = USERNAME_PATTERN, message = USERNAME_MESSAGE) String username,
-            @NotBlank @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String password) {
+            @NotBlank(message = NOT_BLANK) @Pattern(regexp = USERNAME_PATTERN, message = USERNAME_MESSAGE) String username,
+            @NotBlank(message = NOT_BLANK) @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String password) {
     }
 
-    public record LoginRequest(@NotBlank String username, @NotBlank String password) {
+    public record LoginRequest(@NotBlank(message = NOT_BLANK) String username,
+                               @NotBlank(message = NOT_BLANK) String password) {
     }
 
     public record CreateUserRequest(
-            @NotBlank @Pattern(regexp = USERNAME_PATTERN, message = USERNAME_MESSAGE) String username,
-            @NotBlank @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String password,
-            @NotNull Role role) {
+            @NotBlank(message = NOT_BLANK) @Pattern(regexp = USERNAME_PATTERN, message = USERNAME_MESSAGE) String username,
+            @NotBlank(message = NOT_BLANK) @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String password,
+            @NotNull(message = NOT_NULL) Role role) {
     }
 
     public record UpdateUserRequest(
-            @NotNull Role role,
+            @NotNull(message = NOT_NULL) Role role,
             boolean enabled,
             /* null oder leer = Passwort unverändert lassen */
-            @Size(max = 200) String password) {
+            @Size(max = 200, message = SIZE) String password) {
     }
 
     public record ChangePasswordRequest(
-            @NotBlank String currentPassword,
-            @NotBlank @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String newPassword) {
+            @NotBlank(message = NOT_BLANK) String currentPassword,
+            @NotBlank(message = NOT_BLANK) @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String newPassword) {
     }
 
     public record AuthStatusDto(boolean setupRequired, UserDto user) {

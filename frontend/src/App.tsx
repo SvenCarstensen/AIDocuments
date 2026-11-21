@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
 import { Button, Logo, Spinner } from './components/ui'
@@ -9,6 +10,7 @@ import { DocumentsPage } from './pages/DocumentsPage'
 import { SettingsPage } from './pages/SettingsPage'
 
 export default function App() {
+  const { t } = useTranslation()
   const auth = useAuthStatus()
 
   if (auth.isPending) {
@@ -23,11 +25,11 @@ export default function App() {
       <div className="flex min-h-dvh flex-col items-center justify-center gap-4 px-6 text-center">
         <Logo className="size-12" />
         <div>
-          <h1 className="text-lg font-semibold">Keine Verbindung zum Server</h1>
+          <h1 className="text-lg font-semibold">{t('errors.noConnection')}</h1>
           <p className="mt-1 text-sm text-muted">{errorMessage(auth.error)}</p>
         </div>
         <Button onClick={() => auth.refetch()} loading={auth.isFetching}>
-          Erneut versuchen
+          {t('common.retry')}
         </Button>
       </div>
     )

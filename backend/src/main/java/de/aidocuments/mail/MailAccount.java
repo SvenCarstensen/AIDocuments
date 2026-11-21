@@ -29,6 +29,7 @@ public class MailAccount {
     private Long lastUid;
     private Instant lastSyncAt;
     private SyncStatus lastSyncStatus;
+    /** Sprachneutral abgelegt (siehe MsgCodec); Datensätze älterer Versionen enthalten deutschen Klartext. */
     private String lastSyncMessage;
     private Instant createdAt;
 

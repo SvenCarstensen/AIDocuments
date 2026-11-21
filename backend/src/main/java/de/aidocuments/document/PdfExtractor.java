@@ -1,5 +1,7 @@
 package de.aidocuments.document;
 
+import de.aidocuments.i18n.Localizable;
+import de.aidocuments.i18n.Msg;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,9 +35,19 @@ public class PdfExtractor {
         }
     }
 
-    public static class PdfReadException extends Exception {
-        public PdfReadException(String message, Throwable cause) {
-            super(message, cause);
+    /** Das PDF lässt sich nicht lesen; die Meldung steht später – übersetzt – am Dokument. */
+    public static class PdfReadException extends Exception implements Localizable {
+
+        private final Msg msg;
+
+        public PdfReadException(Msg msg, Throwable cause) {
+            super(msg.toString(), cause);
+            this.msg = msg;
+        }
+
+        @Override
+        public Msg msg() {
+            return msg;
         }
     }
 
@@ -46,9 +58,9 @@ public class PdfExtractor {
             boolean thumbnail = pages > 0 && renderThumbnail(pdf, thumbnailTarget);
             return new PdfContent(pages, text, thumbnail);
         } catch (InvalidPasswordException e) {
-            throw new PdfReadException("Das PDF ist passwortgeschützt und kann nicht gelesen werden.", e);
+            throw new PdfReadException(Msg.of("document.error.passwordProtected"), e);
         } catch (IOException e) {
-            throw new PdfReadException("Das PDF ist beschädigt oder kein gültiges PDF: " + e.getMessage(), e);
+            throw new PdfReadException(Msg.of("document.error.corrupt", Msg.detailOf(e)), e);
         }
     }
 

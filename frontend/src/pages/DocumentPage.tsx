@@ -1,15 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Download, ExternalLink, Pencil, Plus, RefreshCw, Sparkles, Trash2, X } from 'lucide-react'
 import { type FormEvent, type KeyboardEvent, type ReactNode, useEffect, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { isBusy, OcrHint, sourceInfo, StatusBadge, TagChip } from '../components/documents'
+import { isBusy, OcrHint, sourceInfo, StatusBadge } from '../components/documents'
 import { Alert, Badge, Button, Card, ConfirmDialog, Field, Input, Modal, Spinner, Textarea } from '../components/ui'
 import { api, ApiError, type Doc, errorMessage, fileUrl } from '../lib/api'
 import { useAuth } from '../lib/auth'
-import { cx, formatBytes, formatDateTime, formatLongDate, plural } from '../lib/format'
+import { cx, formatBytes, formatDateTime, formatLongDate } from '../lib/format'
 
 export function DocumentPage() {
+  const { t } = useTranslation()
   const { id = '' } = useParams()
   const { isAdmin } = useAuth()
   const navigate = useNavigate()
@@ -30,14 +32,14 @@ export function DocumentPage() {
     mutationFn: () => api.reprocess(id),
     onSuccess: (updated) => {
       queryClient.setQueryData(['document', id], updated)
-      toast.success('Das Dokument wird neu analysiert.')
+      toast.success(t('document.reprocessStarted'))
     },
     onError: (e) => toast.error(errorMessage(e)),
   })
   const remove = useMutation({
     mutationFn: () => api.deleteDocument(id),
     onSuccess: async () => {
-      toast.success('Dokument gelöscht')
+      toast.success(t('document.deleted'))
       await queryClient.invalidateQueries({ queryKey: ['documents'] })
       navigate('/documents')
     },
@@ -56,7 +58,7 @@ export function DocumentPage() {
       <div className="mx-auto max-w-lg py-16">
         <Alert tone="danger">{errorMessage(query.error)}</Alert>
         <Link to="/documents" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-ink">
-          <ArrowLeft className="size-4" /> Zur Übersicht
+          <ArrowLeft className="size-4" /> {t('document.backToList')}
         </Link>
       </div>
     )
@@ -71,7 +73,7 @@ export function DocumentPage() {
         <button
           type="button"
           onClick={() => (window.history.length > 1 ? navigate(-1) : navigate('/documents'))}
-          aria-label="Zurück"
+          aria-label={t('common.back')}
           className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg border border-line-strong bg-surface text-muted hover:bg-raised hover:text-ink"
         >
           <ArrowLeft className="size-[18px]" />
@@ -88,10 +90,10 @@ export function DocumentPage() {
         </div>
         <div className="flex flex-wrap gap-2">
           <a href={fileUrl(doc.id, true)} download>
-            <Button icon={<Download className="size-4" aria-hidden />}>Herunterladen</Button>
+            <Button icon={<Download className="size-4" aria-hidden />}>{t('document.download')}</Button>
           </a>
           <Button icon={<Pencil className="size-4" aria-hidden />} onClick={() => setEditing(true)} disabled={busy}>
-            Bearbeiten
+            {t('common.edit')}
           </Button>
           {isAdmin && (
             <>
@@ -100,9 +102,9 @@ export function DocumentPage() {
                 onClick={() => reprocess.mutate()}
                 loading={reprocess.isPending}
                 disabled={busy}
-                title="PDF erneut auslesen und von der KI analysieren lassen"
+                title={t('document.reprocessHint')}
               >
-                Neu analysieren
+                {t('document.reprocess')}
               </Button>
               <Button
                 variant="ghost"
@@ -110,7 +112,7 @@ export function DocumentPage() {
                 icon={<Trash2 className="size-4" aria-hidden />}
                 onClick={() => setConfirmDelete(true)}
               >
-                Löschen
+                {t('common.delete')}
               </Button>
             </>
           )}
@@ -120,40 +122,25 @@ export function DocumentPage() {
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_26rem]">
         {/* PDF-Ansicht: der eingebaute Betrachter des Browsers (blättern, zoomen, im PDF suchen, drucken) */}
         <div className="relative h-[70dvh] overflow-hidden rounded-xl border border-line bg-raised shadow-card xl:sticky xl:top-22 xl:h-[calc(100dvh-10.5rem)]">
-          <iframe src={fileUrl(doc.id)} title={`PDF: ${doc.title}`} className="size-full" />
+          <iframe src={fileUrl(doc.id)} title={t('document.pdfTitle', { title: doc.title })} className="size-full" />
           <a
             href={fileUrl(doc.id)}
             target="_blank"
             rel="noreferrer"
             className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface/95 px-2.5 py-1.5 text-xs font-medium text-muted shadow-card backdrop-blur hover:text-ink"
           >
-            <ExternalLink className="size-3.5" aria-hidden /> In neuem Tab öffnen
+            <ExternalLink className="size-3.5" aria-hidden /> {t('document.openInNewTab')}
           </a>
         </div>
 
         <div className="flex min-w-0 flex-col gap-4">
-          {busy && (
-            <Alert tone="brand">
-              Das Dokument wird gerade verarbeitet. Zusammenfassung und Schlagworte erscheinen hier, sobald die
-              Analyse fertig ist.
-            </Alert>
-          )}
+          {busy && <Alert tone="brand">{t('document.processingNotice')}</Alert>}
           {doc.status === 'FAILED' && doc.errorMessage && <Alert tone="danger">{doc.errorMessage}</Alert>}
           {doc.status === 'INDEXED' && doc.errorMessage && <Alert tone="warn">{doc.errorMessage}</Alert>}
-          {doc.status === 'TEXT_ONLY' && (
-            <Alert tone="warn">
-              Ohne KI erschlossen: Das Dokument ist über seinen Text durchsuchbar, hat aber keine Zusammenfassung
-              und keine automatischen Schlagworte.
-            </Alert>
-          )}
+          {doc.status === 'TEXT_ONLY' && <Alert tone="warn">{t('document.textOnlyNotice')}</Alert>}
 
           <div className="flex gap-1 rounded-lg bg-raised p-1">
-            {(
-              [
-                ['overview', 'Übersicht'],
-                ['text', 'Volltext'],
-              ] as const
-            ).map(([key, label]) => (
+            {(['overview', 'text'] as const).map((key) => (
               <button
                 key={key}
                 type="button"
@@ -163,7 +150,7 @@ export function DocumentPage() {
                   tab === key ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink',
                 )}
               >
-                {label}
+                {t(`document.tabs.${key}`)}
               </button>
             ))}
           </div>
@@ -172,34 +159,19 @@ export function DocumentPage() {
             <>
               {doc.summary && (
                 <Card className="p-4">
-                  <SectionTitle icon={<Sparkles className="size-4 text-brand" aria-hidden />}>Zusammenfassung</SectionTitle>
+                  <SectionTitle icon={<Sparkles className="size-4 text-brand" aria-hidden />}>{t('document.fields.summary')}</SectionTitle>
                   <p className="text-sm leading-relaxed text-ink">{doc.summary}</p>
                 </Card>
               )}
 
               <Card className="p-4">
-                <SectionTitle>Schlagworte</SectionTitle>
-                {doc.tags.length > 0 ? (
-                  <div className="flex flex-wrap gap-1.5">
-                    {doc.tags.map((tag) => (
-                      <Link key={tag} to={`/documents?tag=${encodeURIComponent(tag)}`} title={`Alle Dokumente mit „${tag}“`}>
-                        <TagChip tag={tag} className="!px-2.5 !py-1 !text-[13px]" />
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted">
-                    Keine Schlagworte.{' '}
-                    <button type="button" onClick={() => setEditing(true)} disabled={busy} className="font-medium text-brand-ink hover:underline">
-                      Hinzufügen
-                    </button>
-                  </p>
-                )}
+                <SectionTitle>{t('document.fields.tags')}</SectionTitle>
+                <TagEditor doc={doc} disabled={busy} />
               </Card>
 
               {doc.keyFacts.length > 0 && (
                 <Card className="p-4">
-                  <SectionTitle>Kerndaten</SectionTitle>
+                  <SectionTitle>{t('document.keyFacts')}</SectionTitle>
                   <dl className="divide-y divide-line">
                     {doc.keyFacts.map((fact, index) => (
                       <div key={index} className="flex gap-4 py-2 text-sm first:pt-0 last:pb-0">
@@ -212,26 +184,26 @@ export function DocumentPage() {
               )}
 
               <Card className="p-4">
-                <SectionTitle>Details</SectionTitle>
+                <SectionTitle>{t('document.details.title')}</SectionTitle>
                 <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-sm">
-                  <Detail label="Datei">{doc.originalFilename}</Detail>
-                  <Detail label="Umfang">
-                    {doc.pageCount != null ? `${plural(doc.pageCount, 'Seite', 'Seiten')} · ` : ''}
+                  <Detail label={t('document.details.file')}>{doc.originalFilename}</Detail>
+                  <Detail label={t('document.details.size')}>
+                    {doc.pageCount != null ? `${t('document.details.pageCount', { count: doc.pageCount })} · ` : ''}
                     {formatBytes(doc.sizeBytes)}
                   </Detail>
-                  {doc.language && <Detail label="Sprache">{doc.language.toUpperCase()}</Detail>}
-                  <Detail label="Herkunft">
+                  {doc.language && <Detail label={t('document.details.language')}>{doc.language.toUpperCase()}</Detail>}
+                  <Detail label={t('document.details.source')}>
                     <span className="inline-flex items-center gap-1.5">
                       <SourceIcon className="size-4 text-muted" aria-hidden />
-                      {sourceInfo[doc.source].label}
+                      {t(`document.source.${doc.source}`)}
                     </span>
                   </Detail>
-                  {doc.mailSubject && <Detail label="Betreff">{doc.mailSubject}</Detail>}
-                  {doc.mailFrom && <Detail label="Von">{doc.mailFrom}</Detail>}
-                  {doc.mailReceivedAt && <Detail label="Empfangen">{formatDateTime(doc.mailReceivedAt)}</Detail>}
-                  <Detail label="Hinzugefügt">{formatDateTime(doc.createdAt)}</Detail>
+                  {doc.mailSubject && <Detail label={t('document.details.mailSubject')}>{doc.mailSubject}</Detail>}
+                  {doc.mailFrom && <Detail label={t('document.details.mailFrom')}>{doc.mailFrom}</Detail>}
+                  {doc.mailReceivedAt && <Detail label={t('document.details.mailReceived')}>{formatDateTime(doc.mailReceivedAt)}</Detail>}
+                  <Detail label={t('document.details.added')}>{formatDateTime(doc.createdAt)}</Detail>
                   {doc.ocrUsed && (
-                    <Detail label="Text">
+                    <Detail label={t('document.details.text')}>
                       <OcrHint />
                     </Detail>
                   )}
@@ -250,11 +222,10 @@ export function DocumentPage() {
         onClose={() => setConfirmDelete(false)}
         onConfirm={() => remove.mutate()}
         loading={remove.isPending}
-        title="Dokument löschen?"
-        confirmLabel="Endgültig löschen"
+        title={t('document.delete.title')}
+        confirmLabel={t('document.delete.confirm')}
       >
-        „{doc.title}“ wird mitsamt PDF-Datei, Volltext und Schlagworten gelöscht. Das lässt sich nicht rückgängig
-        machen.
+        {t('document.delete.text', { title: doc.title })}
       </ConfirmDialog>
     </div>
   )
@@ -279,6 +250,7 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
 }
 
 function FullText({ id, stamp }: { id: string; stamp: string | null }) {
+  const { t } = useTranslation()
   const text = useQuery({ queryKey: ['document', id, 'text', stamp], queryFn: () => api.documentText(id) })
   return (
     <Card className="p-4">
@@ -293,18 +265,208 @@ function FullText({ id, stamp }: { id: string; stamp: string | null }) {
           {text.data.content}
         </pre>
       ) : (
-        <p className="text-sm leading-relaxed text-muted">
-          Für dieses Dokument liegt kein Text vor – vermutlich ein Scan ohne Textebene. Mit eingerichteter KI und
-          aktivierter Texterkennung wird der Inhalt beim Analysieren transkribiert.
-        </p>
+        <p className="text-sm leading-relaxed text-muted">{t('document.noText')}</p>
       )}
     </Card>
+  )
+}
+
+// ---------- Schlagworte direkt am Dokument ----------
+
+/** So viele Schlagworte behält der Server je Dokument. */
+const MAX_TAGS = 12
+
+/** Dieselbe Bereinigung wie auf dem Server: Kleinschreibung, einfache Leerzeichen. */
+const cleanTag = (raw: string) => raw.trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 100)
+
+/**
+ * Die Schlagworte eines Dokuments: jedes führt zur Liste aller Dokumente mit diesem Schlagwort und lässt sich
+ * mit dem × entfernen; „Hinzufügen“ öffnet ein Eingabefeld mit Vorschlägen. Jede Änderung wird sofort gespeichert.
+ */
+function TagEditor({ doc, disabled }: { doc: Doc; disabled: boolean }) {
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const [adding, setAdding] = useState(false)
+  const [draft, setDraft] = useState('')
+  const facets = useQuery({ queryKey: ['documents', 'facets'], queryFn: api.facets, enabled: adding })
+  const key = ['document', doc.id]
+
+  const save = useMutation({
+    mutationKey: ['document-tags', doc.id],
+    // Nacheinander speichern: Jede Änderung schickt die ganze Liste, die letzte muss auch als letzte ankommen.
+    scope: { id: `document-tags-${doc.id}` },
+    mutationFn: (tags: string[]) =>
+      api.updateDocument(doc.id, {
+        title: doc.title,
+        summary: doc.summary,
+        category: doc.category,
+        correspondent: doc.correspondent,
+        documentDate: doc.documentDate,
+        tags,
+      }),
+    // Sofort anzeigen; schlägt das Speichern fehl, kommt der vorherige Stand zurück.
+    onMutate: (tags) => {
+      const previous = queryClient.getQueryData<Doc>(key)
+      if (previous) queryClient.setQueryData<Doc>(key, { ...previous, tags })
+      return { previous }
+    },
+    onError: (error, _tags, context) => {
+      if (context?.previous) queryClient.setQueryData(key, context.previous)
+      toast.error(errorMessage(error))
+    },
+    onSuccess: (updated) => {
+      // Folgt schon die nächste Änderung, gilt deren Stand – sonst spränge die Anzeige kurz zurück.
+      if (queryClient.isMutating({ mutationKey: ['document-tags', doc.id] }) <= 1) queryClient.setQueryData(key, updated)
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['documents'] }),
+  })
+
+  /** Der Stand, auf dem die nächste Änderung aufbaut – auch wenn die vorige noch nicht gezeichnet ist. */
+  const currentTags = () => queryClient.getQueryData<Doc>(key)?.tags ?? doc.tags
+
+  function add(raw: string[]) {
+    const tags = [...currentTags()]
+    for (const tag of raw.map(cleanTag)) {
+      if (tag && !tags.includes(tag) && tags.length < MAX_TAGS) tags.push(tag)
+    }
+    // sortiert wie auf dem Server, damit die Anzeige nach dem Speichern nicht umspringt
+    if (tags.length > currentTags().length) save.mutate(tags.sort())
+  }
+  function remove(tag: string) {
+    save.mutate(currentTags().filter((item) => item !== tag))
+  }
+  function close() {
+    setAdding(false)
+    setDraft('')
+  }
+  function onChange(value: string) {
+    // Tippt oder fügt jemand "rechnung, strom" ein, entstehen daraus zwei Schlagworte.
+    if (value.includes(',')) {
+      const parts = value.split(',')
+      add(parts.slice(0, -1))
+      setDraft(parts[parts.length - 1].trimStart())
+    } else {
+      setDraft(value)
+    }
+  }
+  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      add([draft])
+      setDraft('')
+    } else if (event.key === 'Escape') {
+      event.preventDefault()
+      event.stopPropagation()
+      close()
+    }
+  }
+
+  const full = doc.tags.length >= MAX_TAGS
+  const needle = cleanTag(draft)
+  const suggestions = (facets.data?.tags ?? [])
+    .map((facet) => facet.name)
+    .filter((name) => !doc.tags.includes(name) && (needle === '' || name.includes(needle)))
+    .slice(0, 8)
+
+  if (doc.tags.length === 0 && !adding) {
+    return (
+      <p className="text-sm text-muted">
+        <Trans
+          i18nKey="document.tags.none"
+          components={{
+            add: <button type="button" onClick={() => setAdding(true)} disabled={disabled} className="font-medium text-brand-ink hover:underline disabled:opacity-50" />,
+          }}
+        />
+      </p>
+    )
+  }
+
+  return (
+    <div>
+      <ul className="flex flex-wrap items-center gap-1.5">
+        {doc.tags.map((tag) => (
+          <li
+            key={tag}
+            className="inline-flex max-w-full items-center rounded-full border border-line bg-raised text-[13px] font-medium text-muted transition-colors focus-within:border-brand/50 hover:border-brand/50"
+          >
+            <Link
+              to={`/documents?tag=${encodeURIComponent(tag)}`}
+              title={t('document.tags.allWith', { tag })}
+              className={cx('truncate rounded-l-full py-1 pl-2.5 hover:text-brand-ink', disabled ? 'rounded-r-full pr-2.5' : 'pr-1')}
+            >
+              {tag}
+            </Link>
+            {!disabled && (
+              <button
+                type="button"
+                onClick={() => remove(tag)}
+                aria-label={t('document.tags.remove', { tag })}
+                title={t('document.tags.remove', { tag })}
+                className="mr-1 flex size-5 shrink-0 items-center justify-center rounded-full text-subtle hover:bg-danger-soft hover:text-danger"
+              >
+                <X className="size-3.5" aria-hidden />
+              </button>
+            )}
+          </li>
+        ))}
+        {!disabled && !full && (
+          <li className="inline-flex">
+            {adding ? (
+              <input
+                autoFocus
+                value={draft}
+                onChange={(event) => onChange(event.target.value)}
+                onKeyDown={onKeyDown}
+                onBlur={() => {
+                  add([draft])
+                  close()
+                }}
+                maxLength={100}
+                placeholder={t('document.tags.inputPlaceholder')}
+                aria-label={t('document.tags.inputPlaceholder')}
+                className="h-[30px] w-44 rounded-full border border-brand bg-surface px-3 text-[13px] text-ink ring-3 ring-brand/20 outline-none placeholder:text-subtle"
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setAdding(true)}
+                className="inline-flex h-[30px] items-center gap-1 rounded-full border border-dashed border-line-strong px-2.5 text-[13px] font-medium text-muted transition-colors hover:border-brand hover:text-brand-ink"
+              >
+                <Plus className="size-3.5" aria-hidden />
+                {t('common.add')}
+              </button>
+            )}
+          </li>
+        )}
+      </ul>
+      {adding && suggestions.length > 0 && (
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          {suggestions.map((suggestion) => (
+            <button
+              key={suggestion}
+              type="button"
+              // mousedown statt click: sonst schließt das Verlassen des Feldes die Vorschläge vor dem Klick
+              onMouseDown={(event) => {
+                event.preventDefault()
+                add([suggestion])
+                setDraft('')
+              }}
+              className="inline-flex items-center gap-1 rounded-full border border-dashed border-line-strong px-2 py-0.5 text-xs font-medium text-muted hover:border-brand hover:text-brand-ink"
+            >
+              <Plus className="size-3" aria-hidden />
+              {suggestion}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
 // ---------- Metadaten bearbeiten ----------
 
 function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const facets = useQuery({ queryKey: ['documents', 'facets'], queryFn: api.facets })
   const [title, setTitle] = useState(doc.title)
@@ -327,7 +489,7 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
     onSuccess: async (updated) => {
       queryClient.setQueryData(['document', doc.id], updated)
       await queryClient.invalidateQueries({ queryKey: ['documents'] })
-      toast.success('Änderungen gespeichert')
+      toast.success(t('document.edit.saved'))
       onClose()
     },
   })
@@ -338,14 +500,14 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
   }
 
   return (
-    <Modal open onClose={onClose} title="Dokument bearbeiten" size="lg">
+    <Modal open onClose={onClose} title={t('document.edit.title')} size="lg">
       <form onSubmit={submit} className="flex flex-col gap-4">
         {save.isError && <Alert tone="danger">{errorMessage(save.error)}</Alert>}
-        <Field label="Titel">
+        <Field label={t('document.fields.title')}>
           {(id) => <Input id={id} value={title} onChange={(e) => setTitle(e.target.value)} maxLength={500} required />}
         </Field>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Dokumentart">
+          <Field label={t('document.fields.category')}>
             {(id) => (
               <>
                 <Input id={id} value={category} onChange={(e) => setCategory(e.target.value)} list={`${id}-list`} maxLength={100} />
@@ -355,11 +517,11 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
               </>
             )}
           </Field>
-          <Field label="Dokumentdatum">
+          <Field label={t('document.fields.documentDate')}>
             {(id) => <Input id={id} type="date" value={documentDate} onChange={(e) => setDocumentDate(e.target.value)} />}
           </Field>
         </div>
-        <Field label="Absender">
+        <Field label={t('document.fields.correspondent')}>
           {(id) => (
             <>
               <Input id={id} value={correspondent} onChange={(e) => setCorrespondent(e.target.value)} list={`${id}-list`} maxLength={255} />
@@ -369,18 +531,18 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
             </>
           )}
         </Field>
-        <Field label="Schlagworte" hint="Mit Enter oder Komma bestätigen. Vorschläge sind bereits verwendete Schlagworte.">
+        <Field label={t('document.fields.tags')} hint={t('document.tags.inputHint')}>
           {(id) => (
             <TagInput id={id} value={tags} onChange={setTags} suggestions={facets.data?.tags.map((facet) => facet.name) ?? []} />
           )}
         </Field>
-        <Field label="Zusammenfassung">
+        <Field label={t('document.fields.summary')}>
           {(id) => <Textarea id={id} value={summary} onChange={(e) => setSummary(e.target.value)} rows={4} maxLength={4000} />}
         </Field>
         <div className="mt-1 flex justify-end gap-2">
-          <Button onClick={onClose}>Abbrechen</Button>
+          <Button onClick={onClose}>{t('common.cancel')}</Button>
           <Button type="submit" variant="primary" loading={save.isPending}>
-            Speichern
+            {t('common.save')}
           </Button>
         </div>
       </form>
@@ -389,6 +551,7 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
 }
 
 function TagInput({ id, value, onChange, suggestions }: { id: string; value: string[]; onChange: (tags: string[]) => void; suggestions: string[] }) {
+  const { t } = useTranslation()
   const [draft, setDraft] = useState('')
   const [focused, setFocused] = useState(false)
 
@@ -426,7 +589,7 @@ function TagInput({ id, value, onChange, suggestions }: { id: string; value: str
             {tag}
             <button
               type="button"
-              aria-label={`Schlagwort „${tag}“ entfernen`}
+              aria-label={t('document.tags.remove', { tag })}
               onClick={() => onChange(value.filter((t) => t !== tag))}
               className="flex size-4 items-center justify-center rounded-full hover:bg-brand/20"
             >
@@ -444,7 +607,7 @@ function TagInput({ id, value, onChange, suggestions }: { id: string; value: str
             setFocused(false)
             add(draft)
           }}
-          placeholder={value.length === 0 ? 'Schlagwort eingeben …' : ''}
+          placeholder={value.length === 0 ? t('document.tags.inputPlaceholder') : ''}
           className="h-7 min-w-28 flex-1 bg-transparent px-1 text-sm outline-none placeholder:text-subtle"
         />
       </div>

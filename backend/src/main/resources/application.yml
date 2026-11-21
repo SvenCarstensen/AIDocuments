@@ -31,6 +31,14 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  messages:
+    # Texte für Anwender: messages.properties (Englisch, zugleich Rückfall) und messages_xx.properties.
+    # Die Sprache einer Antwort bestimmt der Accept-Language-Header; fehlt eine Übersetzung, gilt Englisch –
+    # nie die Sprache des Servers. (always-use-message-format bleibt aus: Die Anwendung formatiert selbst,
+    # und die Texte der Eingabeprüfung haben benannte Platzhalter.)
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
 
 app:
   # Ablageort für PDF-Dateien, Vorschaubilder, Suchindex und Schlüsseldatei

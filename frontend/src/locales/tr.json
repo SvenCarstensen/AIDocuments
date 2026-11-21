@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "close": "Kapat",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "remove": "Kaldır",
+    "add": "Ekle",
+    "back": "Geri",
+    "retry": "Tekrar dene",
+    "loading": "Yükleniyor",
+    "language": "Dil",
+    "testConnection": "Bağlantıyı test et",
+    "saveFirst": "Lütfen önce kaydedin",
+    "username": "Kullanıcı adı",
+    "usernameHint": "3–50 karakter: harf, rakam, nokta, kısa çizgi, alt çizgi, @",
+    "password": "Parola",
+    "newPassword": "Yeni parola",
+    "passwordHint": "En az 8 karakter",
+    "passwordMismatch": "Parolalar eşleşmiyor.",
+    "justNow": "az önce",
+    "documentCount_one": "{{count, number}} belge",
+    "documentCount_other": "{{count, number}} belge",
+    "role": {
+      "ADMIN": "Yönetici",
+      "USER": "Kullanıcı"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Sunucuya bağlanılamıyor",
+    "server": "Sunucu bir hata bildirdi ({{status}}).",
+    "forbidden": "Bunu yapma yetkiniz yok.",
+    "unreachable": "Sunucuya ulaşılamıyor.",
+    "unexpected": "Beklenmeyen hata.",
+    "languageLoad": "Dil yüklenemedi."
+  },
+  "auth": {
+    "login": {
+      "title": "Tekrar hoş geldiniz",
+      "subtitle": "Belgelerinize erişmek için oturum açın.",
+      "submit": "Oturum aç"
+    },
+    "setup": {
+      "title": "AIDocuments kurulumu",
+      "subtitle": "Önce yönetici hesabını oluşturun. Diğer kullanıcıları daha sonra ayarlardan ekleyebilirsiniz.",
+      "adminAccount": "Yönetici hesabı",
+      "repeatPassword": "Parolayı tekrarlayın",
+      "submit": "Hesabı oluştur ve başla",
+      "features": {
+        "import": "Posta kutunuzdan ve içe aktarma klasöründen PDF’ler",
+        "ai": "Yapay zeka özetler ve etiketler",
+        "search": "Belgelerin içinde tam metin araması"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Yükle",
+    "theme": {
+      "light": "Açık tema",
+      "dark": "Koyu tema"
+    },
+    "search": {
+      "placeholder": "Belgelerde, etiketlerde, içerikte ara…",
+      "label": "Belgelerde ara",
+      "clear": "Aramayı temizle"
+    },
+    "userMenu": {
+      "label": "Kullanıcı menüsü ({{name}})",
+      "aiActive": "Yapay zeka etkin",
+      "aiNotConfigured": "Yapay zeka ayarlanmadı",
+      "changePassword": "Parolayı değiştir",
+      "logout": "Oturumu kapat"
+    },
+    "passwordDialog": {
+      "current": "Mevcut parola",
+      "repeat": "Yeni parolayı tekrarlayın",
+      "changed": "Parola değiştirildi"
+    },
+    "dropzone": {
+      "title": "PDF’leri buraya bırakın",
+      "hint": "Aynı anda birden fazla dosya bırakabilirsiniz. Dosyalar kaydedilir, analiz edilir ve etiketlenir."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Yalnızca PDF dosyaları eklenebilir.",
+    "uploadingFile": "“{{name}}” yükleniyor…",
+    "uploadingFiles_one": "{{count, number}} PDF yükleniyor…",
+    "uploadingFiles_other": "{{count, number}} PDF yükleniyor…",
+    "created_one": "{{count, number}} belge eklendi",
+    "created_other": "{{count, number}} belge eklendi",
+    "processingInBackground": "İşleme arka planda devam ediyor.",
+    "duplicates_one": "{{count, number}} belge zaten mevcut",
+    "duplicates_other": "{{count, number}} belge zaten mevcut",
+    "rejected_one": "{{count, number}} dosya geçerli bir PDF değil",
+    "rejected_other": "{{count, number}} dosya geçerli bir PDF değil",
+    "onlyDuplicates_one": "Bu belge zaten mevcut.",
+    "onlyDuplicates_other": "Bu belgeler zaten mevcut.",
+    "noneValid": "Dosyaların hiçbiri geçerli bir PDF değil.",
+    "failed": "Yükleme başarısız oldu"
+  },
+  "documents": {
+    "status": {
+      "pending": "Bekliyor",
+      "processing": "Analiz ediliyor",
+      "failed": "Hata",
+      "textOnly": "Yapay zekasız"
+    },
+    "ocrBadge": "Metin tanıma",
+    "aiNotice": {
+      "text": "Yapay zeka henüz ayarlanmadı. Yeni belgeler metinleri üzerinden aranabilir, ancak özetlenmez ve etiketlenmez.",
+      "action": "Şimdi ayarla"
+    },
+    "searchResults_one": "<query>“{{query}}” için</query> <count>{{count, number}} sonuç</count>",
+    "searchResults_other": "<query>“{{query}}” için</query> <count>{{count, number}} sonuç</count>",
+    "progress": {
+      "inProgress": "{{documents, number}} belge işleniyor",
+      "inProgressHint": "Yapay zeka analizini bekliyor veya şu anda analiz ediliyor",
+      "remaining": "yaklaşık {{duration}} kaldı",
+      "remainingLessThan": "en fazla {{duration}} kaldı",
+      "finishHint": "Tahmini bitiş: {{time}} – son işlenen belgelerin hızına göre hesaplandı"
+    },
+    "sort": {
+      "label": "Sıralama",
+      "relevance": "En iyi eşleşmeler",
+      "newest": "Önce en yeniler",
+      "date": "Belge tarihine göre"
+    },
+    "view": {
+      "grid": "Izgara görünümü",
+      "list": "Liste görünümü"
+    },
+    "pageSize": {
+      "label": "Gösterilen belge sayısı",
+      "all": "Tümü"
+    },
+    "filters": {
+      "title": "Filtreler",
+      "titleWithCount": "Filtreler ({{active, number}})",
+      "apply": "Göster",
+      "hint": "Belgeler analiz edildikten sonra belge türleri, etiketler ve gönderenler burada filtre olarak görünür.",
+      "dateFrom": "başlangıç",
+      "dateTo": "bitiş",
+      "status": "Durum",
+      "failed": "Başarısız",
+      "showAll": "Tümünü göster",
+      "showLess": "Daha az göster",
+      "activeFrom": "{{date}} ve sonrası",
+      "activeTo": "{{date}} ve öncesi",
+      "removeOne": "“{{label}}” filtresini kaldır",
+      "removeAll": "Tüm filtreleri kaldır",
+      "clear": "Filtreleri kaldır"
+    },
+    "empty": {
+      "libraryTitle": "Henüz belge yok",
+      "libraryHint": "PDF dosyalarını bu pencereye sürüklemeniz veya “Yükle” düğmesini kullanmanız yeterli.",
+      "libraryHintAdmin": "PDF dosyalarını bu pencereye sürüklemeniz veya “Yükle” düğmesini kullanmanız yeterli. Ayarlarda, yeni PDF’lerin otomatik olarak içe aktarılacağı bir posta kutusu veya içe aktarma klasörü tanımlayabilirsiniz.",
+      "noResultsTitle": "Hiçbir şey bulunamadı",
+      "noResultsSearch": "Bu aramayla eşleşen belge yok. Arama, kelime parçalarını da bulur – daha kısa bir terim veya daha az kelime deneyin.",
+      "noResultsFilters": "Seçilen filtrelerle eşleşen belge yok."
+    },
+    "loadingAll_one": "{{loaded, number}} / {{count, number}} belge getirildi…",
+    "loadingAll_other": "{{loaded, number}} / {{count, number}} belge getirildi…",
+    "loadMore": "Daha fazla göster ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Listeye dön",
+    "download": "İndir",
+    "reprocess": "Yeniden analiz et",
+    "reprocessHint": "PDF’yi yeniden oku ve yapay zekaya analiz ettir",
+    "reprocessStarted": "Belge yeniden analiz ediliyor.",
+    "deleted": "Belge silindi",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Yeni sekmede aç",
+    "processingNotice": "Belge işleniyor. Analiz biter bitmez özet ve etiketler burada görünecek.",
+    "textOnlyNotice": "Yapay zeka olmadan dizine eklendi: belge, metni üzerinden aranabilir, ancak özeti ve otomatik etiketleri yok.",
+    "tabs": {
+      "overview": "Genel bakış",
+      "text": "Tam metin"
+    },
+    "fields": {
+      "title": "Başlık",
+      "category": "Belge türü",
+      "documentDate": "Belge tarihi",
+      "correspondent": "Gönderen",
+      "tags": "Etiketler",
+      "summary": "Özet"
+    },
+    "tags": {
+      "allWith": "“{{tag}}” etiketli tüm belgeler",
+      "none": "Etiket yok. <add>Ekle</add>",
+      "inputHint": "Enter veya virgülle onaylayın. Öneriler, kullanılmakta olan etiketlerdir.",
+      "inputPlaceholder": "Etiket girin…",
+      "remove": "“{{tag}}” etiketini kaldır"
+    },
+    "keyFacts": "Temel bilgiler",
+    "details": {
+      "title": "Ayrıntılar",
+      "file": "Dosya",
+      "size": "Boyut",
+      "pageCount_one": "{{count, number}} sayfa",
+      "pageCount_other": "{{count, number}} sayfa",
+      "language": "Dil",
+      "source": "Kaynak",
+      "mailSubject": "Konu",
+      "mailFrom": "Kimden",
+      "mailReceived": "Alındı",
+      "added": "Eklendi",
+      "text": "Metin"
+    },
+    "source": {
+      "MAIL": "Posta kutusu",
+      "FOLDER": "İçe aktarma klasörü",
+      "UPLOAD": "Yüklendi"
+    },
+    "noText": "Bu belge için metin yok – muhtemelen metin katmanı olmayan bir tarama. Yapay zeka ayarlanmış ve metin tanıma etkinse içerik analiz sırasında metne dökülür.",
+    "edit": {
+      "title": "Belgeyi düzenle",
+      "saved": "Değişiklikler kaydedildi"
+    },
+    "delete": {
+      "title": "Belge silinsin mi?",
+      "text": "“{{title}}”; PDF dosyası, tam metni ve etiketleriyle birlikte silinecek. Bu işlem geri alınamaz.",
+      "confirm": "Kalıcı olarak sil"
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "mailboxes": {
+      "title": "Posta kutuları",
+      "navHint": "PDF eklerinin içe aktarıldığı IMAP sunucuları",
+      "intro": "PDF ekleri bu IMAP posta kutularından otomatik olarak içe aktarılır. Posta kutuları yalnızca okunur – e-postalar değişmeden ve okunmamış olarak kalır.",
+      "add": "Posta kutusu ekle",
+      "emptyTitle": "Henüz posta kutusu ayarlanmadı",
+      "emptyText": "Bir IMAP posta kutusunun erişim bilgilerini girin – örneğin tarayıcınızın belgeleri gönderdiği posta kutusu.",
+      "paused": "Duraklatıldı",
+      "syncNow": "Şimdi kontrol et",
+      "syncing": "Posta kutusu kontrol ediliyor…",
+      "neverSynced": "Henüz kontrol edilmedi.",
+      "saved": "Posta kutusu kaydedildi",
+      "added": "Posta kutusu eklendi",
+      "firstSyncRunning": "İlk kontrol zaten sürüyor.",
+      "removed": "Posta kutusu kaldırıldı",
+      "delete": {
+        "title": "Posta kutusu kaldırılsın mı?",
+        "text": "“{{name}}” artık kontrol edilmeyecek. Daha önce içe aktarılan belgeler korunur."
+      },
+      "dialog": {
+        "editTitle": "Posta kutusunu düzenle",
+        "description": "Erişim bilgilerini e-posta sağlayıcınızdan alabilirsiniz. Parola şifrelenmiş olarak saklanır.",
+        "name": "Ad",
+        "nameHint": "İstediğiniz bir ad, örneğin “Tarayıcı” veya “Faturalar”",
+        "namePlaceholder": "Tarayıcı",
+        "host": "IMAP sunucusu",
+        "port": "Port",
+        "security": "Şifreleme",
+        "securityNone": "Yok",
+        "securityNoneWarning": "Şifreleme olmadan kullanıcı adı ve parola düz metin olarak iletilir.",
+        "passwordKeepHint": "Kayıtlı parolayı korumak için boş bırakın",
+        "folder": "Klasör",
+        "folderHint": "Genellikle {{folder}} (gelen kutusu)",
+        "since": "Yalnızca şu tarihten sonraki e-postalar",
+        "sinceHint": "İsteğe bağlı – daha eski e-postalar atlanır",
+        "enabled": "Otomatik kontrol et",
+        "enabledHint": "Posta kutusu, ayarlanan aralıklarla yeni PDF’ler için kontrol edilir."
+      }
+    },
+    "import": {
+      "title": "Zamanlama ve içe aktarma klasörü",
+      "navHint": "Kontrol aralığı ve izlenen dizin",
+      "intro": "Uygulamanın posta kutularında ve içe aktarma klasöründe ne sıklıkla yeni PDF dosyası arayacağını belirler.",
+      "saved": "Ayarlar kaydedildi",
+      "interval": {
+        "title": "Kontrol aralığı",
+        "text": "Uygulama, tüm posta kutularını ve içe aktarma klasörünü bu sıklıkla yeni PDF’ler için kontrol eder.",
+        "label": "Her … dakikada bir",
+        "nextRun": "Sonraki otomatik kontrol: {{when}}."
+      },
+      "folder": {
+        "title": "İçe aktarma klasörü",
+        "text": "Sunucuda yeni PDF dosyaları için izlenen bir dizin – örneğin bir ağ tarayıcısının hedef klasörü. Alt klasörler de aranır.",
+        "enable": "İçe aktarma klasörünü izle",
+        "path": "Sunucudaki yol",
+        "pathHint": "Mutlak yol. Docker kapsayıcısında bu, bağlanan klasördür; genellikle {{path}}.",
+        "afterImport": "İçe aktardıktan sonra",
+        "keep": "Dosyayı yerinde bırak",
+        "move": "“{{folder}}” klasörüne taşı",
+        "keepHint": "Dosyalar değişmeden kalır. Uygulama, neleri içe aktardığını hatırlar.",
+        "moveHint": "İçe aktarılan dosyalar “{{folder}}” alt klasörüne taşınır – içe aktarma klasörü düzenli kalır.",
+        "scanning": "Klasör kontrol ediliyor…",
+        "neverScanned": "Henüz kontrol edilmedi.",
+        "scanNow": "Şimdi kontrol et",
+        "scanStarted": "İçe aktarma klasörü kontrol ediliyor."
+      }
+    },
+    "ai": {
+      "title": "Yapay zeka",
+      "navHint": "LLM sunucusu, model ve metin tanıma",
+      "intro": "Yapay zeka her yeni PDF’yi okur, özetler, belge türünü ve etiketleri belirler, tutar veya son tarih gibi temel bilgileri çıkarır.",
+      "configured": "Ayarlandı",
+      "notConfigured": "Ayarlanmadı",
+      "saved": "Yapay zeka ayarları kaydedildi",
+      "server": {
+        "title": "LLM sunucusu",
+        "provider": "Sağlayıcı",
+        "baseUrl": "Sunucu adresi",
+        "model": "Model",
+        "modelPlaceholder": "Model kimliği",
+        "compatibilityMode": "Yerel modeller için uyumluluk modu",
+        "compatibilityModeHint": "Anthropic arayüzünü kullanan ancak PDF girişini ve yapılandırılmış çıktıları desteklemeyen sunucular içindir: belge modele metin olarak, taramalarda ise sayfa görüntüleri olarak gönderilir. Claude API için kapalı bırakın.",
+        "testIncomplete": "Ayarlar henüz tamamlanmadı"
+      },
+      "privacy": {
+        "title": "{{provider}} kullanıldığında belgeleriniz bu bilgisayardan çıkar",
+        "text": "Analiz için her PDF’nin içeriği internet üzerinden {{provider}} sunucularına iletilir ve orada işlenir – faturalar, sözleşmeler, doktor raporları ve resmî yazışmalar da buna dahildir.",
+        "recommendation": "<emphasis>Öneri:</emphasis> yerel bir yapay zeka kullanın. Kendi ağınızdaki <lmStudio>LM Studio</lmStudio> veya <compatible>OpenAI uyumlu bir sunucu</compatible> ile tüm içerik sizde kalır."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Anthropic’in Claude API’si. Yalnızca önünde kendi ağ geçidiniz varsa değiştirin.",
+          "modelHint": "Önerilen seçenek Claude Opus 5.5’tir; Sonnet ve Haiku daha hızlı ve daha ucuzdur."
+        },
+        "OPENAI": {
+          "urlHint": "OpenAI’nin API’si. Yalnızca önünde kendi ağ geçidiniz varsa değiştirin.",
+          "modelHint": "OpenAI’nin kullandığı adla model kimliği. Anahtarı kaydettikten sonra kullanılabilir modeller burada görünür."
+        },
+        "MOONSHOT": {
+          "urlHint": "Moonshot AI (Kimi) API’si. Çin platformundaki hesaplar için: {{url}}",
+          "modelHint": "Moonshot’ın kullandığı adla model kimliği. Anahtarı kaydettikten sonra kullanılabilir modeller burada görünür."
+        },
+        "LM_STUDIO": {
+          "urlHint": "LM Studio’nun yerel sunucusu (LM Studio’da “Developer” bölümünden başlatın). AIDocuments Docker’da çalışıyorsa: {{url}}",
+          "modelHint": "LM Studio’da yüklü modelin kimliği. Taramalar için görüntü girişi olan, analiz için araç kullanımını (Tool Use) destekleyen bir model gerekir."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "OpenAI arayüzünü kullanan bir sunucunun adresi – genellikle /v1 ile biter, örneğin {{url}}",
+          "modelHint": "Sunucunun kullandığı adla model kimliği. Kaydettikten sonra sunucunun sunduğu modeller burada görünür."
+        }
+      },
+      "apiKey": {
+        "label": "API anahtarı",
+        "labelOptional": "API anahtarı (isteğe bağlı)",
+        "placeholderStored": "{{mask}} (kayıtlı)",
+        "placeholderPreset": "{{mask}} (ön tanımlı)",
+        "placeholderNotNeeded": "gerekli değil",
+        "placeholderIfRequired": "yalnızca sunucu isterse",
+        "hintShown": "Sunucu yapılandırmasından ön tanımlı.",
+        "hintRemoving": "Kayıtlı anahtar, kaydettiğinizde kaldırılacak.",
+        "hintStored": "Şifrelenmiş olarak kayıtlı bir anahtar var. Korumak için boş bırakın – <remove>anahtarı kaldır</remove>",
+        "hintEnvironment": "Anahtar şu anda sunucu yapılandırmasından (ortam değişkeni veya yapılandırma dosyası) geliyor. Buraya girilen anahtar önceliklidir.",
+        "hintPreset": "Bu sağlayıcı için sunucu yapılandırmasında ön tanımlı bir anahtar var. Kullanmak için boş bırakın.",
+        "hintDiscardedOnSwitch": "Şimdiye kadar kayıtlı olan anahtar {{previous}} sağlayıcısına ait ve geçiş yaptığınızda silinecek.",
+        "hintPresetOtherProvider": "Ön tanımlı anahtar yalnızca {{previous}} için geçerli. Lütfen {{provider}} için ayrı bir anahtar girin.",
+        "hintRequired": "Şifrelenmiş olarak saklanır ve bir daha gösterilmez.",
+        "hintLocal": "Yerel sunucular genellikle anahtar gerektirmez."
+      },
+      "analysis": {
+        "title": "Analiz",
+        "effort": "Titizlik",
+        "effortLevels": {
+          "low": "Hızlı",
+          "medium": "Dengeli",
+          "high": "Titiz"
+        },
+        "effortHint": "Daha titiz analiz daha özenli sonuç verir, ancak belge başına daha yavaş ve daha pahalıdır.",
+        "outputLanguage": "Sonuçların dili",
+        "outputLanguageHint": "Yapay zeka başlığı, özeti ve etiketleri bu dilde yazar.",
+        "ocr": "Taramalar için metin tanıma",
+        "ocrHint": "Uygulama, metin katmanı olmayan taranmış PDF’leri yapay zekaya metne döktürür – tam metin aramasında ancak bu şekilde bulunabilirler. Her tarama daha fazla zaman alır ve daha pahalıya gelir."
+      },
+      "unanalyzed_one": "{{count, number}} belge henüz yapay zeka tarafından analiz edilmedi.",
+      "unanalyzed_other": "{{count, number}} belge henüz yapay zeka tarafından analiz edilmedi.",
+      "analyzeNow": "Şimdi analiz et",
+      "analysisStarted_one": "{{count, number}} belge şimdi analiz ediliyor.",
+      "analysisStarted_other": "{{count, number}} belge şimdi analiz ediliyor."
+    },
+    "users": {
+      "title": "Kullanıcılar",
+      "navHint": "Hesaplar ve roller",
+      "intro": "Herkes kendi hesabıyla oturum açar. Yöneticiler uygulamayı yönetir, kullanıcılar belgelerle çalışır.",
+      "add": "Kullanıcı oluştur",
+      "you": "Siz",
+      "disabled": "Devre dışı",
+      "lastLogin": "Son oturum açma: {{when}}",
+      "neverLoggedIn": "Hiç oturum açmadı",
+      "editUser": "{{name}} kullanıcısını düzenle",
+      "deleteUser": "{{name}} kullanıcısını sil",
+      "saved": "Kullanıcı kaydedildi",
+      "created": "Kullanıcı oluşturuldu",
+      "deleted": "Kullanıcı silindi",
+      "delete": {
+        "title": "Kullanıcı silinsin mi?",
+        "text": "“{{name}}” hesabı silinecek ve oturumu hemen kapatılacak. Belgeler korunur."
+      },
+      "dialog": {
+        "selfNotice": "Bu sizin kendi hesabınız. Kaydettikten sonra yeniden oturum açmanız gerekecek.",
+        "passwordKeepHint": "Mevcut parolayı korumak için boş bırakın. Aksi hâlde en az 8 karakter.",
+        "role": "Rol",
+        "roleHints": {
+          "ADMIN": "Her şeyi yapabilir – ayarları değiştirmek, kullanıcıları yönetmek ve belgeleri silmek dahil.",
+          "USER": "Belgeleri görüntüleyebilir, arayabilir, yükleyebilir ve bilgilerini düzenleyebilir."
+        },
+        "active": "Hesap etkin",
+        "activeHint": "Devre dışı hesaplarla oturum açılamaz; etkin oturumlar hemen sona erer.",
+        "create": "Oluştur"
+      }
+    }
+  }
+}

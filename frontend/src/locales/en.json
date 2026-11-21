@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "add": "Add",
+    "back": "Back",
+    "retry": "Try again",
+    "loading": "Loading",
+    "language": "Language",
+    "testConnection": "Test connection",
+    "saveFirst": "Please save first",
+    "username": "Username",
+    "usernameHint": "3–50 characters: letters, digits, dot, hyphen, underscore, @",
+    "password": "Password",
+    "newPassword": "New password",
+    "passwordHint": "At least 8 characters",
+    "passwordMismatch": "The passwords do not match.",
+    "justNow": "just now",
+    "documentCount_one": "{{count, number}} document",
+    "documentCount_other": "{{count, number}} documents",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "User"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Cannot connect to the server",
+    "server": "The server reported an error ({{status}}).",
+    "forbidden": "You do not have permission to do this.",
+    "unreachable": "The server cannot be reached.",
+    "unexpected": "Unexpected error.",
+    "languageLoad": "The language could not be loaded."
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to access your documents.",
+      "submit": "Sign in"
+    },
+    "setup": {
+      "title": "Set up AIDocuments",
+      "subtitle": "Start by creating the administrator account. You can add more users in the settings afterwards.",
+      "adminAccount": "Administrator account",
+      "repeatPassword": "Repeat password",
+      "submit": "Create account and get started",
+      "features": {
+        "import": "PDFs from your mailbox and import folder",
+        "ai": "AI summarizes and tags them",
+        "search": "Full-text search right into the document"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Upload",
+    "theme": {
+      "light": "Light theme",
+      "dark": "Dark theme"
+    },
+    "search": {
+      "placeholder": "Search documents, tags, contents …",
+      "label": "Search documents",
+      "clear": "Clear search"
+    },
+    "userMenu": {
+      "label": "User menu ({{name}})",
+      "aiActive": "AI active",
+      "aiNotConfigured": "AI not set up",
+      "changePassword": "Change password",
+      "logout": "Sign out"
+    },
+    "passwordDialog": {
+      "current": "Current password",
+      "repeat": "Repeat new password",
+      "changed": "Password changed"
+    },
+    "dropzone": {
+      "title": "Drop PDFs here",
+      "hint": "You can drop several files at once. They are stored, analyzed and tagged."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Only PDF files can be added.",
+    "uploadingFile": "Uploading “{{name}}” …",
+    "uploadingFiles_one": "Uploading {{count, number}} PDF …",
+    "uploadingFiles_other": "Uploading {{count, number}} PDFs …",
+    "created_one": "{{count, number}} document added",
+    "created_other": "{{count, number}} documents added",
+    "processingInBackground": "Processing continues in the background.",
+    "duplicates_one": "{{count, number}} already exists",
+    "duplicates_other": "{{count, number}} already exist",
+    "rejected_one": "{{count, number}} file is not a valid PDF",
+    "rejected_other": "{{count, number}} files are not valid PDFs",
+    "onlyDuplicates_one": "This document already exists.",
+    "onlyDuplicates_other": "These documents already exist.",
+    "noneValid": "None of the files is a valid PDF.",
+    "failed": "Upload failed"
+  },
+  "documents": {
+    "status": {
+      "pending": "Waiting",
+      "processing": "Analyzing",
+      "failed": "Error",
+      "textOnly": "Without AI"
+    },
+    "ocrBadge": "Text recognition",
+    "aiNotice": {
+      "text": "The AI has not been set up yet. New documents can be searched by their text, but they are not summarized or tagged.",
+      "action": "Set up now"
+    },
+    "searchResults_one": "<count>{{count, number}} result</count> <query>for “{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} results</count> <query>for “{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} in progress",
+      "inProgressHint": "Waiting for AI analysis or currently being analyzed",
+      "remaining": "about {{duration}} left",
+      "remainingLessThan": "less than {{duration}} left",
+      "finishHint": "Expected to finish: {{time}} – estimated from the pace of the most recently processed documents"
+    },
+    "sort": {
+      "label": "Sort order",
+      "relevance": "Best matches",
+      "newest": "Newest first",
+      "date": "By document date"
+    },
+    "view": {
+      "grid": "Grid view",
+      "list": "List view"
+    },
+    "pageSize": {
+      "label": "Number of documents shown",
+      "all": "All"
+    },
+    "filters": {
+      "title": "Filters",
+      "titleWithCount": "Filters ({{active, number}})",
+      "apply": "Show",
+      "hint": "Once documents have been analyzed, document types, tags and senders will appear here as filters.",
+      "dateFrom": "from",
+      "dateTo": "to",
+      "status": "Status",
+      "failed": "Failed",
+      "showAll": "Show all",
+      "showLess": "Show less",
+      "activeFrom": "from {{date}}",
+      "activeTo": "until {{date}}",
+      "removeOne": "Remove filter “{{label}}”",
+      "removeAll": "Remove all filters",
+      "clear": "Remove filters"
+    },
+    "empty": {
+      "libraryTitle": "No documents yet",
+      "libraryHint": "Simply drag PDF files into this window or use “Upload”.",
+      "libraryHintAdmin": "Simply drag PDF files into this window or use “Upload”. In the settings you can set up a mailbox or an import folder from which new PDFs are imported automatically.",
+      "noResultsTitle": "Nothing found",
+      "noResultsSearch": "No document matches this search. The search also finds parts of words – try a shorter term or fewer words.",
+      "noResultsFilters": "No document matches the selected filters."
+    },
+    "loadingAll_one": "{{loaded, number}} of {{count, number}} document loaded …",
+    "loadingAll_other": "{{loaded, number}} of {{count, number}} documents loaded …",
+    "loadMore": "Load more ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Back to overview",
+    "download": "Download",
+    "reprocess": "Analyze again",
+    "reprocessHint": "Read the PDF again and have the AI analyze it",
+    "reprocessStarted": "The document is being analyzed again.",
+    "deleted": "Document deleted",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Open in new tab",
+    "processingNotice": "The document is being processed. The summary and tags will appear here as soon as the analysis is finished.",
+    "textOnlyNotice": "Indexed without AI: the document can be searched by its text, but it has no summary and no automatic tags.",
+    "tabs": {
+      "overview": "Overview",
+      "text": "Full text"
+    },
+    "fields": {
+      "title": "Title",
+      "category": "Document type",
+      "documentDate": "Document date",
+      "correspondent": "Sender",
+      "tags": "Tags",
+      "summary": "Summary"
+    },
+    "tags": {
+      "allWith": "All documents tagged “{{tag}}”",
+      "none": "No tags. <add>Add some</add>",
+      "inputHint": "Confirm with Enter or a comma. Suggestions are tags that are already in use.",
+      "inputPlaceholder": "Enter a tag …",
+      "remove": "Remove tag “{{tag}}”"
+    },
+    "keyFacts": "Key facts",
+    "details": {
+      "title": "Details",
+      "file": "File",
+      "size": "Size",
+      "pageCount_one": "{{count, number}} page",
+      "pageCount_other": "{{count, number}} pages",
+      "language": "Language",
+      "source": "Source",
+      "mailSubject": "Subject",
+      "mailFrom": "From",
+      "mailReceived": "Received",
+      "added": "Added",
+      "text": "Text"
+    },
+    "source": {
+      "MAIL": "Email mailbox",
+      "FOLDER": "Import folder",
+      "UPLOAD": "Uploaded"
+    },
+    "noText": "There is no text for this document – it is probably a scan without a text layer. With the AI set up and text recognition enabled, the content is transcribed during analysis.",
+    "edit": {
+      "title": "Edit document",
+      "saved": "Changes saved"
+    },
+    "delete": {
+      "title": "Delete document?",
+      "text": "“{{title}}” will be deleted together with its PDF file, full text and tags. This cannot be undone.",
+      "confirm": "Delete permanently"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "mailboxes": {
+      "title": "Mailboxes",
+      "navHint": "IMAP servers from which PDF attachments are imported",
+      "intro": "PDF attachments are imported automatically from these IMAP mailboxes. The mailboxes are only read – emails stay unchanged and unread.",
+      "add": "Add mailbox",
+      "emptyTitle": "No mailbox set up yet",
+      "emptyText": "Enter the credentials of an IMAP mailbox – for example the mailbox your scanner sends documents to.",
+      "paused": "Paused",
+      "syncNow": "Check now",
+      "syncing": "Checking mailbox …",
+      "neverSynced": "Not checked yet.",
+      "saved": "Mailbox saved",
+      "added": "Mailbox added",
+      "firstSyncRunning": "The first check is already running.",
+      "removed": "Mailbox removed",
+      "delete": {
+        "title": "Remove mailbox?",
+        "text": "“{{name}}” will no longer be checked. Documents that have already been imported are kept."
+      },
+      "dialog": {
+        "editTitle": "Edit mailbox",
+        "description": "You get the credentials from your email provider. The password is stored encrypted.",
+        "name": "Name",
+        "nameHint": "Anything you like, e.g. “Scanner” or “Invoices”",
+        "namePlaceholder": "Scanner",
+        "host": "IMAP server",
+        "port": "Port",
+        "security": "Encryption",
+        "securityNone": "None",
+        "securityNoneWarning": "Without encryption, the username and password are transmitted in plain text.",
+        "passwordKeepHint": "Leave empty to keep the stored password",
+        "folder": "Folder",
+        "folderHint": "Usually {{folder}} (the inbox)",
+        "since": "Only emails from",
+        "sinceHint": "Optional – older emails are skipped",
+        "enabled": "Check automatically",
+        "enabledHint": "The mailbox is checked for new PDFs at the configured interval."
+      }
+    },
+    "import": {
+      "title": "Schedule & import folder",
+      "navHint": "Check interval and watched directory",
+      "intro": "Defines how often the application looks for new PDF files – in the mailboxes and in the import folder.",
+      "saved": "Settings saved",
+      "interval": {
+        "title": "Check interval",
+        "text": "This is how often the application checks all mailboxes and the import folder for new PDFs.",
+        "label": "Every … minutes",
+        "nextRun": "Next automatic check {{when}}."
+      },
+      "folder": {
+        "title": "Import folder",
+        "text": "A directory on the server that is watched for new PDF files – for example the target of a network scanner. Subfolders are searched as well.",
+        "enable": "Watch import folder",
+        "path": "Path on the server",
+        "pathHint": "Absolute path. In the Docker container this is the mounted folder, usually {{path}}.",
+        "afterImport": "After import",
+        "keep": "Leave file in place",
+        "move": "Move to “{{folder}}”",
+        "keepHint": "The files stay unchanged. The application remembers what it has already imported.",
+        "moveHint": "Imported files are moved to the “{{folder}}” subfolder – the import folder stays tidy.",
+        "scanning": "Checking folder …",
+        "neverScanned": "Not checked yet.",
+        "scanNow": "Check now",
+        "scanStarted": "The import folder is being checked."
+      }
+    },
+    "ai": {
+      "title": "AI",
+      "navHint": "LLM server, model and text recognition",
+      "intro": "The AI reads every new PDF, summarizes it, assigns a document type and tags, and extracts key facts such as amounts or deadlines.",
+      "configured": "Set up",
+      "notConfigured": "Not set up",
+      "saved": "AI settings saved",
+      "server": {
+        "title": "LLM server",
+        "provider": "Provider",
+        "baseUrl": "Server address",
+        "model": "Model",
+        "modelPlaceholder": "Model ID",
+        "compatibilityMode": "Compatibility mode for local models",
+        "compatibilityModeHint": "For servers that speak the Anthropic interface but support neither PDF input nor structured outputs: the document is sent to the model as text or, for scans, as page images. Leave this off for the Claude API.",
+        "testIncomplete": "The settings are not complete yet"
+      },
+      "privacy": {
+        "title": "With {{provider}}, your documents leave this computer",
+        "text": "For analysis, the content of every PDF is transmitted to the servers of {{provider}} on the internet and processed there – including invoices, contracts, medical letters and official correspondence.",
+        "recommendation": "<emphasis>Recommendation:</emphasis> use a local AI. With <lmStudio>LM Studio</lmStudio> or an <compatible>OpenAI-compatible server</compatible> on your own network, all content stays with you."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Anthropic's Claude API. Only change this if you have your own gateway in front of it.",
+          "modelHint": "Claude Opus 5.5 is the recommended choice; Sonnet and Haiku are faster and cheaper."
+        },
+        "OPENAI": {
+          "urlHint": "OpenAI's API. Only change this if you have your own gateway in front of it.",
+          "modelHint": "The model ID as OpenAI names it. After you save the key, the available models appear here."
+        },
+        "MOONSHOT": {
+          "urlHint": "The API of Moonshot AI (Kimi). For accounts on the Chinese platform: {{url}}",
+          "modelHint": "The model ID as Moonshot names it. After you save the key, the available models appear here."
+        },
+        "LM_STUDIO": {
+          "urlHint": "LM Studio's local server (start it in LM Studio under “Developer”). If AIDocuments runs in Docker: {{url}}",
+          "modelHint": "The ID of the model loaded in LM Studio. Scans need a model with image input, analysis needs one with tool use."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Address of a server that speaks the OpenAI interface – usually ending in /v1, e.g. {{url}}",
+          "modelHint": "The model ID as the server names it. After saving, the models it offers appear here."
+        }
+      },
+      "apiKey": {
+        "label": "API key",
+        "labelOptional": "API key (optional)",
+        "placeholderStored": "{{mask}} (stored)",
+        "placeholderPreset": "{{mask}} (preset)",
+        "placeholderNotNeeded": "not needed",
+        "placeholderIfRequired": "only if the server requires one",
+        "hintShown": "Preset from the server configuration.",
+        "hintRemoving": "The stored key will be removed when you save.",
+        "hintStored": "A key is stored in encrypted form. Leave empty to keep it – <remove>remove key</remove>",
+        "hintEnvironment": "The key currently comes from the server configuration (environment variable or configuration file). A key entered here takes precedence.",
+        "hintPreset": "A key for this provider is preset in the server configuration. Leave empty to use it.",
+        "hintDiscardedOnSwitch": "The key stored so far belongs to {{previous}} and will be discarded when you switch.",
+        "hintPresetOtherProvider": "The preset key is only valid for {{previous}}. Please enter a separate one for {{provider}}.",
+        "hintRequired": "Stored in encrypted form and never shown again.",
+        "hintLocal": "Local servers usually do not need a key."
+      },
+      "analysis": {
+        "title": "Analysis",
+        "effort": "Thoroughness",
+        "effortLevels": {
+          "low": "Fast",
+          "medium": "Balanced",
+          "high": "Thorough"
+        },
+        "effortHint": "More thorough means more careful results, but slower and more expensive per document.",
+        "outputLanguage": "Language of the results",
+        "outputLanguageHint": "The AI writes the title, summary and tags in this language.",
+        "ocr": "Text recognition for scans",
+        "ocrHint": "The application has the AI transcribe scanned PDFs without a text layer – only then can they be found by full-text search. Each scan takes more time and costs more."
+      },
+      "unanalyzed_one": "{{count, number}} document has not been analyzed by the AI yet.",
+      "unanalyzed_other": "{{count, number}} documents have not been analyzed by the AI yet.",
+      "analyzeNow": "Analyze now",
+      "analysisStarted_one": "{{count, number}} document is now being analyzed.",
+      "analysisStarted_other": "{{count, number}} documents are now being analyzed."
+    },
+    "users": {
+      "title": "Users",
+      "navHint": "Accounts and roles",
+      "intro": "Each person signs in with their own account. Administrators manage the application, users work with the documents.",
+      "add": "Create user",
+      "you": "You",
+      "disabled": "Disabled",
+      "lastLogin": "Last signed in {{when}}",
+      "neverLoggedIn": "Never signed in",
+      "editUser": "Edit {{name}}",
+      "deleteUser": "Delete {{name}}",
+      "saved": "User saved",
+      "created": "User created",
+      "deleted": "User deleted",
+      "delete": {
+        "title": "Delete user?",
+        "text": "The account “{{name}}” will be deleted and signed out immediately. Documents are kept."
+      },
+      "dialog": {
+        "selfNotice": "This is your own account. After saving you will have to sign in again.",
+        "passwordKeepHint": "Leave empty to keep the current password. Otherwise at least 8 characters.",
+        "role": "Role",
+        "roleHints": {
+          "ADMIN": "May do everything – including changing settings, managing users and deleting documents.",
+          "USER": "May view, search and upload documents and edit their details."
+        },
+        "active": "Account active",
+        "activeHint": "Disabled accounts cannot sign in; active sessions end immediately.",
+        "create": "Create"
+      }
+    }
+  }
+}

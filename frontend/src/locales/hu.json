@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "close": "Bezárás",
+    "edit": "Szerkesztés",
+    "delete": "Törlés",
+    "remove": "Eltávolítás",
+    "add": "Hozzáadás",
+    "back": "Vissza",
+    "retry": "Próbáld újra",
+    "loading": "Betöltés",
+    "language": "Nyelv",
+    "testConnection": "Kapcsolat tesztelése",
+    "saveFirst": "Előbb mentsd el",
+    "username": "Felhasználónév",
+    "usernameHint": "3–50 karakter: betűk, számjegyek, pont, kötőjel, aláhúzásjel, @",
+    "password": "Jelszó",
+    "newPassword": "Új jelszó",
+    "passwordHint": "Legalább 8 karakter",
+    "passwordMismatch": "A jelszavak nem egyeznek.",
+    "justNow": "az imént",
+    "documentCount_one": "{{count, number}} dokumentum",
+    "documentCount_other": "{{count, number}} dokumentum",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Felhasználó"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} kB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Nincs kapcsolat a szerverrel",
+    "server": "A szerver hibát jelzett ({{status}}).",
+    "forbidden": "Ehhez nincs jogosultságod.",
+    "unreachable": "A szerver nem érhető el.",
+    "unexpected": "Váratlan hiba.",
+    "languageLoad": "A nyelvet nem sikerült betölteni."
+  },
+  "auth": {
+    "login": {
+      "title": "Üdv újra",
+      "subtitle": "Jelentkezz be a dokumentumaid eléréséhez.",
+      "submit": "Bejelentkezés"
+    },
+    "setup": {
+      "title": "Az AIDocuments beállítása",
+      "subtitle": "Először hozd létre az adminisztrátori fiókot. További felhasználókat később a beállításokban adhatsz hozzá.",
+      "adminAccount": "Adminisztrátori fiók",
+      "repeatPassword": "Jelszó megismétlése",
+      "submit": "Fiók létrehozása és indítás",
+      "features": {
+        "import": "PDF-ek a postafiókból és az importmappából",
+        "ai": "Az MI összefoglalja és címkézi őket",
+        "search": "Teljes szöveges keresés a dokumentumok tartalmában"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Feltöltés",
+    "theme": {
+      "light": "Világos téma",
+      "dark": "Sötét téma"
+    },
+    "search": {
+      "placeholder": "Keresés dokumentumokban, címkékben, tartalomban…",
+      "label": "Dokumentumok keresése",
+      "clear": "Keresés törlése"
+    },
+    "userMenu": {
+      "label": "Felhasználói menü ({{name}})",
+      "aiActive": "Az MI aktív",
+      "aiNotConfigured": "Az MI nincs beállítva",
+      "changePassword": "Jelszó módosítása",
+      "logout": "Kijelentkezés"
+    },
+    "passwordDialog": {
+      "current": "Jelenlegi jelszó",
+      "repeat": "Új jelszó megismétlése",
+      "changed": "Jelszó módosítva"
+    },
+    "dropzone": {
+      "title": "Húzd ide a PDF-eket",
+      "hint": "Egyszerre több fájlt is ide húzhatsz. A rendszer eltárolja, elemzi és címkézi őket."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Csak PDF-fájlok adhatók hozzá.",
+    "uploadingFile": "„{{name}}” feltöltése…",
+    "uploadingFiles_one": "{{count, number}} PDF feltöltése…",
+    "uploadingFiles_other": "{{count, number}} PDF feltöltése…",
+    "created_one": "{{count, number}} dokumentum hozzáadva",
+    "created_other": "{{count, number}} dokumentum hozzáadva",
+    "processingInBackground": "A feldolgozás a háttérben folytatódik.",
+    "duplicates_one": "{{count, number}} már létezik",
+    "duplicates_other": "{{count, number}} már létezik",
+    "rejected_one": "{{count, number}} fájl nem érvényes PDF",
+    "rejected_other": "{{count, number}} fájl nem érvényes PDF",
+    "onlyDuplicates_one": "Ez a dokumentum már létezik.",
+    "onlyDuplicates_other": "Ezek a dokumentumok már léteznek.",
+    "noneValid": "Egyik fájl sem érvényes PDF.",
+    "failed": "A feltöltés nem sikerült"
+  },
+  "documents": {
+    "status": {
+      "pending": "Várakozik",
+      "processing": "Elemzés alatt",
+      "failed": "Hiba",
+      "textOnly": "MI nélkül"
+    },
+    "ocrBadge": "Szövegfelismerés",
+    "aiNotice": {
+      "text": "Az MI még nincs beállítva. Az új dokumentumok a szövegük alapján kereshetők, de nem készül róluk összefoglaló, és címkéket sem kapnak.",
+      "action": "Beállítás most"
+    },
+    "searchResults_one": "<count>{{count, number}} találat</count> <query>erre: „{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} találat</count> <query>erre: „{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} folyamatban",
+      "inProgressHint": "MI-elemzésre várnak, vagy éppen elemzés alatt állnak",
+      "remaining": "kb. {{duration}} van hátra",
+      "remainingLessThan": "kevesebb mint {{duration}} van hátra",
+      "finishHint": "Várható befejezés: {{time}} – a legutóbb feldolgozott dokumentumok üteme alapján becsülve"
+    },
+    "sort": {
+      "label": "Rendezés",
+      "relevance": "Legjobb találatok",
+      "newest": "Legújabbak elöl",
+      "date": "Dokumentum dátuma szerint"
+    },
+    "view": {
+      "grid": "Rácsnézet",
+      "list": "Listanézet"
+    },
+    "pageSize": {
+      "label": "Megjelenített dokumentumok száma",
+      "all": "Összes"
+    },
+    "filters": {
+      "title": "Szűrők",
+      "titleWithCount": "Szűrők ({{active, number}})",
+      "apply": "Megjelenítés",
+      "hint": "Amint elkészül a dokumentumok elemzése, itt jelennek meg szűrőként a dokumentumtípusok, a címkék és a feladók.",
+      "dateFrom": "ettől",
+      "dateTo": "eddig",
+      "status": "Állapot",
+      "failed": "Sikertelen",
+      "showAll": "Összes megjelenítése",
+      "showLess": "Kevesebb megjelenítése",
+      "activeFrom": "ettől: {{date}}",
+      "activeTo": "eddig: {{date}}",
+      "removeOne": "„{{label}}” szűrő eltávolítása",
+      "removeAll": "Összes szűrő eltávolítása",
+      "clear": "Szűrők eltávolítása"
+    },
+    "empty": {
+      "libraryTitle": "Még nincsenek dokumentumok",
+      "libraryHint": "Egyszerűen húzd a PDF-fájlokat ebbe az ablakba, vagy használd a „Feltöltés” gombot.",
+      "libraryHintAdmin": "Egyszerűen húzd a PDF-fájlokat ebbe az ablakba, vagy használd a „Feltöltés” gombot. A beállításokban megadhatsz egy postafiókot vagy egy importmappát, ahonnan az új PDF-ek automatikusan bekerülnek.",
+      "noResultsTitle": "Nincs találat",
+      "noResultsSearch": "Egyetlen dokumentum sem felel meg ennek a keresésnek. A kereső szórészleteket is megtalál – próbálkozz rövidebb kifejezéssel vagy kevesebb szóval.",
+      "noResultsFilters": "Egyetlen dokumentum sem felel meg a kiválasztott szűrőknek."
+    },
+    "loadingAll_one": "{{loaded, number}} / {{count, number}} dokumentum betöltve…",
+    "loadingAll_other": "{{loaded, number}} / {{count, number}} dokumentum betöltve…",
+    "loadMore": "Továbbiak betöltése ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Vissza az áttekintéshez",
+    "download": "Letöltés",
+    "reprocess": "Újraelemzés",
+    "reprocessHint": "A PDF újbóli beolvasása és elemeztetése az MI-vel",
+    "reprocessStarted": "A dokumentum újraelemzése folyamatban van.",
+    "deleted": "Dokumentum törölve",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Megnyitás új lapon",
+    "processingNotice": "A dokumentum feldolgozása folyamatban van. Az összefoglaló és a címkék itt jelennek meg, amint az elemzés elkészült.",
+    "textOnlyNotice": "MI nélkül indexelve: a dokumentum a szövege alapján kereshető, de nincs összefoglalója, és nincsenek automatikus címkéi.",
+    "tabs": {
+      "overview": "Áttekintés",
+      "text": "Teljes szöveg"
+    },
+    "fields": {
+      "title": "Cím",
+      "category": "Dokumentumtípus",
+      "documentDate": "Dokumentum dátuma",
+      "correspondent": "Feladó",
+      "tags": "Címkék",
+      "summary": "Összefoglaló"
+    },
+    "tags": {
+      "allWith": "Minden „{{tag}}” címkéjű dokumentum",
+      "none": "Nincsenek címkék. <add>Hozzáadás</add>",
+      "inputHint": "Megerősítés Enterrel vagy vesszővel. A javaslatok a már használt címkék.",
+      "inputPlaceholder": "Címke megadása…",
+      "remove": "„{{tag}}” címke eltávolítása"
+    },
+    "keyFacts": "Kulcsadatok",
+    "details": {
+      "title": "Részletek",
+      "file": "Fájl",
+      "size": "Méret",
+      "pageCount_one": "{{count, number}} oldal",
+      "pageCount_other": "{{count, number}} oldal",
+      "language": "Nyelv",
+      "source": "Forrás",
+      "mailSubject": "Tárgy",
+      "mailFrom": "Feladó",
+      "mailReceived": "Érkezett",
+      "added": "Hozzáadva",
+      "text": "Szöveg"
+    },
+    "source": {
+      "MAIL": "Postafiók",
+      "FOLDER": "Importmappa",
+      "UPLOAD": "Feltöltve"
+    },
+    "noText": "Ehhez a dokumentumhoz nincs szöveg – valószínűleg szövegréteg nélküli szkennelt dokumentum. Ha az MI be van állítva, és a szövegfelismerés be van kapcsolva, a tartalom átírása az elemzés során megtörténik.",
+    "edit": {
+      "title": "Dokumentum szerkesztése",
+      "saved": "Módosítások mentve"
+    },
+    "delete": {
+      "title": "Törlöd a dokumentumot?",
+      "text": "„{{title}}” a PDF-fájllal, a teljes szöveggel és a címkékkel együtt törlődik. Ez nem vonható vissza.",
+      "confirm": "Végleges törlés"
+    }
+  },
+  "settings": {
+    "title": "Beállítások",
+    "mailboxes": {
+      "title": "Postafiókok",
+      "navHint": "IMAP-szerverek, amelyekről a rendszer PDF-mellékleteket importál",
+      "intro": "Ezekből az IMAP-postafiókokból a rendszer automatikusan importálja a PDF-mellékleteket. A postafiókokat csak olvassa – az e-mailek változatlanok és olvasatlanok maradnak.",
+      "add": "Postafiók hozzáadása",
+      "emptyTitle": "Még nincs beállított postafiók",
+      "emptyText": "Add meg egy IMAP-postafiók hozzáférési adatait – például azét a postafiókét, amelyre a szkennered a dokumentumokat küldi.",
+      "paused": "Szüneteltetve",
+      "syncNow": "Ellenőrzés most",
+      "syncing": "Postafiók ellenőrzése…",
+      "neverSynced": "Még nem volt ellenőrizve.",
+      "saved": "Postafiók mentve",
+      "added": "Postafiók hozzáadva",
+      "firstSyncRunning": "Az első ellenőrzés már folyamatban van.",
+      "removed": "Postafiók eltávolítva",
+      "delete": {
+        "title": "Eltávolítod a postafiókot?",
+        "text": "„{{name}}” ellenőrzése megszűnik. A már importált dokumentumok megmaradnak."
+      },
+      "dialog": {
+        "editTitle": "Postafiók szerkesztése",
+        "description": "A hozzáférési adatokat az e-mail-szolgáltatódtól kapod meg. A jelszót titkosítva tároljuk.",
+        "name": "Név",
+        "nameHint": "Tetszőleges, pl. „Szkenner” vagy „Számlák”",
+        "namePlaceholder": "Szkenner",
+        "host": "IMAP-szerver",
+        "port": "Port",
+        "security": "Titkosítás",
+        "securityNone": "Nincs",
+        "securityNoneWarning": "Titkosítás nélkül a felhasználónév és a jelszó egyszerű szövegként továbbítódik.",
+        "passwordKeepHint": "Hagyd üresen a tárolt jelszó megtartásához",
+        "folder": "Mappa",
+        "folderHint": "Általában {{folder}} (a beérkezett üzenetek mappája)",
+        "since": "Csak az ettől a naptól érkezett e-mailek",
+        "sinceHint": "Nem kötelező – a régebbi e-mailek kimaradnak",
+        "enabled": "Automatikus ellenőrzés",
+        "enabledHint": "A rendszer a beállított időközönként új PDF-eket keres a postafiókban."
+      }
+    },
+    "import": {
+      "title": "Ütemezés és importmappa",
+      "navHint": "Ellenőrzési időköz és figyelt mappa",
+      "intro": "Azt határozza meg, milyen gyakran keres az alkalmazás új PDF-fájlokat – a postafiókokban és az importmappában.",
+      "saved": "Beállítások mentve",
+      "interval": {
+        "title": "Ellenőrzési időköz",
+        "text": "Az alkalmazás ilyen gyakran keres új PDF-eket az összes postafiókban és az importmappában.",
+        "label": "… percenként",
+        "nextRun": "Következő automatikus ellenőrzés: {{when}}."
+      },
+      "folder": {
+        "title": "Importmappa",
+        "text": "Egy mappa a szerveren, amelyet a rendszer új PDF-fájlok után figyel – például egy hálózati szkenner célmappája. Az almappákat is átvizsgálja.",
+        "enable": "Importmappa figyelése",
+        "path": "Elérési út a szerveren",
+        "pathHint": "Abszolút elérési út. Docker-konténerben ez a csatolt mappa, általában {{path}}.",
+        "afterImport": "Importálás után",
+        "keep": "A fájl a helyén marad",
+        "move": "Áthelyezés ide: „{{folder}}”",
+        "keepHint": "A fájlok változatlanok maradnak. Az alkalmazás megjegyzi, mit importált már.",
+        "moveHint": "Az importált fájlok a(z) „{{folder}}” almappába kerülnek – így az importmappa rendezett marad.",
+        "scanning": "Mappa ellenőrzése…",
+        "neverScanned": "Még nem volt ellenőrizve.",
+        "scanNow": "Ellenőrzés most",
+        "scanStarted": "Az importmappa ellenőrzése folyamatban van."
+      }
+    },
+    "ai": {
+      "title": "MI",
+      "navHint": "LLM-szerver, modell és szövegfelismerés",
+      "intro": "A mesterséges intelligencia (MI) minden új PDF-et elolvas, összefoglal, dokumentumtípust és címkéket rendel hozzá, és kigyűjti a kulcsadatokat, például az összegeket vagy a határidőket.",
+      "configured": "Beállítva",
+      "notConfigured": "Nincs beállítva",
+      "saved": "MI-beállítások mentve",
+      "server": {
+        "title": "LLM-szerver",
+        "provider": "Szolgáltató",
+        "baseUrl": "Szerver címe",
+        "model": "Modell",
+        "modelPlaceholder": "Modellazonosító",
+        "compatibilityMode": "Kompatibilitási mód helyi modellekhez",
+        "compatibilityModeHint": "Olyan szerverekhez, amelyek az Anthropic interfészét használják ugyan, de nem támogatják sem a PDF-bemenetet, sem a strukturált kimeneteket: a dokumentum szövegként, szkennelt dokumentumok esetén pedig oldalképekként kerül a modellhez. A Claude API használatakor hagyd kikapcsolva.",
+        "testIncomplete": "A beállítások még hiányosak"
+      },
+      "privacy": {
+        "title": "{{provider}} használata esetén a dokumentumaid elhagyják ezt a számítógépet",
+        "text": "Az elemzéshez minden PDF tartalma az interneten keresztül a szolgáltató ({{provider}}) szervereire kerül, és ott dolgozzák fel – beleértve a számlákat, a szerződéseket, az orvosi leleteket és a hivatalos leveleket is.",
+        "recommendation": "<emphasis>Javaslat:</emphasis> használj helyi MI-t. Az <lmStudio>LM Studio</lmStudio> vagy egy saját hálózaton futó <compatible>OpenAI-kompatibilis szerver</compatible> használatával minden tartalom nálad marad."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "Az Anthropic Claude API-ja. Csak akkor módosítsd, ha saját átjárót használsz előtte.",
+          "modelHint": "A Claude Opus 5.5 az ajánlott választás; a Sonnet és a Haiku gyorsabb és olcsóbb."
+        },
+        "OPENAI": {
+          "urlHint": "Az OpenAI API-ja. Csak akkor módosítsd, ha saját átjárót használsz előtte.",
+          "modelHint": "A modellazonosító, ahogyan az OpenAI nevezi. A kulcs mentése után itt megjelennek az elérhető modellek."
+        },
+        "MOONSHOT": {
+          "urlHint": "A Moonshot AI (Kimi) API-ja. A kínai platform fiókjaihoz: {{url}}",
+          "modelHint": "A modellazonosító, ahogyan a Moonshot nevezi. A kulcs mentése után itt megjelennek az elérhető modellek."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Az LM Studio helyi szervere (az LM Studióban a „Developer” részben indítható el). Ha az AIDocuments Dockerben fut: {{url}}",
+          "modelHint": "Az LM Studióban betöltött modell azonosítója. A szkennelt dokumentumokhoz képbemenetet, az elemzéshez eszközhasználatot (Tool Use) támogató modell kell."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Egy OpenAI-interfészt használó szerver címe – általában /v1 a vége, pl. {{url}}",
+          "modelHint": "A modellazonosító, ahogyan a szerver nevezi. Mentés után itt megjelennek a szerver által kínált modellek."
+        }
+      },
+      "apiKey": {
+        "label": "API-kulcs",
+        "labelOptional": "API-kulcs (nem kötelező)",
+        "placeholderStored": "{{mask}} (tárolva)",
+        "placeholderPreset": "{{mask}} (előre beállítva)",
+        "placeholderNotNeeded": "nem szükséges",
+        "placeholderIfRequired": "csak ha a szerver megköveteli",
+        "hintShown": "A szerver konfigurációjában előre beállítva.",
+        "hintRemoving": "A tárolt kulcs mentéskor törlődik.",
+        "hintStored": "Van titkosítva tárolt kulcs. Hagyd üresen a megtartásához – <remove>kulcs eltávolítása</remove>",
+        "hintEnvironment": "A kulcs jelenleg a szerver konfigurációjából származik (környezeti változóból vagy konfigurációs fájlból). Az itt megadott kulcs elsőbbséget élvez.",
+        "hintPreset": "Ehhez a szolgáltatóhoz a szerver konfigurációjában előre be van állítva egy kulcs. Hagyd üresen a használatához.",
+        "hintDiscardedOnSwitch": "Az eddig tárolt kulcs a korábbi szolgáltatóhoz ({{previous}}) tartozik, és váltáskor törlődik.",
+        "hintPresetOtherProvider": "Az előre beállított kulcs csak ennél a szolgáltatónál érvényes: {{previous}}. A kiválasztott szolgáltatóhoz ({{provider}}) adj meg külön kulcsot.",
+        "hintRequired": "Titkosítva tároljuk, és soha többé nem jelenik meg.",
+        "hintLocal": "A helyi szervereknek általában nincs szükségük kulcsra."
+      },
+      "analysis": {
+        "title": "Elemzés",
+        "effort": "Alaposság",
+        "effortLevels": {
+          "low": "Gyors",
+          "medium": "Kiegyensúlyozott",
+          "high": "Alapos"
+        },
+        "effortHint": "Az alaposabb elemzés gondosabb eredményt ad, de dokumentumonként lassabb és drágább.",
+        "outputLanguage": "Az eredmények nyelve",
+        "outputLanguageHint": "Az MI ezen a nyelven írja a címet, az összefoglalót és a címkéket.",
+        "ocr": "Szövegfelismerés szkennelt dokumentumokhoz",
+        "ocrHint": "A szövegréteg nélküli szkennelt PDF-eket az alkalmazás az MI-vel íratja át – csak így találja meg őket a teljes szöveges keresés. Minden szkennelt dokumentum több időbe és többe kerül."
+      },
+      "unanalyzed_one": "{{count, number}} dokumentumot még nem elemzett az MI.",
+      "unanalyzed_other": "{{count, number}} dokumentumot még nem elemzett az MI.",
+      "analyzeNow": "Elemzés most",
+      "analysisStarted_one": "{{count, number}} dokumentum elemzése elindult.",
+      "analysisStarted_other": "{{count, number}} dokumentum elemzése elindult."
+    },
+    "users": {
+      "title": "Felhasználók",
+      "navHint": "Fiókok és szerepkörök",
+      "intro": "Mindenki a saját fiókjával jelentkezik be. Az adminisztrátorok az alkalmazást kezelik, a felhasználók a dokumentumokkal dolgoznak.",
+      "add": "Felhasználó létrehozása",
+      "you": "Te",
+      "disabled": "Letiltva",
+      "lastLogin": "Utolsó bejelentkezés: {{when}}",
+      "neverLoggedIn": "Még nem jelentkezett be",
+      "editUser": "{{name}} szerkesztése",
+      "deleteUser": "{{name}} törlése",
+      "saved": "Felhasználó mentve",
+      "created": "Felhasználó létrehozva",
+      "deleted": "Felhasználó törölve",
+      "delete": {
+        "title": "Törlöd a felhasználót?",
+        "text": "„{{name}}” fiókja törlődik, és a rendszer azonnal kijelentkezteti. A dokumentumok megmaradnak."
+      },
+      "dialog": {
+        "selfNotice": "Ez a saját fiókod. Mentés után újra be kell jelentkezned.",
+        "passwordKeepHint": "Hagyd üresen, ha nem szeretnéd módosítani a jelszót. Egyébként legalább 8 karakter.",
+        "role": "Szerepkör",
+        "roleHints": {
+          "ADMIN": "Mindent megtehet – a beállításokat is módosíthatja, felhasználókat kezelhet és dokumentumokat törölhet.",
+          "USER": "Megtekintheti, keresheti és feltöltheti a dokumentumokat, és szerkesztheti az adataikat."
+        },
+        "active": "Aktív fiók",
+        "activeHint": "A letiltott fiókokkal nem lehet bejelentkezni; a futó munkamenetek azonnal véget érnek.",
+        "create": "Létrehozás"
+      }
+    }
+  }
+}

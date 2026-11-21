@@ -9,7 +9,7 @@ public enum LlmProvider {
     /** LM Studio auf demselben Rechner; aus einem Docker-Container heraus: http://host.docker.internal:1234/v1 */
     LM_STUDIO("LM Studio", Protocol.OPENAI, "http://localhost:1234/v1", false, false),
     /** Jeder Server, der die OpenAI-Schnittstelle (Chat Completions) spricht – Adresse frei wählbar. */
-    OPENAI_COMPATIBLE("OpenAI Kompatibel", Protocol.OPENAI, "", false, false);
+    OPENAI_COMPATIBLE(null, Protocol.OPENAI, "", false, false);
 
     /** Die Schnittstelle, über die der Anbieter angesprochen wird. */
     public enum Protocol {
@@ -33,8 +33,14 @@ public enum LlmProvider {
         this.cloud = cloud;
     }
 
+    /** Eigenname des Anbieters; {@code null}, wenn die Bezeichnung zu übersetzen ist (siehe {@link #labelKey()}). */
     public String label() {
         return label;
+    }
+
+    /** Schlüssel der Bezeichnung in messages.properties, sofern der Anbieter keinen Eigennamen hat. */
+    public String labelKey() {
+        return this == OPENAI_COMPATIBLE ? "ai.provider.openaiCompatible" : null;
     }
 
     public Protocol protocol() {
@@ -52,14 +58,5 @@ public enum LlmProvider {
     /** Ein Dienst im Internet: Dokumentinhalte verlassen bei der Analyse den eigenen Rechner. */
     public boolean cloud() {
         return cloud;
-    }
-
-    /** Für die Oberfläche. */
-    public record Info(LlmProvider id, String label, Protocol protocol, String defaultBaseUrl, boolean requiresApiKey,
-                       boolean cloud) {
-    }
-
-    public Info info() {
-        return new Info(this, label, protocol, defaultBaseUrl, requiresApiKey, cloud);
     }
 }

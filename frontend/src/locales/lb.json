@@ -1,0 +1,414 @@
+{
+  "common": {
+    "save": "Späicheren",
+    "cancel": "Ofbriechen",
+    "close": "Zoumaachen",
+    "edit": "Beaarbechten",
+    "delete": "Läschen",
+    "remove": "Ewechhuelen",
+    "add": "Derbäisetzen",
+    "back": "Zréck",
+    "retry": "Nach eemol probéieren",
+    "loading": "Lueden",
+    "language": "Sprooch",
+    "testConnection": "Verbindung testen",
+    "saveFirst": "W.e.g. fir d’éischt späicheren",
+    "username": "Benotzernumm",
+    "usernameHint": "3–50 Zeechen: Buschtawen, Zifferen, Punkt, Bindestréch, Ënnerstréch, @",
+    "password": "Passwuert",
+    "newPassword": "Neit Passwuert",
+    "passwordHint": "Op d’mannst 8 Zeechen",
+    "passwordMismatch": "D’Passwierder stëmmen net iwwereneen.",
+    "justNow": "grad elo",
+    "documentCount_one": "{{count, number}} Dokument",
+    "documentCount_other": "{{count, number}} Dokumenter",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Benotzer"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Keng Verbindung mam Server",
+    "server": "De Server mellt e Feeler ({{status}}).",
+    "forbidden": "Dofir feelt Iech d’Berechtegung.",
+    "unreachable": "De Server ass net erreechbar.",
+    "unexpected": "Onerwaarte Feeler.",
+    "languageLoad": "D’Sprooch konnt net geluede ginn."
+  },
+  "auth": {
+    "login": {
+      "title": "Wëllkomm zréck",
+      "subtitle": "Mellt Iech un, fir op Är Dokumenter zouzegräifen.",
+      "submit": "Umellen"
+    },
+    "setup": {
+      "title": "AIDocuments ariichten",
+      "subtitle": "Leet fir d’éischt den Administrateurskont un. Weider Benotzer kënnt Dir duerno an den Astellungen derbäisetzen.",
+      "adminAccount": "Administrateurskont",
+      "repeatPassword": "Passwuert widderhuelen",
+      "submit": "Kont uleeën a lassleeën",
+      "features": {
+        "import": "PDFen aus Mailbox an Importdossier",
+        "ai": "KI faasst zesummen a vergëtt Stéchwierder",
+        "search": "Volltextsich bis an d’Dokument"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Eroplueden",
+    "theme": {
+      "light": "Hellen Design",
+      "dark": "Däischteren Design"
+    },
+    "search": {
+      "placeholder": "Dokumenter, Stéchwierder, Inhalter duerchsichen …",
+      "label": "Dokumenter duerchsichen",
+      "clear": "Sich läschen"
+    },
+    "userMenu": {
+      "label": "Benotzermenü ({{name}})",
+      "aiActive": "KI aktiv",
+      "aiNotConfigured": "KI net ageriicht",
+      "changePassword": "Passwuert änneren",
+      "logout": "Ofmellen"
+    },
+    "passwordDialog": {
+      "current": "Aktuellt Passwuert",
+      "repeat": "Neit Passwuert widderhuelen",
+      "changed": "Passwuert geännert"
+    },
+    "dropzone": {
+      "title": "PDFen hei ofleeën",
+      "hint": "Dir kënnt e puer Fichieren op eemol ofleeën. Si gi gespäichert, analyséiert a mat Stéchwierder versinn."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Et kënnen nëmme PDF-Fichieren derbäigesat ginn.",
+    "uploadingFile": "„{{name}}“ gëtt eropgelueden …",
+    "uploadingFiles_one": "{{count, number}} PDF gëtt eropgelueden …",
+    "uploadingFiles_other": "{{count, number}} PDFe ginn eropgelueden …",
+    "created_one": "{{count, number}} Dokument derbäigesat",
+    "created_other": "{{count, number}} Dokumenter derbäigesat",
+    "processingInBackground": "D’Veraarbechtung leeft am Hannergrond weider.",
+    "duplicates_one": "{{count, number}} existéiert schonn",
+    "duplicates_other": "{{count, number}} existéiere schonn",
+    "rejected_one": "{{count, number}} Fichier ass kee gültege PDF",
+    "rejected_other": "{{count, number}} Fichiere si keng gülteg PDFen",
+    "onlyDuplicates_one": "Dëst Dokument existéiert schonn.",
+    "onlyDuplicates_other": "Dës Dokumenter existéiere schonn.",
+    "noneValid": "Kee vun de Fichieren ass e gültege PDF.",
+    "failed": "Feeler beim Eroplueden"
+  },
+  "documents": {
+    "status": {
+      "pending": "Waart",
+      "processing": "Gëtt analyséiert",
+      "failed": "Feeler",
+      "textOnly": "Ouni KI"
+    },
+    "ocrBadge": "Texterkennung",
+    "aiNotice": {
+      "text": "D’KI ass nach net ageriicht. Nei Dokumenter kënnen iwwer hiren Text duerchsicht ginn, mee si ginn net zesummegefaasst an net mat Stéchwierder versinn.",
+      "action": "Elo ariichten"
+    },
+    "searchResults_one": "<count>{{count, number}} Resultat</count> <query>fir „{{query}}“</query>",
+    "searchResults_other": "<count>{{count, number}} Resultater</count> <query>fir „{{query}}“</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} an der Maach",
+      "inProgressHint": "Waarden op d’KI-Analys oder gi grad analyséiert",
+      "remaining": "nach ca. {{duration}}",
+      "remainingLessThan": "nach manner wéi {{duration}}",
+      "finishHint": "Viraussiichtlech fäerdeg: {{time}} Auer – geschat op Basis vum Tempo vun de leschte veraarbechten Dokumenter"
+    },
+    "sort": {
+      "label": "Sortéierung",
+      "relevance": "Bescht Resultater",
+      "newest": "Neiste fir d’éischt",
+      "date": "No Dokumentdatum"
+    },
+    "view": {
+      "grid": "Kachelusiicht",
+      "list": "Lëschtenusiicht"
+    },
+    "pageSize": {
+      "label": "Unzuel ugewisen Dokumenter",
+      "all": "All"
+    },
+    "filters": {
+      "title": "Filteren",
+      "titleWithCount": "Filteren ({{active, number}})",
+      "apply": "Uweisen",
+      "hint": "Soubal Dokumenter analyséiert sinn, erschéngen hei Dokumenttypen, Stéchwierder an Absender als Filteren.",
+      "dateFrom": "vun",
+      "dateTo": "bis",
+      "status": "Status",
+      "failed": "Feelgeschloen",
+      "showAll": "All uweisen",
+      "showLess": "Manner uweisen",
+      "activeFrom": "vum {{date}} un",
+      "activeTo": "bis {{date}}",
+      "removeOne": "Filter „{{label}}“ ewechhuelen",
+      "removeAll": "All Filteren ewechhuelen",
+      "clear": "Filteren ewechhuelen"
+    },
+    "empty": {
+      "libraryTitle": "Nach keng Dokumenter",
+      "libraryHint": "Zitt PDF-Fichieren einfach an dës Fënster oder benotzt „Eroplueden“.",
+      "libraryHintAdmin": "Zitt PDF-Fichieren einfach an dës Fënster oder benotzt „Eroplueden“. An den Astellunge kënnt Dir eng Mailbox oder en Importdossier ariichten, aus deem nei PDFen automatesch importéiert ginn.",
+      "noResultsTitle": "Näischt fonnt",
+      "noResultsSearch": "Keen Dokument passt bei dës Sich. D’Sich fënnt och Deeler vu Wierder – probéiert et mat engem méi kuerze Begrëff oder manner Wierder.",
+      "noResultsFilters": "Keen Dokument passt bei déi gewielte Filteren."
+    },
+    "loadingAll_one": "{{loaded, number}} vun {{count, number}} Dokument gelueden …",
+    "loadingAll_other": "{{loaded, number}} vun {{count, number}} Dokumenter gelueden …",
+    "loadMore": "Méi lueden ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Zréck bei d’Iwwersiicht",
+    "download": "Eroflueden",
+    "reprocess": "Nei analyséieren",
+    "reprocessHint": "PDF nei ausliesen a vun der KI analyséiere loossen",
+    "reprocessStarted": "D’Dokument gëtt nei analyséiert.",
+    "deleted": "Dokument geläscht",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "An engem neien Tab opmaachen",
+    "processingNotice": "D’Dokument gëtt grad veraarbecht. D’Zesummefaassung an d’Stéchwierder erschéngen hei, soubal d’Analys fäerdeg ass.",
+    "textOnlyNotice": "Ouni KI indexéiert: D’Dokument kann iwwer säin Text duerchsicht ginn, huet awer keng Zesummefaassung a keng automatesch Stéchwierder.",
+    "tabs": {
+      "overview": "Iwwersiicht",
+      "text": "Volltext"
+    },
+    "fields": {
+      "title": "Titel",
+      "category": "Dokumenttyp",
+      "documentDate": "Dokumentdatum",
+      "correspondent": "Absender",
+      "tags": "Stéchwierder",
+      "summary": "Zesummefaassung"
+    },
+    "tags": {
+      "allWith": "All Dokumenter mat „{{tag}}“",
+      "none": "Keng Stéchwierder. <add>Derbäisetzen</add>",
+      "inputHint": "Mat Enter oder Komma bestätegen. D’Virschléi si Stéchwierder, déi scho benotzt ginn.",
+      "inputPlaceholder": "Stéchwuert aginn …",
+      "remove": "Stéchwuert „{{tag}}“ ewechhuelen"
+    },
+    "keyFacts": "Kärdaten",
+    "details": {
+      "title": "Detailer",
+      "file": "Fichier",
+      "size": "Ëmfang",
+      "pageCount_one": "{{count, number}} Säit",
+      "pageCount_other": "{{count, number}} Säiten",
+      "language": "Sprooch",
+      "source": "Hierkonft",
+      "mailSubject": "Betreff",
+      "mailFrom": "Vun",
+      "mailReceived": "Empfaangen",
+      "added": "Derbäigesat",
+      "text": "Text"
+    },
+    "source": {
+      "MAIL": "Mailbox",
+      "FOLDER": "Importdossier",
+      "UPLOAD": "Eropgelueden"
+    },
+    "noText": "Fir dëst Dokument gëtt et keen Text – wahrscheinlech ass et e Scan ouni Textschicht. Wann d’KI ageriicht an d’Texterkennung aktivéiert ass, gëtt den Inhalt bei der Analys transkribéiert.",
+    "edit": {
+      "title": "Dokument beaarbechten",
+      "saved": "Ännerunge gespäichert"
+    },
+    "delete": {
+      "title": "Dokument läschen?",
+      "text": "„{{title}}“ gëtt zesumme mam PDF-Fichier, dem Volltext an de Stéchwierder geläscht. Dat kann net réckgängeg gemaach ginn.",
+      "confirm": "Definitiv läschen"
+    }
+  },
+  "settings": {
+    "title": "Astellungen",
+    "mailboxes": {
+      "title": "Mailboxen",
+      "navHint": "IMAP-Serveren, aus deene PDF-Unhäng importéiert ginn",
+      "intro": "Aus dësen IMAP-Mailboxe gi PDF-Unhäng automatesch importéiert. D’Mailboxe ginn nëmme gelies – E-Maile bleiwen onverännert an ongelies.",
+      "add": "Mailbox derbäisetzen",
+      "emptyTitle": "Nach keng Mailbox ageriicht",
+      "emptyText": "Gitt d’Zougangsdate vun enger IMAP-Mailbox an – zum Beispill déi Mailbox, un déi Äre Scanner Dokumenter schéckt.",
+      "paused": "Pauséiert",
+      "syncNow": "Elo ofruffen",
+      "syncing": "Mailbox gëtt ofgeruff …",
+      "neverSynced": "Nach net ofgeruff.",
+      "saved": "Mailbox gespäichert",
+      "added": "Mailbox derbäigesat",
+      "firstSyncRunning": "Den éischten Ofruff leeft schonn.",
+      "removed": "Mailbox ewechgeholl",
+      "delete": {
+        "title": "Mailbox ewechhuelen?",
+        "text": "„{{name}}“ gëtt net méi ofgeruff. Dokumenter, déi schonn importéiert goufen, bleiwen erhalen."
+      },
+      "dialog": {
+        "editTitle": "Mailbox beaarbechten",
+        "description": "D’Zougangsdate kritt Dir vun Ärem E-Mail-Ubidder. D’Passwuert gëtt verschlësselt gespäichert.",
+        "name": "Numm",
+        "nameHint": "Fräi wielbar, z. B. „Scanner“ oder „Rechnungen“",
+        "namePlaceholder": "Scanner",
+        "host": "IMAP-Server",
+        "port": "Port",
+        "security": "Verschlësselung",
+        "securityNone": "Keng",
+        "securityNoneWarning": "Ouni Verschlësselung gi Benotzernumm a Passwuert am Kloertext iwwerdroen.",
+        "passwordKeepHint": "Eidel loossen, fir dat gespäichert Passwuert ze behalen",
+        "folder": "Dossier",
+        "folderHint": "Meeschtens {{folder}} (Posteingang)",
+        "since": "Nëmmen E-Mailen ab",
+        "sinceHint": "Optional – méi al E-Maile ginn iwwersprongen",
+        "enabled": "Automatesch ofruffen",
+        "enabledHint": "D’Mailbox gëtt am agestallten Intervall op nei PDFe gepréift."
+      }
+    },
+    "import": {
+      "title": "Ofruff & Importdossier",
+      "navHint": "Ofrufintervall an iwwerwaachten Dossier",
+      "intro": "Leet fest, wéi dacks no neie PDF-Fichiere gesicht gëtt – an de Mailboxen an am Importdossier.",
+      "saved": "Astellunge gespäichert",
+      "interval": {
+        "title": "Ofrufintervall",
+        "text": "Sou dacks préift d’Applikatioun all Mailboxen an den Importdossier op nei PDFen.",
+        "label": "All … Minutten",
+        "nextRun": "Nächsten automateschen Ofruff {{when}}."
+      },
+      "folder": {
+        "title": "Importdossier",
+        "text": "En Dossier um Server, deen op nei PDF-Fichieren iwwerwaacht gëtt – zum Beispill d’Zil vun engem Netzwierkscanner. Ënnerdossiere ginn och duerchsicht.",
+        "enable": "Importdossier iwwerwaachen",
+        "path": "Pad um Server",
+        "pathHint": "Absolutte Pad. Am Docker-Container ass dat den agebonnenen Dossier, normalerweis {{path}}.",
+        "afterImport": "Nom Import",
+        "keep": "Fichier leie loossen",
+        "move": "An „{{folder}}“ verréckelen",
+        "keepHint": "D’Fichiere bleiwen onverännert. D’Applikatioun verhält sech, wat se schonn importéiert huet.",
+        "moveHint": "Importéiert Fichiere ginn an den Ënnerdossier „{{folder}}“ verréckelt – sou bleift den Importdossier opgeraumt.",
+        "scanning": "Dossier gëtt gepréift …",
+        "neverScanned": "Nach net gepréift.",
+        "scanNow": "Elo préiwen",
+        "scanStarted": "Den Importdossier gëtt gepréift."
+      }
+    },
+    "ai": {
+      "title": "KI",
+      "navHint": "LLM-Server, Modell an Texterkennung",
+      "intro": "D’KI liest all neie PDF, faasst en zesummen, vergëtt Dokumenttyp a Stéchwierder an zitt Kärdate wéi Beträg oder Fristen eraus.",
+      "configured": "Ageriicht",
+      "notConfigured": "Net ageriicht",
+      "saved": "KI-Astellunge gespäichert",
+      "server": {
+        "title": "LLM-Server",
+        "provider": "Ubidder",
+        "baseUrl": "Serveradress",
+        "model": "Modell",
+        "modelPlaceholder": "Modell-ID",
+        "compatibilityMode": "Kompatibilitéitsmodus fir lokal Modeller",
+        "compatibilityModeHint": "Fir Serveren, déi zwar d’Anthropic-Schnëttstell schwätzen, awer keng PDF-Agab a keng strukturéiert Ausgabe kennen: D’Dokument geet als Text oder, bei Scannen, als Säitebiller un de Modell. Bei der Claude API ausgeschalt loossen.",
+        "testIncomplete": "D’Angabe sinn nach net komplett"
+      },
+      "privacy": {
+        "title": "Mat {{provider}} verloossen Är Dokumenter dëse Computer",
+        "text": "Fir d’Analys gëtt den Inhalt vun all PDF un d’Servere vun {{provider}} am Internet iwwerdroen an do veraarbecht – och Rechnungen, Kontrakter, Dokteschbréiwer a Post vun Administratiounen.",
+        "recommendation": "<emphasis>Recommandatioun:</emphasis> eng lokal KI benotzen. Mat <lmStudio>LM Studio</lmStudio> oder engem <compatible>OpenAI-kompatibele Server</compatible> am eegenen Netz bleiwen all Inhalter bei Iech."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "D’Claude API vun Anthropic. Nëmmen änneren, wann en eegene Gateway dovirsteet.",
+          "modelHint": "Claude Opus 5.5 ass déi recommandéiert Wiel; Sonnet an Haiku si méi séier a méi bëlleg."
+        },
+        "OPENAI": {
+          "urlHint": "D’API vun OpenAI. Nëmmen änneren, wann en eegene Gateway dovirsteet.",
+          "modelHint": "D’Modell-ID, sou wéi OpenAI se nennt. Nom Späichere vum Schlëssel erschéngen hei déi verfügbar Modeller."
+        },
+        "MOONSHOT": {
+          "urlHint": "D’API vu Moonshot AI (Kimi). Fir Konte vun der chinesescher Plattform: {{url}}",
+          "modelHint": "D’Modell-ID, sou wéi Moonshot se nennt. Nom Späichere vum Schlëssel erschéngen hei déi verfügbar Modeller."
+        },
+        "LM_STUDIO": {
+          "urlHint": "De lokale Server vun LM Studio (an LM Studio ënner „Developer“ starten). Wann AIDocuments an Docker leeft: {{url}}",
+          "modelHint": "D’ID vum Modell, deen an LM Studio geluede gouf. Fir Scanne brauch et e Modell mat Bildagab, fir d’Analys ee mat Tool Use."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Adress vun engem Server, deen d’OpenAI-Schnëttstell schwätzt – normalerweis mat /v1 um Enn, z. B. {{url}}",
+          "modelHint": "D’Modell-ID, sou wéi de Server se nennt. Nom Späicheren erschéngen hei d’Modeller, déi en ubitt."
+        }
+      },
+      "apiKey": {
+        "label": "API-Schlëssel",
+        "labelOptional": "API-Schlëssel (optional)",
+        "placeholderStored": "{{mask}} (gespäichert)",
+        "placeholderPreset": "{{mask}} (virdefinéiert)",
+        "placeholderNotNeeded": "net néideg",
+        "placeholderIfRequired": "nëmme wann de Server ee verlaangt",
+        "hintShown": "Aus der Serverkonfiguratioun virdefinéiert.",
+        "hintRemoving": "De gespäicherte Schlëssel gëtt beim Späicheren ewechgeholl.",
+        "hintStored": "E Schlëssel ass verschlësselt gespäichert. Eidel loossen, fir en ze behalen – <remove>Schlëssel ewechhuelen</remove>",
+        "hintEnvironment": "De Schlëssel kënnt de Moment aus der Serverkonfiguratioun (Ëmgéigendsvariabel oder Konfiguratiounsfichier). E Schlëssel, deen hei agedroe gëtt, huet Virrang.",
+        "hintPreset": "Fir dësen Ubidder ass an der Serverkonfiguratioun e Schlëssel virdefinéiert. Eidel loossen, fir en ze benotzen.",
+        "hintDiscardedOnSwitch": "De bis elo gespäicherte Schlëssel gehéiert zu {{previous}} a gëtt beim Wiessel verworf.",
+        "hintPresetOtherProvider": "De virdefinéierte Schlëssel gëllt nëmme fir {{previous}}. Gitt w.e.g. fir {{provider}} en eegenen an.",
+        "hintRequired": "Gëtt verschlësselt gespäichert an ni méi ugewisen.",
+        "hintLocal": "Lokal Servere brauche meeschtens kee Schlëssel."
+      },
+      "analysis": {
+        "title": "Analys",
+        "effort": "Grëndlechkeet",
+        "effortLevels": {
+          "low": "Séier",
+          "medium": "Ausgeglach",
+          "high": "Grëndlech"
+        },
+        "effortHint": "Méi grëndlech heescht: méi suergfälteg Resultater, awer méi lues a méi deier pro Dokument.",
+        "outputLanguage": "Sprooch vun de Resultater",
+        "outputLanguageHint": "An dëser Sprooch schreift d’KI Titel, Zesummefaassung a Stéchwierder.",
+        "ocr": "Texterkennung fir Scannen",
+        "ocrHint": "Gescannte PDFen ouni Textschicht léisst d’Applikatioun vun der KI transkribéieren – eréischt doduerch kënne se am Volltext duerchsicht ginn. Brauch pro Scan méi Zäit a kascht méi."
+      },
+      "unanalyzed_one": "{{count, number}} Dokument gouf nach net vun der KI analyséiert.",
+      "unanalyzed_other": "{{count, number}} Dokumenter goufen nach net vun der KI analyséiert.",
+      "analyzeNow": "Elo analyséieren",
+      "analysisStarted_one": "{{count, number}} Dokument gëtt elo analyséiert.",
+      "analysisStarted_other": "{{count, number}} Dokumenter ginn elo analyséiert."
+    },
+    "users": {
+      "title": "Benotzer",
+      "navHint": "Konten a Rollen",
+      "intro": "All Persoun mellt sech mat engem eegene Kont un. Administrateure verwalten d’Applikatioun, Benotzer schaffe mat den Dokumenter.",
+      "add": "Benotzer uleeën",
+      "you": "Dir",
+      "disabled": "Desaktivéiert",
+      "lastLogin": "Fir d’lescht ugemellt {{when}}",
+      "neverLoggedIn": "Nach ni ugemellt",
+      "editUser": "{{name}} beaarbechten",
+      "deleteUser": "{{name}} läschen",
+      "saved": "Benotzer gespäichert",
+      "created": "Benotzer ugeluecht",
+      "deleted": "Benotzer geläscht",
+      "delete": {
+        "title": "Benotzer läschen?",
+        "text": "De Kont „{{name}}“ gëtt geläscht an direkt ofgemellt. Dokumenter bleiwen erhalen."
+      },
+      "dialog": {
+        "selfNotice": "Dat ass Ären eegene Kont. Nom Späichere musst Dir Iech nei umellen.",
+        "passwordKeepHint": "Eidel loossen, fir d’Passwuert net z’änneren. Soss op d’mannst 8 Zeechen.",
+        "role": "Roll",
+        "roleHints": {
+          "ADMIN": "Däerf alles – och Astellungen änneren, Benotzer verwalten an Dokumenter läschen.",
+          "USER": "Däerf Dokumenter ukucken, duerchsichen, eroplueden an hir Angabe beaarbechten."
+        },
+        "active": "Kont aktiv",
+        "activeHint": "Desaktivéiert Konte kënne sech net umellen; lafend Sessiounen halen direkt op.",
+        "create": "Uleeën"
+      }
+    }
+  }
+}

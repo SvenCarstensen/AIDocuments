@@ -1,7 +1,9 @@
 package de.aidocuments.web;
 
+import de.aidocuments.document.Document;
 import de.aidocuments.document.DocumentRepository;
 import de.aidocuments.document.DocumentStatus;
+import de.aidocuments.document.ProcessingEstimate;
 import de.aidocuments.settings.AiSettingsService;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class SystemController {
 
     public record SystemDto(boolean aiEnabled, String aiModel, long documents, long processing, long failed,
-                            long unanalyzed) {
+                            long unanalyzed,
+                            /* geschätzte Sekunden, bis die Warteschlange leer ist; null = (noch) keine Schätzung */
+                            Long estimatedSecondsRemaining) {
     }
 
     private final DocumentRepository documents;
@@ -28,9 +32,14 @@ public class SystemController {
     @GetMapping
     public SystemDto system() {
         AiSettingsService.Effective ai = aiSettings.current();
+        long processing = documents.countByStatusIn(List.of(DocumentStatus.PENDING, DocumentStatus.PROCESSING));
+        Long remaining = processing == 0 ? null : ProcessingEstimate.secondsRemaining(processing,
+                documents.findTop25ByProcessedAtNotNullOrderByProcessedAtDesc().stream()
+                        .map(Document::getProcessedAt).toList());
         return new SystemDto(ai.enabled(), ai.model(), documents.count(),
-                documents.countByStatusIn(List.of(DocumentStatus.PENDING, DocumentStatus.PROCESSING)),
+                processing,
                 documents.countByStatusIn(List.of(DocumentStatus.FAILED)),
-                documents.countByStatusIn(List.of(DocumentStatus.TEXT_ONLY)));
+                documents.countByStatusIn(List.of(DocumentStatus.TEXT_ONLY)),
+                remaining);
     }
 }

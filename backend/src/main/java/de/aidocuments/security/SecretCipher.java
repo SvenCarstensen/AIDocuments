@@ -1,6 +1,8 @@
 package de.aidocuments.security;
 
 import de.aidocuments.config.AppProperties;
+import de.aidocuments.i18n.Localizable;
+import de.aidocuments.i18n.Msg;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
@@ -34,6 +36,22 @@ public class SecretCipher {
         this.key = new SecretKeySpec(loadOrCreateKey(properties.dataRoot().resolve("secret.key")), "AES");
     }
 
+    /** Ver- oder Entschlüsselung gescheitert: fürs Protokoll ein deutscher Satz, für den Anwender ein übersetzbarer. */
+    public static final class SecretException extends IllegalStateException implements Localizable {
+
+        private final Msg msg;
+
+        SecretException(String logMessage, Msg msg, Throwable cause) {
+            super(logMessage, cause);
+            this.msg = msg;
+        }
+
+        @Override
+        public Msg msg() {
+            return msg;
+        }
+    }
+
     public String encrypt(String plain) {
         try {
             byte[] iv = new byte[IV_LENGTH];
@@ -44,7 +62,7 @@ public class SecretCipher {
             ByteBuffer buffer = ByteBuffer.allocate(iv.length + encrypted.length).put(iv).put(encrypted);
             return Base64.getEncoder().encodeToString(buffer.array());
         } catch (GeneralSecurityException e) {
-            throw new IllegalStateException("Verschlüsselung fehlgeschlagen", e);
+            throw new SecretException("Verschlüsselung fehlgeschlagen", Msg.of("error.secret.encryptFailed"), e);
         }
     }
 
@@ -56,8 +74,8 @@ public class SecretCipher {
             byte[] plain = cipher.doFinal(data, IV_LENGTH, data.length - IV_LENGTH);
             return new String(plain, StandardCharsets.UTF_8);
         } catch (GeneralSecurityException | IllegalArgumentException e) {
-            throw new IllegalStateException(
-                    "Gespeichertes Passwort kann nicht entschlüsselt werden (secret.key geändert?)", e);
+            throw new SecretException("Gespeichertes Passwort kann nicht entschlüsselt werden (secret.key geändert?)",
+                    Msg.of("error.secret.decryptFailed"), e);
         }
     }
 

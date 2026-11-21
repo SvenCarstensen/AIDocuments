@@ -1,8 +1,21 @@
-# Vorlage: nach debug.yml kopieren und anpassen. debug.yml wird beim lokalen Start automatisch geladen.
+# Vorlage: nach debug.yml kopieren und anpassen. debug.yml wird beim lokalen Start automatisch geladen,
+# steht nicht im Git und landet nicht im Docker-Image.
 app:
   ai:
+    # Womit die Anwendung startet, solange in der Oberfläche nichts gespeichert ist – und zugleich die
+    # Vorbelegung, wenn dieser Anbieter unter Einstellungen → KI gewählt wird:
     # anthropic | openai | moonshot | lm-studio | openai-compatible
     provider: openai-compatible
     base-url: http://<llm-server>:8000/v1
     api-key: <api-schlüssel, falls der Server einen verlangt>
     model: <modell-id>
+
+    # Den vorbelegten Schlüssel im Formular anzeigen. Nur für die Entwicklungsumgebung: Ohne diese Zeile
+    # verlässt ein konfigurierter Schlüssel den Server nie.
+    # reveal-preset-keys: true
+
+    # Vorbelegungen für weitere Anbieter:
+    # presets:
+    #   lm-studio:
+    #     base-url: http://localhost:1234/v1
+    #     model: <modell-id>

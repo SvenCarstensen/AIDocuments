@@ -1,0 +1,425 @@
+{
+  "common": {
+    "save": "Salva",
+    "cancel": "Annulla",
+    "close": "Chiudi",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "remove": "Rimuovi",
+    "add": "Aggiungi",
+    "back": "Indietro",
+    "retry": "Riprova",
+    "loading": "Caricamento",
+    "language": "Lingua",
+    "testConnection": "Verifica connessione",
+    "saveFirst": "Salva prima",
+    "username": "Nome utente",
+    "usernameHint": "Da 3 a 50 caratteri: lettere, cifre, punto, trattino, trattino basso, @",
+    "password": "Password",
+    "newPassword": "Nuova password",
+    "passwordHint": "Almeno 8 caratteri",
+    "passwordMismatch": "Le password non corrispondono.",
+    "justNow": "adesso",
+    "documentCount_one": "{{count, number}} documento",
+    "documentCount_many": "{{count, number}} di documenti",
+    "documentCount_other": "{{count, number}} documenti",
+    "role": {
+      "ADMIN": "Admin",
+      "USER": "Utente"
+    },
+    "fileSize": {
+      "bytes": "{{value}} B",
+      "kilobytes": "{{value}} KB",
+      "megabytes": "{{value}} MB"
+    }
+  },
+  "errors": {
+    "noConnection": "Impossibile connettersi al server",
+    "server": "Il server ha segnalato un errore ({{status}}).",
+    "forbidden": "Non hai l’autorizzazione per farlo.",
+    "unreachable": "Il server non è raggiungibile.",
+    "unexpected": "Errore imprevisto.",
+    "languageLoad": "Impossibile caricare la lingua."
+  },
+  "auth": {
+    "login": {
+      "title": "Bentornato",
+      "subtitle": "Accedi per consultare i tuoi documenti.",
+      "submit": "Accedi"
+    },
+    "setup": {
+      "title": "Configura AIDocuments",
+      "subtitle": "Inizia creando l’account amministratore. In seguito potrai aggiungere altri utenti nelle impostazioni.",
+      "adminAccount": "Account amministratore",
+      "repeatPassword": "Ripeti la password",
+      "submit": "Crea l’account e inizia",
+      "features": {
+        "import": "PDF dalla tua casella di posta e dalla cartella di importazione",
+        "ai": "L’IA li riassume e assegna loro dei tag",
+        "search": "Ricerca full-text fin dentro al documento"
+      }
+    }
+  },
+  "shell": {
+    "upload": "Carica",
+    "theme": {
+      "light": "Tema chiaro",
+      "dark": "Tema scuro"
+    },
+    "search": {
+      "placeholder": "Cerca documenti, tag, contenuti …",
+      "label": "Cerca documenti",
+      "clear": "Cancella la ricerca"
+    },
+    "userMenu": {
+      "label": "Menu utente ({{name}})",
+      "aiActive": "IA attiva",
+      "aiNotConfigured": "IA non configurata",
+      "changePassword": "Cambia password",
+      "logout": "Esci"
+    },
+    "passwordDialog": {
+      "current": "Password attuale",
+      "repeat": "Ripeti la nuova password",
+      "changed": "Password modificata"
+    },
+    "dropzone": {
+      "title": "Trascina qui i PDF",
+      "hint": "Puoi trascinare più file contemporaneamente. Vengono salvati, analizzati e provvisti di tag."
+    }
+  },
+  "upload": {
+    "onlyPdf": "Si possono aggiungere solo file PDF.",
+    "uploadingFile": "Caricamento di “{{name}}” …",
+    "uploadingFiles_one": "Caricamento di {{count, number}} PDF …",
+    "uploadingFiles_many": "Caricamento di {{count, number}} di PDF …",
+    "uploadingFiles_other": "Caricamento di {{count, number}} PDF …",
+    "created_one": "{{count, number}} documento aggiunto",
+    "created_many": "{{count, number}} di documenti aggiunti",
+    "created_other": "{{count, number}} documenti aggiunti",
+    "processingInBackground": "L’elaborazione prosegue in background.",
+    "duplicates_one": "{{count, number}} esiste già",
+    "duplicates_many": "{{count, number}} esistono già",
+    "duplicates_other": "{{count, number}} esistono già",
+    "rejected_one": "{{count, number}} file non è un PDF valido",
+    "rejected_many": "{{count, number}} di file non sono PDF validi",
+    "rejected_other": "{{count, number}} file non sono PDF validi",
+    "onlyDuplicates_one": "Questo documento esiste già.",
+    "onlyDuplicates_many": "Questi documenti esistono già.",
+    "onlyDuplicates_other": "Questi documenti esistono già.",
+    "noneValid": "Nessuno dei file è un PDF valido.",
+    "failed": "Caricamento non riuscito"
+  },
+  "documents": {
+    "status": {
+      "pending": "In attesa",
+      "processing": "In analisi",
+      "failed": "Errore",
+      "textOnly": "Senza IA"
+    },
+    "ocrBadge": "Riconoscimento del testo",
+    "aiNotice": {
+      "text": "L’IA non è ancora configurata. I nuovi documenti sono ricercabili in base al testo, ma non vengono riassunti né provvisti di tag.",
+      "action": "Configura ora"
+    },
+    "searchResults_one": "<count>{{count, number}} risultato</count> <query>per “{{query}}”</query>",
+    "searchResults_many": "<count>{{count, number}} di risultati</count> <query>per “{{query}}”</query>",
+    "searchResults_other": "<count>{{count, number}} risultati</count> <query>per “{{query}}”</query>",
+    "progress": {
+      "inProgress": "{{documents, number}} in corso",
+      "inProgressHint": "In attesa dell’analisi dell’IA o in fase di analisi",
+      "remaining": "mancano circa {{duration}}",
+      "remainingLessThan": "mancano meno di {{duration}}",
+      "finishHint": "Termine previsto: {{time}} – stimato in base al ritmo degli ultimi documenti elaborati"
+    },
+    "sort": {
+      "label": "Ordinamento",
+      "relevance": "Più pertinenti",
+      "newest": "Più recenti prima",
+      "date": "Per data del documento"
+    },
+    "view": {
+      "grid": "Vista a griglia",
+      "list": "Vista a elenco"
+    },
+    "pageSize": {
+      "label": "Numero di documenti visualizzati",
+      "all": "Tutti"
+    },
+    "filters": {
+      "title": "Filtri",
+      "titleWithCount": "Filtri ({{active, number}})",
+      "apply": "Mostra",
+      "hint": "Dopo l’analisi dei documenti, qui compariranno come filtri i tipi di documento, i tag e i mittenti.",
+      "dateFrom": "dal",
+      "dateTo": "al",
+      "status": "Stato",
+      "failed": "Non riusciti",
+      "showAll": "Mostra tutto",
+      "showLess": "Mostra meno",
+      "activeFrom": "dal {{date}}",
+      "activeTo": "fino al {{date}}",
+      "removeOne": "Rimuovi il filtro “{{label}}”",
+      "removeAll": "Rimuovi tutti i filtri",
+      "clear": "Rimuovi i filtri"
+    },
+    "empty": {
+      "libraryTitle": "Ancora nessun documento",
+      "libraryHint": "Trascina semplicemente dei file PDF in questa finestra oppure usa “Carica”.",
+      "libraryHintAdmin": "Trascina semplicemente dei file PDF in questa finestra oppure usa “Carica”. Nelle impostazioni puoi configurare una casella di posta o una cartella di importazione da cui i nuovi PDF vengono importati automaticamente.",
+      "noResultsTitle": "Nessun risultato",
+      "noResultsSearch": "Nessun documento corrisponde a questa ricerca. La ricerca trova anche parti di parole: prova con un termine più breve o con meno parole.",
+      "noResultsFilters": "Nessun documento corrisponde ai filtri selezionati."
+    },
+    "loadingAll_one": "{{loaded, number}} di {{count, number}} documento caricato …",
+    "loadingAll_many": "{{loaded, number}} di {{count, number}} di documenti caricati …",
+    "loadingAll_other": "{{loaded, number}} di {{count, number}} documenti caricati …",
+    "loadMore": "Carica altri ({{remaining, number}})"
+  },
+  "document": {
+    "backToList": "Torna alla panoramica",
+    "download": "Scarica",
+    "reprocess": "Analizza di nuovo",
+    "reprocessHint": "Rileggi il PDF e fallo analizzare di nuovo dall’IA",
+    "reprocessStarted": "Il documento è in corso di nuova analisi.",
+    "deleted": "Documento eliminato",
+    "pdfTitle": "PDF: {{title}}",
+    "openInNewTab": "Apri in una nuova scheda",
+    "processingNotice": "Il documento è in elaborazione. Il riassunto e i tag compariranno qui non appena l’analisi sarà terminata.",
+    "textOnlyNotice": "Indicizzato senza IA: il documento è ricercabile in base al testo, ma non ha né riassunto né tag automatici.",
+    "tabs": {
+      "overview": "Panoramica",
+      "text": "Testo completo"
+    },
+    "fields": {
+      "title": "Titolo",
+      "category": "Tipo di documento",
+      "documentDate": "Data del documento",
+      "correspondent": "Mittente",
+      "tags": "Tag",
+      "summary": "Riassunto"
+    },
+    "tags": {
+      "allWith": "Tutti i documenti con il tag “{{tag}}”",
+      "none": "Nessun tag. <add>Aggiungi</add>",
+      "inputHint": "Conferma con Invio o con una virgola. I suggerimenti sono tag già in uso.",
+      "inputPlaceholder": "Inserisci un tag …",
+      "remove": "Rimuovi il tag “{{tag}}”"
+    },
+    "keyFacts": "Dati chiave",
+    "details": {
+      "title": "Dettagli",
+      "file": "File",
+      "size": "Dimensione",
+      "pageCount_one": "{{count, number}} pagina",
+      "pageCount_many": "{{count, number}} di pagine",
+      "pageCount_other": "{{count, number}} pagine",
+      "language": "Lingua",
+      "source": "Origine",
+      "mailSubject": "Oggetto",
+      "mailFrom": "Da",
+      "mailReceived": "Ricevuto",
+      "added": "Aggiunto",
+      "text": "Testo"
+    },
+    "source": {
+      "MAIL": "Casella di posta",
+      "FOLDER": "Cartella di importazione",
+      "UPLOAD": "Caricato"
+    },
+    "noText": "Questo documento non contiene testo: probabilmente è una scansione senza livello di testo. Con l’IA configurata e il riconoscimento del testo attivo, il contenuto viene trascritto durante l’analisi.",
+    "edit": {
+      "title": "Modifica documento",
+      "saved": "Modifiche salvate"
+    },
+    "delete": {
+      "title": "Eliminare il documento?",
+      "text": "“{{title}}” verrà eliminato insieme al file PDF, al testo completo e ai tag. L’operazione non può essere annullata.",
+      "confirm": "Elimina definitivamente"
+    }
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "mailboxes": {
+      "title": "Caselle di posta",
+      "navHint": "Server IMAP da cui vengono importati gli allegati PDF",
+      "intro": "Gli allegati PDF vengono importati automaticamente da queste caselle di posta IMAP. Le caselle vengono solo lette: le e-mail restano invariate e non lette.",
+      "add": "Aggiungi casella di posta",
+      "emptyTitle": "Nessuna casella di posta ancora configurata",
+      "emptyText": "Inserisci le credenziali di una casella di posta IMAP, ad esempio quella a cui il tuo scanner invia i documenti.",
+      "paused": "In pausa",
+      "syncNow": "Controlla ora",
+      "syncing": "Controllo della casella di posta …",
+      "neverSynced": "Non ancora controllata.",
+      "saved": "Casella di posta salvata",
+      "added": "Casella di posta aggiunta",
+      "firstSyncRunning": "Il primo controllo è già in corso.",
+      "removed": "Casella di posta rimossa",
+      "delete": {
+        "title": "Rimuovere la casella di posta?",
+        "text": "“{{name}}” non verrà più controllata. I documenti già importati vengono conservati."
+      },
+      "dialog": {
+        "editTitle": "Modifica casella di posta",
+        "description": "Le credenziali ti vengono fornite dal tuo provider di posta. La password viene memorizzata in forma cifrata.",
+        "name": "Nome",
+        "nameHint": "A tua scelta, ad es. “Scanner” o “Fatture”",
+        "namePlaceholder": "Scanner",
+        "host": "Server IMAP",
+        "port": "Porta",
+        "security": "Crittografia",
+        "securityNone": "Nessuna",
+        "securityNoneWarning": "Senza crittografia, nome utente e password vengono trasmessi in chiaro.",
+        "passwordKeepHint": "Lascia vuoto per mantenere la password memorizzata",
+        "folder": "Cartella",
+        "folderHint": "Di solito {{folder}} (la posta in arrivo)",
+        "since": "Solo e-mail dal",
+        "sinceHint": "Facoltativo: le e-mail più vecchie vengono ignorate",
+        "enabled": "Controlla automaticamente",
+        "enabledHint": "La casella di posta viene controllata alla ricerca di nuovi PDF con l’intervallo configurato."
+      }
+    },
+    "import": {
+      "title": "Pianificazione e cartella di importazione",
+      "navHint": "Intervallo di controllo e cartella monitorata",
+      "intro": "Stabilisce con quale frequenza l’applicazione cerca nuovi file PDF: nelle caselle di posta e nella cartella di importazione.",
+      "saved": "Impostazioni salvate",
+      "interval": {
+        "title": "Intervallo di controllo",
+        "text": "Con questa frequenza l’applicazione controlla tutte le caselle di posta e la cartella di importazione alla ricerca di nuovi PDF.",
+        "label": "Ogni … minuti",
+        "nextRun": "Prossimo controllo automatico {{when}}."
+      },
+      "folder": {
+        "title": "Cartella di importazione",
+        "text": "Una directory sul server che viene monitorata per rilevare nuovi file PDF, ad esempio la destinazione di uno scanner di rete. Vengono esaminate anche le sottocartelle.",
+        "enable": "Monitora la cartella di importazione",
+        "path": "Percorso sul server",
+        "pathHint": "Percorso assoluto. Nel container Docker è la cartella montata, di solito {{path}}.",
+        "afterImport": "Dopo l’importazione",
+        "keep": "Lascia il file dov’è",
+        "move": "Sposta in “{{folder}}”",
+        "keepHint": "I file restano invariati. L’applicazione ricorda ciò che ha già importato.",
+        "moveHint": "I file importati vengono spostati nella sottocartella “{{folder}}”: la cartella di importazione resta in ordine.",
+        "scanning": "Controllo della cartella …",
+        "neverScanned": "Non ancora controllata.",
+        "scanNow": "Controlla ora",
+        "scanStarted": "La cartella di importazione è in fase di controllo."
+      }
+    },
+    "ai": {
+      "title": "IA",
+      "navHint": "Server LLM, modello e riconoscimento del testo",
+      "intro": "L’IA legge ogni nuovo PDF, lo riassume, gli assegna un tipo di documento e dei tag, ed estrae dati chiave come importi o scadenze.",
+      "configured": "Configurata",
+      "notConfigured": "Non configurata",
+      "saved": "Impostazioni dell’IA salvate",
+      "server": {
+        "title": "Server LLM",
+        "provider": "Provider",
+        "baseUrl": "Indirizzo del server",
+        "model": "Modello",
+        "modelPlaceholder": "ID del modello",
+        "compatibilityMode": "Modalità di compatibilità per i modelli locali",
+        "compatibilityModeHint": "Per i server che parlano l’interfaccia di Anthropic ma non supportano né l’input di PDF né gli output strutturati: il documento viene inviato al modello come testo oppure, per le scansioni, come immagini delle pagine. Lascia disattivata per l’API di Claude.",
+        "testIncomplete": "Le impostazioni non sono ancora complete"
+      },
+      "privacy": {
+        "title": "Con {{provider}} i tuoi documenti lasciano questo computer",
+        "text": "Per l’analisi, il contenuto di ogni PDF viene trasmesso ai server di {{provider}} su internet ed elaborato lì, comprese fatture, contratti, referti medici e corrispondenza ufficiale.",
+        "recommendation": "<emphasis>Consiglio:</emphasis> usa un’IA locale. Con <lmStudio>LM Studio</lmStudio> o un <compatible>server compatibile con OpenAI</compatible> nella tua rete, tutti i contenuti restano da te."
+      },
+      "providers": {
+        "ANTHROPIC": {
+          "urlHint": "L’API di Claude di Anthropic. Modificala solo se hai un tuo gateway davanti.",
+          "modelHint": "Claude Opus 5.5 è la scelta consigliata; Sonnet e Haiku sono più veloci ed economici."
+        },
+        "OPENAI": {
+          "urlHint": "L’API di OpenAI. Modificala solo se hai un tuo gateway davanti.",
+          "modelHint": "L’ID del modello così come lo chiama OpenAI. Dopo aver salvato la chiave, qui compaiono i modelli disponibili."
+        },
+        "MOONSHOT": {
+          "urlHint": "L’API di Moonshot AI (Kimi). Per gli account della piattaforma cinese: {{url}}",
+          "modelHint": "L’ID del modello così come lo chiama Moonshot. Dopo aver salvato la chiave, qui compaiono i modelli disponibili."
+        },
+        "LM_STUDIO": {
+          "urlHint": "Il server locale di LM Studio (avvialo in LM Studio sotto “Developer”). Se AIDocuments è in esecuzione in Docker: {{url}}",
+          "modelHint": "L’ID del modello caricato in LM Studio. Le scansioni richiedono un modello con input di immagini, l’analisi uno con uso di strumenti."
+        },
+        "OPENAI_COMPATIBLE": {
+          "urlHint": "Indirizzo di un server che parla l’interfaccia OpenAI, di solito terminante con /v1, ad es. {{url}}",
+          "modelHint": "L’ID del modello così come lo chiama il server. Dopo il salvataggio, qui compaiono i modelli che offre."
+        }
+      },
+      "apiKey": {
+        "label": "Chiave API",
+        "labelOptional": "Chiave API (facoltativa)",
+        "placeholderStored": "{{mask}} (memorizzata)",
+        "placeholderPreset": "{{mask}} (predefinita)",
+        "placeholderNotNeeded": "non necessaria",
+        "placeholderIfRequired": "solo se il server la richiede",
+        "hintShown": "Predefinita nella configurazione del server.",
+        "hintRemoving": "La chiave memorizzata verrà rimossa al salvataggio.",
+        "hintStored": "È memorizzata una chiave in forma cifrata. Lascia vuoto per mantenerla – <remove>rimuovi la chiave</remove>",
+        "hintEnvironment": "Al momento la chiave proviene dalla configurazione del server (variabile d’ambiente o file di configurazione). Una chiave inserita qui ha la precedenza.",
+        "hintPreset": "Nella configurazione del server è predefinita una chiave per questo provider. Lascia vuoto per usarla.",
+        "hintDiscardedOnSwitch": "La chiave memorizzata finora appartiene a {{previous}} e verrà eliminata se cambi provider.",
+        "hintPresetOtherProvider": "La chiave predefinita vale solo per {{previous}}. Inseriscine una separata per {{provider}}.",
+        "hintRequired": "Memorizzata in forma cifrata e non più mostrata.",
+        "hintLocal": "I server locali di solito non richiedono una chiave."
+      },
+      "analysis": {
+        "title": "Analisi",
+        "effort": "Accuratezza",
+        "effortLevels": {
+          "low": "Veloce",
+          "medium": "Bilanciata",
+          "high": "Approfondita"
+        },
+        "effortHint": "Più approfondita significa risultati più accurati, ma più lenti e più costosi per ogni documento.",
+        "outputLanguage": "Lingua dei risultati",
+        "outputLanguageHint": "L’IA scrive titolo, riassunto e tag in questa lingua.",
+        "ocr": "Riconoscimento del testo per le scansioni",
+        "ocrHint": "L’applicazione fa trascrivere all’IA i PDF scansionati senza livello di testo: solo così possono essere trovati con la ricerca full-text. Ogni scansione richiede più tempo e costa di più."
+      },
+      "unanalyzed_one": "{{count, number}} documento non è ancora stato analizzato dall’IA.",
+      "unanalyzed_many": "{{count, number}} di documenti non sono ancora stati analizzati dall’IA.",
+      "unanalyzed_other": "{{count, number}} documenti non sono ancora stati analizzati dall’IA.",
+      "analyzeNow": "Analizza ora",
+      "analysisStarted_one": "{{count, number}} documento è in fase di analisi.",
+      "analysisStarted_many": "{{count, number}} di documenti sono in fase di analisi.",
+      "analysisStarted_other": "{{count, number}} documenti sono in fase di analisi."
+    },
+    "users": {
+      "title": "Utenti",
+      "navHint": "Account e ruoli",
+      "intro": "Ogni persona accede con il proprio account. Gli amministratori gestiscono l’applicazione, gli utenti lavorano con i documenti.",
+      "add": "Crea utente",
+      "you": "Tu",
+      "disabled": "Disattivato",
+      "lastLogin": "Ultimo accesso {{when}}",
+      "neverLoggedIn": "Mai effettuato l’accesso",
+      "editUser": "Modifica {{name}}",
+      "deleteUser": "Elimina {{name}}",
+      "saved": "Utente salvato",
+      "created": "Utente creato",
+      "deleted": "Utente eliminato",
+      "delete": {
+        "title": "Eliminare l’utente?",
+        "text": "L’account “{{name}}” verrà eliminato e disconnesso immediatamente. I documenti vengono conservati."
+      },
+      "dialog": {
+        "selfNotice": "Questo è il tuo account. Dopo il salvataggio dovrai accedere di nuovo.",
+        "passwordKeepHint": "Lascia vuoto per mantenere la password attuale. Altrimenti almeno 8 caratteri.",
+        "role": "Ruolo",
+        "roleHints": {
+          "ADMIN": "Può fare tutto, anche modificare le impostazioni, gestire gli utenti ed eliminare documenti.",
+          "USER": "Può visualizzare, cercare e caricare documenti e modificarne i dettagli."
+        },
+        "active": "Account attivo",
+        "activeHint": "Gli account disattivati non possono accedere; le sessioni in corso terminano immediatamente.",
+        "create": "Crea"
+      }
+    }
+  }
+}
