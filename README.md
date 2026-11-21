@@ -4,6 +4,22 @@ Document management for PDFs: the application collects PDF files from IMAP mailb
 or by upload, has an AI index them (title, summary, document type, correspondent, date, tags, key facts – and
 for scans the full text as well) and makes them searchable.
 
+## Highlights
+
+- **Modern, simple interface** – one search box, filters that stay out of the way, grid and list view with
+  thumbnails, light and dark theme, 36 languages. Everything is configured in the browser; there are no
+  configuration files to edit.
+- **Local installation** – AIDocuments runs on your own computer or server as a single Docker container. PDFs,
+  database, search index and keys live in one directory that you control and back up.
+- **Data security** – access only after sign-in, with separate roles for administrators and users. Passwords are
+  stored as hashes, mailbox passwords and API keys encrypted (AES-256-GCM). Mailboxes are read without changing
+  them. An AI in the cloud is used only if you choose one yourself – the interface says so clearly – and a local
+  AI server keeps the contents of your documents inside your network.
+- **No telemetry** – no analytics, no tracking, no usage statistics, no fonts or scripts loaded from third
+  parties. The application connects only to the mailboxes and to the AI server you have configured.
+
+## Technology
+
 - **Backend:** Spring Boot 4 (Java 21), MongoDB, Apache Lucene (full-text search), PDFBox, Anthropic Java SDK,
   a custom client for OpenAI-compatible servers
 - **Frontend:** React 19, TypeScript, Vite, Tailwind CSS 4, TanStack Query
