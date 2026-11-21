@@ -64,6 +64,16 @@ public class PdfExtractor {
         }
     }
 
+    /** Erzeugt nur das Vorschaubild (erste Seite) – etwa um ein missratenes zu ersetzen. */
+    public boolean renderThumbnail(Path file, Path thumbnailTarget) {
+        try (PDDocument pdf = Loader.loadPDF(file.toFile())) {
+            return pdf.getNumberOfPages() > 0 && renderThumbnail(pdf, thumbnailTarget);
+        } catch (IOException | RuntimeException e) {
+            log.warn("Vorschaubild konnte nicht erzeugt werden: {}", e.toString());
+            return false;
+        }
+    }
+
     /**
      * Rendert die ersten Seiten als JPEG – für KI-Server, die kein PDF annehmen, aber Bilder lesen können.
      */

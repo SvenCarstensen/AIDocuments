@@ -21,6 +21,7 @@
         <anthropic.version>3.12.0</anthropic.version>
         <lucene.version>10.6.0</lucene.version>
         <pdfbox.version>3.0.8</pdfbox.version>
+        <jbig2-imageio.version>3.0.4</jbig2-imageio.version>
         <greenmail.version>2.1.15</greenmail.version>
     </properties>
 
@@ -59,6 +60,14 @@
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>${pdfbox.version}</version>
+        </dependency>
+        <!-- Decoder für JBIG2-Bilder: So komprimieren viele Scanner Schwarz-Weiß-Scans. Ohne ihn rendert PDFBox
+             solche Seiten als leere weiße Fläche (Vorschaubild, Seitenbilder für die KI). -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>jbig2-imageio</artifactId>
+            <version>${jbig2-imageio.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Volltextsuche -->

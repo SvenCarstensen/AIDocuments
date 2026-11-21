@@ -20,13 +20,15 @@ public class DocumentStartup implements ApplicationRunner {
     private final DocumentTextRepository texts;
     private final SearchIndex searchIndex;
     private final DocumentProcessor processor;
+    private final ThumbnailRepair thumbnailRepair;
 
     public DocumentStartup(DocumentRepository documents, DocumentTextRepository texts, SearchIndex searchIndex,
-                           DocumentProcessor processor) {
+                           DocumentProcessor processor, ThumbnailRepair thumbnailRepair) {
         this.documents = documents;
         this.texts = texts;
         this.searchIndex = searchIndex;
         this.processor = processor;
+        this.thumbnailRepair = thumbnailRepair;
     }
 
     @Override
@@ -52,5 +54,6 @@ public class DocumentStartup implements ApplicationRunner {
                 processor.enqueue(doc.getId());
             }
         }
+        thumbnailRepair.startInBackground();
     }
 }
