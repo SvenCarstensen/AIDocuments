@@ -69,10 +69,9 @@
     "search": {
       "placeholder": "Căutați documente, etichete, conținut …",
       "placeholderAi": "Caută documente cu propriile cuvinte – de ex. „facturi de la Kia din 2024”",
+      "labelAi": "IA",
       "label": "Căutare documente",
       "clear": "Șterge căutarea",
-      "modeAi": "Căutare cu IA – comută la căutarea după cuvinte cheie",
-      "modeKeywords": "Căutare după cuvinte cheie – comută la căutarea cu IA",
       "askFailed": "Se caută după cuvinte cheie."
     },
     "userMenu": {

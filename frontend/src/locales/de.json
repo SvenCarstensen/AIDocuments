@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Dokumente, Schlagworte, Inhalte durchsuchen …",
       "placeholderAi": "Frag nach Dokumenten – z. B. „Rechnungen von Kia aus 2024“",
+      "labelAi": "KI",
       "label": "Dokumente durchsuchen",
       "clear": "Suche leeren",
-      "modeAi": "KI-Suche – zur Stichwortsuche wechseln",
-      "modeKeywords": "Stichwortsuche – zur KI-Suche wechseln",
       "askFailed": "Es wird nach Stichworten gesucht."
     },
     "userMenu": {

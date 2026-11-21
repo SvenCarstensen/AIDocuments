@@ -70,10 +70,9 @@
     "search": {
       "placeholder": "Iskanje po dokumentih, oznakah, vsebini …",
       "placeholderAi": "Išči dokumente s svojimi besedami – npr. »računi od Kie iz leta 2024«",
+      "labelAi": "UI",
       "label": "Iskanje dokumentov",
       "clear": "Počisti iskanje",
-      "modeAi": "Iskanje z UI – preklopi na iskanje po ključnih besedah",
-      "modeKeywords": "Iskanje po ključnih besedah – preklopi na iskanje z UI",
       "askFailed": "Išče se po ključnih besedah."
     },
     "userMenu": {

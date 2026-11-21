@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Zoek in documenten, tags, inhoud …",
       "placeholderAi": "Zoek documenten in je eigen woorden – bijv. ‘facturen van Kia uit 2024’",
+      "labelAi": "AI",
       "label": "Documenten doorzoeken",
       "clear": "Zoekopdracht wissen",
-      "modeAi": "AI-zoeken – overschakelen naar zoeken op trefwoorden",
-      "modeKeywords": "Zoeken op trefwoorden – overschakelen naar AI-zoeken",
       "askFailed": "Er wordt op trefwoorden gezocht."
     },
     "userMenu": {

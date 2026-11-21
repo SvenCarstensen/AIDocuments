@@ -69,10 +69,9 @@
     "search": {
       "placeholder": "Buscar documentos, etiquetas, contenidos …",
       "placeholderAi": "Busca documentos con tus palabras: p. ej. «facturas de Kia de 2024»",
+      "labelAi": "IA",
       "label": "Buscar documentos",
       "clear": "Borrar la búsqueda",
-      "modeAi": "Búsqueda con IA: cambiar a búsqueda por palabras clave",
-      "modeKeywords": "Búsqueda por palabras clave: cambiar a búsqueda con IA",
       "askFailed": "Se busca por palabras clave."
     },
     "userMenu": {

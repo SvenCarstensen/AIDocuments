@@ -70,10 +70,9 @@
     "search": {
       "placeholder": "Hledat v dokumentech, štítcích, obsahu …",
       "placeholderAi": "Hledej dokumenty vlastními slovy – např. „faktury od Kia z roku 2024“",
+      "labelAi": "AI",
       "label": "Hledat dokumenty",
       "clear": "Vymazat hledání",
-      "modeAi": "Vyhledávání AI – přepnout na vyhledávání podle klíčových slov",
-      "modeKeywords": "Vyhledávání podle klíčových slov – přepnout na vyhledávání AI",
       "askFailed": "Vyhledává se podle klíčových slov."
     },
     "userMenu": {

@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Hae asiakirjoja, tunnisteita, sisältöä…",
       "placeholderAi": "Hae asiakirjoja omin sanoin – esim. ”Kian laskut vuodelta 2024”",
+      "labelAi": "Tekoäly",
       "label": "Hae asiakirjoja",
       "clear": "Tyhjennä haku",
-      "modeAi": "Tekoälyhaku – vaihda hakusanahakuun",
-      "modeKeywords": "Hakusanahaku – vaihda tekoälyhakuun",
       "askFailed": "Haetaan hakusanoilla."
     },
     "userMenu": {

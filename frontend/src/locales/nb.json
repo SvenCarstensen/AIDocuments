@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Søk i dokumenter, stikkord, innhold …",
       "placeholderAi": "Søk etter dokumenter med egne ord – f.eks. «fakturaer fra Kia fra 2024»",
+      "labelAi": "KI",
       "label": "Søk i dokumenter",
       "clear": "Tøm søket",
-      "modeAi": "KI-søk – bytt til søk med stikkord",
-      "modeKeywords": "Søk med stikkord – bytt til KI-søk",
       "askFailed": "Det søkes med stikkord."
     },
     "userMenu": {

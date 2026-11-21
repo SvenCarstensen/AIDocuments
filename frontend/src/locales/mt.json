@@ -71,10 +71,9 @@
     "search": {
       "placeholder": "Fittex dokumenti, tikketti, kontenut…",
       "placeholderAi": "Fittex dokumenti bi kliemek tiegħek – eż. “fatturi minn Kia mill-2024”",
+      "labelAi": "IA",
       "label": "Fittex dokumenti",
       "clear": "Ikklerja t-tfittxija",
-      "modeAi": "Tiftix bl-IA – aqleb għal tiftix b’kelmiet ewlenin",
-      "modeKeywords": "Tiftix b’kelmiet ewlenin – aqleb għal tiftix bl-IA",
       "askFailed": "Qed jitfittex b’kelmiet ewlenin."
     },
     "userMenu": {

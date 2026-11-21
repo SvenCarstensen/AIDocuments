@@ -70,10 +70,9 @@
     "search": {
       "placeholder": "Szukaj w dokumentach, tagach, treści …",
       "placeholderAi": "Szukaj dokumentów własnymi słowami – np. „faktury od Kia z 2024”",
+      "labelAi": "AI",
       "label": "Szukaj dokumentów",
       "clear": "Wyczyść wyszukiwanie",
-      "modeAi": "Wyszukiwanie AI – przełącz na wyszukiwanie słów kluczowych",
-      "modeKeywords": "Wyszukiwanie słów kluczowych – przełącz na wyszukiwanie AI",
       "askFailed": "Wyszukiwanie odbywa się według słów kluczowych."
     },
     "userMenu": {

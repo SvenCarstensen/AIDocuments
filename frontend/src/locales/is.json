@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Leita í skjölum, efnisorðum, efni …",
       "placeholderAi": "Leitaðu að skjölum með eigin orðum – t.d. „reikningar frá Kia frá 2024“",
+      "labelAi": "Gervigreind",
       "label": "Leita í skjölum",
       "clear": "Hreinsa leit",
-      "modeAi": "Gervigreindarleit – skipta yfir í leit eftir leitarorðum",
-      "modeKeywords": "Leit eftir leitarorðum – skipta yfir í gervigreindarleit",
       "askFailed": "Leitað er eftir leitarorðum."
     },
     "userMenu": {

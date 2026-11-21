@@ -69,10 +69,9 @@
     "search": {
       "placeholder": "Meklēt dokumentus, atslēgvārdus, saturu…",
       "placeholderAi": "Meklē dokumentus saviem vārdiem – piem., “Kia rēķini no 2024. gada”",
+      "labelAi": "MI",
       "label": "Meklēt dokumentus",
       "clear": "Notīrīt meklēšanu",
-      "modeAi": "MI meklēšana – pārslēgties uz atslēgvārdu meklēšanu",
-      "modeKeywords": "Atslēgvārdu meklēšana – pārslēgties uz MI meklēšanu",
       "askFailed": "Tiek meklēts pēc atslēgvārdiem."
     },
     "userMenu": {

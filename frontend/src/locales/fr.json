@@ -69,10 +69,9 @@
     "search": {
       "placeholder": "Rechercher des documents, mots-clés, contenus …",
       "placeholderAi": "Recherchez des documents en langage naturel – p. ex. « factures de Kia de 2024 »",
+      "labelAi": "IA",
       "label": "Rechercher des documents",
       "clear": "Effacer la recherche",
-      "modeAi": "Recherche IA – passer à la recherche par mots-clés",
-      "modeKeywords": "Recherche par mots-clés – passer à la recherche IA",
       "askFailed": "La recherche se fait par mots-clés."
     },
     "userMenu": {

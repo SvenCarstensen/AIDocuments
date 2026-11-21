@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Sök i dokument, taggar, innehåll …",
       "placeholderAi": "Sök dokument med egna ord – t.ex. ”fakturor från Kia från 2024”",
+      "labelAi": "AI",
       "label": "Sök i dokument",
       "clear": "Rensa sökning",
-      "modeAi": "AI-sökning – byt till sökning på nyckelord",
-      "modeKeywords": "Sökning på nyckelord – byt till AI-sökning",
       "askFailed": "Sökningen görs på nyckelord."
     },
     "userMenu": {

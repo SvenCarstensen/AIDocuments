@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Dokumenter, Stéchwierder, Inhalter duerchsichen …",
       "placeholderAi": "Sich Dokumenter mat denge Wierder – z. B. „Rechnunge vu Kia aus 2024“",
+      "labelAi": "KI",
       "label": "Dokumenter duerchsichen",
       "clear": "Sich läschen",
-      "modeAi": "KI-Sich – op Stéchwuertsich wiesselen",
-      "modeKeywords": "Stéchwuertsich – op KI-Sich wiesselen",
       "askFailed": "Et gëtt no Stéchwierder gesicht."
     },
     "userMenu": {

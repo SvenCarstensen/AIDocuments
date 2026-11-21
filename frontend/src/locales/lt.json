@@ -70,10 +70,9 @@
     "search": {
       "placeholder": "Ieškoti dokumentų, žymų, turinio…",
       "placeholderAi": "Ieškok dokumentų savais žodžiais – pvz., „Kia sąskaitos iš 2024 m.“",
+      "labelAi": "DI",
       "label": "Ieškoti dokumentų",
       "clear": "Išvalyti paiešką",
-      "modeAi": "DI paieška – pereiti prie paieškos pagal raktažodžius",
-      "modeKeywords": "Paieška pagal raktažodžius – pereiti prie DI paieškos",
       "askFailed": "Ieškoma pagal raktažodžius."
     },
     "userMenu": {

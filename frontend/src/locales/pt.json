@@ -69,10 +69,9 @@
     "search": {
       "placeholder": "Pesquisar documentos, etiquetas, conteúdos …",
       "placeholderAi": "Pesquise documentos por palavras suas – p. ex. «faturas da Kia de 2024»",
+      "labelAi": "IA",
       "label": "Pesquisar documentos",
       "clear": "Limpar pesquisa",
-      "modeAi": "Pesquisa com IA – mudar para pesquisa por palavras-chave",
-      "modeKeywords": "Pesquisa por palavras-chave – mudar para pesquisa com IA",
       "askFailed": "A pesquisa é feita por palavras-chave."
     },
     "userMenu": {

@@ -183,8 +183,7 @@ function SearchBox() {
     else apply(text, false)
   }
 
-  function toggleMode() {
-    const next: SearchMode = mode === 'ai' ? 'keywords' : 'ai'
+  function chooseMode(next: SearchMode) {
     setMode(next)
     try {
       localStorage.setItem('searchMode', next)
@@ -194,30 +193,54 @@ function SearchBox() {
     input.current?.focus()
   }
 
+  const aiAvailable = !!system.data?.aiEnabled
   return (
-    <form onSubmit={submit} role="search" className="relative mx-auto min-w-0 flex-1 md:max-w-2xl">
-      {system.data?.aiEnabled ? (
+    <form
+      onSubmit={submit}
+      role="search"
+      className={cx(
+        'mx-auto flex h-11 min-w-0 flex-1 items-center gap-1 rounded-xl border border-line bg-raised pr-1.5 transition-all md:max-w-2xl',
+        aiAvailable ? 'pl-1' : 'pl-3.5',
+        'focus-within:border-brand focus-within:bg-surface focus-within:ring-3 focus-within:ring-brand/20',
+      )}
+    >
+      {aiAvailable ? (
+        // Mit eingerichteter KI: Schiebeschalter „KI“ vorn in der Zeile – an = Fragen an die KI, aus = Stichwortsuche.
+        // Beschriftung und Schalter sind ein einziger Knopf: Jeder Klick schaltet genau einmal um (ein umschließendes
+        // <label> würde den Klick in manchen Browsern ein zweites Mal an den Schalter weitergeben).
         <button
           type="button"
-          onClick={toggleMode}
-          title={aiMode ? t('shell.search.modeAi') : t('shell.search.modeKeywords')}
-          aria-label={aiMode ? t('shell.search.modeAi') : t('shell.search.modeKeywords')}
-          aria-pressed={aiMode}
-          className={cx(
-            'absolute top-1/2 left-1.5 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg transition-colors',
-            aiMode ? 'text-brand hover:bg-brand-soft' : 'text-subtle hover:bg-line hover:text-ink',
-          )}
+          role="switch"
+          aria-checked={aiMode}
+          aria-label={t('shell.search.labelAi')}
+          onClick={() => chooseMode(aiMode ? 'keywords' : 'ai')}
+          className="flex shrink-0 cursor-pointer items-center gap-2 rounded-lg py-1 pr-2 pl-1 select-none hover:bg-line/40"
         >
-          {ask.isPending ? (
-            <Loader2 className="size-[18px] animate-spin" aria-hidden />
-          ) : aiMode ? (
-            <Sparkles className="size-[18px]" aria-hidden />
-          ) : (
-            <Search className="size-[18px]" aria-hidden />
-          )}
+          <span
+            className={cx('relative h-6 w-11 shrink-0 rounded-full transition-colors', aiMode ? 'bg-brand' : 'bg-line-strong')}
+            aria-hidden
+          >
+            <span
+              className={cx(
+                'absolute top-0.5 left-0.5 flex size-5 items-center justify-center rounded-full bg-white shadow transition-transform',
+                aiMode && 'translate-x-5',
+              )}
+            >
+              {ask.isPending ? (
+                <Loader2 className="size-3 animate-spin text-brand" />
+              ) : aiMode ? (
+                <Sparkles className="size-3 text-brand" />
+              ) : (
+                <Search className="size-3 text-subtle" />
+              )}
+            </span>
+          </span>
+          <span className={cx('hidden text-xs font-semibold sm:inline', aiMode ? 'text-brand-ink' : 'text-muted')} aria-hidden>
+            {t('shell.search.labelAi')}
+          </span>
         </button>
       ) : (
-        <Search className="pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2 text-subtle" aria-hidden />
+        <Search className="size-[18px] shrink-0 text-subtle" aria-hidden />
       )}
       <input
         ref={input}
@@ -232,11 +255,7 @@ function SearchBox() {
         placeholder={aiMode ? t('shell.search.placeholderAi') : t('shell.search.placeholder')}
         aria-busy={ask.isPending}
         aria-label={t('shell.search.label')}
-        className={cx(
-          'h-11 w-full rounded-xl border border-line bg-raised pr-11 pl-10.5 text-[15px] text-ink',
-          'placeholder:text-subtle transition-all',
-          'focus:border-brand focus:bg-surface focus:ring-3 focus:ring-brand/20 focus:outline-none',
-        )}
+        className="h-full min-w-0 flex-1 bg-transparent pl-1.5 text-[15px] text-ink placeholder:text-subtle focus:outline-none"
       />
       {text ? (
         <button
@@ -246,12 +265,12 @@ function SearchBox() {
             setText('')
             input.current?.focus()
           }}
-          className="absolute top-1/2 right-2.5 flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-subtle hover:bg-line hover:text-ink"
+          className="flex size-7 shrink-0 items-center justify-center rounded-md text-subtle hover:bg-line hover:text-ink"
         >
           <X className="size-4" />
         </button>
       ) : (
-        <kbd className="pointer-events-none absolute top-1/2 right-3 hidden -translate-y-1/2 rounded-md border border-line bg-surface px-1.5 py-0.5 text-xs font-medium text-subtle sm:block">
+        <kbd className="pointer-events-none mr-1.5 hidden shrink-0 rounded-md border border-line bg-surface px-1.5 py-0.5 text-xs font-medium text-subtle sm:block">
           /
         </kbd>
       )}

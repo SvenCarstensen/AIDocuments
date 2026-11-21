@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Belgelerde, etiketlerde, içerikte ara…",
       "placeholderAi": "Belgeleri kendi sözlerinizle arayın – ör. “Kia’nın 2024 faturaları”",
+      "labelAi": "YZ",
       "label": "Belgelerde ara",
       "clear": "Aramayı temizle",
-      "modeAi": "Yapay zekâ araması – anahtar kelime aramasına geç",
-      "modeKeywords": "Anahtar kelime araması – yapay zekâ aramasına geç",
       "askFailed": "Anahtar kelimelere göre aranıyor."
     },
     "userMenu": {

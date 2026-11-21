@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Search documents, tags, contents …",
       "placeholderAi": "Ask for documents – e.g. “invoices from Kia from 2024”",
+      "labelAi": "AI",
       "label": "Search documents",
       "clear": "Clear search",
-      "modeAi": "AI search – switch to keyword search",
-      "modeKeywords": "Keyword search – switch to AI search",
       "askFailed": "Searching by keywords instead."
     },
     "userMenu": {

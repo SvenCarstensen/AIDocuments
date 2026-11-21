@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Kërko dokumente, etiketa, përmbajtje…",
       "placeholderAi": "Kërko dokumente me fjalët e tua – p.sh. “faturat nga Kia nga 2024”",
+      "labelAi": "IA",
       "label": "Kërko dokumente",
       "clear": "Pastro kërkimin",
-      "modeAi": "Kërkim me IA – kalo te kërkimi me fjalë kyçe",
-      "modeKeywords": "Kërkim me fjalë kyçe – kalo te kërkimi me IA",
       "askFailed": "Po kërkohet me fjalë kyçe."
     },
     "userMenu": {

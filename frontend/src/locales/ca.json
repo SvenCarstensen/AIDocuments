@@ -69,10 +69,9 @@
     "search": {
       "placeholder": "Cerca documents, etiquetes, continguts …",
       "placeholderAi": "Cerca documents amb les teves paraules – p. ex. «factures de Kia del 2024»",
+      "labelAi": "IA",
       "label": "Cerca documents",
       "clear": "Esborra la cerca",
-      "modeAi": "Cerca amb IA – canvia a la cerca per paraules clau",
-      "modeKeywords": "Cerca per paraules clau – canvia a la cerca amb IA",
       "askFailed": "Es cerca per paraules clau."
     },
     "userMenu": {

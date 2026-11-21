@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Otsi dokumente, märksõnu, sisu…",
       "placeholderAi": "Otsi dokumente oma sõnadega – nt „Kia arved aastast 2024“",
+      "labelAi": "TI",
       "label": "Otsi dokumente",
       "clear": "Tühjenda otsing",
-      "modeAi": "Tehisintellekti otsing – lülitu märksõnaotsingule",
-      "modeKeywords": "Märksõnaotsing – lülitu tehisintellekti otsingule",
       "askFailed": "Otsitakse märksõnade järgi."
     },
     "userMenu": {

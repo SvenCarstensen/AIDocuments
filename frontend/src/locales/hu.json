@@ -68,10 +68,9 @@
     "search": {
       "placeholder": "Keresés dokumentumokban, címkékben, tartalomban…",
       "placeholderAi": "Keress dokumentumokat a saját szavaiddal – pl. „a Kia számlái 2024-ből”",
+      "labelAi": "MI",
       "label": "Dokumentumok keresése",
       "clear": "Keresés törlése",
-      "modeAi": "MI-keresés – váltás kulcsszavas keresésre",
-      "modeKeywords": "Kulcsszavas keresés – váltás MI-keresésre",
       "askFailed": "Kulcsszavak alapján keresünk."
     },
     "userMenu": {

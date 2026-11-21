@@ -69,10 +69,9 @@
     "search": {
       "placeholder": "Pretražite dokumente, oznake, sadržaj…",
       "placeholderAi": "Traži dokumente vlastitim riječima – npr. „računi od Kie iz 2024.“",
+      "labelAi": "VI",
       "label": "Pretraga dokumenata",
       "clear": "Očisti pretragu",
-      "modeAi": "Pretraga s VI – prebaci na pretragu po ključnim riječima",
-      "modeKeywords": "Pretraga po ključnim riječima – prebaci na pretragu s VI",
       "askFailed": "Pretražuje se po ključnim riječima."
     },
     "userMenu": {

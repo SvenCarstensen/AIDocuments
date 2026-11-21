@@ -71,10 +71,9 @@
     "search": {
       "placeholder": "Cuardaigh doiciméid, clibeanna, ábhar…",
       "placeholderAi": "Cuardaigh doiciméid i d’fhocail féin – m.sh. „sonraisc ó Kia ó 2024“",
+      "labelAi": "IS",
       "label": "Cuardaigh doiciméid",
       "clear": "Glan an cuardach",
-      "modeAi": "Cuardach IS – athraigh go cuardach eochairfhocal",
-      "modeKeywords": "Cuardach eochairfhocal – athraigh go cuardach IS",
       "askFailed": "Déantar cuardach de réir eochairfhocal."
     },
     "userMenu": {
