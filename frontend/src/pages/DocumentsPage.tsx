@@ -43,11 +43,12 @@ function useDocumentFilters() {
     }
   }, [params])
 
-  function set(key: string, value: string) {
+  /** @param replace ersetzt den Verlaufseintrag – für Änderungen, die nicht der Anwender ausgelöst hat */
+  function set(key: string, value: string, replace = false) {
     const next = new URLSearchParams(params)
     if (value) next.set(key, value)
     else next.delete(key)
-    setParams(next)
+    setParams(next, { replace })
   }
   function toggleTag(tag: string) {
     const next = new URLSearchParams(params)
@@ -85,6 +86,15 @@ export function DocumentsPage() {
     refetchInterval: (query) => ((query.state.data?.processing ?? 0) > 0 ? 4000 : 10_000),
   })
   const inProgress = system.data?.processing ?? 0
+  const failed = system.data?.failed ?? 0
+
+  // Der Filter „Fehlgeschlagen“ ist nur wählbar, solange es Fehlschläge gibt. Ist der letzte behoben, während
+  // er gesetzt ist, entfällt er – sonst bliebe eine leere Liste hinter einem Filter, den niemand mehr sieht.
+  const failedFilterObsolete = filters.status === 'FAILED' && system.data !== undefined && failed === 0
+  useEffect(() => {
+    if (failedFilterObsolete) set('status', '', true)
+    // hängt bewusst nur an der Bedingung: "set" entsteht bei jedem Rendern neu
+  }, [failedFilterObsolete])
   const remainingSeconds = system.data?.estimatedSecondsRemaining ?? null
   const working = inProgress > 0
 
@@ -139,7 +149,7 @@ export function DocumentsPage() {
     <FilterPanel
       facets={facets.data}
       filters={filters}
-      failed={system.data?.failed ?? 0}
+      failed={failed}
       onSet={set}
       onToggleTag={toggleTag}
     />
@@ -439,7 +449,7 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
         </div>
       </FilterSection>
 
-      {(failed > 0 || filters.status === 'FAILED') && (
+      {failed > 0 && (
         <FilterSection title={t('documents.filters.status')}>
           <FacetRow
             label={t('documents.filters.failed')}
