@@ -15,7 +15,7 @@ Absender, Datum, Schlagworte, Kerndaten – bei Scans auch den Volltext) und mac
 | Eingang | PDF-Anhänge aus IMAP-Postfächern (nur lesend – E-Mails bleiben unverändert und ungelesen), neue Dateien aus einem überwachten Ordner, Upload per Schaltfläche oder Drag & Drop (mehrere Dateien auf einmal). Inhaltsgleiche Dateien werden erkannt und nicht doppelt abgelegt. |
 | KI | Zusammenfassung, Dokumentart, Absender, Dokumentdatum, Schlagworte und Kerndaten (Beträge, Fristen, Nummern …). Vorhandene Schlagworte und Absender werden wiederverwendet. Scans ohne Textebene werden transkribiert und damit im Volltext durchsuchbar. |
 | Suche | Volltext über Inhalt, Titel, Schlagworte, Absender und Kerndaten – mit deutscher Stammformbildung, Treffern schon beim Tippen und Teiltextsuche mitten im Wort. Filter nach Dokumentart, Schlagworten, Absender und Zeitraum. |
-| Ansicht | Kachel- und Listenansicht mit Vorschaubildern, Detailseite mit PDF-Betrachter, Metadaten von Hand bearbeitbar, helles und dunkles Design. |
+| Ansicht | Kachel- und Listenansicht mit Vorschaubildern, Detailseite mit PDF-Betrachter, helles und dunkles Design. Metadaten sind von Hand bearbeitbar, Schlagworte lassen sich direkt am Dokument entfernen und ergänzen. |
 | Benutzer | Ersteinrichtung mit Administratorkonto, weitere Konten mit den Rollen **Admin** und **Benutzer**. |
 | Einstellungen | Postfächer, Abrufintervall und Eingangsordner, KI-/LLM-Server, Benutzer – alles in der Oberfläche. |
 | Sprachen | Oberfläche und Meldungen des Servers in 36 europäischen Sprachen. Beim ersten Start gilt die Systemsprache, ohne passende Übersetzung Englisch; umschaltbar im Benutzermenü. Siehe [Sprachen](#sprachen). |
@@ -37,6 +37,11 @@ Absender, Datum, Schlagworte, Kerndaten – bei Scans auch den Volltext) und mac
 | `"zahlbar bis"` | genau diese Wortfolge |
 | `miete -kaution` | „Miete“, aber nicht „Kaution“ |
 | `strom \| gas` | eines von beiden |
+
+## Stand
+
+Das Projekt ist in Entwicklung und wird bislang von einer Person genutzt. Es gibt noch keine veröffentlichten
+Versionen und keine Lizenz – das Repository ist privat.
 
 ## Entwicklung
 
@@ -176,6 +181,14 @@ Wie das Dokument beim Modell ankommt:
 Jede Antwort wird geprüft (Titel, Zusammenfassung, Dokumentart, Schlagworte, Datum, bei Scans der Volltext).
 Ist sie nicht verarbeitbar, fragt die Anwendung genau einmal nach und nennt dem Modell, was gefehlt hat.
 Dokumente gehen strikt nacheinander an das Modell, nie mehrere gleichzeitig.
+
+**Lange Antworten:** Modelle, die vor der Antwort „nachdenken“ (viele lokale Modelle tun das), verbrauchen dafür
+ein Vielfaches der eigentlichen Antwort – und das Nachdenken zählt gegen dasselbe Token-Limit. Die Anwendung
+gibt deshalb reichlich Platz (16.000 Token, mit Texterkennung 24.000). Wird eine Antwort trotzdem
+abgeschnitten, folgt ein zweiter Anlauf mit doppeltem Limit. Reicht auch der nicht oder lässt der Server ihn
+nicht zu, wird aus der abgeschnittenen Antwort übernommen, was vollständig ankam – vorausgesetzt, Titel,
+Zusammenfassung, Dokumentart und Schlagworte sind komplett. Erst danach gilt die Analyse als fehlgeschlagen.
+Das Protokoll nennt bei jedem Abbruch, wie viele Token erzeugt wurden und wie viel davon Nachdenken war.
 
 Ohne KI-Zugang funktioniert die Anwendung weiter: PDFs werden gespeichert und sind über ihre Textebene
 durchsuchbar, nur Zusammenfassung und Schlagworte fehlen. Nachträglich analysieren: *Einstellungen → KI →
