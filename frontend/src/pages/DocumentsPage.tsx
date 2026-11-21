@@ -338,6 +338,9 @@ function ActiveFilter({ label, onRemove }: { label: string; onRemove: () => void
 
 // ---------- Filterleiste ----------
 
+/** So oft muss ein Schlagwort vorkommen, damit es in der Übersicht der Filter erscheint. */
+const MIN_TAG_COUNT = 3
+
 interface FilterPanelProps {
   facets: Facets | undefined
   filters: DocumentQuery
@@ -359,7 +362,10 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
       </div>
     )
   }
-  const tags = allTags ? facets.tags : facets.tags.slice(0, 18)
+  // Die Übersicht zeigt nur Schlagworte, die öfter vorkommen – einmalige würden sie bei vielen Dokumenten
+  // unbrauchbar lang machen. Ein gerade gewähltes bleibt sichtbar, damit es sich wieder abwählen lässt.
+  const frequentTags = facets.tags.filter((facet) => facet.count >= MIN_TAG_COUNT || filters.tags.includes(facet.name))
+  const tags = allTags ? frequentTags : frequentTags.slice(0, 18)
   const correspondents = allCorrespondents ? facets.correspondents : facets.correspondents.slice(0, 7)
   const nothingYet = facets.categories.length + facets.tags.length + facets.correspondents.length === 0
 
@@ -386,7 +392,7 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
         </FilterSection>
       )}
 
-      {facets.tags.length > 0 && (
+      {frequentTags.length > 0 && (
         <FilterSection title={t('document.fields.tags')}>
           <div className="flex flex-wrap gap-1.5">
             {tags.map((facet) => (
@@ -399,7 +405,7 @@ function FilterPanel({ facets, filters, failed, onSet, onToggleTag }: FilterPane
               />
             ))}
           </div>
-          {facets.tags.length > 18 && <MoreToggle open={allTags} onClick={() => setAllTags(!allTags)} />}
+          {frequentTags.length > 18 && <MoreToggle open={allTags} onClick={() => setAllTags(!allTags)} />}
         </FilterSection>
       )}
 
