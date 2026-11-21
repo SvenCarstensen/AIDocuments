@@ -1,243 +1,238 @@
 # AIDocuments
 
-Dokumentenverwaltung für PDFs: Die Anwendung holt PDF-Dateien aus IMAP-Postfächern, einem überwachten
-Eingangsordner oder per Upload, lässt sie von einer KI erschließen (Titel, Zusammenfassung, Dokumentart,
-Absender, Datum, Schlagworte, Kerndaten – bei Scans auch den Volltext) und macht sie durchsuchbar.
+Document management for PDFs: the application collects PDF files from IMAP mailboxes, a watched import folder
+or by upload, has an AI index them (title, summary, document type, correspondent, date, tags, key facts – and
+for scans the full text as well) and makes them searchable.
 
-- **Backend:** Spring Boot 4 (Java 21), MongoDB, Apache Lucene (Volltextsuche), PDFBox, Anthropic Java SDK,
-  eigene Anbindung für OpenAI-kompatible Server
+- **Backend:** Spring Boot 4 (Java 21), MongoDB, Apache Lucene (full-text search), PDFBox, Anthropic Java SDK,
+  a custom client for OpenAI-compatible servers
 - **Frontend:** React 19, TypeScript, Vite, Tailwind CSS 4, TanStack Query
 
-## Funktionen
+## Features
 
-| Bereich | Was die Anwendung tut |
+| Area | What the application does |
 |---|---|
-| Eingang | PDF-Anhänge aus IMAP-Postfächern (nur lesend – E-Mails bleiben unverändert und ungelesen), neue Dateien aus einem überwachten Ordner, Upload per Schaltfläche oder Drag & Drop (mehrere Dateien auf einmal). Inhaltsgleiche Dateien werden erkannt und nicht doppelt abgelegt. |
-| KI | Zusammenfassung, Dokumentart, Absender, Dokumentdatum, Schlagworte und Kerndaten (Beträge, Fristen, Nummern …). Vorhandene Schlagworte und Absender werden wiederverwendet. Scans ohne Textebene werden transkribiert und damit im Volltext durchsuchbar. |
-| Suche | Volltext über Inhalt, Titel, Schlagworte, Absender und Kerndaten – mit deutscher Stammformbildung, Treffern schon beim Tippen und Teiltextsuche mitten im Wort. Filter nach Dokumentart, Schlagworten, Absender und Zeitraum. |
-| Ansicht | Kachel- und Listenansicht mit Vorschaubildern, Detailseite mit PDF-Betrachter, helles und dunkles Design. Metadaten sind von Hand bearbeitbar, Schlagworte lassen sich direkt am Dokument entfernen und ergänzen. |
-| Benutzer | Ersteinrichtung mit Administratorkonto, weitere Konten mit den Rollen **Admin** und **Benutzer**. |
-| Einstellungen | Postfächer, Abrufintervall und Eingangsordner, KI-/LLM-Server, Benutzer – alles in der Oberfläche. |
-| Sprachen | Oberfläche und Meldungen des Servers in 36 europäischen Sprachen. Beim ersten Start gilt die Systemsprache, ohne passende Übersetzung Englisch; umschaltbar im Benutzermenü. Siehe [Sprachen](#sprachen). |
+| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread), new files from a watched folder, upload by button or drag & drop (several files at once). Files with identical content are recognised and not stored twice. |
+| AI | Summary, document type, correspondent, document date, tags and key facts (amounts, deadlines, numbers …). Existing tags and correspondents are reused. Scans without a text layer are transcribed and thus become full-text searchable. |
+| Search | Full text across content, title, tags, correspondent and key facts – with German stemming, results while typing and partial matches in the middle of a word. Filters for document type, tags, correspondent and period. |
+| View | Grid and list view with thumbnails, detail page with PDF viewer, light and dark theme. Metadata can be edited by hand; tags can be removed and added directly on the document. |
+| Users | Initial setup with an administrator account, further accounts with the roles **Admin** and **User**. |
+| Settings | Mailboxes, check interval and import folder, AI/LLM server, users – all in the user interface. |
+| Languages | User interface and server messages in 36 European languages. The first start uses the system language, English if there is no matching translation; switchable in the user menu. See [Languages](#languages). |
 
-### Rollen
+### Roles
 
-| | Benutzer | Admin |
+| | User | Admin |
 |---|:-:|:-:|
-| Dokumente ansehen, suchen, hochladen, Metadaten bearbeiten | ✓ | ✓ |
-| Dokumente löschen, neu analysieren | | ✓ |
-| Einstellungen (Postfächer, Abruf, KI), Benutzerverwaltung | | ✓ |
+| View, search and upload documents, edit metadata | ✓ | ✓ |
+| Delete documents, analyze them again | | ✓ |
+| Settings (mailboxes, schedule, AI), user management | | ✓ |
 
-### Suche
+### Search
 
-| Eingabe | findet |
+| Input | finds |
 |---|---|
-| `rechnung strom` | Dokumente, in denen beide Wörter vorkommen (auch „Rechnungen“, „Stromrechnung“) |
-| `versicherung` | auch „Haftpflichtversicherung“ – Wortteile zählen mit |
-| `"zahlbar bis"` | genau diese Wortfolge |
-| `miete -kaution` | „Miete“, aber nicht „Kaution“ |
-| `strom \| gas` | eines von beiden |
+| `rechnung strom` | documents containing both words (also “Rechnungen”, “Stromrechnung”) |
+| `versicherung` | also “Haftpflichtversicherung” – parts of words count |
+| `"zahlbar bis"` | exactly this sequence of words |
+| `miete -kaution` | “Miete”, but not “Kaution” |
+| `strom \| gas` | either of the two |
 
-## Stand
+## Development
 
-Das Projekt ist in Entwicklung und wird bislang von einer Person genutzt. Es gibt noch keine veröffentlichten
-Versionen und keine Lizenz – das Repository ist privat.
-
-## Entwicklung
-
-Voraussetzungen: Java 21, Node.js 22+, Docker (für die MongoDB).
+Requirements: Java 21, Node.js 22+, Docker (for MongoDB).
 
 ```bash
-# 1. MongoDB starten (localhost:27017)
+# 1. Start MongoDB (localhost:27017)
 docker compose -f docker-compose.dev.yml up -d
 
-# 2. Backend starten (http://127.0.0.1:8080)
+# 2. Start the backend (http://127.0.0.1:8080)
 cd backend && ./mvnw spring-boot:run
 
-# 3. Frontend starten (http://127.0.0.1:5173, leitet /api an das Backend weiter)
+# 3. Start the frontend (http://127.0.0.1:5173, forwards /api to the backend)
 cd frontend && npm install && npm run dev
 ```
 
-Beim ersten Aufruf von <http://127.0.0.1:5173> fragt die Anwendung nach Name und Passwort für das
-Administratorkonto.
+On the first visit to <http://127.0.0.1:5173> the application asks for the name and password of the
+administrator account.
 
-**LLM-Server der Debug-Version:** Liegt `backend/config/debug.yml` vor, wird sie beim lokalen Start
-automatisch geladen (Vorlage: `backend/config/debug.example.yml`). Die Datei steht nicht im Git und landet
-nicht im Docker-Image – der richtige Ort für Server-Adresse und API-Schlüssel der Entwicklungsumgebung.
+**LLM server of the debug build:** If `backend/config/debug.yml` exists, it is loaded automatically on a local
+start (template: `backend/config/debug.example.yml`). The file is not in Git and does not end up in the Docker
+image – the right place for the server address and API key of the development environment.
 
-Tests (brauchen ein laufendes Docker für Testcontainers):
+Tests (need a running Docker for Testcontainers):
 
 ```bash
 cd backend && ./mvnw test
 ```
 
-Der Integrationstest durchläuft Ersteinrichtung, Rollen, Upload, Suche, IMAP-Abruf (gegen einen
-eingebetteten Test-Mailserver) und Eingangsordner gegen eine echte MongoDB.
+The integration test runs through initial setup, roles, upload, search, IMAP retrieval (against an embedded
+test mail server) and the import folder against a real MongoDB.
 
-## Produktion mit Docker
+## Production with Docker
 
-Ein Image enthält Oberfläche, Backend und – wahlweise – die MongoDB.
+One image contains the user interface, the backend and – optionally – MongoDB.
 
-### Variante A: MongoDB im Container
+### Option A: MongoDB inside the container
 
 ```bash
 docker compose up -d --build
 ```
 
-Ohne `MONGODB_URI` startet im Container eine eingebaute MongoDB. Alles Bleibende liegt im Volume
-`/aidocuments`:
+Without `MONGODB_URI` a built-in MongoDB starts inside the container. Everything persistent lives in the
+volume `/aidocuments`:
 
 ```
 /aidocuments
-├── mongo/        Datenbank (nur bei eingebauter MongoDB)
-├── files/        die PDF-Dateien
-├── thumbnails/   Vorschaubilder
-├── index/        Suchindex (wird bei Bedarf aus der Datenbank neu aufgebaut)
-└── secret.key    Schlüssel für gespeicherte Postfach-Passwörter und API-Schlüssel
+├── mongo/        database (only with the built-in MongoDB)
+├── files/        the PDF files
+├── thumbnails/   thumbnails
+├── index/        search index (rebuilt from the database when needed)
+└── secret.key    key for stored mailbox passwords and API keys
 ```
 
-### Variante B: externe MongoDB
+### Option B: external MongoDB
 
 ```bash
 docker compose -f docker-compose.external-mongo.yml up -d --build
 ```
 
-Mit gesetzter `MONGODB_URI` läuft im Container nur die Anwendung. Das Volume `/aidocuments` bleibt nötig
-(PDFs, Suchindex, Schlüsseldatei).
+With `MONGODB_URI` set, only the application runs in the container. The volume `/aidocuments` is still needed
+(PDFs, search index, key file).
 
 ```bash
 docker run -d -p 8080:8080 \
-  -e MONGODB_URI='mongodb://benutzer:passwort@db.example.com:27017/aidocuments?authSource=admin' \
+  -e MONGODB_URI='mongodb://user:password@db.example.com:27017/aidocuments?authSource=admin' \
   -v aidocuments-data:/aidocuments \
   aidocuments
 ```
 
-### Eingangsordner
+### Import folder
 
-Den Ordner des Scanners als `/import` einbinden (`-v /pfad/zum/scan-ordner:/import`) – er ist im Image als
-Eingangsordner vorbelegt. Abschalten oder ändern unter *Einstellungen → Abruf & Eingangsordner*.
+Mount the scanner's folder as `/import` (`-v /path/to/scan-folder:/import`) – the image is preconfigured to
+use it as the import folder. Switch it off or change it under *Settings → Schedule & import folder*.
 
-### Sicherung
+### Backup
 
-`/aidocuments` sichern – bei externer MongoDB zusätzlich die Datenbank. Die Datei `secret.key` gehört zur
-Sicherung: Ohne sie lassen sich gespeicherte Postfach-Passwörter und API-Schlüssel nicht mehr entschlüsseln.
+Back up `/aidocuments` – with an external MongoDB the database as well. The file `secret.key` belongs in the
+backup: without it, stored mailbox passwords and API keys can no longer be decrypted.
 
-### Hinter einem Reverse-Proxy (HTTPS)
+### Behind a reverse proxy (HTTPS)
 
-Die Anwendung selbst spricht HTTP. Für den Betrieb im Netz einen Reverse-Proxy mit TLS davorsetzen und
-`SERVER_FORWARD_HEADERS_STRATEGY=framework` sowie `SERVER_SERVLET_SESSION_COOKIE_SECURE=true` setzen.
+The application itself speaks HTTP. For use on a network, put a reverse proxy with TLS in front of it and set
+`SERVER_FORWARD_HEADERS_STRATEGY=framework` and `SERVER_SERVLET_SESSION_COOKIE_SECURE=true`.
 
-### Hinweis zur MongoDB-Version
+### Note on the MongoDB version
 
-Die eingebaute MongoDB ist Version 7.0. MongoDB 8.0 und neuer starten auf Hosts mit Linux-Kernel 6.19 bis
-7.0.13 nicht ([SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)) – das betrifft unter anderem
-aktuelle Docker-Desktop-Versionen. Wer nicht betroffen ist, kann mit
-`docker build --build-arg MONGO_VERSION=8.0 -t aidocuments .` eine neuere Version einbauen.
+The built-in MongoDB is version 7.0. MongoDB 8.0 and newer do not start on hosts with Linux kernel 6.19 to
+7.0.13 ([SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)) – this affects current Docker Desktop
+versions, among others. If you are not affected, you can build in a newer version with
+`docker build --build-arg MONGO_VERSION=8.0 -t aidocuments .`.
 
-## Konfiguration
+## Configuration
 
-Fast alles lässt sich in der Oberfläche einstellen. Die Umgebungsvariablen sind Vorgaben für den Start;
-in der Oberfläche gespeicherte Werte haben Vorrang.
+Almost everything can be set in the user interface. The environment variables are defaults for the start;
+values saved in the user interface take precedence.
 
-| Variable | Bedeutung | Standard |
+| Variable | Meaning | Default |
 |---|---|---|
-| `MONGODB_URI` | Verbindung zur MongoDB | `mongodb://localhost:27017/aidocuments` (im Image: eingebaute MongoDB) |
-| `AIDOCS_DATA_DIR` | Ablage für PDFs, Suchindex, Schlüsseldatei | `./data` (im Image: `/aidocuments`) |
-| `AIDOCS_IMPORT_DIR` | überwachter Eingangsordner | leer = aus (im Image: `/import`) |
-| `AIDOCS_IMPORT_INTERVAL` | Abrufintervall, z. B. `5m` | `5m` |
-| `AIDOCS_AI_PROVIDER` | LLM-Anbieter: `anthropic`, `openai`, `moonshot`, `lm-studio`, `openai-compatible` | `anthropic` |
-| `AIDOCS_AI_BASE_URL` | Adresse des LLM-Servers | Standardadresse des Anbieters |
-| `AIDOCS_AI_API_KEY` | API-Schlüssel des LLM-Servers (`ANTHROPIC_API_KEY` wird ebenfalls gelesen) | leer |
-| `AIDOCS_AI_MODEL` | Modell-ID | `claude-opus-5-5` |
-| `SERVER_ADDRESS` / `SERVER_PORT` | Bindeadresse und Port | `127.0.0.1` / `8080` (im Image: `0.0.0.0`) |
+| `MONGODB_URI` | Connection to MongoDB | `mongodb://localhost:27017/aidocuments` (in the image: built-in MongoDB) |
+| `AIDOCS_DATA_DIR` | Storage for PDFs, search index, key file | `./data` (in the image: `/aidocuments`) |
+| `AIDOCS_IMPORT_DIR` | Watched import folder | empty = off (in the image: `/import`) |
+| `AIDOCS_IMPORT_INTERVAL` | Check interval, e.g. `5m` | `5m` |
+| `AIDOCS_AI_PROVIDER` | LLM provider: `anthropic`, `openai`, `moonshot`, `lm-studio`, `openai-compatible` | `anthropic` |
+| `AIDOCS_AI_BASE_URL` | Address of the LLM server | the provider's default address |
+| `AIDOCS_AI_API_KEY` | API key of the LLM server (`ANTHROPIC_API_KEY` is read as well) | empty |
+| `AIDOCS_AI_MODEL` | Model ID | `claude-opus-5-5` |
+| `SERVER_ADDRESS` / `SERVER_PORT` | Bind address and port | `127.0.0.1` / `8080` (in the image: `0.0.0.0`) |
 
-## KI-Anbindung
+## AI integration
 
-Der Anbieter wird unter *Einstellungen → KI* gewählt:
+The provider is chosen under *Settings → AI*:
 
-| Anbieter | Schnittstelle | Standardadresse | Inhalte verlassen den Rechner |
+| Provider | Interface | Default address | Content leaves the machine |
 |---|---|---|:-:|
-| Anthropic | Anthropic Messages API | `https://api.anthropic.com` | ja |
-| OpenAI | OpenAI Chat Completions | `https://api.openai.com/v1` | ja |
-| Moonshot | OpenAI Chat Completions | `https://api.moonshot.ai/v1` | ja |
-| LM Studio | OpenAI Chat Completions | `http://localhost:1234/v1` | nein |
-| OpenAI Kompatibel | OpenAI Chat Completions | frei wählbar | je nach Server |
+| Anthropic | Anthropic Messages API | `https://api.anthropic.com` | yes |
+| OpenAI | OpenAI Chat Completions | `https://api.openai.com/v1` | yes |
+| Moonshot | OpenAI Chat Completions | `https://api.moonshot.ai/v1` | yes |
+| LM Studio | OpenAI Chat Completions | `http://localhost:1234/v1` | no |
+| OpenAI-compatible | OpenAI Chat Completions | freely selectable | depends on the server |
 
-Bei Anthropic, OpenAI und Moonshot weist die Oberfläche darauf hin, dass die Dokumentinhalte zur Analyse an
-Server im Internet übertragen werden, und empfiehlt eine lokale KI. Ein gespeicherter API-Schlüssel gehört
-immer zu genau einem Anbieter: Beim Wechsel wird er verworfen und nie an den neuen Anbieter geschickt.
+For Anthropic, OpenAI and Moonshot the user interface points out that document contents are transmitted to
+servers on the internet for analysis, and recommends a local AI. A stored API key always belongs to exactly
+one provider: when the provider changes, the key is discarded and never sent to the new provider.
 
-Wie das Dokument beim Modell ankommt:
+How the document reaches the model:
 
-- **Claude API** (Anthropic mit der Standardadresse): Das PDF geht als Ganzes an das Modell – Layout,
-  Tabellen und Scans inklusive –, das Ergebnis kommt als strukturierte Ausgabe zurück.
-- **Alle anderen** (OpenAI-Schnittstelle sowie Anthropic-Schnittstelle im *Kompatibilitätsmodus* für eigene
-  Server): Das Dokument geht als ausgelesener Text bzw. – bei Scans – als Seitenbilder an das Modell, das
-  Ergebnis kommt als Werkzeugaufruf zurück. Das Modell muss dafür Werkzeugaufrufe (Tool Use / Function
-  Calling) und für Scans Bildeingabe beherrschen. Grenzen: Von sehr langen Texten wertet die KI nur den Anfang
-  aus, von Scans die ersten 8 Seiten; die Anwendung vermerkt das am Dokument. Die Volltextsuche umfasst bei
-  Textdokumenten trotzdem den gesamten Text.
+- **Claude API** (Anthropic with the default address): the PDF goes to the model as a whole – layout, tables
+  and scans included – and the result comes back as structured output.
+- **All others** (the OpenAI interface, and the Anthropic interface in *compatibility mode* for self-hosted
+  servers): the document goes to the model as extracted text or – for scans – as page images, and the result
+  comes back as a tool call. The model therefore has to support tool calls (tool use / function calling) and,
+  for scans, image input. Limits: of very long texts the AI evaluates only the beginning, of scans the first
+  8 pages; the application notes this on the document. For text documents the full-text search still covers
+  the entire text.
 
-Jede Antwort wird geprüft (Titel, Zusammenfassung, Dokumentart, Schlagworte, Datum, bei Scans der Volltext).
-Ist sie nicht verarbeitbar, fragt die Anwendung genau einmal nach und nennt dem Modell, was gefehlt hat.
-Dokumente gehen strikt nacheinander an das Modell, nie mehrere gleichzeitig.
+Every answer is checked (title, summary, document type, tags, date, and for scans the full text). If it cannot
+be processed, the application asks exactly once more and tells the model what was missing. Documents go to the
+model strictly one after another, never several at the same time.
 
-**Lange Antworten:** Modelle, die vor der Antwort „nachdenken“ (viele lokale Modelle tun das), verbrauchen dafür
-ein Vielfaches der eigentlichen Antwort – und das Nachdenken zählt gegen dasselbe Token-Limit. Die Anwendung
-gibt deshalb reichlich Platz (16.000 Token, mit Texterkennung 24.000). Wird eine Antwort trotzdem
-abgeschnitten, folgt ein zweiter Anlauf mit doppeltem Limit. Reicht auch der nicht oder lässt der Server ihn
-nicht zu, wird aus der abgeschnittenen Antwort übernommen, was vollständig ankam – vorausgesetzt, Titel,
-Zusammenfassung, Dokumentart und Schlagworte sind komplett. Erst danach gilt die Analyse als fehlgeschlagen.
-Das Protokoll nennt bei jedem Abbruch, wie viele Token erzeugt wurden und wie viel davon Nachdenken war.
+**Long answers:** Models that “think” before answering (many local models do) use many times the size of the
+actual answer for that – and the thinking counts against the same token limit. The application therefore
+leaves plenty of room (16,000 tokens, 24,000 with text recognition). If an answer is cut off anyway, a second
+attempt follows with twice the limit. If that is not enough either, or the server does not allow it, the
+application keeps whatever arrived complete from the cut-off answer – provided title, summary, document type
+and tags are complete. Only then does the analysis count as failed. For every cut-off the log states how many
+tokens were generated and how much of that was thinking.
 
-Ohne KI-Zugang funktioniert die Anwendung weiter: PDFs werden gespeichert und sind über ihre Textebene
-durchsuchbar, nur Zusammenfassung und Schlagworte fehlen. Nachträglich analysieren: *Einstellungen → KI →
-„Jetzt analysieren“*.
+Without AI access the application keeps working: PDFs are stored and searchable through their text layer, only
+summary and tags are missing. To analyze them later: *Settings → AI → “Analyze now”*.
 
-## Sprachen
+## Languages
 
-Die Anwendung ist in 36 Sprachen übersetzt: die 24 Amtssprachen der EU (Bulgarisch, Dänisch, Deutsch,
-Englisch, Estnisch, Finnisch, Französisch, Griechisch, Irisch, Italienisch, Kroatisch, Lettisch, Litauisch,
-Maltesisch, Niederländisch, Polnisch, Portugiesisch, Rumänisch, Schwedisch, Slowakisch, Slowenisch, Spanisch,
-Tschechisch, Ungarisch) sowie Albanisch, Belarussisch, Bosnisch, Isländisch, Katalanisch, Luxemburgisch,
-Mazedonisch, Norwegisch (Bokmål), Russisch, Serbisch, Türkisch und Ukrainisch.
+The application is translated into 36 languages: the 24 official languages of the EU (Bulgarian, Croatian,
+Czech, Danish, Dutch, English, Estonian, Finnish, French, German, Greek, Hungarian, Irish, Italian, Latvian,
+Lithuanian, Maltese, Polish, Portuguese, Romanian, Slovak, Slovenian, Spanish, Swedish) plus Albanian,
+Belarusian, Bosnian, Catalan, Icelandic, Luxembourgish, Macedonian, Norwegian (Bokmål), Russian, Serbian,
+Turkish and Ukrainian.
 
-- **Welche Sprache gilt:** Beim ersten Start die Systemsprache, wie der Browser sie meldet (`de-AT` wird mit
-  Deutsch bedient, `nn`/`no` mit Norwegisch Bokmål). Gibt es dafür keine Übersetzung, gilt Englisch. Die
-  Sprache lässt sich im Benutzermenü und auf der Anmeldeseite umschalten; die Wahl merkt sich der Browser.
-- **Was übersetzt ist:** die Oberfläche, Fehlermeldungen und Statusmeldungen des Servers (etwa das Ergebnis
-  eines Postfachabrufs – sie werden sprachneutral gespeichert und erst beim Anzeigen übersetzt) sowie Datums-,
-  Zahlen- und Zeitangaben.
-- **Was nicht:** Inhalte, die die KI erzeugt (Titel, Zusammenfassung, Schlagworte, Dokumentart) – deren Sprache
-  bestimmt *Einstellungen → KI → Sprache der Ergebnisse*. Die Volltextsuche bildet Stammformen für deutsche
-  Texte; Teiltextsuche funktioniert in jeder Sprache.
-- **Herkunft:** Deutsch ist der ursprüngliche Wortlaut. Alle anderen Sprachen sind maschinell übersetzt und nicht
-  von Muttersprachlern gegengelesen – Korrekturen sind einfache Textänderungen in den Dateien unten.
+- **Which language applies:** On the first start the system language as reported by the browser (`de-AT` is
+  served with German, `nn`/`no` with Norwegian Bokmål). If there is no translation for it, English applies.
+  The language can be switched in the user menu and on the sign-in page; the browser remembers the choice.
+- **What is translated:** the user interface, error and status messages of the server (such as the result of
+  a mailbox check – they are stored language-neutrally and translated only when displayed) as well as dates,
+  numbers and times.
+- **What is not:** content generated by the AI (title, summary, tags, document type) – its language is set by
+  *Settings → AI → Language of the results*. The full-text search applies stemming for German texts; partial
+  matching works in every language.
+- **Origin:** German is the original wording. All other languages are machine translations and have not been
+  proofread by native speakers – corrections are simple text changes in the files below.
 
-| | Oberfläche | Server |
+| | User interface | Server |
 |---|---|---|
-| Dateien | `frontend/src/locales/<code>.json` | `backend/src/main/resources/messages_<code>.properties` |
-| Vorlage und Rückfallsprache (Englisch) | `en.json` | `messages.properties` |
-| Regeln für Übersetzungen | `frontend/src/locales/README.md` | Kopf von `messages.properties` |
-| Prüfung | `cd frontend && npm run check:locales` | `MessageBundlesTest` (läuft mit `./mvnw test`) |
+| Files | `frontend/src/locales/<code>.json` | `backend/src/main/resources/messages_<code>.properties` |
+| Template and fallback language (English) | `en.json` | `messages.properties` |
+| Rules for translations | `frontend/src/locales/README.md` | header of `messages.properties` |
+| Check | `cd frontend && npm run check:locales` | `MessageBundlesTest` (runs with `./mvnw test`) |
 
-Eine weitere Sprache hinzufügen: beide Dateien anlegen – sie wird ohne Codeänderung erkannt und erscheint in der
-Sprachauswahl. Norwegisch heißt in der Oberfläche `nb.json`, auf dem Server `messages_no.properties`.
+Adding another language: create both files – it is detected without any code change and appears in the
+language selection. Norwegian is called `nb.json` in the user interface and `messages_no.properties` on the
+server.
 
-## Projektstruktur
+## Project structure
 
 ```
-backend/     Spring-Boot-Anwendung
+backend/     Spring Boot application
   src/main/java/de/aidocuments/
-    i18n/       Mehrsprachigkeit: sprachneutrale Meldungen, Sprachwahl je Anfrage
-    document/   Dokumente, Verarbeitungs-Pipeline, REST-API
-    ai/         KI-Analyse (Anthropic- und OpenAI-Schnittstelle)
-    search/     Lucene-Volltextindex
-    mail/       IMAP-Postfächer und Abruf
-    importer/   Eingangsordner und Abrufintervall
-    user/       Benutzer, Rollen, Anmeldung
-    settings/   KI- und Abruf-Einstellungen
-    security/   Zugriffsschutz, Verschlüsselung gespeicherter Geheimnisse
-frontend/    React-Oberfläche
-docker/      Startskript des Containers
+    i18n/       multilingual support: language-neutral messages, language per request
+    document/   documents, processing pipeline, REST API
+    ai/         AI analysis (Anthropic and OpenAI interface)
+    search/     Lucene full-text index
+    mail/       IMAP mailboxes and retrieval
+    importer/   import folder and check interval
+    user/       users, roles, sign-in
+    settings/   AI and schedule settings
+    security/   access control, encryption of stored secrets
+frontend/    React user interface
+docker/      start script of the container
 ```
