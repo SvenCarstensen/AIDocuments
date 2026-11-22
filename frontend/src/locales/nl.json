@@ -49,6 +49,8 @@
     "setup": {
       "title": "AIDocuments instellen",
       "subtitle": "Maak eerst het beheerdersaccount aan. Daarna kun je in de instellingen meer gebruikers toevoegen.",
+      "code": "Installatiecode",
+      "codeHint": "Staat bij het starten in het serverlogboek (Docker: docker compose logs).",
       "adminAccount": "Beheerdersaccount",
       "repeatPassword": "Wachtwoord herhalen",
       "submit": "Account aanmaken en beginnen",
@@ -57,6 +59,19 @@
         "ai": "AI vat ze samen en voorziet ze van tags",
         "search": "Zoeken in de volledige tekst, tot in het document"
       }
+    },
+    "twoFactor": {
+      "title": "Aanmelding bevestigen",
+      "subtitle": "Voer de 6-cijferige code uit je authenticator-app in.",
+      "code": "Code",
+      "codeHint": "Geen toegang tot de app? Voer in plaats daarvan een van je herstelcodes in.",
+      "submit": "Bevestigen",
+      "back": "Terug naar aanmelden"
+    },
+    "twoFactorRequired": {
+      "title": "Tweestapsverificatie instellen",
+      "subtitle": "Tweestapsverificatie is verplicht voor beheerders. Stel het nu in om verder te gaan.",
+      "intro": "Je hebt een authenticator-app op je telefoon nodig (bijv. Google Authenticator, Microsoft Authenticator, 1Password of Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Donker thema"
     },
     "search": {
-      "placeholder": "Zoek in documenten, tags, inhoud …",
-      "placeholderAi": "Zoek documenten in je eigen woorden – bijv. ‘facturen van Kia uit 2024’",
+      "placeholder": "Zoeken op trefwoorden: documenten, labels, inhoud …",
+      "placeholderAi": "AI-zoeken: vraag in je eigen woorden – bijv. ‘facturen van Kia uit 2024’",
       "labelAi": "AI",
       "label": "Documenten doorzoeken",
       "clear": "Zoekopdracht wissen",
@@ -78,6 +93,7 @@
       "aiActive": "AI actief",
       "aiNotConfigured": "AI niet ingesteld",
       "changePassword": "Wachtwoord wijzigen",
+      "licenses": "Licenties van derden",
       "logout": "Uitloggen"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Document verwijderen?",
-      "text": "“{{title}}” wordt verwijderd, samen met het PDF-bestand, de volledige tekst en de tags. Dit kan niet ongedaan worden gemaakt.",
-      "confirm": "Definitief verwijderen"
+      "text": "‘{{title}}’ wordt verwijderd. In de geschiedenis kun je dit 30 dagen lang ongedaan maken; daarna wordt het definitief verwijderd.",
+      "confirm": "Verwijderen"
     },
     "chat": {
       "intro": "Stel een vraag over dit document – de AI antwoordt op basis van de inhoud.",
@@ -266,6 +282,25 @@
         "summary": "Waar gaat dit document over?",
         "deadlines": "Zijn er termijnen of data?",
         "amounts": "Welke bedragen worden genoemd?"
+      }
+    },
+    "versions": {
+      "title": "Versies",
+      "intro": "Elke wijziging van de pdf levert een nieuwe versie op. Oudere versies blijven bewaard en kunnen worden bekeken, gedownload of hersteld.",
+      "current": "actueel",
+      "view": "Versie {{number}} bekijken",
+      "download": "Versie {{number}} downloaden",
+      "restore": "Versie {{number}} herstellen",
+      "restoreTitle": "Versie {{number}} herstellen?",
+      "restoreText": "Deze versie wordt de actuele. De huidige versie blijft bewaard en de stap kan in de geschiedenis ongedaan worden gemaakt.",
+      "restoreConfirm": "Herstellen",
+      "restored": "Versie {{number}} hersteld",
+      "kinds": {
+        "IMPORTED": "Geïmporteerd",
+        "EDITED": "Bewerkt",
+        "ORIGINAL_RESTORED": "Origineel hersteld",
+        "VERSION_RESTORED": "Versie {{from}} hersteld",
+        "UNDONE": "Wijziging ongedaan gemaakt"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Alleen e-mails vanaf",
         "sinceHint": "Optioneel – oudere e-mails worden overgeslagen",
         "enabled": "Automatisch controleren",
-        "enabledHint": "De mailbox wordt met het ingestelde interval op nieuwe PDF’s gecontroleerd."
-      }
+        "enabledHint": "De mailbox wordt met het ingestelde interval op nieuwe PDF’s gecontroleerd.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Alleen e-mails die aan alle voorwaarden voldoen worden verwerkt. Eén term per regel; hoofdletters en kleine letters maken niet uit, een deel van de tekst is genoeg. Lege velden beperken niets.",
+          "subjectIncludes": "Onderwerp bevat een van deze termen",
+          "subjectExcludes": "Onderwerp bevat geen van deze termen",
+          "senderIncludes": "Afzender bevat een van deze termen",
+          "senderExcludes": "Afzender bevat geen van deze termen",
+          "senderHint": "Naam of adres, bijv. ‘@example.com’",
+          "newOnly": "Het filter geldt voor e-mails die na de laatste controle binnenkomen; al gecontroleerde e-mails worden niet opnieuw verwerkt."
+        },
+        "interval": "Controle-interval in minuten",
+        "intervalHint": "Leeg laten voor het algemene interval (nu {{interval}})."
+      },
+      "filterActive": "Filter actief",
+      "schedule": "Controle elke {{interval}} · volgende {{when}}",
+      "scheduleSoon": "Controle elke {{interval}} · volgende binnenkort"
     },
     "import": {
       "title": "Schema & importmap",
@@ -317,7 +367,7 @@
       "saved": "Instellingen opgeslagen",
       "interval": {
         "title": "Controle-interval",
-        "text": "Zo vaak controleert de toepassing alle mailboxen en de importmap op nieuwe PDF’s.",
+        "text": "Zo vaak controleert de applicatie de invoermap en alle postvakken zonder eigen interval op nieuwe pdf’s.",
         "label": "Om de … minuten",
         "nextRun": "Volgende automatische controle {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Account actief",
         "activeHint": "Uitgeschakelde accounts kunnen niet inloggen; actieve sessies eindigen direct.",
         "create": "Aanmaken"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Tweestapsverificatie resetten",
+      "resetTwoFactorHint": "Voor dit account is tweestapsverificatie ingeschakeld.",
+      "resetTwoFactorText": "{{name}} meldt zich daarna alleen met het wachtwoord aan en kan tweestapsverificatie opnieuw instellen – bijvoorbeeld na verlies van de telefoon.",
+      "resetTwoFactorConfirm": "Resetten",
+      "twoFactorReset": "Tweestapsverificatie gereset"
+    }
+  },
+  "history": {
+    "nav": "Geschiedenis",
+    "title": "Geschiedenis",
+    "subtitle": "Wat er met je documenten is gebeurd – nieuwste items eerst.",
+    "empty": "Nog geen items.",
+    "actions": {
+      "IMPORTED": "Geïmporteerd",
+      "EDITED": "Bewerkt",
+      "DELETED": "Verwijderd"
+    },
+    "changes": {
+      "DETAILS": "Gegevens gewijzigd",
+      "FILE": "PDF gewijzigd",
+      "ORIGINAL_RESTORED": "Origineel hersteld",
+      "DUPLICATE": "als duplicaat",
+      "VERSION_RESTORED": "Versie hersteld"
+    },
+    "by": "door {{user}}",
+    "automatic": "automatisch",
+    "more": "Meer laden",
+    "undo": "Ongedaan maken",
+    "undone": "Ongedaan gemaakt"
+  },
+  "duplicates": {
+    "title": "Mogelijk duplicaat",
+    "subtitle": "De twee documenten komen inhoudelijk overeen. Bewaar er één en verwijder het andere – of geef aan dat het geen duplicaten zijn.",
+    "older": "Eerder binnengekomen",
+    "newer": "Later binnengekomen",
+    "deleteThis": "Dit verwijderen",
+    "compare": "Naast elkaar vergelijken"
+  },
+  "twoFactor": {
+    "title": "Tweestapsverificatie",
+    "on": "Aan",
+    "off": "Uit",
+    "intro": "Bescherm je account met een tweede factor: bij het aanmelden voer je dan ook een code in uit een authenticator-app op je telefoon (bijv. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Instellen",
+    "scan": "Scan de QR-code met je authenticator-app of voer de sleutel handmatig in. Voer daarna de code uit de app en je wachtwoord in.",
+    "qrAlt": "QR-code voor de authenticator-app",
+    "secret": "Sleutel",
+    "confirmCode": "Code uit de app",
+    "activate": "Activeren",
+    "recoveryTitle": "Herstelcodes",
+    "recoveryText": "Bewaar deze herstelcodes op een veilige plek. Elke code werkt één keer als je de app niet kunt gebruiken – bijvoorbeeld als je je telefoon kwijtraakt. Ze worden alleen nu getoond.",
+    "download": "Opslaan als bestand",
+    "done": "Klaar",
+    "enabled": "Tweestapsverificatie is ingeschakeld",
+    "disabled": "Tweestapsverificatie is uitgeschakeld",
+    "disableHint": "Voer om uit te schakelen een actuele code uit de app (of een herstelcode) en je wachtwoord in.",
+    "disable": "Uitschakelen",
+    "recoveryLeft": "Ongebruikte herstelcodes: {{count}}",
+    "adminCannotDisable": "Als beheerder kun je tweestapsverificatie niet uitschakelen."
+  },
+  "confirmCode": {
+    "title": "Wijziging bevestigen",
+    "text": "Wijzigingen aan accounts, postvakken en instellingen vereisen een actuele code uit je authenticator-app. De bevestiging is 10 minuten geldig.",
+    "submit": "Bevestigen"
+  },
+  "share": {
+    "button": "Delen",
+    "title": "Document delen",
+    "intro": "Maakt een link waarmee iemand zonder account precies dit document kan openen.",
+    "recipient": "Met wie deel je?",
+    "recipientHint": "De naam van de persoon – zodat je later ziet aan wie je de link hebt gegeven.",
+    "permission": "Mag deze persoon het document bewerken?",
+    "viewOnly": "Alleen bekijken",
+    "canEdit": "Mag bewerken",
+    "viewHint": "De persoon kan de pdf bekijken, afdrukken en downloaden.",
+    "editHint": "De persoon kan de pdf ook markeren, beschrijven, ondertekenen en opslaan. Elke keer opslaan wordt een nieuwe versie; titel, labels en andere gegevens blijven verborgen.",
+    "validity": "Geldig",
+    "unlimited": "Onbeperkt",
+    "create": "Link maken",
+    "link": "Link",
+    "linkHint": "Iedereen met deze link kan het document openen – geef hem alleen aan {{name}}. Je kunt hem altijd intrekken in de documentweergave.",
+    "copy": "Link kopiëren",
+    "copied": "Link gekopieerd",
+    "listTitle": "Extern gedeeld",
+    "expired": "verlopen",
+    "validUntil": "geldig tot {{date}}",
+    "noExpiry": "onbeperkt geldig",
+    "lastOpened": "laatst geopend {{when}} (bezoeken: {{views}})",
+    "neverOpened": "nog niet geopend",
+    "revoke": "Link intrekken",
+    "revokeTitle": "Link voor {{name}} intrekken?",
+    "revokeText": "De link werkt meteen niet meer. Kopieën die de persoon al heeft gedownload, blijven bij hem of haar.",
+    "revoked": "Link ingetrokken",
+    "page": {
+      "for": "Gedeeld met {{name}}",
+      "invalid": "Deze link is ongeldig of verlopen, of het document is verwijderd. Neem contact op met de persoon die hem je gaf."
     }
   }
 }

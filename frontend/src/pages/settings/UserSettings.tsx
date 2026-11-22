@@ -63,6 +63,7 @@ export function UserSettings() {
                     <Badge tone={user.role === 'ADMIN' ? 'brand' : 'neutral'}>{t(`common.role.${user.role}`)}</Badge>
                     {user.id === me.id && <Badge>{t('settings.users.you')}</Badge>}
                     {!user.enabled && <Badge tone="warn">{t('settings.users.disabled')}</Badge>}
+                    {user.twoFactorEnabled && <Badge tone="ok">{t('settings.users.twoFactor')}</Badge>}
                   </div>
                   <p className="mt-0.5 text-xs text-muted">
                     {user.lastLoginAt ? t('settings.users.lastLogin', { when: formatRelative(user.lastLoginAt) }) : t('settings.users.neverLoggedIn')}
@@ -107,6 +108,21 @@ function UserDialog({ user, isSelf, onClose }: { user: User | null; isSelf: bool
   const [password, setPassword] = useState('')
   const [role, setRole] = useState<Role>(user?.role ?? 'USER')
   const [enabled, setEnabled] = useState(user?.enabled ?? true)
+  const [confirmReset, setConfirmReset] = useState(false)
+
+  const resetTwoFactor = useMutation({
+    mutationFn: () => api.resetTwoFactor(user!.id),
+    onSuccess: async () => {
+      setConfirmReset(false)
+      await queryClient.invalidateQueries({ queryKey: ['users'] })
+      toast.success(t('settings.users.twoFactorReset'))
+      onClose()
+    },
+    onError: (e) => {
+      setConfirmReset(false)
+      toast.error(errorMessage(e))
+    },
+  })
 
   const save = useMutation({
     mutationFn: () =>
@@ -157,6 +173,12 @@ function UserDialog({ user, isSelf, onClose }: { user: User | null; isSelf: bool
         {user && (
           <Switch checked={enabled} onChange={setEnabled} label={t('settings.users.dialog.active')} description={t('settings.users.dialog.activeHint')} />
         )}
+        {user?.twoFactorEnabled && !isSelf && (
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-line px-3 py-2.5">
+            <p className="text-sm text-muted">{t('settings.users.resetTwoFactorHint')}</p>
+            <Button onClick={() => setConfirmReset(true)}>{t('settings.users.resetTwoFactor')}</Button>
+          </div>
+        )}
         <div className="mt-1 flex justify-end gap-2">
           <Button onClick={onClose}>{t('common.cancel')}</Button>
           <Button type="submit" variant="primary" loading={save.isPending}>
@@ -164,6 +186,16 @@ function UserDialog({ user, isSelf, onClose }: { user: User | null; isSelf: bool
           </Button>
         </div>
       </form>
+      <ConfirmDialog
+        open={confirmReset}
+        onClose={() => setConfirmReset(false)}
+        onConfirm={() => resetTwoFactor.mutate()}
+        loading={resetTwoFactor.isPending}
+        title={t('settings.users.resetTwoFactor')}
+        confirmLabel={t('settings.users.resetTwoFactorConfirm')}
+      >
+        {t('settings.users.resetTwoFactorText', { name: user?.username ?? '' })}
+      </ConfirmDialog>
     </Modal>
   )
 }

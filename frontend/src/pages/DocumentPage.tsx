@@ -7,6 +7,8 @@ import { toast } from 'sonner'
 import { isBusy, OcrHint, sourceInfo, StatusBadge } from '../components/documents'
 import { Alert, Badge, Button, Card, ConfirmDialog, Field, Input, Modal, Spinner, Textarea } from '../components/ui'
 import { PdfViewer } from '../components/PdfViewer'
+import { ShareButton, SharesCard } from '../components/ShareDialog'
+import { VersionsButton } from '../components/VersionsDialog'
 import { api, ApiError, type ChatMessage, type Doc, errorMessage, fileUrl } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { cx, formatBytes, formatDateTime, formatLongDate } from '../lib/format'
@@ -96,6 +98,8 @@ export function DocumentPage() {
           <Button icon={<Pencil className="size-4" aria-hidden />} onClick={() => setEditing(true)} disabled={busy}>
             {t('common.edit')}
           </Button>
+          <VersionsButton doc={doc} disabled={busy} />
+          <ShareButton doc={doc} />
           {isAdmin && (
             <>
               <Button
@@ -133,6 +137,7 @@ export function DocumentPage() {
           {doc.status === 'TEXT_ONLY' && <Alert tone="warn">{t('document.textOnlyNotice')}</Alert>}
           {doc.status === 'TEXT_ONLY' && doc.errorMessage && <Alert tone="warn">{doc.errorMessage}</Alert>}
           {doc.duplicateOf && <DuplicateNotice doc={doc} />}
+          <SharesCard doc={doc} />
 
           <div className="flex gap-1 rounded-lg bg-raised p-1">
             {(['overview', 'text', 'chat'] as const).map((key) => (
@@ -388,8 +393,8 @@ function DuplicateNotice({ doc }: { doc: Doc }) {
       tone="warn"
       action={
         <div className="flex shrink-0 flex-col items-end gap-1.5">
-          <Link to={`/documents/${other.data.id}`} className="font-semibold underline underline-offset-2">
-            {t('document.duplicate.open')}
+          <Link to={`/duplicates/${doc.id}`} className="font-semibold underline underline-offset-2">
+            {t('duplicates.compare')}
           </Link>
           <button type="button" onClick={() => dismiss.mutate()} disabled={dismiss.isPending} className="font-medium underline underline-offset-2">
             {t('document.duplicate.dismiss')}

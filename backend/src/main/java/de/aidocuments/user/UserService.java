@@ -4,6 +4,9 @@ import de.aidocuments.user.UserDtos.CreateUserRequest;
 import de.aidocuments.user.UserDtos.UpdateUserRequest;
 import de.aidocuments.user.UserDtos.UserDto;
 import de.aidocuments.web.ApiException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
@@ -11,7 +14,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +28,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService implements UserDetailsService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final AppUserRepository users;
     private final PasswordEncoder passwordEncoder;
@@ -42,12 +52,58 @@ public class UserService implements UserDetailsService {
         return users.count() == 0;
     }
 
-    /** Legt beim allerersten Start das Administratorkonto an. */
-    public synchronized AppUser createInitialAdmin(String username, String password) {
+    /**
+     * Einmaliger Code für die Ersteinrichtung. Ohne ihn könnte jeder, der eine frisch gestartete, aus dem Internet
+     * erreichbare Instanz zuerst aufruft, sich selbst zum Administrator machen. Der Code steht nur im Protokoll des
+     * Servers – wer ihn kennt, hat Zugriff auf den Server und ist damit der Betreiber.
+     */
+    private volatile String setupCode;
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void announceSetupCode() {
+        if (setupRequired()) {
+            log.warn("""
+
+                    ================================================================
+                      AIDocuments ist noch nicht eingerichtet.
+                      Einrichtungscode für das Administratorkonto: {}
+                      (Initial setup code – enter it on the setup page.)
+                    ================================================================""", setupCode());
+        }
+    }
+
+    /** Der Einrichtungscode dieses Starts – nur für das Protokoll und für Tests. */
+    public synchronized String setupCode() {
+        if (setupCode == null) {
+            StringBuilder code = new StringBuilder();
+            for (int i = 0; i < 12; i++) {
+                if (i > 0 && i % 4 == 0) {
+                    code.append('-');
+                }
+                code.append(SETUP_CODE_ALPHABET.charAt(random.nextInt(SETUP_CODE_ALPHABET.length())));
+            }
+            setupCode = code.toString();
+        }
+        return setupCode;
+    }
+
+    private static final String SETUP_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    private final SecureRandom random = new SecureRandom();
+
+    /** Legt beim allerersten Start das Administratorkonto an – nur mit dem Einrichtungscode aus dem Protokoll. */
+    public synchronized AppUser createInitialAdmin(String username, String password, String code) {
         if (!setupRequired()) {
             throw ApiException.conflict("error.setup.alreadyDone");
         }
-        return users.save(new AppUser(newId(), normalize(username), passwordEncoder.encode(password), Role.ADMIN));
+        String given = code == null ? "" : code.strip().toUpperCase(Locale.ROOT).replaceAll("[\\s-]", "");
+        String expected = setupCode().replace("-", "");
+        if (!MessageDigest.isEqual(given.getBytes(StandardCharsets.UTF_8), expected.getBytes(StandardCharsets.UTF_8))) {
+            throw ApiException.of(HttpStatus.UNAUTHORIZED, "error.setup.wrongCode");
+        }
+        AppUser admin = users.save(
+                new AppUser(newId(), normalize(username), encode(password), Role.ADMIN));
+        setupCode = null;
+        return admin;
     }
 
     public List<UserDto> list() {
@@ -68,7 +124,7 @@ public class UserService implements UserDetailsService {
         }
         try {
             return UserDto.of(users.save(
-                    new AppUser(newId(), username, passwordEncoder.encode(request.password()), request.role())));
+                    new AppUser(newId(), username, encode(request.password()), request.role())));
         } catch (DuplicateKeyException e) {
             throw ApiException.conflict("error.user.nameTaken", username);
         }
@@ -87,7 +143,7 @@ public class UserService implements UserDetailsService {
             if (request.password().length() < 8) {
                 throw ApiException.badRequest("error.user.passwordTooShort");
             }
-            user.setPasswordHash(passwordEncoder.encode(request.password()));
+            user.setPasswordHash(encode(request.password()));
         }
         users.save(user);
         invalidateSessions(id);
@@ -107,13 +163,21 @@ public class UserService implements UserDetailsService {
         invalidateSessions(id);
     }
 
-    public void changeOwnPassword(String id, String currentPassword, String newPassword) {
+    /**
+     * Ändert das eigene Passwort und beendet alle anderen Sitzungen des Kontos (etwa eine, die jemand mit dem alten
+     * Passwort geöffnet hat).
+     *
+     * @return die Anmeldedaten mit dem neuen Stand – damit bleibt die aufrufende Sitzung gültig
+     */
+    public UserPrincipal changeOwnPassword(String id, String currentPassword, String newPassword) {
         AppUser user = require(id);
         if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
             throw ApiException.badRequest("error.user.currentPasswordWrong");
         }
-        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setPasswordHash(encode(newPassword));
         users.save(user);
+        invalidateSessions(id);
+        return principalOf(user);
     }
 
     public void recordLogin(String id) {
@@ -125,19 +189,28 @@ public class UserService implements UserDetailsService {
 
     public UserPrincipal principalOf(AppUser user) {
         return new UserPrincipal(user.getId(), user.getUsername(), user.getPasswordHash(), user.getRole(),
-                user.isEnabled(), currentVersion(user.getId()));
+                user.isEnabled(), currentVersion(user.getId()), user.isTwoFactorEnabled());
     }
 
     public long currentVersion(String userId) {
         return versions.getOrDefault(userId, 0L);
     }
 
-    private void invalidateSessions(String userId) {
+    /** Beendet alle Sitzungen des Kontos (beim nächsten Aufruf, siehe SessionValidationFilter). */
+    void invalidateSessions(String userId) {
         versions.merge(userId, 1L, Long::sum);
     }
 
     private AppUser require(String id) {
         return users.findById(id).orElseThrow(() -> ApiException.notFound("error.user.notFound"));
+    }
+
+    /** bcrypt verarbeitet höchstens 72 Byte – längere Passwörter werden abgelehnt statt mit einem Serverfehler. */
+    private String encode(String password) {
+        if (password.getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw ApiException.badRequest("error.user.passwordTooLong");
+        }
+        return passwordEncoder.encode(password);
     }
 
     private static String normalize(String username) {

@@ -1,5 +1,5 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { ChevronDown, FileSearch, FolderOpen, LayoutGrid, List, Loader2, SlidersHorizontal, Sparkles, X } from 'lucide-react'
+import { ChevronDown, FileSearch, FolderOpen, History, LayoutGrid, List, Loader2, SlidersHorizontal, Sparkles, X } from 'lucide-react'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -171,8 +171,10 @@ export function DocumentsPage() {
   return (
     <div className="flex gap-8">
       <aside className="hidden w-60 shrink-0 lg:block">
-        <div className="sticky top-22 -ml-2 max-h-[calc(100dvh-7rem)] overflow-x-hidden overflow-y-auto pr-1 pb-4 pl-2">
-          {filterPanel}
+        {/* Filter oben (eigener Bildlauf), der Menüpunkt Historie immer unten in der Leiste */}
+        <div className="sticky top-22 -ml-2 flex h-[calc(100dvh-7rem)] flex-col">
+          <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pr-1 pb-4 pl-2">{filterPanel}</div>
+          <HistoryLink />
         </div>
       </aside>
 
@@ -320,13 +322,13 @@ export function DocumentsPage() {
         ) : view === 'grid' ? (
           <div key="grid" className="grid auto-rows-fr grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4">
             {items.map((doc) => (
-              <DocumentCard key={doc.id} doc={doc} activeTags={filters.tags} onTag={toggleTag} />
+              <DocumentCard key={doc.id} doc={doc} activeTags={filters.tags} onTag={toggleTag} compareDuplicates={filters.duplicates} />
             ))}
           </div>
         ) : (
           <div key="list" className="overflow-hidden rounded-xl border border-line bg-surface shadow-card">
             {items.map((doc) => (
-              <DocumentRow key={doc.id} doc={doc} activeTags={filters.tags} onTag={toggleTag} />
+              <DocumentRow key={doc.id} doc={doc} activeTags={filters.tags} onTag={toggleTag} compareDuplicates={filters.duplicates} />
             ))}
           </div>
         )}
@@ -348,6 +350,9 @@ export function DocumentsPage() {
 
       <Modal open={filtersOpen} onClose={() => setFiltersOpen(false)} title={t('documents.filters.title')} footer={<Button variant="primary" onClick={() => setFiltersOpen(false)}>{t('documents.filters.apply')}</Button>}>
         {filterPanel}
+        <div className="mt-6">
+          <HistoryLink />
+        </div>
       </Modal>
     </div>
   )
@@ -533,6 +538,20 @@ function useSectionOpen(name: string | undefined): [boolean, (open: boolean) => 
   return [open, change]
 }
 
+/** Menüpunkt Historie, unten in der linken Leiste. */
+function HistoryLink() {
+  const { t } = useTranslation()
+  return (
+    <Link
+      to="/history"
+      className="ml-0 flex shrink-0 items-center gap-2 rounded-lg border-t border-line px-2 py-3 text-sm font-medium text-muted hover:bg-raised hover:text-ink"
+    >
+      <History className="size-4" aria-hidden />
+      {t('history.nav')}
+    </Link>
+  )
+}
+
 function FilterSection({ title, children, collapsible, selected = 0 }: FilterSectionProps) {
   const [open, setOpen] = useSectionOpen(collapsible)
   if (!collapsible) {
@@ -598,9 +617,15 @@ interface DocItemProps {
   doc: Doc
   activeTags: string[]
   onTag: (tag: string) => void
+  /** in der Liste der möglichen Duplikate: zum Vergleich beider Dokumente statt zum einzelnen */
+  compareDuplicates?: boolean
 }
 
-function DocumentCard({ doc, activeTags, onTag }: DocItemProps) {
+function docHref(doc: Doc, compareDuplicates?: boolean) {
+  return compareDuplicates && doc.duplicateOf ? `/duplicates/${doc.id}` : `/documents/${doc.id}`
+}
+
+function DocumentCard({ doc, activeTags, onTag, compareDuplicates }: DocItemProps) {
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition duration-150 focus-within:border-brand hover:-translate-y-0.5 hover:border-line-strong hover:shadow-pop">
       <div className="relative aspect-[5/4] overflow-hidden border-b border-line bg-raised">
@@ -612,7 +637,7 @@ function DocumentCard({ doc, activeTags, onTag }: DocItemProps) {
       </div>
       <div className="flex flex-1 flex-col gap-1.5 p-3.5">
         <h3 className="line-clamp-2 text-sm leading-snug font-semibold">
-          <Link to={`/documents/${doc.id}`} className="outline-none after:absolute after:inset-0">
+          <Link to={docHref(doc, compareDuplicates)} className="outline-none after:absolute after:inset-0">
             {doc.title}
           </Link>
         </h3>
@@ -635,7 +660,7 @@ function DocumentCard({ doc, activeTags, onTag }: DocItemProps) {
   )
 }
 
-function DocumentRow({ doc, activeTags, onTag }: DocItemProps) {
+function DocumentRow({ doc, activeTags, onTag, compareDuplicates }: DocItemProps) {
   return (
     <article className="relative flex gap-4 border-b border-line px-4 py-3.5 transition-colors last:border-b-0 hover:bg-raised/70">
       <div className="h-[76px] w-[58px] shrink-0 overflow-hidden rounded-md border border-line bg-raised">
@@ -644,7 +669,7 @@ function DocumentRow({ doc, activeTags, onTag }: DocItemProps) {
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <h3 className="min-w-0 truncate text-sm font-semibold">
-            <Link to={`/documents/${doc.id}`} className="outline-none after:absolute after:inset-0">
+            <Link to={docHref(doc, compareDuplicates)} className="outline-none after:absolute after:inset-0">
               {doc.title}
             </Link>
           </h3>

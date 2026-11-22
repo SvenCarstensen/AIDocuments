@@ -7,3 +7,4 @@ backend/config
 .idea
 *.iml
 frontend/public/pdfjs
+.env

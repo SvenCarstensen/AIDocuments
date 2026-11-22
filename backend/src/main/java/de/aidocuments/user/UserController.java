@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final TwoFactorService twoFactor;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, TwoFactorService twoFactor) {
+        this.twoFactor = twoFactor;
         this.userService = userService;
     }
 
@@ -42,6 +44,13 @@ public class UserController {
     @PutMapping("/{id}")
     public UserDto update(@PathVariable String id, @Valid @RequestBody UpdateUserRequest request) {
         return userService.update(id, request);
+    }
+
+    /** Zwei-Faktor-Anmeldung eines Kontos zurücksetzen – etwa wenn das Gerät mit der App verloren ging. */
+    @DeleteMapping("/{id}/two-factor")
+    public UserDto resetTwoFactor(@PathVariable String id) {
+        twoFactor.reset(id);
+        return userService.get(id);
     }
 
     @DeleteMapping("/{id}")

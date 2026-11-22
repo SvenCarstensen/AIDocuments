@@ -43,8 +43,10 @@ export function AuthProvider({ user, children }: { user: User; children: ReactNo
       isAdmin: user.role === 'ADMIN',
       logout: async () => {
         await api.logout()
-        queryClient.clear()
-        await queryClient.invalidateQueries({ queryKey: ['auth'] })
+        // Anmeldestatus direkt setzen (die App beobachtet genau diese Abfrage, daher nicht mit clear() entfernen),
+        // alle übrigen zwischengespeicherten Daten verwerfen
+        queryClient.setQueryData<AuthStatus>(['auth'], { setupRequired: false, user: null })
+        queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== 'auth' })
       },
     }),
     [user, queryClient],

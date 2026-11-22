@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,7 +24,6 @@ import de.aidocuments.document.DocumentStatus;
 import de.aidocuments.i18n.Msg;
 import de.aidocuments.i18n.MsgCodec;
 import de.aidocuments.importer.FolderImportService;
-import de.aidocuments.mail.MailAccount;
 import de.aidocuments.mail.MailAccountRepository;
 import de.aidocuments.mail.MailSyncService;
 import jakarta.activation.DataHandler;
@@ -60,10 +58,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -72,23 +68,24 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.mongodb.MongoDBContainer;
+import org.testcontainers.mariadb.MariaDBContainer;
 
 /**
- * Durchläuft die Anwendung von der Ersteinrichtung bis zur Suche gegen eine echte MongoDB (Testcontainers)
- * und einen echten IMAP-Server (GreenMail). Ohne KI-Schlüssel – geprüft wird alles außer dem Aufruf der KI.
+ * Durchläuft die Anwendung von der Ersteinrichtung bis zur Suche gegen die eingebaute Datenbank (SQLite im
+ * Datenverzeichnis) und einen echten IMAP-Server (GreenMail). Ohne KI-Schlüssel – geprüft wird alles außer dem
+ * Aufruf der KI.
+ *
+ * <p>Mit {@code -Daidocs.test.database=mariadb} läuft derselbe Durchlauf gegen eine echte MariaDB (Testcontainers);
+ * die POM tut das in einem eigenen Lauf (siehe Surefire-Ausführung „mariadb“).
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ApplicationFlowTest {
 
-    @Container
-    @ServiceConnection
-    static final MongoDBContainer mongo = new MongoDBContainer("mongo:7.0");
+    static final MariaDBContainer mariaDb = "mariadb".equals(System.getProperty("aidocs.test.database"))
+            ? new MariaDBContainer("mariadb:11.8")
+            : null;
 
     @RegisterExtension
     static final GreenMailExtension greenMail =
@@ -98,6 +95,17 @@ class ApplicationFlowTest {
     static final Path inbox = createTempDir("aidocs-inbox");
     static final MockHttpSession adminSession = new MockHttpSession();
     static final MockHttpSession userSession = new MockHttpSession();
+
+    /**
+     * Änderungen an Konten, Postfächern und Einstellungen verlangen einen höchstens zehn Minuten alten Code aus der App
+     * – die Bestätigung der Admin-Sitzung über die ganze (lange) Testreihe frisch halten; geprüft wird sie in Order 1.
+     */
+    @org.junit.jupiter.api.BeforeEach
+    void keepAdminConfirmed() {
+        if (!adminSession.isInvalid()) {
+            adminSession.setAttribute("aidocuments.confirmedAt", java.time.Instant.now());
+        }
+    }
 
     /**
      * Der Server selbst „spricht“ in diesem Test Deutsch. Trotzdem muss jede Antwort ohne passenden
@@ -122,6 +130,12 @@ class ApplicationFlowTest {
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
         registry.add("app.data-dir", dataDir::toString);
+        if (mariaDb != null) {
+            mariaDb.start();
+            registry.add("spring.datasource.url", mariaDb::getJdbcUrl);
+            registry.add("spring.datasource.username", mariaDb::getUsername);
+            registry.add("spring.datasource.password", mariaDb::getPassword);
+        }
         // unabhängig von einer lokalen config/debug.yml: Auslieferungszustand ohne KI-Zugang
         registry.add("app.ai.provider", () -> "anthropic");
         // Ergebnisse sollen nicht davon abhängen, ob auf dem Rechner zufällig Tesseract installiert ist
@@ -150,24 +164,46 @@ class ApplicationFlowTest {
     @Autowired
     FolderImportService folderImport;
     @Autowired
-    MongoTemplate mongoTemplate;
+    de.aidocuments.importer.ImportSettingsService importSettings;
+    @Autowired
+    JdbcClient jdbc;
+    @Autowired
+    de.aidocuments.document.DocumentService documentService;
+    @Autowired
+    de.aidocuments.user.UserService userService;
 
     @Test
     @Order(1)
     void firstStartRequiresSetupAndProtectsTheApi() throws Exception {
         mvc.perform(get("/api/auth/status"))
                 .andExpect(status().isOk())
+                .andExpect(header().string("Content-Security-Policy", containsString("script-src 'self'")))
+                .andExpect(header().string("Content-Security-Policy", containsString("object-src 'none'")))
+                .andExpect(header().string("X-Content-Type-Options", "nosniff"))
+                .andExpect(header().string("X-Frame-Options", "SAMEORIGIN"))
+                .andExpect(header().string("Referrer-Policy", "same-origin"))
                 .andExpect(jsonPath("$.setupRequired").value(true))
                 .andExpect(jsonPath("$.user").doesNotExist());
         mvc.perform(get("/api/documents")).andExpect(status().isUnauthorized());
 
+        String code = userService.setupCode();
         mvc.perform(post("/api/auth/setup").with(csrf()).session(adminSession)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"Chef\",\"password\":\"kurz\"}"))
+                        .content("{\"username\":\"Chef\",\"password\":\"kurz\",\"setupCode\":\"" + code + "\"}"))
                 .andExpect(status().isBadRequest());
+        // ohne den Einrichtungscode aus dem Protokoll kann niemand die frische Instanz übernehmen
+        mvc.perform(post("/api/auth/setup").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"angreifer\",\"password\":\"test-Passwort-9\"}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/auth/setup").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"angreifer\",\"password\":\"test-Passwort-9\",\"setupCode\":\"AAAA-BBBB-CCCC\"}"))
+                .andExpect(status().isUnauthorized());
         mvc.perform(post("/api/auth/setup").with(csrf()).session(adminSession)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"Chef\",\"password\":\"test-Passwort-1\"}"))
+                        .content("{\"username\":\"Chef\",\"password\":\"test-Passwort-1\",\"setupCode\":\""
+                                + code.toLowerCase().replace("-", " ") + "\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("chef"))
                 .andExpect(jsonPath("$.role").value("ADMIN"));
@@ -175,11 +211,68 @@ class ApplicationFlowTest {
         // die Ersteinrichtung ist einmalig und meldet direkt an
         mvc.perform(post("/api/auth/setup").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"zweiter\",\"password\":\"test-Passwort-2\"}"))
+                        .content("{\"username\":\"zweiter\",\"password\":\"test-Passwort-2\",\"setupCode\":\"" + code + "\"}"))
                 .andExpect(status().isConflict());
         mvc.perform(get("/api/auth/status").session(adminSession))
                 .andExpect(jsonPath("$.setupRequired").value(false))
-                .andExpect(jsonPath("$.user.username").value("chef"));
+                .andExpect(jsonPath("$.user.username").value("chef"))
+                .andExpect(jsonPath("$.user.twoFactorEnabled").value(false));
+
+        // für Administratoren ist die Zwei-Faktor-Anmeldung Pflicht: vorher geht nichts außer der Einrichtung
+        mvc.perform(get("/api/users").session(adminSession))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.detail").value(containsString("mandatory for administrators")));
+        mvc.perform(get("/api/documents").session(adminSession)).andExpect(status().isForbidden());
+        // auch nicht über kodierte Zeichen im Pfad („/%61pi“ ist für Spring „/api“)
+        mvc.perform(get(java.net.URI.create("/%61pi/documents")).session(adminSession))
+                .andExpect(status().isForbidden());
+        mvc.perform(get(java.net.URI.create("/api/%64ocuments")).session(adminSession))
+                .andExpect(status().isForbidden());
+        while (java.time.Instant.now().getEpochSecond() % 30 >= 25) {
+            Thread.sleep(500);
+        }
+        String secret = jsonValue(mvc.perform(post("/api/auth/two-factor/setup").with(csrf()).session(adminSession))
+                .andReturn(), "$.secret");
+        mvc.perform(post("/api/auth/two-factor/enable").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"password\":\"test-Passwort-1\",\"code\":\"" + totp(secret, 0) + "\"}"))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/users").session(adminSession)).andExpect(status().isOk());
+        // und lässt sich für sie nicht abschalten
+        mvc.perform(post("/api/auth/two-factor/disable").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"password\":\"test-Passwort-1\",\"code\":\"" + totp(secret, 1) + "\"}"))
+                .andExpect(status().isConflict());
+
+        // Änderungen an Konten, Postfächern und Einstellungen verlangen einen höchstens zehn Minuten alten Code
+        adminSession.setAttribute("aidocuments.confirmedAt",
+                java.time.Instant.now().minus(java.time.Duration.ofMinutes(11)));
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("confirmationRequired"));
+        mvc.perform(put("/api/settings/ai").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isForbidden());
+        mvc.perform(put(java.net.URI.create("/api/%75sers/x")).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("confirmationRequired"));
+        mvc.perform(put(java.net.URI.create("/%61pi/%73ettings/ai")).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("confirmationRequired"));
+        mvc.perform(get("/api/users").session(adminSession)).andExpect(status().isOk()); // lesen geht weiter
+        mvc.perform(post("/api/auth/confirm").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"code\":\"" + totp(secret, 7) + "\"}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/auth/confirm").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"code\":\"" + totp(secret, 1) + "\"}"))
+                .andExpect(status().isNoContent());
+        // jetzt kommt die Anfrage durch (und scheitert erst an der Eingabeprüfung)
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -349,6 +442,19 @@ class ApplicationFlowTest {
         assertThat(mailAccounts.findById(accountId).orElseThrow().getPasswordEncrypted())
                 .doesNotContain("imap-test-secret");
 
+        // das gespeicherte Passwort geht nur an den Server, für den es gespeichert wurde
+        String otherServer = body.replace("\"127.0.0.1\"", "\"mail.example.test\"")
+                .replace("\"password\":\"imap-test-secret\",", "");
+        mvc.perform(post("/api/mail-accounts/test").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"accountId\":\"" + accountId + "\",\"account\":" + otherServer + "}"))
+                .andExpect(jsonPath("$.ok").value(false))
+                .andExpect(jsonPath("$.message").value(containsString("password again")));
+        mvc.perform(put("/api/mail-accounts/" + accountId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(otherServer))
+                .andExpect(status().isBadRequest());
+        assertThat(mailAccounts.findById(accountId).orElseThrow().getHost()).isEqualTo("127.0.0.1");
+
         mailSync.sync(accountId);
         awaitProcessed(3);
         Document scan = documents.findAll().stream()
@@ -461,6 +567,8 @@ class ApplicationFlowTest {
         mvc.perform(get("/api/documents/" + id + "/original").session(userSession))
                 .andExpect(status().isNotFound());
 
+        String thumbnailBefore = documents.findById(id).orElseThrow().getThumbnailAt().toString();
+        Thread.sleep(20); // Zeitstempel des Dateisystems müssen sich unterscheiden können
         // die erste Änderung legt das Original beiseite
         mvc.perform(put("/api/documents/" + id + "/file").with(csrf()).session(userSession)
                         .contentType(MediaType.APPLICATION_PDF).content(changed))
@@ -468,6 +576,8 @@ class ApplicationFlowTest {
                 .andExpect(jsonPath("$.hasOriginal").value(true))
                 .andExpect(jsonPath("$.modifiedAt").isNotEmpty())
                 .andExpect(jsonPath("$.id").value(id));
+        // neues Vorschaubild – mit neuem Zeitpunkt, damit die Oberfläche es neu lädt
+        assertThat(documents.findById(id).orElseThrow().getThumbnailAt().toString()).isNotEqualTo(thumbnailBefore);
         // eine zweite überschreibt nur die Arbeitsfassung, nie das Original
         byte[] changedAgain = pdf("Rechnungsbetrag 482,17 EUR", "Geprüft, bezahlt und abgelegt");
         mvc.perform(put("/api/documents/" + id + "/file").with(csrf()).session(userSession)
@@ -506,7 +616,30 @@ class ApplicationFlowTest {
                 .andExpect(status().isNoContent());
         mvc.perform(get("/api/documents").param("q", "Kaution").session(userSession))
                 .andExpect(jsonPath("$.total").value(0));
+        // zunächst im Papierkorb: Datei bleibt, das Dokument ist aus Liste und Suche verschwunden
+        assertThat(documents.findById(contract.getId())).isEmpty();
+        assertThat(dataDir.resolve(contract.getStoragePath())).exists();
+
+        // über die Historie zurückholen – das dürfen nur Administratoren
+        String deletion = historyEntryId(contract.getId(), "DELETED");
+        mvc.perform(post("/api/history/" + deletion + "/undo").with(csrf()).session(userSession))
+                .andExpect(status().isForbidden());
+        mvc.perform(post("/api/history/" + deletion + "/undo").with(csrf()).session(adminSession))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/documents").param("q", "Kaution").session(userSession))
+                .andExpect(jsonPath("$.total").value(1));
+        // ein zweites Mal geht nicht
+        mvc.perform(post("/api/history/" + deletion + "/undo").with(csrf()).session(adminSession))
+                .andExpect(status().isConflict());
+
+        // erneut löschen; nach Ablauf der Frist wird endgültig aufgeräumt
+        mvc.perform(delete("/api/documents/" + contract.getId()).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+        jdbc.sql("UPDATE deleted_documents SET deleted_at = ? WHERE id = ?")
+                .param(Instant.now().minus(Duration.ofDays(31)).toEpochMilli()).param(contract.getId()).update();
+        documentService.purgeTrash();
         assertThat(dataDir.resolve(contract.getStoragePath())).doesNotExist();
+        assertThat(documents.findInTrash(contract.getId())).isEmpty();
 
         // ein deaktivierter Benutzer verliert seine laufende Sitzung sofort
         String userId = jsonValue(mvc.perform(get("/api/auth/status").session(userSession)).andReturn(),
@@ -725,14 +858,13 @@ class ApplicationFlowTest {
                 .andExpect(jsonPath("$.errorMessage").value(legacy));
 
         String accountId = mailAccounts.findAll().getFirst().getId();
-        mongoTemplate.updateFirst(query(where("_id").is(accountId)),
-                new Update().set("lastSyncMessage", "3 neue E-Mails geprüft, 1 PDF übernommen."), MailAccount.class);
+        jdbc.sql("UPDATE mail_accounts SET last_sync_message = ? WHERE id = ?")
+                .param("3 neue E-Mails geprüft, 1 PDF übernommen.").param(accountId).update();
         mvc.perform(get("/api/mail-accounts").session(adminSession))
                 .andExpect(jsonPath("$[0].lastSyncMessage").value("3 neue E-Mails geprüft, 1 PDF übernommen."));
 
         // Ein Postfach-Abruf, der scheitert: bekannte Ursachen übersetzt, …
-        mongoTemplate.updateFirst(query(where("_id").is(accountId)),
-                new Update().set("folder", "Gibt es nicht"), MailAccount.class);
+        jdbc.sql("UPDATE mail_accounts SET folder = ? WHERE id = ?").param("Gibt es nicht").param(accountId).update();
         mailSync.sync(accountId);
         mvc.perform(get("/api/mail-accounts").session(adminSession))
                 .andExpect(jsonPath("$[0].lastSyncStatus").value("ERROR"))
@@ -788,6 +920,134 @@ class ApplicationFlowTest {
             mvc.perform(delete("/api/documents/" + doc.getId()).with(csrf()).session(adminSession))
                     .andExpect(status().isNoContent());
         }
+
+        // die Historie hält Import (mit Quelle und Anwender) und Löschung fest – neueste zuerst
+        String historyJson = mvc.perform(get("/api/history").param("size", "200").session(adminSession))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        String id = pair.get(1).getId();
+        List<java.util.Map<String, Object>> entries = com.jayway.jsonpath.JsonPath.read(historyJson,
+                "$.items[?(@.documentId == '" + id + "')]");
+        assertThat(entries).extracting(e -> e.get("action")).containsExactly("DELETED", "IMPORTED");
+        assertThat(entries.get(1)).containsEntry("source", "UPLOAD").containsEntry("user", "chef");
+        assertThat((String) entries.get(1).get("origin")).contains("nebenkosten.pdf");
+        assertThat(entries.get(0)).containsEntry("documentTitle", pair.get(1).getTitle());
+        List<String> actions = com.jayway.jsonpath.JsonPath.read(historyJson, "$.items[*].action");
+        assertThat(actions).contains("EDITED");
+    }
+
+    @Test
+    @Order(12)
+    void editsCanBeUndoneStepByStepFromTheHistory() throws Exception {
+        long before = documents.count();
+        byte[] original = pdf("Angebot Dachdecker Meier", "Gesamtbetrag 4.180,00 EUR", "gültig bis 30.06.2026");
+        mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files", "angebot.pdf",
+                        "application/pdf", original)).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED"));
+        awaitProcessed((int) before + 1);
+        String id = documents.findAll().stream().filter(d -> d.getOriginalFilename().equals("angebot.pdf"))
+                .findFirst().orElseThrow().getId();
+        String fileUrl = "/api/documents/" + id + "/file";
+
+        // Angaben ändern, dann zweimal das PDF, dann das Original wiederherstellen
+        mvc.perform(put("/api/documents/" + id).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Angebot Dach\",\"category\":\"Angebot\",\"tags\":[\"dach\"]}"))
+                .andExpect(status().isOk());
+        byte[] first = pdf("Angebot Dachdecker Meier", "Gesamtbetrag 4.180,00 EUR", "angenommen");
+        byte[] second = pdf("Angebot Dachdecker Meier", "Gesamtbetrag 4.180,00 EUR", "angenommen und bezahlt");
+        for (byte[] version : List.of(first, second)) {
+            mvc.perform(put(fileUrl).with(csrf()).session(adminSession)
+                    .contentType(MediaType.APPLICATION_PDF).content(version)).andExpect(status().isOk());
+        }
+        mvc.perform(post("/api/documents/" + id + "/restore-original").with(csrf()).session(adminSession))
+                .andExpect(status().isOk());
+        assertThat(file(fileUrl)).isEqualTo(original);
+
+        // nur der neueste Schritt lässt sich zurücknehmen
+        String details = historyEntryId(id, "EDITED", "DETAILS");
+        mvc.perform(post("/api/history/" + details + "/undo").with(csrf()).session(adminSession))
+                .andExpect(status().isConflict());
+
+        // Schritt für Schritt zurück: Original wiederhergestellt → zweite Fassung → erste Fassung → Original
+        undoLatest(id, "ORIGINAL_RESTORED");
+        assertThat(file(fileUrl)).isEqualTo(second);
+        undoLatest(id, "FILE");
+        assertThat(file(fileUrl)).isEqualTo(first);
+        undoLatest(id, "FILE");
+        assertThat(file(fileUrl)).isEqualTo(original);
+        mvc.perform(get("/api/documents/" + id).session(adminSession))
+                .andExpect(jsonPath("$.hasOriginal").value(false));
+
+        // keine Fassung ging dabei verloren: importiert, zweimal bearbeitet, Original, dreimal rückgängig
+        String versionsUrl = "/api/documents/" + id + "/versions";
+        mvc.perform(get(versionsUrl).session(adminSession))
+                .andExpect(jsonPath("$", hasSize(7)))
+                .andExpect(jsonPath("$[0].number").value(7))
+                .andExpect(jsonPath("$[0].current").value(true))
+                .andExpect(jsonPath("$[0].kind").value("UNDONE"))
+                .andExpect(jsonPath("$[3].kind").value("ORIGINAL_RESTORED"))
+                .andExpect(jsonPath("$[3].createdBy").value("chef"))
+                .andExpect(jsonPath("$[6].kind").value("IMPORTED"));
+        assertThat(file(versionsUrl + "/1/file")).isEqualTo(original);
+        assertThat(file(versionsUrl + "/2/file")).isEqualTo(first);
+        assertThat(file(versionsUrl + "/3/file")).isEqualTo(second);
+        assertThat(file(versionsUrl + "/7/file")).isEqualTo(original);
+        mvc.perform(get(versionsUrl + "/99/file").session(adminSession)).andExpect(status().isNotFound());
+
+        // eine ältere Fassung wiederherstellen ergibt eine neue Fassung – und lässt sich zurücknehmen
+        mvc.perform(post(versionsUrl + "/7/restore").with(csrf()).session(adminSession))
+                .andExpect(status().isConflict());
+        mvc.perform(post(versionsUrl + "/3/restore").with(csrf()).session(adminSession))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.hasOriginal").value(true));
+        assertThat(file(fileUrl)).isEqualTo(second);
+        mvc.perform(get(versionsUrl).session(adminSession))
+                .andExpect(jsonPath("$", hasSize(8)))
+                .andExpect(jsonPath("$[0].kind").value("VERSION_RESTORED"))
+                .andExpect(jsonPath("$[0].restoredFrom").value(3));
+        undoLatest(id, "VERSION_RESTORED");
+        assertThat(file(fileUrl)).isEqualTo(original);
+        assertThat(file(versionsUrl + "/8/file")).isEqualTo(second);
+
+        // zuletzt die Angaben
+        undoLatest(id, "DETAILS");
+        mvc.perform(get("/api/documents/" + id).session(adminSession))
+                .andExpect(jsonPath("$.title").value("angebot"))
+                .andExpect(jsonPath("$.category").isEmpty())
+                .andExpect(jsonPath("$.tags", hasSize(0)));
+
+        mvc.perform(delete("/api/documents/" + id).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+    }
+
+    private byte[] file(String url) throws Exception {
+        return mvc.perform(get(url).session(adminSession)).andReturn().getResponse().getContentAsByteArray();
+    }
+
+    /** Nimmt den neuesten Schritt des Dokuments zurück und prüft, dass es der erwartete war. */
+    private void undoLatest(String documentId, String change) throws Exception {
+        String json = mvc.perform(get("/api/history").param("size", "200").session(adminSession))
+                .andReturn().getResponse().getContentAsString();
+        List<java.util.Map<String, Object>> undoable = com.jayway.jsonpath.JsonPath.read(json,
+                "$.items[?(@.documentId == '" + documentId + "' && @.undoable == true)]");
+        assertThat(undoable).hasSize(1);
+        assertThat(undoable.getFirst()).containsEntry("change", change);
+        mvc.perform(post("/api/history/" + undoable.getFirst().get("id") + "/undo").with(csrf()).session(adminSession))
+                .andExpect(status().isOk());
+    }
+
+    private String historyEntryId(String documentId, String action) throws Exception {
+        return historyEntryId(documentId, action, null);
+    }
+
+    private String historyEntryId(String documentId, String action, String change) throws Exception {
+        String json = mvc.perform(get("/api/history").param("size", "200").session(adminSession))
+                .andReturn().getResponse().getContentAsString();
+        List<java.util.Map<String, Object>> entries = com.jayway.jsonpath.JsonPath.read(json,
+                "$.items[?(@.documentId == '" + documentId + "' && @.action == '" + action + "')]");
+        return (String) entries.stream().filter(e -> change == null || change.equals(e.get("change")))
+                .findFirst().orElseThrow().get("id");
     }
 
     // --- Hilfen ---
@@ -805,6 +1065,450 @@ class ApplicationFlowTest {
         }
         throw new AssertionError("Erwartet: " + expectedCount + " fertig verarbeitete Dokumente, vorhanden: "
                 + documents.findAll().stream().map(doc -> doc.getOriginalFilename() + "=" + doc.getStatus()).toList());
+    }
+
+    @Test
+    @Order(13)
+    void twoFactorLoginNeedsTheCodeFromTheApp() throws Exception {
+        // nicht kurz vor einem Intervallwechsel beginnen – sonst verschieben sich die Codes mitten im Test
+        while (java.time.Instant.now().getEpochSecond() % 30 >= 25) {
+            Thread.sleep(500);
+        }
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"zweifaktor\",\"password\":\"test-Passwort-7\",\"role\":\"USER\"}"))
+                .andExpect(status().isCreated());
+        MockHttpSession erika = new MockHttpSession();
+        mvc.perform(post("/api/auth/login").with(csrf()).session(erika).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"zweifaktor\",\"password\":\"test-Passwort-7\"}"))
+                .andExpect(status().isOk());
+
+        // einrichten: Schlüssel holen, mit falschem Passwort bzw. Code abgelehnt, mit beidem richtig eingeschaltet
+        MvcResult setup = mvc.perform(post("/api/auth/two-factor/setup").with(csrf()).session(erika))
+                .andExpect(jsonPath("$.qrCode").value(startsWith("data:image/svg+xml;base64,")))
+                .andReturn();
+        String secret = jsonValue(setup, "$.secret");
+        mvc.perform(post("/api/auth/two-factor/enable").with(csrf()).session(erika)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"password\":\"falsch\",\"code\":\"" + totp(secret, 0) + "\"}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/auth/two-factor/enable").with(csrf()).session(erika)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"password\":\"test-Passwort-7\",\"code\":\"000000\"}"))
+                .andExpect(status().isBadRequest());
+        MvcResult enabled = mvc.perform(post("/api/auth/two-factor/enable").with(csrf()).session(erika)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"password\":\"test-Passwort-7\",\"code\":\"" + totp(secret, -1) + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.recoveryCodes", hasSize(10)))
+                .andReturn();
+        String recoveryCode = jsonValue(enabled, "$.recoveryCodes[0]");
+        // die eigene Sitzung bleibt angemeldet; der Schlüssel liegt nur verschlüsselt in der Datenbank
+        mvc.perform(get("/api/auth/two-factor").session(erika)).andExpect(jsonPath("$.enabled").value(true));
+        assertThat(jdbc.sql("SELECT totp_secret FROM users WHERE username = 'zweifaktor'").query(String.class).single())
+                .doesNotContain(secret);
+
+        // anmelden: Passwort allein reicht nicht mehr
+        MockHttpSession login = new MockHttpSession();
+        mvc.perform(post("/api/auth/login").with(csrf()).session(login).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"zweifaktor\",\"password\":\"test-Passwort-7\"}"))
+                .andExpect(jsonPath("$.twoFactorRequired").value(true));
+        mvc.perform(get("/api/documents").session(login)).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/auth/login/two-factor").with(csrf()).session(login)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"code\":\"123456\"}"))
+                .andExpect(status().isUnauthorized());
+        // der beim Einrichten benutzte Code gilt nicht noch einmal; der aktuelle schon
+        mvc.perform(post("/api/auth/login/two-factor").with(csrf()).session(login)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"code\":\"" + totp(secret, -1) + "\"}"))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/auth/login/two-factor").with(csrf()).session(login)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"code\":\"" + totp(secret, 0) + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("zweifaktor"))
+                .andExpect(jsonPath("$.twoFactorEnabled").value(true));
+        mvc.perform(get("/api/documents").session(login)).andExpect(status().isOk());
+
+        // ein Wiederherstellungscode funktioniert genau einmal
+        MockHttpSession viaRecovery = null;
+        for (int round = 0; round < 2; round++) {
+            MockHttpSession again = new MockHttpSession();
+            if (round == 0) {
+                viaRecovery = again;
+            }
+            mvc.perform(post("/api/auth/login").with(csrf()).session(again).contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"username\":\"zweifaktor\",\"password\":\"test-Passwort-7\"}"))
+                    .andExpect(jsonPath("$.twoFactorRequired").value(true));
+            mvc.perform(post("/api/auth/login/two-factor").with(csrf()).session(again)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"code\":\"" + recoveryCode.toUpperCase() + "\"}"))
+                    .andExpect(round == 0 ? status().isOk() : status().isUnauthorized());
+        }
+
+        // an einer fremden, offen gelassenen Sitzung lässt sich der Bestätigungscode nicht durchprobieren:
+        // nach fünf falschen Codes ist die Sitzung beendet
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            mvc.perform(post("/api/auth/confirm").with(csrf()).session(viaRecovery)
+                            .with(request -> {
+                                request.setRemoteAddr("192.0.2.77");
+                                return request;
+                            })
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"code\":\"" + totp(secret, 9 + attempt) + "\"}"))
+                    .andExpect(attempt < 5 ? status().isBadRequest() : status().isUnauthorized());
+        }
+        mvc.perform(get("/api/documents").session(viaRecovery)).andExpect(status().isUnauthorized());
+
+        // ohne vorher geprüftes Passwort gibt es keinen zweiten Schritt
+        mvc.perform(post("/api/auth/login/two-factor").with(csrf()).session(new MockHttpSession())
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"code\":\"" + totp(secret, 1) + "\"}"))
+                .andExpect(status().isUnauthorized());
+
+        // Gerät verloren: ein Administrator setzt zurück, danach genügt wieder das Passwort
+        String erikaId = jsonValue(mvc.perform(get("/api/auth/status").session(login)).andReturn(), "$.user.id");
+        mvc.perform(delete("/api/users/" + erikaId + "/two-factor").with(csrf()).session(login))
+                .andExpect(status().isForbidden());
+        mvc.perform(delete("/api/users/" + erikaId + "/two-factor").with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$.twoFactorEnabled").value(false));
+        mvc.perform(get("/api/documents").session(login)).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/auth/login").with(csrf()).session(new MockHttpSession())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"zweifaktor\",\"password\":\"test-Passwort-7\"}"))
+                .andExpect(jsonPath("$.username").value("zweifaktor"));
+    }
+
+    @Test
+    @Order(14)
+    void aDocumentCanBeSharedByLinkWithPeopleWithoutAnAccount() throws Exception {
+        Document invoice = documents.findAll().stream()
+                .filter(doc -> doc.getOriginalFilename().startsWith("Stromrechnung")).findFirst().orElseThrow();
+        String id = invoice.getId();
+        String sharesUrl = "/api/documents/" + id + "/shares";
+        // ein Benutzer ohne Adminrechte teilt
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"teilerin\",\"password\":\"test-Passwort-8\",\"role\":\"USER\"}"))
+                .andExpect(status().isCreated());
+        MockHttpSession member = new MockHttpSession();
+        mvc.perform(post("/api/auth/login").with(csrf()).session(member).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"teilerin\",\"password\":\"test-Passwort-8\"}"))
+                .andExpect(status().isOk());
+
+        // nur Angemeldete teilen; Name der Person ist Pflicht
+        mvc.perform(get(sharesUrl)).andExpect(status().isUnauthorized());
+        mvc.perform(post(sharesUrl).with(csrf()).session(member).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"recipient\":\"  \",\"canEdit\":false}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/documents/gibt-es-nicht/shares").with(csrf()).session(member)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"recipient\":\"Pat\",\"canEdit\":false}"))
+                .andExpect(status().isNotFound());
+
+        MvcResult viewOnly = mvc.perform(post(sharesUrl).with(csrf()).session(member)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"recipient\":\"Steuerbüro Beispiel\",\"canEdit\":false,\"expiresInDays\":30}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.canEdit").value(false))
+                .andExpect(jsonPath("$.expiresAt").isNotEmpty())
+                .andExpect(jsonPath("$.createdBy").value("teilerin"))
+                .andReturn();
+        String viewToken = jsonValue(viewOnly, "$.token");
+        String viewShareId = jsonValue(viewOnly, "$.id");
+        assertThat(viewToken).matches("[A-Za-z0-9_-]{43}");
+        // in der Datenbank steht der Link weder im Klartext noch als bloße Kodierung
+        for (String column : List.of("token_hash", "token_encrypted")) {
+            assertThat(jdbc.sql("SELECT " + column + " FROM document_shares WHERE id = ?")
+                    .param(viewShareId).query(String.class).single()).doesNotContain(viewToken);
+        }
+        String editToken = jsonValue(mvc.perform(post(sharesUrl).with(csrf()).session(member)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"recipient\":\"Pat Extern\",\"canEdit\":true}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.expiresAt").isEmpty())
+                .andReturn(), "$.token");
+
+        // ohne Sitzung: genau dieses Dokument, ohne die übrigen Angaben
+        byte[] before = mvc.perform(get("/api/documents/" + id + "/file").session(member))
+                .andReturn().getResponse().getContentAsByteArray();
+        mvc.perform(get("/api/share/" + viewToken))
+                .andExpect(status().isOk())
+                .andExpect(header().string("X-Robots-Tag", containsString("noindex")))
+                .andExpect(jsonPath("$.title").value("Stromrechnung 2025"))
+                .andExpect(jsonPath("$.recipient").value("Steuerbüro Beispiel"))
+                .andExpect(jsonPath("$.canEdit").value(false))
+                .andExpect(jsonPath("$.id").doesNotExist())
+                .andExpect(jsonPath("$.tags").doesNotExist())
+                .andExpect(jsonPath("$.summary").doesNotExist());
+        assertThat(mvc.perform(get("/api/share/" + viewToken + "/file"))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE))
+                .andExpect(header().string(HttpHeaders.CACHE_CONTROL, containsString("no-store")))
+                .andReturn().getResponse().getContentAsByteArray()).isEqualTo(before);
+        // der Link öffnet nichts sonst
+        mvc.perform(get("/api/documents")).andExpect(status().isUnauthorized());
+
+        // nur ansehen: Speichern abgelehnt, Datei unverändert
+        byte[] changed = pdf("Rechnungsbetrag 482,17 EUR", "Vom Steuerbüro geprüft");
+        mvc.perform(put("/api/share/" + viewToken + "/file").with(csrf())
+                        .contentType(MediaType.APPLICATION_PDF).content(changed))
+                .andExpect(status().isForbidden());
+        // darf bearbeiten: neue Fassung, in Fassungen und Historie mit dem Namen der Person
+        mvc.perform(put("/api/share/" + editToken + "/file").with(csrf())
+                        .contentType(MediaType.APPLICATION_PDF).content("kein pdf".getBytes()))
+                .andExpect(status().isBadRequest());
+        mvc.perform(put("/api/share/" + editToken + "/file").with(csrf())
+                        .contentType(MediaType.APPLICATION_PDF).content(changed))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.modifiedAt").isNotEmpty());
+        assertThat(mvc.perform(get("/api/share/" + viewToken + "/file"))
+                .andReturn().getResponse().getContentAsByteArray()).isEqualTo(changed);
+        // mehr als beim Hochladen erlaubt wird auch über einen Link nicht angenommen
+        byte[] huge = new byte[50 * 1024 * 1024 + 1];
+        System.arraycopy("%PDF-1.7".getBytes(), 0, huge, 0, 8);
+        mvc.perform(put("/api/share/" + editToken + "/file").with(csrf())
+                        .contentType(MediaType.APPLICATION_PDF).content(huge))
+                .andExpect(status().isContentTooLarge());
+        mvc.perform(get("/api/documents/" + id + "/versions").session(member))
+                .andExpect(jsonPath("$[0].current").value(true))
+                .andExpect(jsonPath("$[0].createdBy").value("Link: Pat Extern"));
+        String historyJson = mvc.perform(get("/api/history").param("size", "200").session(adminSession))
+                .andReturn().getResponse().getContentAsString();
+        List<String> editors = com.jayway.jsonpath.JsonPath.read(historyJson,
+                "$.items[?(@.documentId == '" + id + "' && @.change == 'FILE')].user");
+        assertThat(editors).first().isEqualTo("Link: Pat Extern");
+
+        // die Dokumentansicht zeigt, mit wem geteilt ist – und wie oft der Link aufgerufen wurde
+        mvc.perform(get(sharesUrl).session(member))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].recipient").value("Pat Extern"))
+                .andExpect(jsonPath("$[1].recipient").value("Steuerbüro Beispiel"))
+                .andExpect(jsonPath("$[1].accessCount").value(1))
+                .andExpect(jsonPath("$[1].lastAccessAt").isNotEmpty())
+                .andExpect(jsonPath("$[1].token").value(viewToken));
+
+        // falsches Format, unbekannt, abgelaufen: alles dieselbe Antwort
+        for (String wrong : List.of("kurz", viewToken.substring(1) + "!", "A".repeat(43))) {
+            mvc.perform(get("/api/share/" + wrong)).andExpect(status().isNotFound());
+        }
+        jdbc.sql("UPDATE document_shares SET expires_at = ? WHERE id = ?")
+                .param(Instant.now().minusSeconds(60).toEpochMilli()).param(viewShareId).update();
+        mvc.perform(get("/api/share/" + viewToken)).andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").isNotEmpty());
+        mvc.perform(get("/api/share/" + viewToken + "/file")).andExpect(status().isNotFound());
+        mvc.perform(get(sharesUrl).session(member)).andExpect(jsonPath("$[1].expired").value(true));
+
+        // im Papierkorb ist das Dokument auch über den Link weg – und nach dem Zurückholen wieder da
+        mvc.perform(delete("/api/documents/" + id).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+        mvc.perform(get("/api/share/" + editToken)).andExpect(status().isNotFound());
+        mvc.perform(put("/api/share/" + editToken + "/file").with(csrf())
+                        .contentType(MediaType.APPLICATION_PDF).content(changed))
+                .andExpect(status().isNotFound());
+        mvc.perform(post("/api/history/" + historyEntryId(id, "DELETED") + "/undo").with(csrf()).session(adminSession))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/share/" + editToken)).andExpect(status().isOk());
+
+        // entziehen dürfen auch Benutzer ohne Adminrechte; danach ist der Link tot
+        String editShareId = jsonValue(mvc.perform(get(sharesUrl).session(member)).andReturn(), "$[0].id");
+        mvc.perform(delete(sharesUrl + "/" + editShareId).with(csrf()).session(member))
+                .andExpect(status().isNoContent());
+        mvc.perform(delete(sharesUrl + "/" + editShareId).with(csrf()).session(member))
+                .andExpect(status().isNotFound());
+        mvc.perform(get("/api/share/" + editToken)).andExpect(status().isNotFound());
+        mvc.perform(get(sharesUrl).session(member)).andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    @Order(15)
+    void onlyMailsMatchingTheSubjectAndSenderFilterAreEvaluated() throws Exception {
+        GreenMailUser mailbox = greenMail.setUser("gefiltert@example.test", "gefiltert@example.test", "imap-test-secret");
+        InternetAddress copier = new InternetAddress("geraet@kopierer.example", "Kopierer Empfang");
+        mailbox.deliver(mailWithPdf("Scan 17", "Scan_17.pdf", pdf("Filtertest: Lieferschein 17"), copier));
+        mailbox.deliver(mailWithPdf("Rechnung Mai", "Rechnung.pdf", pdf("Filtertest: Rechnung Mai"), copier));
+        mailbox.deliver(mailWithPdf("Scan Werbung", "Werbung.pdf", pdf("Filtertest: Werbung"), copier));
+        mailbox.deliver(mailWithPdf("Scan 18", "Scan_18.pdf", pdf("Filtertest: fremder Absender"),
+                new InternetAddress("jemand@other.example")));
+        mailbox.deliver(mailWithPdf("SCAN 19", "Scan_19.pdf", pdf("Filtertest: private Kopie"),
+                new InternetAddress("privat@kopierer.example", "Privat")));
+
+        String account = """
+                {"name":"Gefiltert","host":"127.0.0.1","port":%d,"security":"NONE",
+                 "username":"gefiltert@example.test","password":"imap-test-secret","folder":"INBOX","enabled":false,
+                 "filter":{"subjectIncludes":[" scan ","Scan",""],"subjectExcludes":["werbung"],
+                           "senderIncludes":["@KOPIERER.example"],"senderExcludes":["privat"]}}"""
+                .formatted(greenMail.getImap().getPort());
+        // zu viele oder zu lange Begriffe werden abgelehnt
+        String tooMany = account.replace("\"werbung\"", String.join(",", java.util.Collections.nCopies(51, "\"x\"")));
+        mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(tooMany))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(account.replace("werbung", "w".repeat(201))))
+                .andExpect(status().isBadRequest());
+
+        String accountId = jsonValue(mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(account))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.filter.subjectIncludes", hasSize(1)))
+                .andExpect(jsonPath("$.filter.subjectIncludes[0]").value("scan"))
+                .andExpect(jsonPath("$.filter.senderExcludes[0]").value("privat"))
+                .andReturn(), "$.id");
+
+        long before = documents.count();
+        mailSync.sync(accountId);
+        awaitProcessed((int) before + 1);
+        assertThat(documents.findAll().stream().filter(doc -> accountId.equals(doc.getMailAccountId()))
+                .map(Document::getOriginalFilename)).containsExactly("Scan_17.pdf");
+        mvc.perform(get("/api/mail-accounts").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$[?(@.id == '" + accountId + "')].lastSyncMessage")
+                        .value("Neue E-Mails geprüft: 5. Vom Filter übersprungen: 4. PDFs übernommen: 1."));
+
+        // die Anwendung merkt sich den Beginn des letzten erfolgreichen Abrufs
+        Instant checkedUntil = mailAccounts.findById(accountId).orElseThrow().getCheckedUntil();
+        assertThat(checkedUntil).isNotNull().isBefore(Instant.now());
+
+        // ein anderer Filter gilt nur für E-Mails, die danach eingehen – geprüfte E-Mails bleiben geprüft
+        String withoutSubjectFilter = account.replace("\"password\":\"imap-test-secret\",", "")
+                .replace("\"subjectIncludes\":[\" scan \",\"Scan\",\"\"]", "\"subjectIncludes\":[]");
+        mvc.perform(put("/api/mail-accounts/" + accountId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(withoutSubjectFilter))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.filter.subjectIncludes", hasSize(0)));
+        mailSync.sync(accountId);
+        assertThat(mailFiles(accountId)).containsExactly("Scan_17.pdf");
+        mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andExpect(jsonPath("$[?(@.id == '" + accountId + "')].lastSyncMessage").value("No new e-mails."));
+        mailbox.deliver(mailWithPdf("Rechnung Juni", "Rechnung_Juni.pdf", pdf("Filtertest: Rechnung Juni"), copier));
+        mailSync.sync(accountId);
+        awaitProcessed((int) before + 2);
+        assertThat(mailFiles(accountId)).containsExactlyInAnyOrder("Scan_17.pdf", "Rechnung_Juni.pdf");
+        mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andExpect(jsonPath("$[?(@.id == '" + accountId + "')].lastSyncMessage")
+                        .value("New e-mails checked: 1. PDFs imported: 1."));
+
+        // ein gescheiterter Abruf rückt die Zeitmarke nicht weiter
+        Instant afterSuccess = mailAccounts.findById(accountId).orElseThrow().getCheckedUntil();
+        assertThat(afterSuccess).isAfter(checkedUntil);
+        jdbc.sql("UPDATE mail_accounts SET folder = ? WHERE id = ?").param("Weg").param(accountId).update();
+        mailSync.sync(accountId);
+        assertThat(mailAccounts.findById(accountId).orElseThrow().getLastSyncStatus())
+                .isEqualTo(de.aidocuments.mail.MailAccount.SyncStatus.ERROR);
+        assertThat(mailAccounts.findById(accountId).orElseThrow().getCheckedUntil()).isEqualTo(afterSuccess);
+        jdbc.sql("UPDATE mail_accounts SET folder = ? WHERE id = ?").param("INBOX").param(accountId).update();
+
+        // geht der UID-Stand verloren (z. B. neue UIDVALIDITY nach einem Serverumzug), bleiben ältere E-Mails trotzdem
+        // geprüft. Die Zeitmarke wird vorgestellt, statt den Spielraum für abweichende Uhren abzuwarten.
+        jdbc.sql("UPDATE mail_accounts SET uid_validity = 1, last_uid = 0, checked_until = ? WHERE id = ?")
+                .param(Instant.now().plus(de.aidocuments.mail.MailSyncService.CLOCK_TOLERANCE).plusSeconds(60)
+                        .toEpochMilli())
+                .param(accountId).update();
+        mailSync.sync(accountId);
+        assertThat(mailFiles(accountId)).hasSize(2);
+        mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andExpect(jsonPath("$[?(@.id == '" + accountId + "')].lastSyncMessage").value("No new e-mails."));
+
+        // ein anderer Zeitraum („Nur E-Mails ab“) ist dagegen ein bewusster Neuanfang: alles wird erneut geprüft
+        mvc.perform(put("/api/mail-accounts/" + accountId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(withoutSubjectFilter.replace("\"enabled\":false", "\"enabled\":false,\"importSince\":\"2000-01-01\"")))
+                .andExpect(status().isOk());
+        assertThat(mailAccounts.findById(accountId).orElseThrow().getCheckedUntil()).isNull();
+        mailSync.sync(accountId);
+        awaitProcessed((int) before + 3);
+        assertThat(mailFiles(accountId))
+                .containsExactlyInAnyOrder("Scan_17.pdf", "Rechnung_Juni.pdf", "Rechnung.pdf");
+        mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andExpect(jsonPath("$[?(@.id == '" + accountId + "')].lastSyncMessage").value(
+                        "New e-mails checked: 6. Skipped by filter: 3. PDFs imported: 1. Already present: 2."));
+    }
+
+    @Test
+    @Order(16)
+    void eachMailboxIsCheckedInItsOwnInterval() throws Exception {
+        greenMail.setUser("intervall@example.test", "intervall@example.test", "imap-test-secret");
+        String account = """
+                {"name":"Intervall","host":"127.0.0.1","port":%d,"security":"NONE",
+                 "username":"intervall@example.test","password":"imap-test-secret","folder":"INBOX","enabled":false,
+                 "intervalMinutes":%s}""";
+        int port = greenMail.getImap().getPort();
+        for (String invalid : List.of("0", "1441", "-5")) {
+            mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                            .contentType(MediaType.APPLICATION_JSON).content(account.formatted(port, invalid)))
+                    .andExpect(status().isBadRequest());
+        }
+        String accountId = jsonValue(mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(account.formatted(port, "60")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.intervalMinutes").value(60))
+                .andExpect(jsonPath("$.effectiveIntervalMinutes").value(60))
+                // pausiert: kein nächster Abruf
+                .andExpect(jsonPath("$.nextSyncAt").doesNotExist())
+                .andReturn(), "$.id");
+
+        // aktiviert und noch nie abgerufen: sofort fällig
+        String enabled = account.replace("\"enabled\":false", "\"enabled\":true").formatted(port, "60");
+        mvc.perform(put("/api/mail-accounts/" + accountId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(enabled))
+                .andExpect(status().isOk());
+        mailSync.syncDue();
+        Instant firstSync = mailAccounts.findById(accountId).orElseThrow().getLastSyncAt();
+        assertThat(firstSync).isNotNull();
+
+        // danach erst wieder nach 60 Minuten – gezählt ab dem Beginn des Abrufs
+        List<String> listed = com.jayway.jsonpath.JsonPath.read(mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andReturn().getResponse().getContentAsString(), "$[?(@.id == '" + accountId + "')].nextSyncAt");
+        String next = listed.getFirst();
+        assertThat(Instant.parse(next)).isBetween(firstSync.plus(Duration.ofMinutes(59)), firstSync.plus(Duration.ofMinutes(60)));
+        mailSync.syncDue();
+        assertThat(mailAccounts.findById(accountId).orElseThrow().getLastSyncAt()).isEqualTo(firstSync);
+
+        // ohne eigenes Intervall gilt das allgemeine aus „Abruf & Eingangsordner“
+        mvc.perform(put("/api/mail-accounts/" + accountId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(enabled.replace("\"intervalMinutes\":60", "\"intervalMinutes\":null")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.intervalMinutes").doesNotExist())
+                .andExpect(jsonPath("$.effectiveIntervalMinutes").value(importSettings.current().intervalMinutes()));
+        // ein geändertes Intervall wirkt sofort, ohne dass der Abrufzeitpunkt neu beginnt
+        String shorter = jsonValue(mvc.perform(put("/api/mail-accounts/" + accountId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(enabled.replace("\"intervalMinutes\":60", "\"intervalMinutes\":1")))
+                .andExpect(status().isOk()).andReturn(), "$.nextSyncAt");
+        assertThat(Duration.between(Instant.parse(next), Instant.parse(shorter))).isEqualTo(Duration.ofMinutes(-59));
+
+        mvc.perform(delete("/api/mail-accounts/" + accountId).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+    }
+
+    private List<String> mailFiles(String accountId) {
+        return documents.findAll().stream().filter(doc -> accountId.equals(doc.getMailAccountId()))
+                .map(Document::getOriginalFilename).toList();
+    }
+
+    /** Der Code der Authenticator-App für das aktuelle (oder ein benachbartes) 30-Sekunden-Intervall. */
+    private static String totp(String secret, int offset) {
+        long step = Math.floorDiv(java.time.Instant.now().getEpochSecond(), 30) + offset;
+        try {
+            javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA1");
+            mac.init(new javax.crypto.spec.SecretKeySpec(base32(secret), "HmacSHA1"));
+            byte[] hash = mac.doFinal(java.nio.ByteBuffer.allocate(8).putLong(step).array());
+            int o = hash[hash.length - 1] & 0x0f;
+            int binary = ((hash[o] & 0x7f) << 24) | ((hash[o + 1] & 0xff) << 16) | ((hash[o + 2] & 0xff) << 8)
+                    | (hash[o + 3] & 0xff);
+            return String.format("%06d", binary % 1_000_000);
+        } catch (java.security.GeneralSecurityException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private static byte[] base32(String text) {
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        int buffer = 0;
+        int bits = 0;
+        for (char c : text.toCharArray()) {
+            buffer = (buffer << 5) | alphabet.indexOf(c);
+            bits += 5;
+            if (bits >= 8) {
+                out.write(buffer >> (bits - 8));
+                bits -= 8;
+            }
+        }
+        return out.toByteArray();
     }
 
     private static String jsonValue(MvcResult result, String path) throws Exception {
@@ -831,8 +1535,13 @@ class ApplicationFlowTest {
     }
 
     private static MimeMessage mailWithPdf(String subject, String filename, byte[] pdf) throws Exception {
+        return mailWithPdf(subject, filename, pdf, new InternetAddress("kopierer@example.test", "Kopierer 2. OG"));
+    }
+
+    private static MimeMessage mailWithPdf(String subject, String filename, byte[] pdf, InternetAddress from)
+            throws Exception {
         MimeMessage message = new MimeMessage(Session.getInstance(new Properties()));
-        message.setFrom(new InternetAddress("kopierer@example.test", "Kopierer 2. OG"));
+        message.setFrom(from);
         message.setRecipient(Message.RecipientType.TO, new InternetAddress("scans@example.test"));
         message.setSubject(subject);
         MimeBodyPart text = new MimeBodyPart();

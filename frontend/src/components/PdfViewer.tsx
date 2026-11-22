@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Download, RotateCcw, Save, Undo2 } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { api, type Doc, errorMessage, fileUrl, originalUrl } from '../lib/api'
 import { formatDateTime } from '../lib/format'
-import { currentLanguage } from '../lib/i18n'
+import { usePdfJsFrame, viewerSrc } from '../lib/pdfjs'
 import { Button, ConfirmDialog } from './ui'
 
 /**
@@ -15,126 +15,19 @@ import { Button, ConfirmDialog } from './ui'
  * Dokument (Markierungen, Text, Zeichnungen, Bilder, Unterschriften) lassen sich auslesen und speichern.
  */
 
-/** Was die Anwendung vom Betrachter braucht – ein kleiner Ausschnitt seiner Schnittstelle. */
-interface PdfJsApp {
-  initializedPromise: Promise<void>
-  pdfDocument: {
-    annotationStorage: {
-      onSetModified: (() => void) | null
-      onResetModified: (() => void) | null
-      resetModified: () => void
-    }
-    saveDocument: () => Promise<Uint8Array>
-  } | null
-  eventBus: { on: (name: string, listener: () => void) => void }
-}
-interface PdfJsWindow extends Window {
-  PDFViewerApplication: PdfJsApp
-  PDFViewerApplicationOptions: { set: (name: string, value: unknown) => void }
-}
-
-/** Stufen, in denen die Werkzeugleiste Platz schafft – die Regeln stehen in public/pdfjs-fit.css. */
-const FIT_LEVELS = 7
-
-/** Blendet stufenweise aus, bis die Werkzeugleiste ohne Überlauf in die Breite passt. */
-function fitToolbar(win: Window) {
-  const html = win.document.documentElement
-  const toolbar = win.document.getElementById('toolbarViewer')
-  if (!toolbar) return
-  for (let level = 1; level <= FIT_LEVELS; level++) html.classList.remove(`aid-fit-${level}`)
-  for (let level = 1; level <= FIT_LEVELS && toolbar.scrollWidth > toolbar.clientWidth + 1; level++) {
-    html.classList.add(`aid-fit-${level}`)
-  }
-}
-
 export function PdfViewer({ doc }: { doc: Doc }) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const frame = useRef<HTMLIFrameElement>(null)
-  const [modified, setModified] = useState(false)
   const [reloads, setReloads] = useState(0)
   const [confirmRestore, setConfirmRestore] = useState(false)
 
   // Jede gespeicherte Fassung hat eine eigene Adresse – so zeigt der Betrachter nie eine zwischengespeicherte alte.
   const version = `${doc.modifiedAt ?? 'original'}-${reloads}`
-  const src = `/pdfjs/web/viewer.html?file=${encodeURIComponent(`${fileUrl(doc.id)}?v=${encodeURIComponent(version)}`)}`
-
-  const app = useCallback(() => (frame.current?.contentWindow as PdfJsWindow | null)?.PDFViewerApplication, [])
-
-  // Vor dem Start des Betrachters: Sprache und Design der Anwendung, keine eigenen gespeicherten Vorlieben.
-  useEffect(() => {
-    function configure(event: Event) {
-      const source = (event as CustomEvent<{ source: PdfJsWindow }>).detail?.source
-      if (!source || source !== frame.current?.contentWindow) return
-      const options = source.PDFViewerApplicationOptions
-      options.set('disablePreferences', true)
-      options.set('localeProperties', { lang: currentLanguage() })
-      options.set('viewerCssTheme', document.documentElement.classList.contains('dark') ? 2 : 1)
-      options.set('disableHistory', true)
-    }
-    document.addEventListener('webviewerloaded', configure)
-    return () => document.removeEventListener('webviewerloaded', configure)
-  }, [])
-
-  // Nach dem Laden: Werkzeugleiste einpassen und Änderungen am Dokument mitbekommen.
-  useEffect(() => {
-    const iframe = frame.current
-    if (!iframe) return
-    async function attach() {
-      const win = iframe?.contentWindow as PdfJsWindow | null
-      if (!win?.PDFViewerApplication) return
-      // gleich und noch einmal kurz danach: Der Betrachter ordnet seine Leiste nach einer Größenänderung selbst um
-      const fit = () => {
-        fitToolbar(win)
-        win.setTimeout(() => fitToolbar(win), 120)
-      }
-      // als Datei, nicht als eingebetteter Stil: Die Sicherheitsrichtlinie des Betrachters erlaubt nur Stile derselben Herkunft
-      const style = win.document.createElement('link')
-      style.rel = 'stylesheet'
-      style.href = '/pdfjs-fit.css'
-      style.addEventListener('load', fit)
-      win.document.head.append(style)
-      // Das Fenster des Betrachters meldet seine neue Größe erst, wenn es sie auch übernommen hat – dann messen.
-      win.addEventListener('resize', fit)
-      const viewer = win.PDFViewerApplication
-      await viewer.initializedPromise
-      viewer.eventBus.on('localized', fit)
-      viewer.eventBus.on('documentloaded', () => {
-        fit()
-        const storage = viewer.pdfDocument?.annotationStorage
-        if (!storage) return
-        const onSet = storage.onSetModified
-        const onReset = storage.onResetModified
-        storage.onSetModified = () => {
-          onSet?.()
-          setModified(true)
-        }
-        storage.onResetModified = () => {
-          onReset?.()
-          setModified(false)
-        }
-      })
-      fit()
-    }
-    setModified(false)
-    iframe.addEventListener('load', attach)
-    return () => {
-      iframe.removeEventListener('load', attach)
-    }
-  }, [src])
-
-  /** Änderungen im Betrachter vergessen – sonst fragt er beim Neuladen, ob man die Seite wirklich verlassen will. */
-  function forgetChanges() {
-    app()?.pdfDocument?.annotationStorage.resetModified()
-    setModified(false)
-  }
+  const src = viewerSrc(`${fileUrl(doc.id)}?v=${encodeURIComponent(version)}`)
+  const { frame, modified, forgetChanges, savedBytes } = usePdfJsFrame(src)
 
   const save = useMutation({
-    mutationFn: async () => {
-      const pdf = app()?.pdfDocument
-      if (!pdf) throw new Error(t('errors.unexpected'))
-      return api.replaceFile(doc.id, await pdf.saveDocument())
-    },
+    mutationFn: async () => api.replaceFile(doc.id, await savedBytes()),
     onSuccess: async (updated) => {
       forgetChanges()
       queryClient.setQueryData(['document', doc.id], updated)

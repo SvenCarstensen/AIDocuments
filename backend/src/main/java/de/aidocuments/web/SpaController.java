@@ -10,8 +10,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class SpaController {
 
-    @GetMapping({"/documents", "/documents/**", "/settings", "/settings/**"})
+    @GetMapping({"/documents", "/documents/**", "/settings", "/settings/**", "/history", "/duplicates/**"})
     public String forward() {
+        return "forward:/index.html";
+    }
+
+    /** Geteilte Dokumente (Link für nicht angemeldete Personen) – nicht in Suchmaschinen. */
+    @GetMapping("/s/**")
+    public String forwardShare(jakarta.servlet.http.HttpServletResponse response) {
+        response.setHeader("X-Robots-Tag", "noindex, nofollow");
         return "forward:/index.html";
     }
 }

@@ -23,12 +23,15 @@ spring:
     import:
       - optional:file:./config/debug.yml
       - optional:file:./backend/config/debug.yml
-  mongodb:
-    # Extern betriebene MongoDB: MONGODB_URI setzen, z. B. mongodb://user:pass@host:27017/aidocuments?authSource=admin
-    uri: ${MONGODB_URI:mongodb://localhost:27017/aidocuments}
-  data:
-    mongodb:
-      auto-index-creation: true
+  datasource:
+    # Eingebaut: eine SQLite-Datei im Datenverzeichnis – nichts zu installieren.
+    # Externe MariaDB: AIDOCS_DB_URL=jdbc:mariadb://host:3306/aidocuments, dazu AIDOCS_DB_USER und AIDOCS_DB_PASSWORD.
+    url: ${AIDOCS_DB_URL:jdbc:sqlite:${app.data-dir}/aidocuments.db}
+    username: ${AIDOCS_DB_USER:}
+    password: ${AIDOCS_DB_PASSWORD:}
+  flyway:
+    # Schema je Datenbank: db/migration/sqlite bzw. db/migration/mariadb
+    locations: classpath:db/migration/{vendor}
   servlet:
     multipart:
       max-file-size: 50MB
@@ -48,6 +51,9 @@ spring:
 app:
   # Ablageort für PDF-Dateien, Vorschaubilder, Suchindex und Schlüsseldatei
   data-dir: ${AIDOCS_DATA_DIR:./data}
+  # Reverse-Proxys, deren X-Forwarded-For/-Proto übernommen werden (siehe ReverseProxyConfig):
+  # leer = keinem, "private" = allen aus privaten Netzen, sonst IP-Adressen durch Kommas getrennt
+  trusted-proxies: ${AIDOCS_TRUSTED_PROXIES:}
   ai:
     # Vorgaben für die KI-Anbindung. Alles hiervon lässt sich in der Oberfläche unter
     # Einstellungen → KI überschreiben; die dort gespeicherten Werte haben Vorrang.

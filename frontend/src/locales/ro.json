@@ -50,6 +50,8 @@
     "setup": {
       "title": "Configurați AIDocuments",
       "subtitle": "Începeți prin a crea contul de administrator. Ulterior puteți adăuga alți utilizatori din setări.",
+      "code": "Cod de configurare",
+      "codeHint": "Apare în jurnalul serverului la pornire (Docker: docker compose logs).",
       "adminAccount": "Cont de administrator",
       "repeatPassword": "Repetați parola",
       "submit": "Creează contul și începe",
@@ -58,6 +60,19 @@
         "ai": "IA le rezumă și le etichetează",
         "search": "Căutare în textul integral, până în interiorul documentului"
       }
+    },
+    "twoFactor": {
+      "title": "Confirmă autentificarea",
+      "subtitle": "Introdu codul de 6 cifre din aplicația de autentificare.",
+      "code": "Cod",
+      "codeHint": "Nu ai acces la aplicație? Introdu în schimb unul dintre codurile de recuperare.",
+      "submit": "Confirmă",
+      "back": "Înapoi la autentificare"
+    },
+    "twoFactorRequired": {
+      "title": "Configurează autentificarea în doi pași",
+      "subtitle": "Pentru administratori autentificarea în doi pași este obligatorie. Configureaz-o acum pentru a continua.",
+      "intro": "Ai nevoie de o aplicație de autentificare pe telefon (de ex. Google Authenticator, Microsoft Authenticator, 1Password sau Aegis)."
     }
   },
   "shell": {
@@ -67,8 +82,8 @@
       "dark": "Temă întunecată"
     },
     "search": {
-      "placeholder": "Căutați documente, etichete, conținut …",
-      "placeholderAi": "Caută documente cu propriile cuvinte – de ex. „facturi de la Kia din 2024”",
+      "placeholder": "Căutare după cuvinte cheie: documente, etichete, conținut …",
+      "placeholderAi": "Căutare cu IA: întreabă cu propriile cuvinte – de ex. „facturi de la Kia din 2024”",
       "labelAi": "IA",
       "label": "Căutare documente",
       "clear": "Șterge căutarea",
@@ -79,6 +94,7 @@
       "aiActive": "IA activă",
       "aiNotConfigured": "IA neconfigurată",
       "changePassword": "Schimbă parola",
+      "licenses": "Licențe terțe",
       "logout": "Deconectare"
     },
     "passwordDialog": {
@@ -261,8 +277,8 @@
     },
     "delete": {
       "title": "Ștergeți documentul?",
-      "text": "„{{title}}” va fi șters împreună cu fișierul PDF, textul integral și etichetele. Acțiunea nu poate fi anulată.",
-      "confirm": "Șterge definitiv"
+      "text": "„{{title}}” va fi șters. În istoric poți anula acțiunea timp de 30 de zile; după aceea este eliminat definitiv.",
+      "confirm": "Șterge"
     },
     "chat": {
       "intro": "Pune o întrebare despre acest document – IA răspunde pe baza conținutului său.",
@@ -275,6 +291,25 @@
         "summary": "Despre ce este acest document?",
         "deadlines": "Există termene sau date?",
         "amounts": "Ce sume sunt menționate?"
+      }
+    },
+    "versions": {
+      "title": "Versiuni",
+      "intro": "Fiecare modificare a PDF-ului creează o versiune nouă. Versiunile mai vechi se păstrează și pot fi vizualizate, descărcate sau restaurate.",
+      "current": "actuală",
+      "view": "Vezi versiunea {{number}}",
+      "download": "Descarcă versiunea {{number}}",
+      "restore": "Restaurează versiunea {{number}}",
+      "restoreTitle": "Restaurezi versiunea {{number}}?",
+      "restoreText": "Versiunea devine cea actuală. Versiunea de acum se păstrează, iar pasul poate fi anulat în istoric.",
+      "restoreConfirm": "Restaurează",
+      "restored": "Versiunea {{number}} a fost restaurată",
+      "kinds": {
+        "IMPORTED": "Importat",
+        "EDITED": "Editat",
+        "ORIGINAL_RESTORED": "Original restaurat",
+        "VERSION_RESTORED": "Versiunea {{from}} restaurată",
+        "UNDONE": "Modificare anulată"
       }
     }
   },
@@ -316,8 +351,23 @@
         "since": "Doar e-mailurile din",
         "sinceHint": "Opțional – e-mailurile mai vechi sunt ignorate",
         "enabled": "Verifică automat",
-        "enabledHint": "Căsuța de e-mail este verificată pentru PDF-uri noi la intervalul configurat."
-      }
+        "enabledHint": "Căsuța de e-mail este verificată pentru PDF-uri noi la intervalul configurat.",
+        "filter": {
+          "title": "Filtru",
+          "intro": "Sunt procesate doar e-mailurile care îndeplinesc toate condițiile. Câte un termen pe rând; literele mari și mici nu contează, ajunge o parte din text. Câmpurile goale nu restrâng nimic.",
+          "subjectIncludes": "Subiectul conține unul dintre acești termeni",
+          "subjectExcludes": "Subiectul nu conține niciunul dintre acești termeni",
+          "senderIncludes": "Expeditorul conține unul dintre acești termeni",
+          "senderExcludes": "Expeditorul nu conține niciunul dintre acești termeni",
+          "senderHint": "Nume sau adresă, de ex. „@example.com”",
+          "newOnly": "Filtrul se aplică e-mailurilor primite după ultima verificare; e-mailurile deja verificate nu sunt procesate din nou."
+        },
+        "interval": "Interval de verificare în minute",
+        "intervalHint": "Lasă gol pentru intervalul general (în prezent {{interval}})."
+      },
+      "filterActive": "Filtru activ",
+      "schedule": "Verificare la fiecare {{interval}} · următoarea {{when}}",
+      "scheduleSoon": "Verificare la fiecare {{interval}} · următoarea în curând"
     },
     "import": {
       "title": "Program și folder de import",
@@ -326,7 +376,7 @@
       "saved": "Setările au fost salvate",
       "interval": {
         "title": "Interval de verificare",
-        "text": "Atât de des verifică aplicația toate căsuțele de e-mail și folderul de import pentru PDF-uri noi.",
+        "text": "Cât de des verifică aplicația folderul de intrare și toate căsuțele fără interval propriu pentru PDF-uri noi.",
         "label": "La fiecare … minute",
         "nextRun": "Următoarea verificare automată {{when}}."
       },
@@ -461,7 +511,104 @@
         "active": "Cont activ",
         "activeHint": "Conturile dezactivate nu se pot autentifica; sesiunile active se încheie imediat.",
         "create": "Creează"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Resetează autentificarea în doi pași",
+      "resetTwoFactorHint": "Pentru acest cont autentificarea în doi pași este activă.",
+      "resetTwoFactorText": "{{name}} se va autentifica apoi doar cu parola și poate configura din nou autentificarea în doi pași – de exemplu după pierderea telefonului.",
+      "resetTwoFactorConfirm": "Resetează",
+      "twoFactorReset": "Autentificarea în doi pași a fost resetată"
+    }
+  },
+  "history": {
+    "nav": "Istoric",
+    "title": "Istoric",
+    "subtitle": "Ce s-a întâmplat cu documentele tale – cele mai noi intrări primele.",
+    "empty": "Încă nu există intrări.",
+    "actions": {
+      "IMPORTED": "Importat",
+      "EDITED": "Editat",
+      "DELETED": "Șters"
+    },
+    "changes": {
+      "DETAILS": "Date modificate",
+      "FILE": "PDF modificat",
+      "ORIGINAL_RESTORED": "Original restaurat",
+      "DUPLICATE": "ca duplicat",
+      "VERSION_RESTORED": "Versiune restaurată"
+    },
+    "by": "de {{user}}",
+    "automatic": "automat",
+    "more": "Încarcă mai multe",
+    "undo": "Anulează",
+    "undone": "Anulat"
+  },
+  "duplicates": {
+    "title": "Posibil duplicat",
+    "subtitle": "Cele două documente au același conținut. Păstrează unul și șterge-l pe celălalt – sau notează că nu sunt duplicate.",
+    "older": "Sosit mai devreme",
+    "newer": "Sosit mai târziu",
+    "deleteThis": "Șterge-l pe acesta",
+    "compare": "Compară alăturat"
+  },
+  "twoFactor": {
+    "title": "Autentificare în doi pași",
+    "on": "Activă",
+    "off": "Dezactivată",
+    "intro": "Protejează-ți contul cu un al doilea factor: la autentificare vei introduce și un cod dintr-o aplicație de autentificare de pe telefon (de ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Configurează",
+    "scan": "Scanează codul QR cu aplicația de autentificare sau introdu cheia manual. Apoi introdu codul afișat de aplicație și parola ta.",
+    "qrAlt": "Cod QR pentru aplicația de autentificare",
+    "secret": "Cheie",
+    "confirmCode": "Cod din aplicație",
+    "activate": "Activează",
+    "recoveryTitle": "Coduri de recuperare",
+    "recoveryText": "Păstrează aceste coduri de recuperare într-un loc sigur. Fiecare funcționează o singură dată dacă nu poți folosi aplicația – de exemplu dacă îți pierzi telefonul. Sunt afișate doar acum.",
+    "download": "Salvează ca fișier",
+    "done": "Gata",
+    "enabled": "Autentificarea în doi pași este activă",
+    "disabled": "Autentificarea în doi pași este dezactivată",
+    "disableHint": "Pentru dezactivare introdu un cod actual din aplicație (sau un cod de recuperare) și parola ta.",
+    "disable": "Dezactivează",
+    "recoveryLeft": "Coduri de recuperare nefolosite: {{count}}",
+    "adminCannotDisable": "Ca administrator nu poți dezactiva autentificarea în doi pași."
+  },
+  "confirmCode": {
+    "title": "Confirmă modificarea",
+    "text": "Modificările conturilor, căsuțelor poștale și setărilor necesită un cod actual din aplicația de autentificare. Confirmarea este valabilă 10 minute.",
+    "submit": "Confirmă"
+  },
+  "share": {
+    "button": "Partajează",
+    "title": "Partajează documentul",
+    "intro": "Creează un link cu care o persoană fără cont poate deschide exact acest document.",
+    "recipient": "Cu cine partajezi?",
+    "recipientHint": "Numele persoanei – ca să vezi mai târziu cui i-ai dat linkul.",
+    "permission": "Poate această persoană să modifice documentul?",
+    "viewOnly": "Doar vizualizare",
+    "canEdit": "Poate modifica",
+    "viewHint": "Persoana poate vizualiza, tipări și descărca PDF-ul.",
+    "editHint": "Persoana poate și marca, scrie, semna și salva PDF-ul. Fiecare salvare devine o versiune nouă; titlul, etichetele și celelalte date rămân ascunse.",
+    "validity": "Valabil",
+    "unlimited": "Nelimitat",
+    "create": "Creează link",
+    "link": "Link",
+    "linkHint": "Oricine are acest link poate deschide documentul – dă-l doar lui {{name}}. Îl poți revoca oricând din vizualizarea documentului.",
+    "copy": "Copiază linkul",
+    "copied": "Link copiat",
+    "listTitle": "Partajat extern",
+    "expired": "expirat",
+    "validUntil": "valabil până la {{date}}",
+    "noExpiry": "fără expirare",
+    "lastOpened": "deschis ultima dată {{when}} (accesări: {{views}})",
+    "neverOpened": "nedeschis încă",
+    "revoke": "Revocă linkul",
+    "revokeTitle": "Revoci linkul pentru {{name}}?",
+    "revokeText": "Linkul nu mai funcționează imediat. Copiile pe care persoana le-a descărcat deja rămân la ea.",
+    "revoked": "Link revocat",
+    "page": {
+      "for": "Partajat cu {{name}}",
+      "invalid": "Acest link nu este valid sau a expirat, ori documentul a fost șters. Adresează-te persoanei care ți l-a dat."
     }
   }
 }

@@ -1,10 +1,6 @@
 package de.aidocuments.importer;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-/** In der Oberfläche gespeicherte Abruf-Einstellungen (genau ein Datensatz mit der ID "import"). */
-@Document(collection = "settings")
+/** In der Oberfläche gespeicherte Abruf-Einstellungen (Datensatz "import" der Tabelle settings). */
 public class ImportSettings {
 
     public static final String ID = "import";
@@ -16,8 +12,6 @@ public class ImportSettings {
         MOVE
     }
 
-    @Id
-    private String id = ID;
     private int intervalMinutes;
     private boolean folderEnabled;
     private String folderPath;

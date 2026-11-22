@@ -1,5 +1,6 @@
 import { AlertTriangle, CheckCircle2, Info, Loader2, X, XCircle } from 'lucide-react'
 import {
+  type Ref,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
   type ReactNode,
@@ -116,12 +117,14 @@ export function Field({ label, hint, error, className, children }: FieldProps) {
   )
 }
 
-export function Input({ className, ...rest }: InputHTMLAttributes<HTMLInputElement>) {
-  return <input className={cx(controlClass, 'h-10', className)} {...rest} />
+// React 19: ref ist eine gewöhnliche Eigenschaft und wird mit durchgereicht
+export function Input({ className, ...rest }: InputHTMLAttributes<HTMLInputElement> & { ref?: Ref<HTMLInputElement> }) {
+  // data-autofocus: in einem Modal greift autoFocus nicht (der Dialog ist beim Einhängen noch zu) – siehe Modal
+  return <input className={cx(controlClass, 'h-10', className)} data-autofocus={rest.autoFocus || undefined} {...rest} />
 }
 
 export function Textarea({ className, ...rest }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea className={cx(controlClass, 'py-2 leading-relaxed', className)} {...rest} />
+  return <textarea className={cx(controlClass, 'py-2 leading-relaxed', className)} data-autofocus={rest.autoFocus || undefined} {...rest} />
 }
 
 export function Select({ className, children, ...rest }: SelectHTMLAttributes<HTMLSelectElement>) {
@@ -304,7 +307,12 @@ export function Modal({ open, onClose, title, description, children, footer, siz
   useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
-    if (open && !dialog.open) dialog.showModal()
+    if (open && !dialog.open) {
+      // React führt autoFocus aus, solange der Dialog noch geschlossen (unsichtbar) ist, und showModal() setzt den
+      // Fokus dann auf das erste Bedienelement – den Schließen-Knopf. Felder mit autoFocus tragen data-autofocus.
+      dialog.showModal()
+      dialog.querySelector<HTMLElement>('[data-autofocus]')?.focus()
+    }
     if (!open && dialog.open) dialog.close()
   }, [open])
 

@@ -11,7 +11,7 @@ import de.aidocuments.settings.AiSettingsService.ProviderOption;
 import java.nio.file.Path;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import de.aidocuments.persistence.SettingsStore;
 
 /** Vorbelegungen aus der Konfiguration: für wen sie gelten und wann ein Schlüssel den Server verlassen darf. */
 class AiSettingsServiceTest {
@@ -63,7 +63,15 @@ class AiSettingsServiceTest {
         AppProperties properties = new AppProperties(Path.of("./data"), ai,
                 new AppProperties.Import(Duration.ofMinutes(5), ""),
                 new AppProperties.Ocr(false, "tesseract", "deu+eng", 50, 300, Duration.ofMinutes(5)));
-        return new AiSettingsService(mock(MongoTemplate.class), mock(SecretCipher.class), properties,
+        return new AiSettingsService(mock(SettingsStore.class), mock(SecretCipher.class), properties,
                 TestMessages.create());
+    }
+
+    @Test
+    void presetKeyIsOnlyUsedForItsOwnServer() {
+        assertThat(AiSettingsService.sameServer("http://server.lan:8000/v1", "http://SERVER.lan:9000/v1")).isTrue();
+        assertThat(AiSettingsService.sameServer("http://server.lan:8000/v1", "http://angreifer.example/v1")).isFalse();
+        assertThat(AiSettingsService.sameServer("https://api.anthropic.com", "http://api.anthropic.com")).isFalse();
+        assertThat(AiSettingsService.sameServer("", "http://server.lan")).isFalse();
     }
 }

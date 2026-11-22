@@ -7,16 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
     <title>AIDocuments</title>
-    <script>
-      // Farbschema vor dem ersten Rendern setzen, damit nichts aufblitzt
-      (function () {
-        try {
-          var stored = localStorage.getItem('theme');
-          var dark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (dark) document.documentElement.classList.add('dark');
-        } catch (e) {}
-      })();
-    </script>
+    <!-- Farbschema vor dem ersten Rendern setzen, damit nichts aufblitzt. Als eigene Datei statt inline, damit die
+         Content-Security-Policy des Servers keine Inline-Skripte erlauben muss. -->
+    <script src="/theme-init.js"></script>
   </head>
   <body>
     <div id="root"></div>

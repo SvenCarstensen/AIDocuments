@@ -52,6 +52,8 @@
     "setup": {
       "title": "Issettja AIDocuments",
       "subtitle": "Ibda billi toħloq il-kont tal-amministratur. Wara tista’ żżid aktar utenti fis-settings.",
+      "code": "Kodiċi tas-setup",
+      "codeHint": "Jidher fil-log tas-server mal-bidu (Docker: docker compose logs).",
       "adminAccount": "Kont tal-amministratur",
       "repeatPassword": "Irrepeti l-password",
       "submit": "Oħloq il-kont u ibda",
@@ -60,6 +62,19 @@
         "ai": "L-IA tagħmel sommarju tagħhom u tagħtihom tikketti",
         "search": "Tfittxija fit-test sħiħ sa ġewwa d-dokument"
       }
+    },
+    "twoFactor": {
+      "title": "Ikkonferma d-dħul",
+      "subtitle": "Daħħal il-kodiċi ta' 6 ċifri mill-app tal-awtentikazzjoni tiegħek.",
+      "code": "Kodiċi",
+      "codeHint": "M'għandekx aċċess għall-app? Minflok daħħal wieħed mill-kodiċijiet ta' rkupru tiegħek.",
+      "submit": "Ikkonferma",
+      "back": "Lura għad-dħul"
+    },
+    "twoFactorRequired": {
+      "title": "Issettja l-awtentikazzjoni b'żewġ fatturi",
+      "subtitle": "L-awtentikazzjoni b'żewġ fatturi hija obbligatorja għall-amministraturi. Issettjaha issa biex tkompli.",
+      "intro": "Għandek bżonn app tal-awtentikazzjoni fuq il-mowbajl (eż. Google Authenticator, Microsoft Authenticator, 1Password jew Aegis)."
     }
   },
   "shell": {
@@ -69,8 +84,8 @@
       "dark": "Tema skura"
     },
     "search": {
-      "placeholder": "Fittex dokumenti, tikketti, kontenut…",
-      "placeholderAi": "Fittex dokumenti bi kliemek tiegħek – eż. “fatturi minn Kia mill-2024”",
+      "placeholder": "Tiftix b’kelmiet ewlenin: dokumenti, tikketti, kontenut …",
+      "placeholderAi": "Tiftix bl-IA: staqsi bi kliemek – eż. “fatturi minn Kia mill-2024”",
       "labelAi": "IA",
       "label": "Fittex dokumenti",
       "clear": "Ikklerja t-tfittxija",
@@ -81,6 +96,7 @@
       "aiActive": "IA attiva",
       "aiNotConfigured": "IA mhux issettjata",
       "changePassword": "Ibdel il-password",
+      "licenses": "Liċenzji ta’ partijiet terzi",
       "logout": "Oħroġ"
     },
     "passwordDialog": {
@@ -279,8 +295,8 @@
     },
     "delete": {
       "title": "Tħassar id-dokument?",
-      "text": "“{{title}}” se jitħassar flimkien mal-fajl PDF, it-test sħiħ u t-tikketti tiegħu. Dan ma jistax jitreġġa’ lura.",
-      "confirm": "Ħassar għal dejjem"
+      "text": "“{{title}}” se jitħassar. Fl-istorja tista’ tannulla dan għal 30 jum; wara jitneħħa għal kollox.",
+      "confirm": "Ħassar"
     },
     "chat": {
       "intro": "Staqsi dwar dan id-dokument – l-IA twieġeb abbażi tal-kontenut tiegħu.",
@@ -293,6 +309,25 @@
         "summary": "Dwar xiex inhu dan id-dokument?",
         "deadlines": "Hemm skadenzi jew dati?",
         "amounts": "Liema ammonti huma msemmija?"
+      }
+    },
+    "versions": {
+      "title": "Verżjonijiet",
+      "intro": "Kull bidla fil-PDF toħloq verżjoni ġdida. Il-verżjonijiet eqdem jinżammu u jistgħu jintwerew, jitniżżlu jew jiġu rrestawrati.",
+      "current": "attwali",
+      "view": "Uri l-verżjoni {{number}}",
+      "download": "Niżżel il-verżjoni {{number}}",
+      "restore": "Irrestawra l-verżjoni {{number}}",
+      "restoreTitle": "Tirrestawra l-verżjoni {{number}}?",
+      "restoreText": "Din il-verżjoni ssir l-attwali. Il-verżjoni preżenti tinżamm, u l-pass jista' jitreġġa' lura fl-istorja.",
+      "restoreConfirm": "Irrestawra",
+      "restored": "Il-verżjoni {{number}} ġiet irrestawrata",
+      "kinds": {
+        "IMPORTED": "Importat",
+        "EDITED": "Editjat",
+        "ORIGINAL_RESTORED": "L-oriġinal ġie rrestawrat",
+        "VERSION_RESTORED": "Il-verżjoni {{from}} ġiet irrestawrata",
+        "UNDONE": "Il-bidla tħassret"
       }
     }
   },
@@ -334,8 +369,23 @@
         "since": "Emails minn din id-data biss",
         "sinceHint": "Mhux obbligatorju – emails eqdem jinqabżu",
         "enabled": "Iċċekkja awtomatikament",
-        "enabledHint": "Il-kaxxa postali tiġi ċċekkjata għal PDFs ġodda fl-intervall issettjat."
-      }
+        "enabledHint": "Il-kaxxa postali tiġi ċċekkjata għal PDFs ġodda fl-intervall issettjat.",
+        "filter": {
+          "title": "Filtru",
+          "intro": "Jiġu pproċessati biss l-emails li jissodisfaw il-kundizzjonijiet kollha. Terminu wieħed għal kull linja; l-ittri kbar u żgħar ma jagħmlux differenza, u biżżejjed parti mit-test. Il-qasam vojt ma jillimita xejn.",
+          "subjectIncludes": "Is-suġġett fih wieħed minn dawn it-termini",
+          "subjectExcludes": "Is-suġġett ma fih l-ebda wieħed minn dawn it-termini",
+          "senderIncludes": "Il-mittent fih wieħed minn dawn it-termini",
+          "senderExcludes": "Il-mittent ma fih l-ebda wieħed minn dawn it-termini",
+          "senderHint": "Isem jew indirizz, eż. “@example.com”",
+          "newOnly": "Il-filtru japplika għall-emails li jaslu wara l-aħħar ġbir; l-emails li diġà ġew iċċekkjati ma jerġgħux jiġu pproċessati."
+        },
+        "interval": "Intervall tal-ġbir f’minuti",
+        "intervalHint": "Ħallih vojt biex tuża l-intervall ġenerali (bħalissa {{interval}})."
+      },
+      "filterActive": "Filtru attiv",
+      "schedule": "Ġbir kull {{interval}} · li jmiss {{when}}",
+      "scheduleSoon": "Ġbir kull {{interval}} · li jmiss dalwaqt"
     },
     "import": {
       "title": "Skeda u folder tal-importazzjoni",
@@ -344,7 +394,7 @@
       "saved": "Is-settings ġew issejvjati",
       "interval": {
         "title": "Intervall tal-iċċekkjar",
-        "text": "Dan huwa kemm ta’ spiss l-applikazzjoni tiċċekkja l-kaxex postali kollha u l-folder tal-importazzjoni għal PDFs ġodda.",
+        "text": "Kemm-il darba l-applikazzjoni tiċċekkja l-folder tad-dħul u l-kaxxi tal-posta kollha mingħajr intervall tagħhom għal PDFs ġodda.",
         "label": "Kull … minuti",
         "nextRun": "L-iċċekkjar awtomatiku li jmiss {{when}}."
       },
@@ -483,7 +533,104 @@
         "active": "Kont attiv",
         "activeHint": "Kontijiet diżattivati ma jistgħux jidħlu; is-sessjonijiet attivi jintemmu minnufih.",
         "create": "Oħloq"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Irrisettja l-awtentikazzjoni b'żewġ fatturi",
+      "resetTwoFactorHint": "Għal dan il-kont l-awtentikazzjoni b'żewġ fatturi hija attiva.",
+      "resetTwoFactorText": "{{name}} imbagħad jidħol bil-password biss u jista' jerġa' jissettja l-awtentikazzjoni b'żewġ fatturi – pereżempju wara li jitlef il-mowbajl.",
+      "resetTwoFactorConfirm": "Irrisettja",
+      "twoFactorReset": "L-awtentikazzjoni b'żewġ fatturi ġiet irrisettjata"
+    }
+  },
+  "history": {
+    "nav": "Storja",
+    "title": "Storja",
+    "subtitle": "X’ġara mid-dokumenti tiegħek – l-aktar entrati ġodda l-ewwel.",
+    "empty": "Għad m’hemmx entrati.",
+    "actions": {
+      "IMPORTED": "Importat",
+      "EDITED": "Editjat",
+      "DELETED": "Imħassar"
+    },
+    "changes": {
+      "DETAILS": "Dettalji mibdula",
+      "FILE": "PDF mibdul",
+      "ORIGINAL_RESTORED": "Oriġinal irrestawrat",
+      "DUPLICATE": "bħala duplikat",
+      "VERSION_RESTORED": "Verżjoni rrestawrata"
+    },
+    "by": "minn {{user}}",
+    "automatic": "awtomatikament",
+    "more": "Għabbi aktar",
+    "undo": "Annulla",
+    "undone": "Annullat"
+  },
+  "duplicates": {
+    "title": "Duplikat possibbli",
+    "subtitle": "Iż-żewġ dokumenti għandhom l-istess kontenut. Żomm wieħed u ħassar l-ieħor – jew innota li mhumiex duplikati.",
+    "older": "Wasal qabel",
+    "newer": "Wasal wara",
+    "deleteThis": "Ħassar dan",
+    "compare": "Qabbel ħdejn xulxin"
+  },
+  "twoFactor": {
+    "title": "Awtentikazzjoni b'żewġ fatturi",
+    "on": "Attiva",
+    "off": "Mitfija",
+    "intro": "Ipproteġi l-kont tiegħek b'fattur ieħor: meta tidħol, iddaħħal ukoll kodiċi minn app tal-awtentikazzjoni fuq il-mowbajl (eż. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Issettja",
+    "scan": "Skennja l-kodiċi QR bl-app tal-awtentikazzjoni jew daħħal iċ-ċavetta manwalment. Imbagħad daħħal il-kodiċi mill-app u l-password tiegħek.",
+    "qrAlt": "Kodiċi QR għall-app tal-awtentikazzjoni",
+    "secret": "Ċavetta",
+    "confirmCode": "Kodiċi mill-app",
+    "activate": "Attiva",
+    "recoveryTitle": "Kodiċijiet ta' rkupru",
+    "recoveryText": "Żomm dawn il-kodiċijiet ta' rkupru f'post sigur. Kull wieħed jaħdem darba jekk ma tistax tuża l-app – pereżempju jekk titlef il-mowbajl. Jintwerew biss issa.",
+    "download": "Issejvja bħala fajl",
+    "done": "Lest",
+    "enabled": "L-awtentikazzjoni b'żewġ fatturi hija attiva",
+    "disabled": "L-awtentikazzjoni b'żewġ fatturi ntfiet",
+    "disableHint": "Biex titfiha, daħħal kodiċi kurrenti mill-app (jew kodiċi ta' rkupru) u l-password tiegħek.",
+    "disable": "Itfi",
+    "recoveryLeft": "Kodiċijiet ta' rkupru mhux użati: {{count}}",
+    "adminCannotDisable": "Bħala amministratur ma tistax titfi l-awtentikazzjoni b'żewġ fatturi."
+  },
+  "confirmCode": {
+    "title": "Ikkonferma l-bidla",
+    "text": "Il-bidliet fil-kontijiet, fil-kaxxi tal-posta u fis-settings jeħtieġu kodiċi attwali mill-app tal-awtentikazzjoni tiegħek. Il-konferma tibqa' valida għal 10 minuti.",
+    "submit": "Ikkonferma"
+  },
+  "share": {
+    "button": "Aqsam",
+    "title": "Aqsam id-dokument",
+    "intro": "Toħloq link li bih persuna mingħajr kont tista' tiftaħ eżattament dan id-dokument.",
+    "recipient": "Ma' min qed taqsam?",
+    "recipientHint": "L-isem tal-persuna – biex aktar tard tara lil min tajt il-link.",
+    "permission": "Din il-persuna tista' teditja d-dokument?",
+    "viewOnly": "Ara biss",
+    "canEdit": "Tista' teditja",
+    "viewHint": "Il-persuna tista' tara, tipprintja u tniżżel il-PDF.",
+    "editHint": "Il-persuna tista' wkoll timmarka, tikteb fih, tiffirma u tissejvja l-PDF. Kull salvataġġ isir verżjoni ġdida; it-titlu, it-tikketti u dettalji oħra jibqgħu moħbija.",
+    "validity": "Validu għal",
+    "unlimited": "Bla limitu",
+    "create": "Oħloq link",
+    "link": "Link",
+    "linkHint": "Kull min għandu dan il-link jista' jiftaħ id-dokument – agħtih biss lil {{name}}. Tista' tirtirah meta trid fil-veduta tad-dokument.",
+    "copy": "Ikkopja l-link",
+    "copied": "Il-link ġie kkupjat",
+    "listTitle": "Maqsum barra",
+    "expired": "skada",
+    "validUntil": "validu sa {{date}}",
+    "noExpiry": "bla skadenza",
+    "lastOpened": "l-aħħar miftuħ {{when}} (dħul: {{views}})",
+    "neverOpened": "għadu ma nfetaħx",
+    "revoke": "Irtira l-link",
+    "revokeTitle": "Tirtira l-link għal {{name}}?",
+    "revokeText": "Il-link jieqaf jaħdem minnufih. Il-kopji li l-persuna diġà niżżlet jibqgħu għandha.",
+    "revoked": "Il-link ġie rtirat",
+    "page": {
+      "for": "Maqsum ma' {{name}}",
+      "invalid": "Dan il-link mhux validu jew skada, jew id-dokument tħassar. Ikkuntattja lill-persuna li tatek il-link."
     }
   }
 }

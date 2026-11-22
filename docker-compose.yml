@@ -1,4 +1,4 @@
-# Produktion, Variante A: alles in einem Container – die MongoDB läuft im Container mit.
+# Produktion, Variante A: alles in einem Container – die Datenbank (SQLite) liegt im Datenverzeichnis.
 #
 #   docker compose up -d --build
 #
@@ -9,6 +9,9 @@ services:
     image: aidocuments:latest
     restart: unless-stopped
     ports:
+      # Unverschlüsselt (HTTP) – so nur im eigenen Netz. Aus dem Internet erreichbar nur über einen Reverse-Proxy
+      # mit HTTPS (siehe README); dann "127.0.0.1:8080:8080", damit Port 8080 selbst nicht offen ist –
+      # unter Linux umgehen von Docker veröffentlichte Ports die Firewall (ufw), ein „deny 8080“ hilft dort nicht.
       - "8080:8080"
     environment:
       TZ: Europe/Berlin
@@ -21,7 +24,7 @@ services:
       # AIDOCS_OCR: "off"                     # abschalten
       # AIDOCS_OCR_LANGUAGES: deu+eng+fra     # Sprachen der Dokumente (im Image: deu eng fra ita spa nld)
     volumes:
-      # PDFs, Suchindex, Schlüsseldatei und die eingebaute MongoDB (Unterordner mongo/)
+      # PDFs, Suchindex, Schlüsseldatei und die Datenbank (aidocuments.db)
       - aidocuments-data:/aidocuments
       # Überwachter Eingangsordner, z. B. das Ziel des Netzwerkscanners:
       # - /pfad/zum/scan-ordner:/import

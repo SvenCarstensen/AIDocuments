@@ -49,6 +49,8 @@
     "setup": {
       "title": "Setja upp AIDocuments",
       "subtitle": "Byrjaðu á að stofna stjórnandaaðganginn. Síðan geturðu bætt við fleiri notendum í stillingunum.",
+      "code": "Uppsetningarkóði",
+      "codeHint": "Birtist í annál þjónsins við ræsingu (Docker: docker compose logs).",
       "adminAccount": "Stjórnandaaðgangur",
       "repeatPassword": "Endurtaka lykilorð",
       "submit": "Stofna aðgang og byrja",
@@ -57,6 +59,19 @@
         "ai": "Gervigreind tekur saman og bætir við efnisorðum",
         "search": "Heildartextaleit sem nær inn í skjölin"
       }
+    },
+    "twoFactor": {
+      "title": "Staðfesta innskráningu",
+      "subtitle": "Sláðu inn 6 stafa kóðann úr auðkenningarforritinu þínu.",
+      "code": "Kóði",
+      "codeHint": "Enginn aðgangur að forritinu? Sláðu í staðinn inn einn af endurheimtarkóðunum þínum.",
+      "submit": "Staðfesta",
+      "back": "Til baka í innskráningu"
+    },
+    "twoFactorRequired": {
+      "title": "Setja upp tveggja þátta auðkenningu",
+      "subtitle": "Tveggja þátta auðkenning er skylda fyrir stjórnendur. Settu hana upp núna til að halda áfram.",
+      "intro": "Þú þarft auðkenningarforrit í símann (t.d. Google Authenticator, Microsoft Authenticator, 1Password eða Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Dökkt þema"
     },
     "search": {
-      "placeholder": "Leita í skjölum, efnisorðum, efni …",
-      "placeholderAi": "Leitaðu að skjölum með eigin orðum – t.d. „reikningar frá Kia frá 2024“",
+      "placeholder": "Leit eftir leitarorðum: skjöl, merki, efni …",
+      "placeholderAi": "Gervigreindarleit: spurðu með eigin orðum – t.d. „reikningar frá Kia frá 2024“",
       "labelAi": "Gervigreind",
       "label": "Leita í skjölum",
       "clear": "Hreinsa leit",
@@ -78,6 +93,7 @@
       "aiActive": "Gervigreind virk",
       "aiNotConfigured": "Gervigreind ekki uppsett",
       "changePassword": "Breyta lykilorði",
+      "licenses": "Leyfi þriðju aðila",
       "logout": "Skrá út"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Eyða skjali?",
-      "text": "„{{title}}“ verður eytt ásamt PDF-skránni, heildartextanum og efnisorðunum. Ekki er hægt að afturkalla þetta.",
-      "confirm": "Eyða varanlega"
+      "text": "„{{title}}“ verður eytt. Þú getur afturkallað það í sögunni í 30 daga; eftir það er því eytt endanlega.",
+      "confirm": "Eyða"
     },
     "chat": {
       "intro": "Spurðu um þetta skjal – gervigreindin svarar út frá efni þess.",
@@ -266,6 +282,25 @@
         "summary": "Um hvað fjallar þetta skjal?",
         "deadlines": "Eru einhverjir frestir eða dagsetningar?",
         "amounts": "Hvaða upphæðir eru nefndar?"
+      }
+    },
+    "versions": {
+      "title": "Útgáfur",
+      "intro": "Hver breyting á PDF-skjalinu býr til nýja útgáfu. Eldri útgáfur eru geymdar og hægt er að skoða þær, sækja eða endurheimta.",
+      "current": "núverandi",
+      "view": "Skoða útgáfu {{number}}",
+      "download": "Sækja útgáfu {{number}}",
+      "restore": "Endurheimta útgáfu {{number}}",
+      "restoreTitle": "Endurheimta útgáfu {{number}}?",
+      "restoreText": "Útgáfan verður sú núverandi. Núverandi útgáfa er geymd og hægt er að afturkalla skrefið í ferlinum.",
+      "restoreConfirm": "Endurheimta",
+      "restored": "Útgáfa {{number}} endurheimt",
+      "kinds": {
+        "IMPORTED": "Flutt inn",
+        "EDITED": "Breytt",
+        "ORIGINAL_RESTORED": "Upprunalegt endurheimt",
+        "VERSION_RESTORED": "Útgáfa {{from}} endurheimt",
+        "UNDONE": "Breyting afturkölluð"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Aðeins tölvupóstar frá",
         "sinceHint": "Valfrjálst – eldri tölvupóstum er sleppt",
         "enabled": "Athuga sjálfkrafa",
-        "enabledHint": "Leitað er að nýjum PDF-skrám í pósthólfinu með stilltu millibili."
-      }
+        "enabledHint": "Leitað er að nýjum PDF-skrám í pósthólfinu með stilltu millibili.",
+        "filter": {
+          "title": "Sía",
+          "intro": "Aðeins tölvupóstar sem uppfylla öll skilyrði eru unnir. Eitt orð í hverja línu; hástafir og lágstafir skipta ekki máli og hluti textans nægir. Tóm svæði takmarka ekkert.",
+          "subjectIncludes": "Efnið inniheldur eitt þessara orða",
+          "subjectExcludes": "Efnið inniheldur ekkert þessara orða",
+          "senderIncludes": "Sendandinn inniheldur eitt þessara orða",
+          "senderExcludes": "Sendandinn inniheldur ekkert þessara orða",
+          "senderHint": "Nafn eða netfang, t.d. „@example.com“",
+          "newOnly": "Sían gildir um tölvupóst sem berst eftir síðustu sókn; tölvupóstur sem þegar hefur verið skoðaður er ekki unninn aftur."
+        },
+        "interval": "Sóknartíðni í mínútum",
+        "intervalHint": "Skildu eftir autt til að nota almennu tíðnina (núna {{interval}})."
+      },
+      "filterActive": "Sía virk",
+      "schedule": "Sótt á {{interval}} fresti · næst {{when}}",
+      "scheduleSoon": "Sótt á {{interval}} fresti · næst innan skamms"
     },
     "import": {
       "title": "Áætlun og innflutningsmappa",
@@ -317,7 +367,7 @@
       "saved": "Stillingar vistaðar",
       "interval": {
         "title": "Athugunarbil",
-        "text": "Svona oft leitar forritið að nýjum PDF-skrám í öllum pósthólfum og innflutningsmöppunni.",
+        "text": "Hversu oft forritið athugar innhólfsmöppuna og öll pósthólf án eigin tíðni að nýjum PDF-skjölum.",
         "label": "Á … mínútna fresti",
         "nextRun": "Næsta sjálfvirka athugun {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Aðgangur virkur",
         "activeHint": "Ekki er hægt að skrá sig inn með óvirkum aðgangi; virkum lotum lýkur samstundis.",
         "create": "Stofna"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Endurstilla tveggja þátta auðkenningu",
+      "resetTwoFactorHint": "Tveggja þátta auðkenning er virk fyrir þennan aðgang.",
+      "resetTwoFactorText": "{{name}} skráir sig þá aðeins inn með lykilorði og getur sett upp tveggja þátta auðkenningu aftur – til dæmis eftir að síminn týndist.",
+      "resetTwoFactorConfirm": "Endurstilla",
+      "twoFactorReset": "Tveggja þátta auðkenning endurstillt"
+    }
+  },
+  "history": {
+    "nav": "Saga",
+    "title": "Saga",
+    "subtitle": "Það sem gerst hefur með skjölin þín – nýjustu færslurnar fyrst.",
+    "empty": "Engar færslur enn.",
+    "actions": {
+      "IMPORTED": "Flutt inn",
+      "EDITED": "Breytt",
+      "DELETED": "Eytt"
+    },
+    "changes": {
+      "DETAILS": "Upplýsingum breytt",
+      "FILE": "PDF breytt",
+      "ORIGINAL_RESTORED": "Frumrit endurheimt",
+      "DUPLICATE": "sem tvítaki",
+      "VERSION_RESTORED": "Útgáfa endurheimt"
+    },
+    "by": "af {{user}}",
+    "automatic": "sjálfvirkt",
+    "more": "Hlaða fleiri",
+    "undo": "Afturkalla",
+    "undone": "Afturkallað"
+  },
+  "duplicates": {
+    "title": "Hugsanlegt tvítak",
+    "subtitle": "Skjölin tvö eru eins að efni til. Haltu öðru og eyddu hinu – eða skráðu að þau séu ekki tvítök.",
+    "older": "Barst fyrr",
+    "newer": "Barst síðar",
+    "deleteThis": "Eyða þessu",
+    "compare": "Bera saman hlið við hlið"
+  },
+  "twoFactor": {
+    "title": "Tveggja þátta auðkenning",
+    "on": "Virk",
+    "off": "Óvirk",
+    "intro": "Verndaðu aðganginn með öðrum þætti: við innskráningu slærðu þá líka inn kóða úr auðkenningarforriti í símanum (t.d. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Setja upp",
+    "scan": "Skannaðu QR-kóðann með auðkenningarforritinu eða sláðu lykilinn inn handvirkt. Sláðu síðan inn kóðann úr forritinu og lykilorðið þitt.",
+    "qrAlt": "QR-kóði fyrir auðkenningarforritið",
+    "secret": "Lykill",
+    "confirmCode": "Kóði úr forritinu",
+    "activate": "Virkja",
+    "recoveryTitle": "Endurheimtarkóðar",
+    "recoveryText": "Geymdu þessa endurheimtarkóða á öruggum stað. Hver kóði virkar einu sinni ef þú getur ekki notað forritið – til dæmis ef síminn týnist. Þeir eru aðeins sýndir núna.",
+    "download": "Vista sem skrá",
+    "done": "Lokið",
+    "enabled": "Tveggja þátta auðkenning er virk",
+    "disabled": "Slökkt er á tveggja þátta auðkenningu",
+    "disableHint": "Til að slökkva á henni skaltu slá inn gildan kóða úr forritinu (eða endurheimtarkóða) og lykilorðið þitt.",
+    "disable": "Slökkva",
+    "recoveryLeft": "Ónotaðir endurheimtarkóðar: {{count}}",
+    "adminCannotDisable": "Sem stjórnandi geturðu ekki slökkt á tveggja þátta auðkenningu."
+  },
+  "confirmCode": {
+    "title": "Staðfesta breytingu",
+    "text": "Breytingar á aðgöngum, pósthólfum og stillingum krefjast gilds kóða úr auðkenningarforritinu þínu. Staðfestingin gildir í 10 mínútur.",
+    "submit": "Staðfesta"
+  },
+  "share": {
+    "button": "Deila",
+    "title": "Deila skjali",
+    "intro": "Býr til tengil sem gerir einstaklingi án aðgangs kleift að opna nákvæmlega þetta skjal.",
+    "recipient": "Með hverjum deilir þú?",
+    "recipientHint": "Nafn viðkomandi – svo þú sjáir seinna hverjum þú gafst tengilinn.",
+    "permission": "Má viðkomandi breyta skjalinu?",
+    "viewOnly": "Aðeins skoða",
+    "canEdit": "Má breyta",
+    "viewHint": "Viðkomandi getur skoðað, prentað og sótt PDF-skjalið.",
+    "editHint": "Viðkomandi getur líka merkt við, skrifað í, undirritað og vistað PDF-skjalið. Hver vistun verður ný útgáfa; titill, merki og aðrar upplýsingar eru faldar.",
+    "validity": "Gildir í",
+    "unlimited": "Ótakmarkað",
+    "create": "Búa til tengil",
+    "link": "Tengill",
+    "linkHint": "Allir sem hafa þennan tengil geta opnað skjalið – gefðu hann aðeins {{name}}. Þú getur afturkallað hann hvenær sem er í skjalayfirlitinu.",
+    "copy": "Afrita tengil",
+    "copied": "Tengill afritaður",
+    "listTitle": "Deilt utan kerfis",
+    "expired": "útrunninn",
+    "validUntil": "gildir til {{date}}",
+    "noExpiry": "rennur ekki út",
+    "lastOpened": "síðast opnaður {{when}} (skoðanir: {{views}})",
+    "neverOpened": "ekki opnaður enn",
+    "revoke": "Afturkalla tengil",
+    "revokeTitle": "Afturkalla tengilinn fyrir {{name}}?",
+    "revokeText": "Tengillinn hættir strax að virka. Afrit sem viðkomandi hefur þegar sótt verða áfram hjá honum.",
+    "revoked": "Tengill afturkallaður",
+    "page": {
+      "for": "Deilt með {{name}}",
+      "invalid": "Þessi tengill er ógildur eða útrunninn, eða skjalinu hefur verið eytt. Hafðu samband við þann sem gaf þér hann."
     }
   }
 }

@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CheckCircle2, Mail, Pencil, Plus, RefreshCw, Trash2, XCircle } from 'lucide-react'
+import { CheckCircle2, ChevronRight, Clock, Filter, Mail, Pencil, Plus, RefreshCw, Trash2, XCircle } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { Alert, Badge, Button, Card, ConfirmDialog, EmptyState, Field, IconButton, Input, Modal, Segmented, Spinner, Switch } from '../../components/ui'
-import { api, errorMessage, type MailAccount, type MailAccountInput, type MailSecurity, type TestResult } from '../../lib/api'
-import { formatRelative } from '../../lib/format'
+import { Alert, Badge, Button, Card, ConfirmDialog, EmptyState, Field, IconButton, Input, Modal, Segmented, Spinner, Switch, Textarea } from '../../components/ui'
+import { api, errorMessage, type MailAccount, type MailAccountInput, type MailFilter, type MailSecurity, type TestResult } from '../../lib/api'
+import { formatDuration, formatRelative } from '../../lib/format'
 import { SectionHeader } from './SectionHeader'
 
 export function MailboxSettings() {
@@ -82,11 +82,18 @@ export function MailboxSettings() {
                     <h3 className="truncate font-semibold">{account.name}</h3>
                     {!account.enabled && <Badge>{t('settings.mailboxes.paused')}</Badge>}
                     <Badge tone="neutral">{t('common.documentCount', { count: account.documentCount })}</Badge>
+                    {filterTerms(account.filter) > 0 && (
+                      <Badge tone="brand">
+                        <Filter className="size-3" aria-hidden />
+                        {t('settings.mailboxes.filterActive')}
+                      </Badge>
+                    )}
                   </div>
                   <p className="mt-0.5 truncate text-sm text-muted">
                     {account.username} · {account.host}:{account.port} · {account.folder}
                   </p>
                   <SyncState account={account} />
+                  <Schedule account={account} />
                 </div>
                 <div className="flex items-center gap-1">
                   <Button
@@ -144,7 +151,49 @@ function SyncState({ account }: { account: MailAccount }) {
   )
 }
 
+/** Intervall und nächster automatischer Abruf; bei pausierten Postfächern nichts. */
+function Schedule({ account }: { account: MailAccount }) {
+  const { t } = useTranslation()
+  if (!account.nextSyncAt || account.lastSyncStatus === 'RUNNING') return null
+  const interval = formatInterval(account.effectiveIntervalMinutes)
+  const soon = dueSoon(account.nextSyncAt)
+  return (
+    <p className="mt-1 flex items-center gap-1.5 text-[13px] text-subtle">
+      <Clock className="size-3.5 shrink-0" aria-hidden />
+      {soon
+        ? t('settings.mailboxes.scheduleSoon', { interval })
+        : t('settings.mailboxes.schedule', { interval, when: formatRelative(account.nextSyncAt) })}
+    </p>
+  )
+}
+
+/** Der Takt im Backend prüft alle 15 Sekunden – ein gerade fälliger Abruf startet also gleich. */
+function dueSoon(at: string) {
+  return new Date(at).getTime() <= Date.now() + 15_000
+}
+
+function formatInterval(minutes: number) {
+  return minutes >= 60 && minutes % 60 === 0 ? formatDuration(minutes / 60, 'hour') : formatDuration(minutes, 'minute')
+}
+
 const defaultPorts: Record<MailSecurity, number> = { SSL: 993, STARTTLS: 143, NONE: 143 }
+
+const FILTER_FIELDS = ['subjectIncludes', 'subjectExcludes', 'senderIncludes', 'senderExcludes'] as const
+type FilterTexts = Record<keyof MailFilter, string>
+
+function filterTerms(filter: MailFilter | undefined) {
+  return filter ? FILTER_FIELDS.reduce((sum, key) => sum + filter[key].length, 0) : 0
+}
+
+/** Ein Begriff pro Zeile – im Formular als Text, beim Speichern als Liste. */
+function filterTexts(filter: MailFilter | undefined): FilterTexts {
+  return Object.fromEntries(FILTER_FIELDS.map((key) => [key, filter?.[key].join('\n') ?? ''])) as FilterTexts
+}
+function parseFilter(texts: FilterTexts): MailFilter {
+  return Object.fromEntries(
+    FILTER_FIELDS.map((key) => [key, texts[key].split('\n').map((term) => term.trim()).filter(Boolean)]),
+  ) as unknown as MailFilter
+}
 
 function MailboxDialog({ account, onClose }: { account: MailAccount | null; onClose: () => void }) {
   const { t } = useTranslation()
@@ -158,7 +207,11 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
   const [folder, setFolder] = useState(account?.folder ?? 'INBOX')
   const [importSince, setImportSince] = useState(account?.importSince ?? '')
   const [enabled, setEnabled] = useState(account?.enabled ?? true)
+  const [filter, setFilter] = useState<FilterTexts>(() => filterTexts(account?.filter))
+  const [interval, setIntervalMinutes] = useState(account?.intervalMinutes == null ? '' : String(account.intervalMinutes))
   const [test, setTest] = useState<TestResult | null>(null)
+  // für den Hinweis, welches Intervall ohne eigene Angabe gilt
+  const importSettings = useQuery({ queryKey: ['settings', 'import'], queryFn: api.importSettings })
 
   const input = (): MailAccountInput => ({
     name: name.trim() || username.trim() || host.trim(),
@@ -170,6 +223,8 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
     folder: folder.trim() || 'INBOX',
     importSince: importSince || null,
     enabled,
+    filter: parseFilter(filter),
+    intervalMinutes: interval.trim() === '' ? null : Number(interval),
   })
 
   const save = useMutation({
@@ -252,6 +307,28 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
             {(id) => <Input id={id} type="date" value={importSince} onChange={(e) => setImportSince(e.target.value)} />}
           </Field>
         </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label={t('settings.mailboxes.dialog.interval')}
+            hint={t('settings.mailboxes.dialog.intervalHint', {
+              interval: importSettings.data ? formatInterval(importSettings.data.intervalMinutes) : '…',
+            })}
+          >
+            {(id) => (
+              <Input
+                id={id}
+                type="number"
+                min={1}
+                max={1440}
+                step={1}
+                value={interval}
+                onChange={(e) => setIntervalMinutes(e.target.value)}
+                placeholder={importSettings.data ? String(importSettings.data.intervalMinutes) : ''}
+              />
+            )}
+          </Field>
+        </div>
+        <MailFilterFields value={filter} onChange={setFilter} />
         <Switch checked={enabled} onChange={setEnabled} label={t('settings.mailboxes.dialog.enabled')} description={t('settings.mailboxes.dialog.enabledHint')} />
 
         {test && <Alert tone={test.ok ? 'ok' : 'danger'}>{test.message}</Alert>}
@@ -269,5 +346,48 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
         </div>
       </form>
     </Modal>
+  )
+}
+
+/** Betreff- und Absenderfilter; aufgeklappt, sobald einer gesetzt ist. */
+function MailFilterFields({ value, onChange }: { value: FilterTexts; onChange: (next: FilterTexts) => void }) {
+  const { t } = useTranslation()
+  const active = filterTerms(parseFilter(value))
+  // nur anfangs nach dem Inhalt richten – sonst klappt der Bereich zu, sobald man den letzten Begriff löscht
+  const [open, setOpen] = useState(active > 0)
+  const field = (key: keyof MailFilter, hint?: string) => (
+    <Field label={t(`settings.mailboxes.dialog.filter.${key}`)} hint={hint}>
+      {(id) => (
+        <Textarea
+          id={id}
+          rows={2}
+          value={value[key]}
+          onChange={(e) => onChange({ ...value, [key]: e.target.value })}
+          spellCheck={false}
+          autoCapitalize="none"
+          className="min-h-16 resize-y"
+        />
+      )}
+    </Field>
+  )
+  return (
+    <details open={open} onToggle={(e) => setOpen(e.currentTarget.open)} className="group rounded-xl border border-line">
+      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-[13px] font-medium select-none [&::-webkit-details-marker]:hidden">
+        <ChevronRight className="size-4 text-muted transition-transform group-open:rotate-90" aria-hidden />
+        <Filter className="size-4 text-muted" aria-hidden />
+        {t('settings.mailboxes.dialog.filter.title')}
+        {active > 0 && <Badge tone="brand">{active}</Badge>}
+      </summary>
+      <div className="flex flex-col gap-4 border-t border-line px-4 py-4">
+        <p className="text-[13px] leading-relaxed text-muted">{t('settings.mailboxes.dialog.filter.intro')}</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {field('subjectIncludes')}
+          {field('subjectExcludes')}
+          {field('senderIncludes', t('settings.mailboxes.dialog.filter.senderHint'))}
+          {field('senderExcludes')}
+        </div>
+        <p className="text-xs leading-relaxed text-subtle">{t('settings.mailboxes.dialog.filter.newOnly')}</p>
+      </div>
+    </details>
   )
 }

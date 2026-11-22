@@ -3,6 +3,8 @@ package de.aidocuments.document;
 import de.aidocuments.document.DocumentDtos.DocumentDto;
 import de.aidocuments.document.DocumentDtos.PageDto;
 import de.aidocuments.document.DocumentDtos.UpdateDocumentRequest;
+import de.aidocuments.history.HistoryEntry;
+import de.aidocuments.history.HistoryService;
 import de.aidocuments.i18n.Messages;
 import de.aidocuments.i18n.Msg;
 import de.aidocuments.search.SearchIndex;
@@ -12,6 +14,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +25,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DocumentService {
@@ -49,10 +54,17 @@ public class DocumentService {
 
     private final PdfExtractor pdfExtractor;
     private final DuplicateDetector duplicates;
+    private final HistoryService history;
+    private final DocumentVersions versions;
+    private final DocumentShares shares;
 
     public DocumentService(DocumentRepository documents, DocumentTextRepository texts, FileStorage storage,
                            DocumentProcessor processor, SearchIndex searchIndex, Messages messages,
-                           PdfExtractor pdfExtractor, DuplicateDetector duplicates) {
+                           PdfExtractor pdfExtractor, DuplicateDetector duplicates, HistoryService history,
+                           DocumentVersions versions, DocumentShares shares) {
+        this.versions = versions;
+        this.shares = shares;
+        this.history = history;
         this.duplicates = duplicates;
         this.messages = messages;
         this.pdfExtractor = pdfExtractor;
@@ -70,7 +82,12 @@ public class DocumentService {
     public IngestResult ingest(InputStream content, String filename, DocumentSource source, MailOrigin origin)
             throws IOException {
         String cleanName = sanitizeFilename(filename);
-        FileStorage.Received received = storage.receive(content);
+        FileStorage.Received received;
+        try {
+            received = storage.receive(content);
+        } catch (FileStorage.TooLargeException e) {
+            return new IngestResult(Outcome.REJECTED, null, Msg.of("error.upload.tooLarge"));
+        }
         try {
             if (received.size() == 0 || !storage.looksLikePdf(received)) {
                 return new IngestResult(Outcome.REJECTED, null, Msg.of("upload.notPdf"));
@@ -89,12 +106,13 @@ public class DocumentService {
             try {
                 documents.save(doc);
             } catch (DuplicateKeyException e) {
-                // dieselbe Datei kam gleichzeitig über einen zweiten Weg herein
+                // dieselbe Datei kam gleichzeitig über einen zweiten Weg herein (eindeutiger Index auf sha256)
                 storage.delete(doc.getStoragePath(), id);
                 Document winner = documents.findBySha256(received.sha256()).orElse(null);
                 return new IngestResult(Outcome.DUPLICATE, winner, Msg.of("upload.duplicate"));
             }
             searchIndex.index(doc, "");
+            history.imported(doc);
             processor.enqueue(id);
             log.info("Neues Dokument {} ({}, {} Bytes)", cleanName, source, received.size());
             return new IngestResult(Outcome.CREATED, doc, null);
@@ -133,6 +151,7 @@ public class DocumentService {
 
     public DocumentDto update(String id, UpdateDocumentRequest request) {
         Document doc = require(id);
+        HistoryEntry.Details before = HistoryService.detailsOf(doc);
         if (request.title() != null && !request.title().isBlank()) {
             doc.setTitle(request.title().strip());
         }
@@ -143,16 +162,171 @@ public class DocumentService {
         doc.replaceTags(DocumentProcessor.normalizeTags(request.tags()));
         documents.save(doc);
         processor.reindex(doc);
+        history.editedDetails(doc, before);
         return DocumentDto.of(doc, null, messages);
     }
 
-    public void delete(String id) {
+    /** So lange lässt sich ein Löschen zurücknehmen; danach wird das Dokument endgültig entfernt. */
+    static final Duration TRASH_RETENTION = Duration.ofDays(30);
+
+    /**
+     * Löscht ein Dokument – zunächst in den Papierkorb: Es verschwindet aus Liste, Suche und Zählern, lässt sich aber
+     * über die Historie 30 Tage lang zurückholen. Danach entfernt {@link #purgeTrash()} es endgültig.
+     *
+     * @param asDuplicate in der Historie als „als Duplikat gelöscht“ vermerken
+     */
+    @Transactional
+    public void delete(String id, boolean asDuplicate) {
         Document doc = require(id);
+        doc.setDeletedAt(Instant.now());
+        documents.saveToTrash(doc);
         documents.delete(doc);
-        texts.deleteById(id);
         searchIndex.delete(id);
-        storage.delete(doc.getStoragePath(), doc.getOriginalStoragePath(), id);
         duplicates.forget(id);
+        history.deleted(doc, asDuplicate);
+    }
+
+    @Transactional
+    public void delete(String id) {
+        delete(id, false);
+    }
+
+    /** Entfernt Dokumente endgültig, die länger als 30 Tage im Papierkorb liegen – einmal je Stunde. */
+    @Scheduled(initialDelay = 60_000, fixedDelay = 3_600_000)
+    public void purgeTrash() {
+        Instant limit = Instant.now().minus(TRASH_RETENTION);
+        for (Document doc : documents.findInTrashDeletedBefore(limit)) {
+            try {
+                storage.deleteAllFiles(doc.getStoragePath(), doc.getId());
+                texts.deleteById(doc.getId());
+                versions.forget(doc.getId());
+                shares.forget(doc.getId());
+                documents.removeFromTrash(doc.getId());
+                log.info("Dokument {} endgültig gelöscht (Papierkorb)", doc.getId());
+            } catch (RuntimeException e) {
+                log.warn("Dokument {} konnte nicht endgültig gelöscht werden: {}", doc.getId(), e.toString());
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // Rückgängig machen (aus der Historie)
+    // ------------------------------------------------------------------------------------------------
+
+    /** Ob die Daten noch da sind, um den Schritt zurückzunehmen. */
+    public boolean canUndo(HistoryEntry entry) {
+        return switch (entry.action()) {
+            case IMPORTED -> false;
+            case DELETED -> {
+                Document trashed = documents.findInTrash(entry.documentId()).orElse(null);
+                yield trashed != null && documents.findBySha256(trashed.getSha256()).isEmpty();
+            }
+            case EDITED -> {
+                Document doc = documents.findById(entry.documentId()).orElse(null);
+                if (doc == null || entry.change() == null) {
+                    yield false;
+                }
+                yield switch (entry.change()) {
+                    case DETAILS -> entry.before() != null;
+                    case FILE, VERSION_RESTORED -> entry.previousFile() == null
+                            ? doc.getOriginalStoragePath() != null
+                            : Files.exists(storage.resolve(entry.previousFile()));
+                    case ORIGINAL_RESTORED -> entry.previousFile() != null
+                            && Files.exists(storage.resolve(entry.previousFile()));
+                    case DUPLICATE -> false;
+                };
+            }
+        };
+    }
+
+    /** Nimmt den Schritt zurück; geprüft, ob das geht, hat der Aufrufer ({@link #canUndo} und die Historie). */
+    @Transactional
+    public DocumentDto undo(HistoryEntry entry) throws IOException {
+        if (entry.action() == HistoryEntry.Action.DELETED) {
+            return restoreDeleted(entry.documentId());
+        }
+        Document doc = require(entry.documentId());
+        switch (entry.change()) {
+            case DETAILS -> {
+                HistoryEntry.Details before = entry.before();
+                doc.setTitle(before.title());
+                doc.setSummary(before.summary());
+                doc.setCategory(before.category());
+                doc.setCorrespondent(before.correspondent());
+                doc.setDocumentDate(before.documentDate());
+                doc.replaceTags(new java.util.LinkedHashSet<>(before.tags() == null ? List.of() : before.tags()));
+                documents.save(doc);
+                processor.reindex(doc);
+            }
+            case FILE, VERSION_RESTORED -> {
+                requireIdle(doc);
+                versions.keepCurrent(doc, null); // auch die zurückgenommene Fassung bleibt erhalten
+                if (entry.previousFile() == null) {
+                    revertToOriginal(doc); // davor war es noch das Original
+                } else {
+                    adoptVersion(doc, entry.previousFile());
+                }
+                versions.added(doc, DocumentVersions.Kind.UNDONE, null);
+            }
+            case ORIGINAL_RESTORED -> {
+                requireIdle(doc);
+                versions.keepCurrent(doc, null);
+                // das jetzige ist das Original: wieder beiseitelegen, dann die geänderte Fassung zurückholen
+                doc.setOriginalStoragePath(storage.keepOriginal(doc.getStoragePath()));
+                documents.save(doc);
+                adoptVersion(doc, entry.previousFile());
+                versions.added(doc, DocumentVersions.Kind.UNDONE, null);
+            }
+            default -> throw ApiException.conflict("error.history.notUndoable");
+        }
+        log.info("Historie: {} an Dokument {} rückgängig gemacht", entry.change(), doc.getId());
+        return DocumentDto.of(doc, null, messages);
+    }
+
+    private DocumentDto restoreDeleted(String id) {
+        Document doc = documents.findInTrash(id).orElse(null);
+        if (doc == null) {
+            throw ApiException.conflict("error.history.notUndoable");
+        }
+        if (documents.findBySha256(doc.getSha256()).isPresent()) {
+            throw ApiException.conflict("error.history.alreadyExists");
+        }
+        doc.setDeletedAt(null);
+        String text = texts.findById(id).map(DocumentText::content).orElse("");
+        duplicates.check(doc, text);
+        documents.save(doc);
+        documents.removeFromTrash(id);
+        processor.reindex(doc);
+        log.info("Dokument {} aus dem Papierkorb zurückgeholt", id);
+        return DocumentDto.of(doc, null, messages);
+    }
+
+    private static void requireIdle(Document doc) {
+        if (doc.getStatus() == DocumentStatus.PENDING || doc.getStatus() == DocumentStatus.PROCESSING) {
+            throw ApiException.conflict("error.document.alreadyProcessing");
+        }
+    }
+
+    /** Macht eine aufbewahrte Fassung wieder zur aktuellen; die Kopie selbst wird danach nicht mehr gebraucht. */
+    private void adoptVersion(Document doc, String version) throws IOException {
+        Path thumbnail = storage.temporaryFile(".jpg");
+        try {
+            PdfExtractor.PdfContent pdf;
+            try {
+                pdf = pdfExtractor.extract(storage.resolve(version), thumbnail);
+            } catch (PdfExtractor.PdfReadException e) {
+                throw new ApiException(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR, e.msg());
+            }
+            storage.restore(version, doc.getStoragePath());
+            adoptRendering(doc, pdf, thumbnail);
+            doc.setSizeBytes(Files.size(storage.resolve(doc.getStoragePath())));
+            doc.setModifiedAt(Instant.now());
+            documents.save(doc);
+            // die Kopie bleibt: Sie ist eine Fassung des Dokuments (siehe DocumentVersions)
+            processor.reindex(doc);
+        } finally {
+            Files.deleteIfExists(thumbnail);
+        }
     }
 
     public DocumentDto notDuplicate(String id) {
@@ -162,9 +336,6 @@ public class DocumentService {
         processor.reindex(doc);
         return DocumentDto.of(doc, null, messages);
     }
-
-    /** Größte Datei, die als geänderte Fassung angenommen wird – wie beim Hochladen gilt ein großzügiges Limit. */
-    private static final long MAX_EDITED_BYTES = 250L * 1024 * 1024;
 
     /**
      * Ersetzt das PDF durch eine geänderte Fassung (etwa mit Markierungen oder Notizen aus dem Betrachter). Beim
@@ -177,12 +348,14 @@ public class DocumentService {
         if (doc.getStatus() == DocumentStatus.PENDING || doc.getStatus() == DocumentStatus.PROCESSING) {
             throw ApiException.conflict("error.document.alreadyProcessing");
         }
-        FileStorage.Received received = storage.receive(body);
+        FileStorage.Received received;
+        try {
+            received = storage.receive(body);
+        } catch (FileStorage.TooLargeException e) {
+            throw ApiException.of(org.springframework.http.HttpStatus.CONTENT_TOO_LARGE, "error.upload.tooLarge");
+        }
         Path thumbnail = storage.temporaryFile(".jpg");
         try {
-            if (received.size() > MAX_EDITED_BYTES) {
-                throw ApiException.badRequest("error.upload.tooLarge");
-            }
             if (received.size() == 0 || !storage.looksLikePdf(received)) {
                 throw ApiException.badRequest("upload.notPdf");
             }
@@ -192,17 +365,26 @@ public class DocumentService {
             } catch (PdfExtractor.PdfReadException e) {
                 throw new ApiException(org.springframework.http.HttpStatus.BAD_REQUEST, e.msg());
             }
+            // die Fassung davor aufbewahren, damit sich die Änderung zurücknehmen lässt (beim ersten Mal: das Original)
+            String previous = null;
             if (doc.getOriginalStoragePath() == null) {
-                doc.setOriginalStoragePath(storage.keepOriginal(doc.getStoragePath()));
+                String original = storage.keepOriginal(doc.getStoragePath());
+                versions.keepCurrent(doc, original);
+                doc.setOriginalStoragePath(original);
                 documents.save(doc); // erst die Kopie festhalten, dann die Datei ersetzen
+            } else {
+                previous = storage.keepVersion(doc.getStoragePath());
+                versions.keepCurrent(doc, previous);
             }
             storage.replace(doc.getStoragePath(), received);
             adoptRendering(doc, pdf, thumbnail);
             doc.setSizeBytes(received.size());
             doc.setModifiedAt(Instant.now());
             documents.save(doc);
+            versions.added(doc, DocumentVersions.Kind.EDITED, null);
             processor.reindex(doc);
             log.info("PDF von Dokument {} geändert, Original aufbewahrt unter {}", id, doc.getOriginalStoragePath());
+            history.editedFile(doc, HistoryEntry.Change.FILE, previous);
             return DocumentDto.of(doc, null, messages);
         } finally {
             storage.discard(received);
@@ -210,15 +392,24 @@ public class DocumentService {
         }
     }
 
-    /** Stellt das aufbewahrte Original wieder her; die geänderte Fassung wird verworfen. */
+    /** Stellt das aufbewahrte Original wieder her; die geänderte Fassung bleibt für ein Rückgängig aufbewahrt. */
     public DocumentDto restoreOriginal(String id) throws IOException {
         Document doc = require(id);
         if (doc.getOriginalStoragePath() == null) {
             throw ApiException.notFound("error.document.fileNotFound");
         }
-        if (doc.getStatus() == DocumentStatus.PENDING || doc.getStatus() == DocumentStatus.PROCESSING) {
-            throw ApiException.conflict("error.document.alreadyProcessing");
-        }
+        requireIdle(doc);
+        String previous = storage.keepVersion(doc.getStoragePath());
+        versions.keepCurrent(doc, previous);
+        revertToOriginal(doc);
+        versions.added(doc, DocumentVersions.Kind.ORIGINAL_RESTORED, 1);
+        history.editedFile(doc, HistoryEntry.Change.ORIGINAL_RESTORED, previous);
+        return DocumentDto.of(doc, null, messages);
+    }
+
+    /** Macht das aufbewahrte Original wieder zur aktuellen Fassung; die Kopie wird danach nicht mehr gebraucht. */
+    private void revertToOriginal(Document doc) throws IOException {
+        String id = doc.getId();
         Path thumbnail = storage.temporaryFile(".jpg");
         try {
             PdfExtractor.PdfContent pdf;
@@ -234,10 +425,9 @@ public class DocumentService {
             doc.setOriginalStoragePath(null);
             doc.setModifiedAt(null);
             documents.save(doc);
-            Files.deleteIfExists(storage.resolve(copy)); // die Datei ist jetzt selbst wieder das Original
+            // die Kopie des Originals bleibt: Sie ist die erste Fassung des Dokuments (siehe DocumentVersions)
             processor.reindex(doc);
             log.info("Original von Dokument {} wiederhergestellt", id);
-            return DocumentDto.of(doc, null, messages);
         } finally {
             Files.deleteIfExists(thumbnail);
         }
@@ -249,9 +439,59 @@ public class DocumentService {
         if (pdf.thumbnailCreated()) {
             Files.move(thumbnail, storage.thumbnailPath(doc.getId()), StandardCopyOption.REPLACE_EXISTING);
             doc.setHasThumbnail(true);
+            doc.setThumbnailAt(storage.thumbnailWrittenAt(doc.getId()));
         }
         if (!doc.isOcrUsed()) {
             texts.save(new DocumentText(doc.getId(), pdf.text()));
+        }
+    }
+
+    public List<DocumentVersions.Version> versions(String id) {
+        return versions.list(require(id));
+    }
+
+    public Path versionFile(String id, int number) {
+        return versions.file(require(id), number);
+    }
+
+    /**
+     * Macht eine ältere Fassung wieder zur aktuellen – als neue Fassung; die bisherige bleibt erhalten und der Schritt
+     * lässt sich über die Historie zurücknehmen.
+     */
+    @Transactional
+    public DocumentDto restoreVersion(String id, int number) throws IOException {
+        Document doc = require(id);
+        requireIdle(doc);
+        DocumentVersions.Version target = versions.list(doc).stream().filter(v -> v.number() == number).findFirst()
+                .orElseThrow(() -> ApiException.notFound("error.document.versionNotFound"));
+        if (target.current()) {
+            throw ApiException.conflict("error.document.versionIsCurrent");
+        }
+        Path thumbnail = storage.temporaryFile(".jpg");
+        try {
+            PdfExtractor.PdfContent pdf;
+            try {
+                pdf = pdfExtractor.extract(storage.resolve(target.storagePath()), thumbnail);
+            } catch (PdfExtractor.PdfReadException e) {
+                throw new ApiException(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR, e.msg());
+            }
+            String previous = versions.keepCurrent(doc, null);
+            if (doc.getOriginalStoragePath() == null) {
+                // bisher unverändert: die erste Fassung ist das Original
+                doc.setOriginalStoragePath(versions.list(doc).getFirst().storagePath());
+            }
+            storage.restore(target.storagePath(), doc.getStoragePath());
+            adoptRendering(doc, pdf, thumbnail);
+            doc.setSizeBytes(Files.size(storage.resolve(doc.getStoragePath())));
+            doc.setModifiedAt(Instant.now());
+            documents.save(doc);
+            versions.added(doc, DocumentVersions.Kind.VERSION_RESTORED, number);
+            processor.reindex(doc);
+            history.editedFile(doc, HistoryEntry.Change.VERSION_RESTORED, previous);
+            log.info("Fassung {} von Dokument {} wiederhergestellt", number, id);
+            return DocumentDto.of(doc, null, messages);
+        } finally {
+            Files.deleteIfExists(thumbnail);
         }
     }
 

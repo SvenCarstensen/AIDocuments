@@ -132,7 +132,7 @@ public class DuplicateDetector {
         Thread thread = new Thread(() -> {
             try {
                 scanAll();
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | OutOfMemoryError | StackOverflowError e) {
                 log.warn("Duplikatabgleich abgebrochen: {}", e.toString());
             }
         }, "duplicate-scan");

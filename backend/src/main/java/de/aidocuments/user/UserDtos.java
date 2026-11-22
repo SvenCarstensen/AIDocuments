@@ -21,21 +21,35 @@ public final class UserDtos {
     public static final String PASSWORD_MESSAGE = "{validation.password}";
 
     public record UserDto(String id, String username, Role role, boolean enabled, Instant createdAt,
-                          Instant lastLoginAt) {
+                          Instant lastLoginAt, boolean twoFactorEnabled) {
 
         static UserDto of(AppUser user) {
             return new UserDto(user.getId(), user.getUsername(), user.getRole(), user.isEnabled(),
-                    user.getCreatedAt(), user.getLastLoginAt());
+                    user.getCreatedAt(), user.getLastLoginAt(), user.isTwoFactorEnabled());
         }
     }
 
-    public record CredentialsRequest(
-            @NotBlank(message = NOT_BLANK) @Pattern(regexp = USERNAME_PATTERN, message = USERNAME_MESSAGE) String username,
-            @NotBlank(message = NOT_BLANK) @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String password) {
+    /** Antwort der Anmeldung, wenn noch der Code aus der Authenticator-App fehlt. */
+    public record TwoFactorRequired(boolean twoFactorRequired) {
     }
 
-    public record LoginRequest(@NotBlank(message = NOT_BLANK) String username,
-                               @NotBlank(message = NOT_BLANK) String password) {
+    public record CodeRequest(@NotBlank(message = NOT_BLANK) @Size(max = 50, message = SIZE) String code) {
+    }
+
+    public record PasswordAndCodeRequest(
+            @NotBlank(message = NOT_BLANK) @Size(max = 200, message = SIZE) String password,
+            @NotBlank(message = NOT_BLANK) @Size(max = 50, message = SIZE) String code) {
+    }
+
+    /** Ersteinrichtung: Administratorkonto plus Einrichtungscode aus dem Protokoll des Servers. */
+    public record SetupRequest(
+            @NotBlank(message = NOT_BLANK) @Pattern(regexp = USERNAME_PATTERN, message = USERNAME_MESSAGE) String username,
+            @NotBlank(message = NOT_BLANK) @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String password,
+            @NotBlank(message = NOT_BLANK) @Size(max = 100, message = SIZE) String setupCode) {
+    }
+
+    public record LoginRequest(@NotBlank(message = NOT_BLANK) @Size(max = 200, message = SIZE) String username,
+                               @NotBlank(message = NOT_BLANK) @Size(max = 200, message = SIZE) String password) {
     }
 
     public record CreateUserRequest(

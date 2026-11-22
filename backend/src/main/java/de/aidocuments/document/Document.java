@@ -6,23 +6,16 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceCreator;
-import org.springframework.data.mongodb.core.index.Indexed;
-
-@org.springframework.data.mongodb.core.mapping.Document(collection = "documents")
+/** Ein Dokument mit allen Angaben (Tabelle documents; gelöschte bis zum endgültigen Entfernen in deleted_documents). */
 public class Document {
 
-    @Id
     private String id;
     private String originalFilename;
     private String storagePath;
-    @Indexed(unique = true)
     private String sha256;
     private long sizeBytes;
     private Integer pageCount;
     private DocumentSource source;
-    @Indexed
     private DocumentStatus status;
     /**
      * Fehlermeldung oder Hinweis der Verarbeitung – sprachneutral abgelegt (siehe MsgCodec) und beim Ausliefern
@@ -42,25 +35,42 @@ public class Document {
     private String mailSubject;
     private String mailFrom;
     private Instant mailReceivedAt;
-    @Indexed
     private Instant createdAt;
     private Instant processedAt;
     /** Kopie der Datei, wie sie ankam – angelegt, sobald jemand das PDF ändert; null = nie geändert. */
     private String originalStoragePath;
     /** Wann das PDF zuletzt geändert wurde; null = es ist noch das Original. */
     private Instant modifiedAt;
+    /** Wann das Vorschaubild zuletzt geschrieben wurde – Teil seiner Adresse, damit Browser nie ein altes zeigen. */
+    private Instant thumbnailAt;
+    /** Nur im Papierkorb gesetzt: wann das Dokument gelöscht wurde. */
+    private Instant deletedAt;
     /** Fingerabdruck des Inhalts für die Duplikaterkennung; null = (noch) keiner oder zu wenig Text. */
     private ContentFingerprint fingerprint;
     /** Das frühere Dokument, dem dieses inhaltlich gleicht; null = kein Duplikat bekannt. */
-    @Indexed(sparse = true)
     private String duplicateOf;
     /** Dokumente, von denen der Anwender bestätigt hat, dass dieses kein Duplikat ist. */
     private Set<String> notDuplicateOf = new LinkedHashSet<>();
     private Set<String> tags = new LinkedHashSet<>();
     private List<KeyFact> keyFacts = new ArrayList<>();
 
-    @PersistenceCreator
-    protected Document() {
+    /** Für {@link DocumentRepository}: ein leeres Dokument, das anschließend aus einer Tabellenzeile gefüllt wird. */
+    Document() {
+    }
+
+    /** Für {@link DocumentRepository}: die unveränderlichen Angaben aus der Tabellenzeile übernehmen. */
+    void restoreIdentity(String id, String originalFilename, String storagePath, String sha256, DocumentSource source,
+                         Instant createdAt) {
+        this.id = id;
+        this.originalFilename = originalFilename;
+        this.storagePath = storagePath;
+        this.sha256 = sha256;
+        this.source = source;
+        this.createdAt = createdAt;
+    }
+
+    void restoreNotDuplicateOf(Set<String> ids) {
+        this.notDuplicateOf = ids == null ? new LinkedHashSet<>() : new LinkedHashSet<>(ids);
     }
 
     public Document(String id, String originalFilename, String storagePath, String sha256, long sizeBytes,
@@ -236,6 +246,22 @@ public class Document {
 
     public void setModifiedAt(Instant modifiedAt) {
         this.modifiedAt = modifiedAt;
+    }
+
+    public Instant getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Instant deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public Instant getThumbnailAt() {
+        return thumbnailAt;
+    }
+
+    public void setThumbnailAt(Instant thumbnailAt) {
+        this.thumbnailAt = thumbnailAt;
     }
 
     public ContentFingerprint getFingerprint() {

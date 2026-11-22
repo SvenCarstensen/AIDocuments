@@ -49,6 +49,8 @@
     "setup": {
       "title": "Konfiguro AIDocuments",
       "subtitle": "Fillo duke krijuar llogarinë e administratorit. Më pas mund të shtosh përdorues të tjerë te cilësimet.",
+      "code": "Kodi i konfigurimit",
+      "codeHint": "Shfaqet në regjistrin e serverit gjatë nisjes (Docker: docker compose logs).",
       "adminAccount": "Llogaria e administratorit",
       "repeatPassword": "Përsërit fjalëkalimin",
       "submit": "Krijo llogarinë dhe fillo",
@@ -57,6 +59,19 @@
         "ai": "IA i përmbledh dhe i etiketon",
         "search": "Kërkim në tekstin e plotë, deri brenda dokumentit"
       }
+    },
+    "twoFactor": {
+      "title": "Konfirmo hyrjen",
+      "subtitle": "Fut kodin me 6 shifra nga aplikacioni i vërtetimit.",
+      "code": "Kodi",
+      "codeHint": "Nuk ke qasje në aplikacion? Fut në vend të tij një nga kodet e rikuperimit.",
+      "submit": "Konfirmo",
+      "back": "Kthehu te hyrja"
+    },
+    "twoFactorRequired": {
+      "title": "Konfiguro vërtetimin me dy faktorë",
+      "subtitle": "Për administratorët vërtetimi me dy faktorë është i detyrueshëm. Konfiguroje tani për të vazhduar.",
+      "intro": "Të duhet një aplikacion vërtetimi në telefon (p.sh. Google Authenticator, Microsoft Authenticator, 1Password ose Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Tema e errët"
     },
     "search": {
-      "placeholder": "Kërko dokumente, etiketa, përmbajtje…",
-      "placeholderAi": "Kërko dokumente me fjalët e tua – p.sh. “faturat nga Kia nga 2024”",
+      "placeholder": "Kërkim me fjalë kyçe: dokumente, etiketa, përmbajtje …",
+      "placeholderAi": "Kërkim me IA: pyet me fjalët e tua – p.sh. “faturat nga Kia nga 2024”",
       "labelAi": "IA",
       "label": "Kërko dokumente",
       "clear": "Pastro kërkimin",
@@ -78,6 +93,7 @@
       "aiActive": "IA aktive",
       "aiNotConfigured": "IA e pakonfiguruar",
       "changePassword": "Ndrysho fjalëkalimin",
+      "licenses": "Licencat e palëve të treta",
       "logout": "Dil"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Të fshihet dokumenti?",
-      "text": "Dokumenti „{{title}}“ do të fshihet bashkë me skedarin PDF, tekstin e plotë dhe etiketat. Ky veprim nuk mund të zhbëhet.",
-      "confirm": "Fshi përgjithmonë"
+      "text": "“{{title}}” do të fshihet. Në historik mund ta zhbësh këtë për 30 ditë; pas kësaj hiqet përgjithmonë.",
+      "confirm": "Fshi"
     },
     "chat": {
       "intro": "Bëj një pyetje për këtë dokument – IA përgjigjet bazuar në përmbajtjen e tij.",
@@ -266,6 +282,25 @@
         "summary": "Për çfarë bën fjalë ky dokument?",
         "deadlines": "A ka afate ose data?",
         "amounts": "Cilat shuma përmenden?"
+      }
+    },
+    "versions": {
+      "title": "Versionet",
+      "intro": "Çdo ndryshim i PDF-së krijon një version të ri. Versionet më të vjetra ruhen dhe mund të shihen, shkarkohen ose rikthehen.",
+      "current": "aktual",
+      "view": "Shiko versionin {{number}}",
+      "download": "Shkarko versionin {{number}}",
+      "restore": "Rikthe versionin {{number}}",
+      "restoreTitle": "Të rikthehet versioni {{number}}?",
+      "restoreText": "Ky version bëhet versioni aktual. Versioni i tanishëm ruhet dhe hapi mund të zhbëhet te historiku.",
+      "restoreConfirm": "Rikthe",
+      "restored": "Versioni {{number}} u rikthye",
+      "kinds": {
+        "IMPORTED": "Importuar",
+        "EDITED": "Redaktuar",
+        "ORIGINAL_RESTORED": "Origjinali u rikthye",
+        "VERSION_RESTORED": "Versioni {{from}} u rikthye",
+        "UNDONE": "Ndryshimi u zhbë"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Vetëm email-et nga data",
         "sinceHint": "Opsionale – email-et më të vjetra anashkalohen",
         "enabled": "Kontrollo automatikisht",
-        "enabledHint": "Kutia postare kontrollohet për skedarë të rinj PDF sipas intervalit të caktuar."
-      }
+        "enabledHint": "Kutia postare kontrollohet për skedarë të rinj PDF sipas intervalit të caktuar.",
+        "filter": {
+          "title": "Filtër",
+          "intro": "Përpunohen vetëm email-et që plotësojnë të gjitha kushtet. Një term për rresht; shkronjat e mëdha dhe të vogla nuk kanë rëndësi, mjafton një pjesë e tekstit. Fushat bosh nuk kufizojnë asgjë.",
+          "subjectIncludes": "Subjekti përmban një nga këto terma",
+          "subjectExcludes": "Subjekti nuk përmban asnjë nga këto terma",
+          "senderIncludes": "Dërguesi përmban një nga këto terma",
+          "senderExcludes": "Dërguesi nuk përmban asnjë nga këto terma",
+          "senderHint": "Emër ose adresë, p.sh. “@example.com”",
+          "newOnly": "Filtri vlen për email-et që mbërrijnë pas marrjes së fundit; email-et e kontrolluara tashmë nuk përpunohen sërish."
+        },
+        "interval": "Intervali i marrjes në minuta",
+        "intervalHint": "Lëreni bosh për intervalin e përgjithshëm (aktualisht {{interval}})."
+      },
+      "filterActive": "Filtri aktiv",
+      "schedule": "Marrje çdo {{interval}} · e radhës {{when}}",
+      "scheduleSoon": "Marrje çdo {{interval}} · e radhës së shpejti"
     },
     "import": {
       "title": "Orari dhe dosja e importit",
@@ -317,7 +367,7 @@
       "saved": "Cilësimet u ruajtën",
       "interval": {
         "title": "Intervali i kontrollit",
-        "text": "Kaq shpesh aplikacioni kontrollon të gjitha kutitë postare dhe dosjen e importit për skedarë të rinj PDF.",
+        "text": "Sa shpesh aplikacioni kontrollon dosjen hyrëse dhe të gjitha kutitë postare pa interval të vetin për PDF të reja.",
         "label": "Çdo … minuta",
         "nextRun": "Kontrolli tjetër automatik {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Llogari aktive",
         "activeHint": "Llogaritë e çaktivizuara nuk mund të hyjnë; sesionet aktive mbyllen menjëherë.",
         "create": "Krijo"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Rivendos vërtetimin me dy faktorë",
+      "resetTwoFactorHint": "Për këtë llogari vërtetimi me dy faktorë është aktiv.",
+      "resetTwoFactorText": "{{name}} do të hyjë më pas vetëm me fjalëkalim dhe mund ta konfigurojë sërish vërtetimin me dy faktorë – për shembull pas humbjes së telefonit.",
+      "resetTwoFactorConfirm": "Rivendos",
+      "twoFactorReset": "Vërtetimi me dy faktorë u rivendos"
+    }
+  },
+  "history": {
+    "nav": "Historiku",
+    "title": "Historiku",
+    "subtitle": "Çfarë ka ndodhur me dokumentet e tua – hyrjet më të reja në fillim.",
+    "empty": "Ende nuk ka hyrje.",
+    "actions": {
+      "IMPORTED": "Importuar",
+      "EDITED": "Redaktuar",
+      "DELETED": "Fshirë"
+    },
+    "changes": {
+      "DETAILS": "Të dhënat u ndryshuan",
+      "FILE": "PDF u ndryshua",
+      "ORIGINAL_RESTORED": "Origjinali u rikthye",
+      "DUPLICATE": "si dublikatë",
+      "VERSION_RESTORED": "Versioni u rikthye"
+    },
+    "by": "nga {{user}}",
+    "automatic": "automatikisht",
+    "more": "Ngarko më shumë",
+    "undo": "Zhbëj",
+    "undone": "U zhbë"
+  },
+  "duplicates": {
+    "title": "Dublikatë e mundshme",
+    "subtitle": "Të dy dokumentet kanë të njëjtën përmbajtje. Mbaj njërin dhe fshi tjetrin – ose shëno që nuk janë dublikata.",
+    "older": "Mbërriti më herët",
+    "newer": "Mbërriti më vonë",
+    "deleteThis": "Fshi këtë",
+    "compare": "Krahaso krah për krah"
+  },
+  "twoFactor": {
+    "title": "Vërtetimi me dy faktorë",
+    "on": "Aktiv",
+    "off": "Joaktiv",
+    "intro": "Mbro llogarinë me një faktor të dytë: gjatë hyrjes do të fusësh edhe një kod nga një aplikacion vërtetimi në telefon (p.sh. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Konfiguro",
+    "scan": "Skano kodin QR me aplikacionin e vërtetimit ose fut çelësin me dorë. Pastaj fut kodin nga aplikacioni dhe fjalëkalimin tënd.",
+    "qrAlt": "Kodi QR për aplikacionin e vërtetimit",
+    "secret": "Çelësi",
+    "confirmCode": "Kodi nga aplikacioni",
+    "activate": "Aktivizo",
+    "recoveryTitle": "Kodet e rikuperimit",
+    "recoveryText": "Ruaji këto kode rikuperimi në një vend të sigurt. Secili funksionon një herë nëse nuk mund ta përdorësh aplikacionin – për shembull nëse humbet telefonin. Shfaqen vetëm tani.",
+    "download": "Ruaje si skedar",
+    "done": "U krye",
+    "enabled": "Vërtetimi me dy faktorë është aktiv",
+    "disabled": "Vërtetimi me dy faktorë u çaktivizua",
+    "disableHint": "Për ta çaktivizuar, fut një kod aktual nga aplikacioni (ose një kod rikuperimi) dhe fjalëkalimin tënd.",
+    "disable": "Çaktivizo",
+    "recoveryLeft": "Kode rikuperimi të papërdorura: {{count}}",
+    "adminCannotDisable": "Si administrator nuk mund ta çaktivizosh vërtetimin me dy faktorë."
+  },
+  "confirmCode": {
+    "title": "Konfirmo ndryshimin",
+    "text": "Ndryshimet në llogari, kuti postare dhe cilësime kërkojnë një kod aktual nga aplikacioni i vërtetimit. Konfirmimi vlen 10 minuta.",
+    "submit": "Konfirmo"
+  },
+  "share": {
+    "button": "Ndaj",
+    "title": "Ndaj dokumentin",
+    "intro": "Krijon një lidhje me të cilën një person pa llogari mund të hapë pikërisht këtë dokument.",
+    "recipient": "Me kë po e ndan?",
+    "recipientHint": "Emri i personit – që më vonë të shohësh kujt ia dhe lidhjen.",
+    "permission": "A mund ta modifikojë ky person dokumentin?",
+    "viewOnly": "Vetëm shikim",
+    "canEdit": "Mund të modifikojë",
+    "viewHint": "Personi mund ta shikojë, ta printojë dhe ta shkarkojë PDF-në.",
+    "editHint": "Personi mund edhe të shënojë, të shkruajë, të nënshkruajë dhe të ruajë PDF-në. Çdo ruajtje bëhet version i ri; titulli, etiketat dhe të dhënat e tjera mbeten të fshehura.",
+    "validity": "E vlefshme për",
+    "unlimited": "Pa kufi",
+    "create": "Krijo lidhjen",
+    "link": "Lidhja",
+    "linkHint": "Kushdo që ka këtë lidhje mund ta hapë dokumentin – jepja vetëm {{name}}. Mund ta anulosh në çdo kohë te pamja e dokumentit.",
+    "copy": "Kopjo lidhjen",
+    "copied": "Lidhja u kopjua",
+    "listTitle": "E ndarë jashtë",
+    "expired": "ka skaduar",
+    "validUntil": "e vlefshme deri më {{date}}",
+    "noExpiry": "pa skadim",
+    "lastOpened": "hapur për herë të fundit {{when}} (shikime: {{views}})",
+    "neverOpened": "ende e pahapur",
+    "revoke": "Anulo lidhjen",
+    "revokeTitle": "Të anulohet lidhja për {{name}}?",
+    "revokeText": "Lidhja ndalon së punuari menjëherë. Kopjet që personi i ka shkarkuar tashmë mbeten tek ai.",
+    "revoked": "Lidhja u anulua",
+    "page": {
+      "for": "E ndarë me {{name}}",
+      "invalid": "Kjo lidhje është e pavlefshme ose ka skaduar, ose dokumenti është fshirë. Drejtohu personit që ta dha."
     }
   }
 }

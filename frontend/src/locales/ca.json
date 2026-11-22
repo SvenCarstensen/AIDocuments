@@ -50,6 +50,8 @@
     "setup": {
       "title": "Configura AIDocuments",
       "subtitle": "Comença creant el compte d’administrador. Després podràs afegir més usuaris a la configuració.",
+      "code": "Codi de configuració",
+      "codeHint": "Apareix al registre del servidor en iniciar-se (Docker: docker compose logs).",
       "adminAccount": "Compte d’administrador",
       "repeatPassword": "Repeteix la contrasenya",
       "submit": "Crea el compte i comença",
@@ -58,6 +60,19 @@
         "ai": "La IA els resumeix i els etiqueta",
         "search": "Cerca de text complet fins a l’interior del document"
       }
+    },
+    "twoFactor": {
+      "title": "Confirma l'inici de sessió",
+      "subtitle": "Introdueix el codi de 6 xifres de la teva aplicació d'autenticació.",
+      "code": "Codi",
+      "codeHint": "No tens accés a l'aplicació? Introdueix un dels teus codis de recuperació.",
+      "submit": "Confirma",
+      "back": "Torna a l'inici de sessió"
+    },
+    "twoFactorRequired": {
+      "title": "Configura l'autenticació en dos passos",
+      "subtitle": "Per als administradors l'autenticació en dos passos és obligatòria. Configura-la ara per continuar.",
+      "intro": "Necessites una aplicació d'autenticació al mòbil (p. ex. Google Authenticator, Microsoft Authenticator, 1Password o Aegis)."
     }
   },
   "shell": {
@@ -67,8 +82,8 @@
       "dark": "Tema fosc"
     },
     "search": {
-      "placeholder": "Cerca documents, etiquetes, continguts …",
-      "placeholderAi": "Cerca documents amb les teves paraules – p. ex. «factures de Kia del 2024»",
+      "placeholder": "Cerca per paraules clau: documents, etiquetes, contingut …",
+      "placeholderAi": "Cerca amb IA: pregunta amb les teves paraules – p. ex. «factures de Kia del 2024»",
       "labelAi": "IA",
       "label": "Cerca documents",
       "clear": "Esborra la cerca",
@@ -79,6 +94,7 @@
       "aiActive": "IA activa",
       "aiNotConfigured": "IA sense configurar",
       "changePassword": "Canvia la contrasenya",
+      "licenses": "Llicències de tercers",
       "logout": "Tanca la sessió"
     },
     "passwordDialog": {
@@ -261,8 +277,8 @@
     },
     "delete": {
       "title": "Vols eliminar el document?",
-      "text": "«{{title}}» s’eliminarà juntament amb el fitxer PDF, el text complet i les etiquetes. Aquesta acció no es pot desfer.",
-      "confirm": "Elimina’l definitivament"
+      "text": "«{{title}}» se suprimirà. A l’historial ho pots desfer durant 30 dies; després s’elimina definitivament.",
+      "confirm": "Suprimeix"
     },
     "chat": {
       "intro": "Fes una pregunta sobre aquest document: la IA respon a partir del seu contingut.",
@@ -275,6 +291,25 @@
         "summary": "De què tracta aquest document?",
         "deadlines": "Hi ha terminis o dates?",
         "amounts": "Quins imports s’esmenten?"
+      }
+    },
+    "versions": {
+      "title": "Versions",
+      "intro": "Cada canvi al PDF crea una versió nova. Les versions anteriors es conserven i es poden veure, baixar o restaurar.",
+      "current": "actual",
+      "view": "Mostra la versió {{number}}",
+      "download": "Baixa la versió {{number}}",
+      "restore": "Restaura la versió {{number}}",
+      "restoreTitle": "Vols restaurar la versió {{number}}?",
+      "restoreText": "Aquesta versió passa a ser l'actual. La versió actual es conserva i el pas es pot desfer a l'historial.",
+      "restoreConfirm": "Restaura",
+      "restored": "Versió {{number}} restaurada",
+      "kinds": {
+        "IMPORTED": "Importat",
+        "EDITED": "Editat",
+        "ORIGINAL_RESTORED": "Original restaurat",
+        "VERSION_RESTORED": "Versió {{from}} restaurada",
+        "UNDONE": "Canvi desfet"
       }
     }
   },
@@ -316,8 +351,23 @@
         "since": "Només correus des del",
         "sinceHint": "Opcional: els correus més antics s’ometen",
         "enabled": "Comprova automàticament",
-        "enabledHint": "La bústia es comprova a la recerca de PDF nous amb l’interval configurat."
-      }
+        "enabledHint": "La bústia es comprova a la recerca de PDF nous amb l’interval configurat.",
+        "filter": {
+          "title": "Filtre",
+          "intro": "Només es processen els correus que compleixen totes les condicions. Un terme per línia; les majúscules i minúscules no importen i n’hi ha prou amb una part del text. Els camps buits no restringeixen res.",
+          "subjectIncludes": "L’assumpte conté un d’aquests termes",
+          "subjectExcludes": "L’assumpte no conté cap d’aquests termes",
+          "senderIncludes": "El remitent conté un d’aquests termes",
+          "senderExcludes": "El remitent no conté cap d’aquests termes",
+          "senderHint": "Nom o adreça, p. ex. «@example.com»",
+          "newOnly": "El filtre s’aplica als correus que arriben després de l’última consulta; els correus ja revisats no es tornen a processar."
+        },
+        "interval": "Interval de consulta en minuts",
+        "intervalHint": "Deixa-ho buit per fer servir l’interval general (ara {{interval}})."
+      },
+      "filterActive": "Filtre actiu",
+      "schedule": "Consulta cada {{interval}} · propera {{when}}",
+      "scheduleSoon": "Consulta cada {{interval}} · propera aviat"
     },
     "import": {
       "title": "Programació i carpeta d’importació",
@@ -326,7 +376,7 @@
       "saved": "Configuració desada",
       "interval": {
         "title": "Interval de comprovació",
-        "text": "Amb aquesta freqüència l’aplicació comprova totes les bústies de correu i la carpeta d’importació a la recerca de PDF nous.",
+        "text": "Amb quina freqüència l’aplicació revisa la carpeta d’entrada i totes les bústies sense interval propi per trobar PDF nous.",
         "label": "Cada … minuts",
         "nextRun": "Propera comprovació automàtica {{when}}."
       },
@@ -461,7 +511,104 @@
         "active": "Compte actiu",
         "activeHint": "Els comptes desactivats no poden iniciar la sessió; les sessions actives acaben immediatament.",
         "create": "Crea"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Restableix l'autenticació en dos passos",
+      "resetTwoFactorHint": "Aquest compte té activada l'autenticació en dos passos.",
+      "resetTwoFactorText": "{{name}} iniciarà sessió després només amb la contrasenya i podrà tornar a configurar l'autenticació en dos passos, per exemple després de perdre el mòbil.",
+      "resetTwoFactorConfirm": "Restableix",
+      "twoFactorReset": "Autenticació en dos passos restablerta"
+    }
+  },
+  "history": {
+    "nav": "Historial",
+    "title": "Historial",
+    "subtitle": "Què ha passat amb els teus documents: primer les entrades més recents.",
+    "empty": "Encara no hi ha entrades.",
+    "actions": {
+      "IMPORTED": "Importat",
+      "EDITED": "Editat",
+      "DELETED": "Suprimit"
+    },
+    "changes": {
+      "DETAILS": "Dades modificades",
+      "FILE": "PDF modificat",
+      "ORIGINAL_RESTORED": "Original restaurat",
+      "DUPLICATE": "com a duplicat",
+      "VERSION_RESTORED": "Versió restaurada"
+    },
+    "by": "per {{user}}",
+    "automatic": "automàticament",
+    "more": "Carrega’n més",
+    "undo": "Desfés",
+    "undone": "Desfet"
+  },
+  "duplicates": {
+    "title": "Possible duplicat",
+    "subtitle": "Els dos documents tenen el mateix contingut. Conserva’n un i suprimeix l’altre, o indica que no són duplicats.",
+    "older": "Va arribar abans",
+    "newer": "Va arribar després",
+    "deleteThis": "Suprimeix aquest",
+    "compare": "Compara’ls de costat"
+  },
+  "twoFactor": {
+    "title": "Autenticació en dos passos",
+    "on": "Activada",
+    "off": "Desactivada",
+    "intro": "Protegeix el teu compte amb un segon factor: en iniciar sessió introduiràs també un codi d'una aplicació d'autenticació del mòbil (p. ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Configura",
+    "scan": "Escaneja el codi QR amb l'aplicació d'autenticació o introdueix la clau a mà. Després introdueix el codi que mostra l'aplicació i la teva contrasenya.",
+    "qrAlt": "Codi QR per a l'aplicació d'autenticació",
+    "secret": "Clau",
+    "confirmCode": "Codi de l'aplicació",
+    "activate": "Activa",
+    "recoveryTitle": "Codis de recuperació",
+    "recoveryText": "Guarda aquests codis de recuperació en un lloc segur. Cadascun funciona una vegada si no pots fer servir l'aplicació, per exemple si perds el mòbil. Només es mostren ara.",
+    "download": "Desa com a fitxer",
+    "done": "Fet",
+    "enabled": "L'autenticació en dos passos està activada",
+    "disabled": "L'autenticació en dos passos està desactivada",
+    "disableHint": "Per desactivar-la, introdueix un codi actual de l'aplicació (o un codi de recuperació) i la teva contrasenya.",
+    "disable": "Desactiva",
+    "recoveryLeft": "Codis de recuperació sense fer servir: {{count}}",
+    "adminCannotDisable": "Com a administrador no pots desactivar l'autenticació en dos passos."
+  },
+  "confirmCode": {
+    "title": "Confirma el canvi",
+    "text": "Els canvis en comptes, bústies i configuració requereixen un codi actual de la teva aplicació d'autenticació. La confirmació és vàlida durant 10 minuts.",
+    "submit": "Confirma"
+  },
+  "share": {
+    "button": "Comparteix",
+    "title": "Comparteix el document",
+    "intro": "Crea un enllaç amb què una persona sense compte pot obrir només aquest document.",
+    "recipient": "Amb qui el comparteixes?",
+    "recipientHint": "El nom de la persona, perquè més endavant sàpigues a qui has donat l'enllaç.",
+    "permission": "Aquesta persona pot editar el document?",
+    "viewOnly": "Només veure",
+    "canEdit": "Pot editar",
+    "viewHint": "La persona pot veure, imprimir i baixar el PDF.",
+    "editHint": "La persona també pot marcar, escriure, signar i desar el PDF. Cada desament esdevé una versió nova; el títol, les etiquetes i altres dades queden amagats.",
+    "validity": "Vàlid durant",
+    "unlimited": "Sense límit",
+    "create": "Crea l'enllaç",
+    "link": "Enllaç",
+    "linkHint": "Qualsevol persona que tingui aquest enllaç pot obrir el document: dona'l només a {{name}}. Pots revocar-lo en qualsevol moment a la vista del document.",
+    "copy": "Copia l'enllaç",
+    "copied": "Enllaç copiat",
+    "listTitle": "Compartit externament",
+    "expired": "caducat",
+    "validUntil": "vàlid fins al {{date}}",
+    "noExpiry": "sense caducitat",
+    "lastOpened": "obert per última vegada {{when}} (visites: {{views}})",
+    "neverOpened": "encara no s'ha obert",
+    "revoke": "Revoca l'enllaç",
+    "revokeTitle": "Vols revocar l'enllaç de {{name}}?",
+    "revokeText": "L'enllaç deixa de funcionar immediatament. Les còpies que la persona ja hagi baixat es queden amb ella.",
+    "revoked": "Enllaç revocat",
+    "page": {
+      "for": "Compartit amb {{name}}",
+      "invalid": "Aquest enllaç no és vàlid o ha caducat, o el document s'ha suprimit. Posa't en contacte amb la persona que te'l va donar."
     }
   }
 }

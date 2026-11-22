@@ -88,7 +88,11 @@ public class MailAccountController {
         probe.setFolder(data.folder().strip());
         String password = data.password();
         if ((password == null || password.isBlank()) && request.accountId() != null) {
-            password = service.password(service.require(request.accountId()));
+            MailAccount stored = service.require(request.accountId());
+            if (!service.mayReusePassword(stored, data.host(), data.security())) {
+                return new ConnectionTestDto(false, messages.get("error.mailbox.passwordForNewServer"));
+            }
+            password = service.password(stored);
         }
         if (password == null || password.isBlank()) {
             return new ConnectionTestDto(false, messages.get("error.mailbox.passwordRequired"));

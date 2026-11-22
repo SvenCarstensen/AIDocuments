@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import de.aidocuments.persistence.SettingsStore;
 import org.springframework.stereotype.Service;
 
 /**
@@ -92,15 +92,15 @@ public class AiSettingsService {
         }
     }
 
-    private final MongoTemplate mongo;
+    private final SettingsStore store;
     private final SecretCipher cipher;
     private final AppProperties.Ai defaults;
     private final Messages messages;
     private volatile Effective cached;
 
-    public AiSettingsService(MongoTemplate mongo, SecretCipher cipher, AppProperties properties, Messages messages) {
+    public AiSettingsService(SettingsStore store, SecretCipher cipher, AppProperties properties, Messages messages) {
         this.messages = messages;
-        this.mongo = mongo;
+        this.store = store;
         this.cipher = cipher;
         this.defaults = properties.ai();
     }
@@ -108,7 +108,7 @@ public class AiSettingsService {
     public Effective current() {
         Effective effective = cached;
         if (effective == null) {
-            effective = resolve(mongo.findById(AiSettings.ID, AiSettings.class));
+            effective = resolve(store.find(AiSettings.ID, AiSettings.class));
             cached = effective;
         }
         return effective;
@@ -142,11 +142,12 @@ public class AiSettingsService {
             throw ApiException.badRequest("error.ai.baseUrlRequired");
         }
 
-        AiSettings stored = mongo.findById(AiSettings.ID, AiSettings.class);
+        AiSettings stored = store.find(AiSettings.ID, AiSettings.class);
         if (stored == null) {
             stored = new AiSettings();
         }
-        boolean providerChanged = resolve(stored).provider() != provider;
+        Effective before = resolve(stored);
+        boolean providerChanged = before.provider() != provider;
         stored.setProvider(provider);
         // Die Adresse wird so gespeichert, wie sie im Formular stand – auch die Standardadresse. Sonst träte
         // an ihre Stelle stillschweigend wieder eine Vorbelegung aus der Konfiguration.
@@ -163,13 +164,43 @@ public class AiSettingsService {
         if (request.apiKey() != null) {
             String key = request.apiKey().strip();
             stored.setApiKeyEncrypted(key.isEmpty() ? null : cipher.encrypt(key));
-        } else if (providerChanged) {
-            // Der gespeicherte Schlüssel gehört zum bisherigen Anbieter und darf nicht an den neuen gehen.
+        } else if (providerChanged || !sameServer(before.baseUrl(), stored.getBaseUrl())) {
+            // Der gespeicherte Schlüssel gehört zum bisherigen Anbieter bzw. Server und darf nicht an einen anderen
+            // gehen – sonst ließe er sich mit einer geänderten Adresse abgreifen. Für den neuen Server neu eingeben.
             stored.setApiKeyEncrypted(null);
         }
-        mongo.save(stored);
+        store.save(AiSettings.ID, stored);
         cached = null;
         return dto();
+    }
+
+    private static String presetBaseUrl(LlmProvider provider, AppProperties.Preset preset) {
+        return preset.baseUrl().isBlank() ? provider.defaultBaseUrl() : normalizeBaseUrl(provider, preset.baseUrl());
+    }
+
+    /**
+     * Derselbe Server: gleicher Rechnername, und nicht von https auf http herabgestuft. Port und Pfad dürfen sich
+     * ändern (etwa /v1 ergänzt).
+     */
+    static boolean sameServer(String previous, String next) {
+        URI a = parse(previous);
+        URI b = parse(next);
+        if (a == null || b == null || a.getHost() == null || b.getHost() == null) {
+            return false;
+        }
+        boolean downgrade = "https".equalsIgnoreCase(a.getScheme()) && !"https".equalsIgnoreCase(b.getScheme());
+        return a.getHost().equalsIgnoreCase(b.getHost()) && !downgrade;
+    }
+
+    private static URI parse(String url) {
+        if (url == null || url.isBlank()) {
+            return null;
+        }
+        try {
+            return URI.create(url.strip());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /**
@@ -209,7 +240,8 @@ public class AiSettingsService {
         if (stored != null && stored.getApiKeyEncrypted() != null) {
             key = cipher.decrypt(stored.getApiKeyEncrypted());
             source = KeySource.SETTINGS;
-        } else if (!preset.apiKey().isBlank()) {
+        } else if (!preset.apiKey().isBlank() && sameServer(presetBaseUrl(provider, preset), baseUrl)) {
+            // der vorbelegte Schlüssel nur für den Server, für den er vorbelegt ist
             key = preset.apiKey().strip();
             source = KeySource.ENVIRONMENT;
         }

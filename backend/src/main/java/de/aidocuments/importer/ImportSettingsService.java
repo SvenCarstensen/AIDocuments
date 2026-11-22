@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.time.Duration;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import de.aidocuments.persistence.SettingsStore;
 import org.springframework.stereotype.Service;
 
 /** Wirksame Abruf-Einstellungen: gespeicherte Werte haben Vorrang vor den Vorgaben aus der Konfiguration. */
@@ -36,19 +36,19 @@ public class ImportSettingsService {
             @NotNull(message = NOT_NULL) FolderMode folderMode) {
     }
 
-    private final MongoTemplate mongo;
+    private final SettingsStore store;
     private final AppProperties.Import defaults;
     private volatile Effective cached;
 
-    public ImportSettingsService(MongoTemplate mongo, AppProperties properties) {
-        this.mongo = mongo;
+    public ImportSettingsService(SettingsStore store, AppProperties properties) {
+        this.store = store;
         this.defaults = properties.importer();
     }
 
     public Effective current() {
         Effective effective = cached;
         if (effective == null) {
-            ImportSettings stored = mongo.findById(ImportSettings.ID, ImportSettings.class);
+            ImportSettings stored = store.find(ImportSettings.ID, ImportSettings.class);
             if (stored == null) {
                 String directory = defaults.directory() == null ? "" : defaults.directory().strip();
                 int minutes = (int) Math.clamp(defaults.interval().toMinutes(), 1, 1440);
@@ -89,7 +89,7 @@ public class ImportSettingsService {
         stored.setFolderEnabled(request.folderEnabled());
         stored.setFolderPath(path);
         stored.setFolderMode(request.folderMode());
-        mongo.save(stored);
+        store.save(ImportSettings.ID, stored);
         cached = null;
         return current();
     }

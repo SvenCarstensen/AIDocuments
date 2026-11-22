@@ -49,6 +49,8 @@
     "setup": {
       "title": "Set up AIDocuments",
       "subtitle": "Start by creating the administrator account. You can add more users in the settings afterwards.",
+      "code": "Setup code",
+      "codeHint": "Shown in the server log at startup (Docker: docker compose logs).",
       "adminAccount": "Administrator account",
       "repeatPassword": "Repeat password",
       "submit": "Create account and get started",
@@ -57,6 +59,19 @@
         "ai": "AI summarizes and tags them",
         "search": "Full-text search right into the document"
       }
+    },
+    "twoFactor": {
+      "title": "Confirm sign-in",
+      "subtitle": "Enter the 6-digit code from your authenticator app.",
+      "code": "Code",
+      "codeHint": "No access to the app? Enter one of your recovery codes instead.",
+      "submit": "Confirm",
+      "back": "Back to sign-in"
+    },
+    "twoFactorRequired": {
+      "title": "Set up two-factor authentication",
+      "subtitle": "Two-factor authentication is mandatory for administrators. Set it up now to continue.",
+      "intro": "You will need an authenticator app on your phone (e.g. Google Authenticator, Microsoft Authenticator, 1Password or Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Dark theme"
     },
     "search": {
-      "placeholder": "Search documents, tags, contents …",
-      "placeholderAi": "Ask for documents – e.g. “invoices from Kia from 2024”",
+      "placeholder": "Keyword search: documents, tags, content …",
+      "placeholderAi": "AI search: ask in your own words – e.g. “invoices from Kia from 2024”",
       "labelAi": "AI",
       "label": "Search documents",
       "clear": "Clear search",
@@ -78,6 +93,7 @@
       "aiActive": "AI active",
       "aiNotConfigured": "AI not set up",
       "changePassword": "Change password",
+      "licenses": "Third-party licenses",
       "logout": "Sign out"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Delete document?",
-      "text": "“{{title}}” will be deleted together with its PDF file, full text and tags. This cannot be undone.",
-      "confirm": "Delete permanently"
+      "text": "“{{title}}” will be deleted. You can undo this in the history for 30 days; after that it is removed for good.",
+      "confirm": "Delete"
     },
     "chat": {
       "intro": "Ask a question about this document – the AI answers based on its content.",
@@ -266,6 +282,25 @@
         "summary": "What is this document about?",
         "deadlines": "Are there any deadlines or dates?",
         "amounts": "Which amounts are mentioned?"
+      }
+    },
+    "versions": {
+      "title": "Versions",
+      "intro": "Every change to the PDF creates a new version. Older versions are kept and can be viewed, downloaded or restored.",
+      "current": "current",
+      "view": "View version {{number}}",
+      "download": "Download version {{number}}",
+      "restore": "Restore version {{number}}",
+      "restoreTitle": "Restore version {{number}}?",
+      "restoreText": "This version becomes the current one. The current version is kept, and the step can be undone in the history.",
+      "restoreConfirm": "Restore",
+      "restored": "Version {{number}} restored",
+      "kinds": {
+        "IMPORTED": "Imported",
+        "EDITED": "Edited",
+        "ORIGINAL_RESTORED": "Original restored",
+        "VERSION_RESTORED": "Version {{from}} restored",
+        "UNDONE": "Change undone"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Only emails from",
         "sinceHint": "Optional – older emails are skipped",
         "enabled": "Check automatically",
-        "enabledHint": "The mailbox is checked for new PDFs at the configured interval."
-      }
+        "enabledHint": "The mailbox is checked for new PDFs at the configured interval.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Only e-mails that meet all conditions are evaluated. One term per line; upper and lower case do not matter, part of the text is enough. Empty fields do not restrict anything.",
+          "subjectIncludes": "Subject contains one of these terms",
+          "subjectExcludes": "Subject contains none of these terms",
+          "senderIncludes": "Sender contains one of these terms",
+          "senderExcludes": "Sender contains none of these terms",
+          "senderHint": "Name or address, e.g. “@example.com”",
+          "newOnly": "The filter applies to e-mails that arrive after the last check; e-mails already checked are not evaluated again."
+        },
+        "interval": "Check interval in minutes",
+        "intervalHint": "Leave empty to use the general interval (currently {{interval}})."
+      },
+      "filterActive": "Filter active",
+      "schedule": "Checked every {{interval}} · next {{when}}",
+      "scheduleSoon": "Checked every {{interval}} · next check shortly"
     },
     "import": {
       "title": "Schedule & import folder",
@@ -317,7 +367,7 @@
       "saved": "Settings saved",
       "interval": {
         "title": "Check interval",
-        "text": "This is how often the application checks all mailboxes and the import folder for new PDFs.",
+        "text": "How often the application checks the inbox folder and all mailboxes without their own interval for new PDFs.",
         "label": "Every … minutes",
         "nextRun": "Next automatic check {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Account active",
         "activeHint": "Disabled accounts cannot sign in; active sessions end immediately.",
         "create": "Create"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Reset two-factor authentication",
+      "resetTwoFactorHint": "Two-factor authentication is on for this account.",
+      "resetTwoFactorText": "{{name}} will then sign in with the password only and can set up two-factor authentication again – for example after losing the phone with the app.",
+      "resetTwoFactorConfirm": "Reset",
+      "twoFactorReset": "Two-factor authentication reset"
+    }
+  },
+  "history": {
+    "nav": "History",
+    "title": "History",
+    "subtitle": "What happened to your documents – newest entries first.",
+    "empty": "No entries yet.",
+    "actions": {
+      "IMPORTED": "Imported",
+      "EDITED": "Edited",
+      "DELETED": "Deleted"
+    },
+    "changes": {
+      "DETAILS": "Details changed",
+      "FILE": "PDF changed",
+      "ORIGINAL_RESTORED": "Original restored",
+      "DUPLICATE": "as a duplicate",
+      "VERSION_RESTORED": "Version restored"
+    },
+    "by": "by {{user}}",
+    "automatic": "automatically",
+    "more": "Load more",
+    "undo": "Undo",
+    "undone": "Undone"
+  },
+  "duplicates": {
+    "title": "Possible duplicate",
+    "subtitle": "The two documents match in content. Keep one and delete the other – or note that they are not duplicates.",
+    "older": "Arrived earlier",
+    "newer": "Arrived later",
+    "deleteThis": "Delete this one",
+    "compare": "Compare side by side"
+  },
+  "twoFactor": {
+    "title": "Two-factor authentication",
+    "on": "On",
+    "off": "Off",
+    "intro": "Protect your account with a second factor: when signing in, you then also enter a code from an authenticator app on your phone (e.g. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Set up",
+    "scan": "Scan the QR code with your authenticator app or enter the key manually. Then enter the code shown by the app, together with your password.",
+    "qrAlt": "QR code for the authenticator app",
+    "secret": "Key",
+    "confirmCode": "Code from the app",
+    "activate": "Activate",
+    "recoveryTitle": "Recovery codes",
+    "recoveryText": "Keep these recovery codes in a safe place. Each one works once if you cannot use the app – for example if you lose your phone. They are shown only now.",
+    "download": "Save as file",
+    "done": "Done",
+    "enabled": "Two-factor authentication is on",
+    "disabled": "Two-factor authentication is off",
+    "disableHint": "To switch it off, enter a current code from the app (or a recovery code) and your password.",
+    "disable": "Switch off",
+    "recoveryLeft": "Unused recovery codes: {{count}}",
+    "adminCannotDisable": "As an administrator, you cannot switch off two-factor authentication."
+  },
+  "confirmCode": {
+    "title": "Confirm change",
+    "text": "Changes to accounts, mailboxes and settings need a current code from your authenticator app. The confirmation is valid for 10 minutes.",
+    "submit": "Confirm"
+  },
+  "share": {
+    "button": "Share",
+    "title": "Share document",
+    "intro": "Creates a link that lets a person without an account open exactly this document.",
+    "recipient": "Who are you sharing with?",
+    "recipientHint": "The person's name – so you can see later who you gave the link to.",
+    "permission": "May this person edit the document?",
+    "viewOnly": "View only",
+    "canEdit": "Can edit",
+    "viewHint": "The person can view, print and download the PDF.",
+    "editHint": "The person can also mark up, write in, sign and save the PDF. Every save becomes a new version; title, tags and other details stay hidden.",
+    "validity": "Valid for",
+    "unlimited": "Unlimited",
+    "create": "Create link",
+    "link": "Link",
+    "linkHint": "Anyone who has this link can open the document – only pass it on to {{name}}. You can revoke it at any time in the document view.",
+    "copy": "Copy link",
+    "copied": "Link copied",
+    "listTitle": "Shared externally",
+    "expired": "expired",
+    "validUntil": "valid until {{date}}",
+    "noExpiry": "no expiry",
+    "lastOpened": "last opened {{when}} (views: {{views}})",
+    "neverOpened": "not opened yet",
+    "revoke": "Revoke link",
+    "revokeTitle": "Revoke the link for {{name}}?",
+    "revokeText": "The link stops working immediately. Copies the person has already downloaded stay with them.",
+    "revoked": "Link revoked",
+    "page": {
+      "for": "Shared with {{name}}",
+      "invalid": "This link is invalid or has expired, or the document was deleted. Please contact the person who gave it to you."
     }
   }
 }

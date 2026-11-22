@@ -22,7 +22,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -57,15 +56,15 @@ public class FolderImportService {
 
     private final ImportSettingsService settings;
     private final DocumentService documentService;
-    private final MongoTemplate mongo;
+    private final ImportedFileRepository importedFiles;
     private final ReentrantLock lock = new ReentrantLock();
     private volatile Status status = new Status(null, true, null, false);
 
     public FolderImportService(ImportSettingsService settings, DocumentService documentService,
-                               MongoTemplate mongo) {
+                               ImportedFileRepository importedFiles) {
         this.settings = settings;
         this.documentService = documentService;
-        this.mongo = mongo;
+        this.importedFiles = importedFiles;
     }
 
     public Status status() {
@@ -113,7 +112,7 @@ public class FolderImportService {
                     continue;
                 }
                 String key = file.toAbsolutePath().toString();
-                ImportedFile known = mongo.findById(key, ImportedFile.class);
+                ImportedFile known = importedFiles.findById(key).orElse(null);
                 if (known != null && known.size() == attributes.size() && known.modifiedAt() == modified) {
                     continue;
                 }
@@ -129,7 +128,7 @@ public class FolderImportService {
                 if (config.folderMode() == FolderMode.MOVE && result.outcome() != Outcome.REJECTED) {
                     moveAside(root, file);
                 } else {
-                    mongo.save(new ImportedFile(key, attributes.size(), modified, result.outcome().name(),
+                    importedFiles.save(new ImportedFile(key, attributes.size(), modified, result.outcome().name(),
                             Instant.now()));
                 }
             } catch (IOException | RuntimeException e) {
@@ -162,7 +161,9 @@ public class FolderImportService {
 
     private static boolean isCandidate(Path root, Path path) {
         String name = path.getFileName().toString();
-        if (name.startsWith(".") || !name.toLowerCase(Locale.ROOT).endsWith(".pdf") || !Files.isRegularFile(path)) {
+        if (name.startsWith(".") || !name.toLowerCase(Locale.ROOT).endsWith(".pdf") || !Files.isRegularFile(path, java.nio.file.LinkOption.NOFOLLOW_LINKS)) {
+            // keine symbolischen Links: Wer in den Eingangsordner schreiben darf, soll darüber nicht beliebige
+            // andere Dateien des Servers einschleusen können
             return false;
         }
         Path relative = root.relativize(path);

@@ -49,6 +49,8 @@
     "setup": {
       "title": "AIDocuments ariichten",
       "subtitle": "Leet fir d’éischt den Administrateurskont un. Weider Benotzer kënnt Dir duerno an den Astellungen derbäisetzen.",
+      "code": "Ariichtungscode",
+      "codeHint": "Steet beim Start am Protokoll vum Server (Docker: docker compose logs).",
       "adminAccount": "Administrateurskont",
       "repeatPassword": "Passwuert widderhuelen",
       "submit": "Kont uleeën a lassleeën",
@@ -57,6 +59,19 @@
         "ai": "KI faasst zesummen a vergëtt Stéchwierder",
         "search": "Volltextsich bis an d’Dokument"
       }
+    },
+    "twoFactor": {
+      "title": "Umeldung bestätegen",
+      "subtitle": "Gëff de 6-stellege Code aus denger Authenticator-App an.",
+      "code": "Code",
+      "codeHint": "Keen Zougrëff op d'App? Gëff amplaz ee vun denge Restauratiounscoden an.",
+      "submit": "Bestätegen",
+      "back": "Zréck bei d'Umeldung"
+    },
+    "twoFactorRequired": {
+      "title": "Zwee-Faktor-Umeldung ariichten",
+      "subtitle": "Fir Administrateuren ass d'Zwee-Faktor-Umeldung Flicht. Riicht se elo an, fir weiderzemaachen.",
+      "intro": "Du brauchs dofir eng Authenticator-App op dengem Handy (z. B. Google Authenticator, Microsoft Authenticator, 1Password oder Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Däischteren Design"
     },
     "search": {
-      "placeholder": "Dokumenter, Stéchwierder, Inhalter duerchsichen …",
-      "placeholderAi": "Sich Dokumenter mat denge Wierder – z. B. „Rechnunge vu Kia aus 2024“",
+      "placeholder": "Stéchwuertsich: Dokumenter, Schlagwierder, Inhalter …",
+      "placeholderAi": "KI-Sich: fro mat denge Wierder – z. B. „Rechnunge vu Kia aus 2024“",
       "labelAi": "KI",
       "label": "Dokumenter duerchsichen",
       "clear": "Sich läschen",
@@ -78,6 +93,7 @@
       "aiActive": "KI aktiv",
       "aiNotConfigured": "KI net ageriicht",
       "changePassword": "Passwuert änneren",
+      "licenses": "Lizenze vun Drëttubidder",
       "logout": "Ofmellen"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Dokument läschen?",
-      "text": "„{{title}}“ gëtt zesumme mam PDF-Fichier, dem Volltext an de Stéchwierder geläscht. Dat kann net réckgängeg gemaach ginn.",
-      "confirm": "Definitiv läschen"
+      "text": "„{{title}}“ gëtt geläscht. An der Historique kanns de dat 30 Deeg laang réckgängeg maachen; duerno gëtt et definitiv ewechgeholl.",
+      "confirm": "Läschen"
     },
     "chat": {
       "intro": "Stell eng Fro zu dësem Dokument – d’KI äntwert op Basis vu sengem Inhalt.",
@@ -266,6 +282,25 @@
         "summary": "Ëm wat geet et an dësem Dokument?",
         "deadlines": "Gëtt et Fristen oder Datumen?",
         "amounts": "Wéi eng Beträg ginn ernimmt?"
+      }
+    },
+    "versions": {
+      "title": "Versiounen",
+      "intro": "All Ännerung um PDF mécht eng nei Versioun. Méi al Versioune bleiwen erhalen a kënne gewisen, erofgeluede oder restauréiert ginn.",
+      "current": "aktuell",
+      "view": "Versioun {{number}} weisen",
+      "download": "Versioun {{number}} eroflueden",
+      "restore": "Versioun {{number}} restauréieren",
+      "restoreTitle": "Versioun {{number}} restauréieren?",
+      "restoreText": "D'Versioun gëtt déi aktuell. Déi aktuell Versioun bleift erhalen, an de Schrëtt kann an der Historique réckgängeg gemaach ginn.",
+      "restoreConfirm": "Restauréieren",
+      "restored": "Versioun {{number}} restauréiert",
+      "kinds": {
+        "IMPORTED": "Importéiert",
+        "EDITED": "Beaarbecht",
+        "ORIGINAL_RESTORED": "Original restauréiert",
+        "VERSION_RESTORED": "Versioun {{from}} restauréiert",
+        "UNDONE": "Ännerung réckgängeg gemaach"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Nëmmen E-Mailen ab",
         "sinceHint": "Optional – méi al E-Maile ginn iwwersprongen",
         "enabled": "Automatesch ofruffen",
-        "enabledHint": "D’Mailbox gëtt am agestallten Intervall op nei PDFe gepréift."
-      }
+        "enabledHint": "D’Mailbox gëtt am agestallten Intervall op nei PDFe gepréift.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Et ginn nëmmen E-Mailen ausgewäert, déi all Konditioune erfëllen. Ee Begrëff pro Linn; Grouss- a Klengschreiwung spillen keng Roll, en Deel vum Text geet duer. Eidel Felder schränken näischt an.",
+          "subjectIncludes": "Sujet enthält ee vun dëse Begrëffer",
+          "subjectExcludes": "Sujet enthält keen vun dëse Begrëffer",
+          "senderIncludes": "Absender enthält ee vun dëse Begrëffer",
+          "senderExcludes": "Absender enthält keen vun dëse Begrëffer",
+          "senderHint": "Numm oder Adress, z. B. „@example.com“",
+          "newOnly": "De Filter gëllt fir E-Mailen, déi nom leschten Ofruff erakommen; schonn iwwerpréift E-Mailen ginn net nach eng Kéier ausgewäert."
+        },
+        "interval": "Ofruffintervall a Minutten",
+        "intervalHint": "Eidel loossen fir den allgemengen Intervall (de Moment {{interval}})."
+      },
+      "filterActive": "Filter aktiv",
+      "schedule": "Ofruff all {{interval}} · nächsten {{when}}",
+      "scheduleSoon": "Ofruff all {{interval}} · nächsten a Kuerzem"
     },
     "import": {
       "title": "Ofruff & Importdossier",
@@ -317,7 +367,7 @@
       "saved": "Astellunge gespäichert",
       "interval": {
         "title": "Ofrufintervall",
-        "text": "Sou dacks préift d’Applikatioun all Mailboxen an den Importdossier op nei PDFen.",
+        "text": "Sou dacks kontrolléiert d’Applikatioun den Agangsdossier an all Postfächer ouni eegenen Intervall op nei PDFen.",
         "label": "All … Minutten",
         "nextRun": "Nächsten automateschen Ofruff {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Kont aktiv",
         "activeHint": "Desaktivéiert Konte kënne sech net umellen; lafend Sessiounen halen direkt op.",
         "create": "Uleeën"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Zwee-Faktor-Umeldung zrécksetzen",
+      "resetTwoFactorHint": "Fir dëse Kont ass d'Zwee-Faktor-Umeldung aktiv.",
+      "resetTwoFactorText": "{{name}} mellt sech duerno nëmme mam Passwuert un a kann d'Zwee-Faktor-Umeldung nei ariichten – zum Beispill nodeems den Handy verluer gaangen ass.",
+      "resetTwoFactorConfirm": "Zrécksetzen",
+      "twoFactorReset": "Zwee-Faktor-Umeldung zréckgesat"
+    }
+  },
+  "history": {
+    "nav": "Historique",
+    "title": "Historique",
+    "subtitle": "Wat mat denge Dokumenter geschitt ass – déi neist Entréeën als éischt.",
+    "empty": "Nach keng Entréeën.",
+    "actions": {
+      "IMPORTED": "Importéiert",
+      "EDITED": "Beaarbecht",
+      "DELETED": "Geläscht"
+    },
+    "changes": {
+      "DETAILS": "Donnéeë geännert",
+      "FILE": "PDF geännert",
+      "ORIGINAL_RESTORED": "Original restauréiert",
+      "DUPLICATE": "als Duplikat",
+      "VERSION_RESTORED": "Versioun restauréiert"
+    },
+    "by": "vum {{user}}",
+    "automatic": "automatesch",
+    "more": "Méi lueden",
+    "undo": "Réckgängeg maachen",
+    "undone": "Réckgängeg gemaach"
+  },
+  "duplicates": {
+    "title": "Méiglechen Duplikat",
+    "subtitle": "Déi zwee Dokumenter hunn dee selwechten Inhalt. Behal eent a läsch dat anert – oder vermierk, datt et keng Duplikater sinn.",
+    "older": "Méi fréi akomm",
+    "newer": "Méi spéit akomm",
+    "deleteThis": "Dëst läschen",
+    "compare": "Niewentenee vergläichen"
+  },
+  "twoFactor": {
+    "title": "Zwee-Faktor-Umeldung",
+    "on": "Aktiv",
+    "off": "Aus",
+    "intro": "Schütz däi Kont mat engem zweete Faktor: Bei der Umeldung gëss du dann zousätzlech e Code aus enger Authenticator-App op dengem Handy an (z. B. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Ariichten",
+    "scan": "Scann de QR-Code mat denger Authenticator-App oder gëff de Schlëssel mat der Hand an. Gëff dann de Code aus der App an däi Passwuert an.",
+    "qrAlt": "QR-Code fir d'Authenticator-App",
+    "secret": "Schlëssel",
+    "confirmCode": "Code aus der App",
+    "activate": "Aktivéieren",
+    "recoveryTitle": "Restauratiounscoden",
+    "recoveryText": "Hal dës Restauratiounscoden op enger sécherer Plaz. All Code fonctionnéiert eemol, wann s du d'App net benotze kanns – zum Beispill wann däin Handy verluer geet. Si ginn nëmmen elo gewisen.",
+    "download": "Als Fichier späicheren",
+    "done": "Fäerdeg",
+    "enabled": "Zwee-Faktor-Umeldung ass aktiv",
+    "disabled": "Zwee-Faktor-Umeldung ass ausgeschalt",
+    "disableHint": "Fir se auszeschalten, gëff en aktuelle Code aus der App (oder e Restauratiounscode) an däi Passwuert an.",
+    "disable": "Ausschalten",
+    "recoveryLeft": "Onbenotzt Restauratiounscoden: {{count}}",
+    "adminCannotDisable": "Als Administrateur kanns du d'Zwee-Faktor-Umeldung net ausschalten."
+  },
+  "confirmCode": {
+    "title": "Ännerung bestätegen",
+    "text": "Ännerunge vu Konten, Postfächer an Astellunge brauchen en aktuelle Code aus denger Authenticator-App. D'Bestätegung gëllt 10 Minutten.",
+    "submit": "Bestätegen"
+  },
+  "share": {
+    "button": "Deelen",
+    "title": "Dokument deelen",
+    "intro": "Erstellt e Link, mat deem eng Persoun ouni Kont genee dëst Dokument opmaache kann.",
+    "recipient": "Mat wiem deels du?",
+    "recipientHint": "Numm vun der Persoun – fir datt s du méi spéit gesäis, wiem s du de Link ginn hues.",
+    "permission": "Däerf d'Persoun d'Dokument beaarbechten?",
+    "viewOnly": "Nëmmen ukucken",
+    "canEdit": "Däerf beaarbechten",
+    "viewHint": "D'Persoun kann de PDF ukucken, drécken an eroflueden.",
+    "editHint": "D'Persoun kann de PDF och markéieren, beschrëften, ënnerschreiwen a späicheren. All Späicheren gëtt eng nei Versioun; Titel, Schlagwierder an aner Informatioune gesäit si net.",
+    "validity": "Gëlteg fir",
+    "unlimited": "Onbegrenzt",
+    "create": "Link erstellen",
+    "link": "Link",
+    "linkHint": "Wien dëse Link huet, kann d'Dokument opmaachen – gëff en nëmmen u(n) {{name}} weider. Du kanns en all Moment an der Dokumentusiicht zréckzéien.",
+    "copy": "Link kopéieren",
+    "copied": "Link kopéiert",
+    "listTitle": "Extern gedeelt",
+    "expired": "ofgelaf",
+    "validUntil": "gëlteg bis {{date}}",
+    "noExpiry": "onbegrenzt gëlteg",
+    "lastOpened": "fir d'lescht opgemaach {{when}} (Oprufen: {{views}})",
+    "neverOpened": "nach net opgemaach",
+    "revoke": "Link zréckzéien",
+    "revokeTitle": "Link fir {{name}} zréckzéien?",
+    "revokeText": "De Link funktionéiert direkt net méi. Kopien, déi d'Persoun schonn erofgelueden huet, bleiwen bei hir.",
+    "revoked": "Link zréckgezunn",
+    "page": {
+      "for": "Gedeelt mat {{name}}",
+      "invalid": "Dëse Link ass ongëlteg oder ofgelaf, oder d'Dokument gouf geläscht. Wann dech w.e.g. un d'Persoun, déi en dir ginn huet."
     }
   }
 }

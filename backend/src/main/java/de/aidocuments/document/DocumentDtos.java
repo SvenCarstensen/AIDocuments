@@ -30,6 +30,8 @@ public final class DocumentDtos {
             long sizeBytes,
             boolean ocrUsed,
             boolean hasThumbnail,
+            /* wann das Vorschaubild zuletzt geschrieben wurde – die Oberfläche hängt es an die Bildadresse */
+            Instant thumbnailAt,
             DocumentSource source,
             String mailSubject,
             String mailFrom,
@@ -64,6 +66,7 @@ public final class DocumentDtos {
                     d.getSizeBytes(),
                     d.isOcrUsed(),
                     d.isHasThumbnail(),
+                    d.getThumbnailAt(),
                     d.getSource(),
                     d.getMailSubject(),
                     d.getMailFrom(),

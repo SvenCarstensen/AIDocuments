@@ -72,7 +72,9 @@ public class DocumentProcessor {
         executor.execute(() -> {
             try {
                 process(documentId);
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | OutOfMemoryError | StackOverflowError e) {
+                // auch Speicher- und Rekursionsfehler: ein präpariertes PDF soll als „fehlgeschlagen“ enden, nicht
+                // ewig „in Arbeit“ stehen bleiben
                 log.error("Verarbeitung von Dokument {} abgebrochen", documentId, e);
                 finish(documentId, null, null, Msg.of("error.unexpected", Msg.detailOf(e)), null);
             }
@@ -108,6 +110,7 @@ public class DocumentProcessor {
         // Zwischenstand sichern: Vorschaubild und Volltextsuche stehen schon bereit, während die KI noch liest.
         doc.setPageCount(pdf.pageCount());
         doc.setHasThumbnail(pdf.thumbnailCreated());
+        doc.setThumbnailAt(pdf.thumbnailCreated() ? storage.thumbnailWrittenAt(doc.getId()) : null);
         documents.save(doc);
         texts.save(new DocumentText(documentId, pdf.text()));
         reindex(doc);
@@ -143,7 +146,7 @@ public class DocumentProcessor {
         aiExecutor.execute(() -> {
             try {
                 analyze(documentId, pdf, quickText);
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | OutOfMemoryError | StackOverflowError e) {
                 log.error("KI-Analyse von Dokument {} abgebrochen", documentId, e);
                 finish(documentId, pdf, null, Msg.of("error.unexpected", Msg.detailOf(e)), quickText);
             }
@@ -182,6 +185,7 @@ public class DocumentProcessor {
         }
         doc.setPageCount(pdf.pageCount());
         doc.setHasThumbnail(pdf.thumbnailCreated());
+        doc.setThumbnailAt(pdf.thumbnailCreated() ? storage.thumbnailWrittenAt(doc.getId()) : null);
         if (doc.getTitle() == null) {
             doc.setTitle(titleFromFilename(doc.getOriginalFilename()));
         }
@@ -193,8 +197,9 @@ public class DocumentProcessor {
         String text = transcribed ? ocr.text().strip() : pdf.text();
         texts.save(new DocumentText(documentId, text));
         duplicates.check(doc, text);
-        documents.save(doc);
+        // erst in den Suchindex, dann der Endstand in die Datenbank: Wer „fertig“ sieht, findet es auch schon
         reindex(doc);
+        documents.save(doc);
     }
 
     /**
@@ -212,6 +217,7 @@ public class DocumentProcessor {
         if (pdf != null) {
             doc.setPageCount(pdf.pageCount());
             doc.setHasThumbnail(pdf.thumbnailCreated());
+            doc.setThumbnailAt(pdf.thumbnailCreated() ? storage.thumbnailWrittenAt(doc.getId()) : null);
             // Text der eingebauten Texterkennung bleibt, auch wenn die KI danach scheitert
             fullText = ocrText ? ocr.text().strip() : pdf.text();
             doc.setOcrUsed(ocrText);
@@ -248,8 +254,9 @@ public class DocumentProcessor {
             texts.save(new DocumentText(documentId, fullText));
             duplicates.check(doc, fullText);
         }
-        documents.save(doc);
+        // erst in den Suchindex, dann der Endstand in die Datenbank: Wer „fertig“ sieht, findet es auch schon
         reindex(doc);
+        documents.save(doc);
     }
 
     public void reindex(Document doc) {

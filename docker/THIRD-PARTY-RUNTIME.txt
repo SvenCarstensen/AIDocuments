@@ -1,0 +1,21 @@
+The AIDocuments Docker image is based on the official Eclipse Temurin image (eclipse-temurin:21-jre), which
+consists of a current Ubuntu LTS release (see /etc/os-release in the image) and the Eclipse Temurin Java
+runtime. On top of it, the image installs the following packages from the Ubuntu archive, together with the
+libraries they depend on:
+
+  Eclipse Temurin 21 (OpenJDK) – GPL-2.0 with Classpath Exception – https://adoptium.net
+      License texts in the image: /opt/java/openjdk/legal
+  Tesseract OCR – Apache-2.0 – https://github.com/tesseract-ocr/tesseract
+  Tesseract language data (tesseract-ocr-*) – Apache-2.0 – https://github.com/tesseract-ocr/tessdata_fast
+  Leptonica – BSD-2-Clause – http://leptonica.org
+  gosu – Apache-2.0 – https://github.com/tianon/gosu
+  fontconfig, FreeType, DejaVu fonts – MIT-style, FreeType License, Bitstream Vera License
+
+Ubuntu and its packages are distributed under various open-source licenses, among them the GNU General Public
+License (GPL) and the GNU Lesser General Public License (LGPL). The image contains them unmodified; AIDocuments
+does not link to them except through the operating system.
+
+  - The exact list of installed packages and versions: /app/THIRD-PARTY-OS-PACKAGES.txt in the image
+  - The copyright and license text of every package: /usr/share/doc/<package>/copyright in the image
+  - The corresponding source code of every package is available from the Ubuntu archive:
+    https://packages.ubuntu.com and https://launchpad.net/ubuntu (for example with "apt-get source <package>")

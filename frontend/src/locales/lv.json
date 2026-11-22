@@ -50,6 +50,8 @@
     "setup": {
       "title": "AIDocuments iestatīšana",
       "subtitle": "Vispirms izveidojiet administratora kontu. Citus lietotājus vēlāk varēsiet pievienot iestatījumos.",
+      "code": "Iestatīšanas kods",
+      "codeHint": "Tiek parādīts servera žurnālā startēšanas laikā (Docker: docker compose logs).",
       "adminAccount": "Administratora konts",
       "repeatPassword": "Atkārtojiet paroli",
       "submit": "Izveidot kontu un sākt",
@@ -58,6 +60,19 @@
         "ai": "MI veido kopsavilkumus un piešķir atslēgvārdus",
         "search": "Pilnteksta meklēšana dokumentu saturā"
       }
+    },
+    "twoFactor": {
+      "title": "Apstiprināt pieteikšanos",
+      "subtitle": "Ievadi 6 ciparu kodu no autentifikācijas lietotnes.",
+      "code": "Kods",
+      "codeHint": "Nav piekļuves lietotnei? Tā vietā ievadi vienu no saviem atkopšanas kodiem.",
+      "submit": "Apstiprināt",
+      "back": "Atpakaļ uz pieteikšanos"
+    },
+    "twoFactorRequired": {
+      "title": "Iestatīt divu faktoru autentifikāciju",
+      "subtitle": "Administratoriem divu faktoru autentifikācija ir obligāta. Iestati to tagad, lai turpinātu.",
+      "intro": "Tev būs vajadzīga autentifikācijas lietotne tālrunī (piem., Google Authenticator, Microsoft Authenticator, 1Password vai Aegis)."
     }
   },
   "shell": {
@@ -67,8 +82,8 @@
       "dark": "Tumšais motīvs"
     },
     "search": {
-      "placeholder": "Meklēt dokumentus, atslēgvārdus, saturu…",
-      "placeholderAi": "Meklē dokumentus saviem vārdiem – piem., “Kia rēķini no 2024. gada”",
+      "placeholder": "Atslēgvārdu meklēšana: dokumenti, birkas, saturs …",
+      "placeholderAi": "MI meklēšana: jautā saviem vārdiem – piem., “Kia rēķini no 2024. gada”",
       "labelAi": "MI",
       "label": "Meklēt dokumentus",
       "clear": "Notīrīt meklēšanu",
@@ -79,6 +94,7 @@
       "aiActive": "MI aktīvs",
       "aiNotConfigured": "MI nav iestatīts",
       "changePassword": "Mainīt paroli",
+      "licenses": "Trešo pušu licences",
       "logout": "Izrakstīties"
     },
     "passwordDialog": {
@@ -261,8 +277,8 @@
     },
     "delete": {
       "title": "Vai dzēst dokumentu?",
-      "text": "„{{title}}” tiks izdzēsts kopā ar PDF failu, pilno tekstu un atslēgvārdiem. Šo darbību nevar atsaukt.",
-      "confirm": "Dzēst neatgriezeniski"
+      "text": "“{{title}}” tiks dzēsts. Vēsturē to var atsaukt 30 dienu laikā; pēc tam tas tiek neatgriezeniski noņemts.",
+      "confirm": "Dzēst"
     },
     "chat": {
       "intro": "Uzdod jautājumu par šo dokumentu – MI atbild, balstoties uz tā saturu.",
@@ -275,6 +291,25 @@
         "summary": "Par ko ir šis dokuments?",
         "deadlines": "Vai ir termiņi vai datumi?",
         "amounts": "Kādas summas ir minētas?"
+      }
+    },
+    "versions": {
+      "title": "Versijas",
+      "intro": "Katra PDF izmaiņa izveido jaunu versiju. Vecākās versijas tiek saglabātas, un tās var skatīt, lejupielādēt vai atjaunot.",
+      "current": "pašreizējā",
+      "view": "Skatīt versiju {{number}}",
+      "download": "Lejupielādēt versiju {{number}}",
+      "restore": "Atjaunot versiju {{number}}",
+      "restoreTitle": "Atjaunot versiju {{number}}?",
+      "restoreText": "Šī versija kļūst par pašreizējo. Esošā versija tiek saglabāta, un soli var atsaukt vēsturē.",
+      "restoreConfirm": "Atjaunot",
+      "restored": "Versija {{number}} atjaunota",
+      "kinds": {
+        "IMPORTED": "Importēts",
+        "EDITED": "Rediģēts",
+        "ORIGINAL_RESTORED": "Oriģināls atjaunots",
+        "VERSION_RESTORED": "Versija {{from}} atjaunota",
+        "UNDONE": "Izmaiņa atsaukta"
       }
     }
   },
@@ -316,8 +351,23 @@
         "since": "Tikai e-pasta ziņojumi no",
         "sinceHint": "Neobligāti – vecāki e-pasta ziņojumi tiek izlaisti",
         "enabled": "Pārbaudīt automātiski",
-        "enabledHint": "Pastkastē ar iestatīto intervālu tiek meklēti jauni PDF faili."
-      }
+        "enabledHint": "Pastkastē ar iestatīto intervālu tiek meklēti jauni PDF faili.",
+        "filter": {
+          "title": "Filtrs",
+          "intro": "Tiek apstrādāti tikai e-pasta ziņojumi, kas atbilst visiem nosacījumiem. Viens termins katrā rindā; lielajiem un mazajiem burtiem nav nozīmes, pietiek ar daļu teksta. Tukši lauki neko neierobežo.",
+          "subjectIncludes": "Tēma satur kādu no šiem terminiem",
+          "subjectExcludes": "Tēma nesatur nevienu no šiem terminiem",
+          "senderIncludes": "Sūtītājs satur kādu no šiem terminiem",
+          "senderExcludes": "Sūtītājs nesatur nevienu no šiem terminiem",
+          "senderHint": "Vārds vai adrese, piem., “@example.com”",
+          "newOnly": "Filtrs attiecas uz e-pasta ziņojumiem, kas saņemti pēc pēdējās pārbaudes; jau pārbaudītie ziņojumi netiek apstrādāti atkārtoti."
+        },
+        "interval": "Pārbaudes intervāls minūtēs",
+        "intervalHint": "Atstājiet tukšu, lai izmantotu vispārējo intervālu (pašlaik {{interval}})."
+      },
+      "filterActive": "Filtrs aktīvs",
+      "schedule": "Pārbaude ik pēc {{interval}} · nākamā: {{when}}",
+      "scheduleSoon": "Pārbaude ik pēc {{interval}} · nākamā drīz"
     },
     "import": {
       "title": "Grafiks un importa mape",
@@ -326,7 +376,7 @@
       "saved": "Iestatījumi saglabāti",
       "interval": {
         "title": "Pārbaudes intervāls",
-        "text": "Tik bieži lietotne pārbauda, vai pastkastēs un importa mapē ir jauni PDF faili.",
+        "text": "Cik bieži lietotne pārbauda ievades mapi un visas pastkastes bez sava intervāla, meklējot jaunus PDF.",
         "label": "Ik pēc … minūtēm",
         "nextRun": "Nākamā automātiskā pārbaude {{when}}."
       },
@@ -461,7 +511,104 @@
         "active": "Konts ir aktīvs",
         "activeHint": "Ar atspējotiem kontiem nevar pierakstīties; aktīvās sesijas tiek nekavējoties izbeigtas.",
         "create": "Izveidot"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Atiestatīt divu faktoru autentifikāciju",
+      "resetTwoFactorHint": "Šim kontam ir ieslēgta divu faktoru autentifikācija.",
+      "resetTwoFactorText": "{{name}} pēc tam piesakās tikai ar paroli un var no jauna iestatīt divu faktoru autentifikāciju – piemēram, pēc tālruņa pazaudēšanas.",
+      "resetTwoFactorConfirm": "Atiestatīt",
+      "twoFactorReset": "Divu faktoru autentifikācija atiestatīta"
+    }
+  },
+  "history": {
+    "nav": "Vēsture",
+    "title": "Vēsture",
+    "subtitle": "Kas noticis ar taviem dokumentiem – jaunākie ieraksti vispirms.",
+    "empty": "Ierakstu vēl nav.",
+    "actions": {
+      "IMPORTED": "Importēts",
+      "EDITED": "Rediģēts",
+      "DELETED": "Dzēsts"
+    },
+    "changes": {
+      "DETAILS": "Dati mainīti",
+      "FILE": "PDF mainīts",
+      "ORIGINAL_RESTORED": "Oriģināls atjaunots",
+      "DUPLICATE": "kā dublikāts",
+      "VERSION_RESTORED": "Versija atjaunota"
+    },
+    "by": "lietotājs {{user}}",
+    "automatic": "automātiski",
+    "more": "Ielādēt vairāk",
+    "undo": "Atsaukt",
+    "undone": "Atsaukts"
+  },
+  "duplicates": {
+    "title": "Iespējams dublikāts",
+    "subtitle": "Abu dokumentu saturs sakrīt. Paturi vienu un izdzēs otru – vai atzīmē, ka tie nav dublikāti.",
+    "older": "Saņemts agrāk",
+    "newer": "Saņemts vēlāk",
+    "deleteThis": "Dzēst šo",
+    "compare": "Salīdzināt blakus"
+  },
+  "twoFactor": {
+    "title": "Divu faktoru autentifikācija",
+    "on": "Ieslēgta",
+    "off": "Izslēgta",
+    "intro": "Aizsargā savu kontu ar otru faktoru: piesakoties tu ievadīsi arī kodu no autentifikācijas lietotnes tālrunī (piem., Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Iestatīt",
+    "scan": "Noskenē QR kodu ar autentifikācijas lietotni vai ievadi atslēgu manuāli. Pēc tam ievadi lietotnes kodu un savu paroli.",
+    "qrAlt": "QR kods autentifikācijas lietotnei",
+    "secret": "Atslēga",
+    "confirmCode": "Kods no lietotnes",
+    "activate": "Aktivizēt",
+    "recoveryTitle": "Atkopšanas kodi",
+    "recoveryText": "Glabā šos atkopšanas kodus drošā vietā. Katrs darbojas vienreiz, ja nevari izmantot lietotni – piemēram, ja pazaudē tālruni. Tie tiek parādīti tikai tagad.",
+    "download": "Saglabāt kā failu",
+    "done": "Gatavs",
+    "enabled": "Divu faktoru autentifikācija ir ieslēgta",
+    "disabled": "Divu faktoru autentifikācija ir izslēgta",
+    "disableHint": "Lai to izslēgtu, ievadi pašreizējo lietotnes kodu (vai atkopšanas kodu) un savu paroli.",
+    "disable": "Izslēgt",
+    "recoveryLeft": "Neizmantotie atkopšanas kodi: {{count}}",
+    "adminCannotDisable": "Kā administrators tu nevari izslēgt divu faktoru autentifikāciju."
+  },
+  "confirmCode": {
+    "title": "Apstiprināt izmaiņas",
+    "text": "Kontu, pastkastu un iestatījumu izmaiņām vajadzīgs aktuāls kods no autentifikācijas lietotnes. Apstiprinājums ir derīgs 10 minūtes.",
+    "submit": "Apstiprināt"
+  },
+  "share": {
+    "button": "Kopīgot",
+    "title": "Kopīgot dokumentu",
+    "intro": "Izveido saiti, ar kuru persona bez konta var atvērt tieši šo dokumentu.",
+    "recipient": "Ar ko tu kopīgo?",
+    "recipientHint": "Personas vārds – lai vēlāk redzētu, kam iedevi saiti.",
+    "permission": "Vai šī persona drīkst rediģēt dokumentu?",
+    "viewOnly": "Tikai skatīt",
+    "canEdit": "Drīkst rediģēt",
+    "viewHint": "Persona var skatīt, drukāt un lejupielādēt PDF.",
+    "editHint": "Persona var arī iezīmēt, rakstīt, parakstīt un saglabāt PDF. Katra saglabāšana kļūst par jaunu versiju; nosaukums, birkas un citi dati paliek paslēpti.",
+    "validity": "Derīga",
+    "unlimited": "Bez ierobežojuma",
+    "create": "Izveidot saiti",
+    "link": "Saite",
+    "linkHint": "Ikviens, kam ir šī saite, var atvērt dokumentu – dod to tikai {{name}}. Jebkurā brīdī vari to atsaukt dokumenta skatā.",
+    "copy": "Kopēt saiti",
+    "copied": "Saite nokopēta",
+    "listTitle": "Kopīgots ārēji",
+    "expired": "beigusies",
+    "validUntil": "derīga līdz {{date}}",
+    "noExpiry": "bez termiņa",
+    "lastOpened": "pēdējoreiz atvērta {{when}} (skatījumi: {{views}})",
+    "neverOpened": "vēl nav atvērta",
+    "revoke": "Atsaukt saiti",
+    "revokeTitle": "Atsaukt saiti personai {{name}}?",
+    "revokeText": "Saite uzreiz pārstāj darboties. Kopijas, ko persona jau lejupielādējusi, paliek pie tās.",
+    "revoked": "Saite atsaukta",
+    "page": {
+      "for": "Kopīgots ar: {{name}}",
+      "invalid": "Šī saite nav derīga vai ir beigusies, vai arī dokuments ir izdzēsts. Sazinies ar personu, kas tev to iedeva."
     }
   }
 }

@@ -9,9 +9,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * Prüft im eingestellten Intervall alle aktiven Postfächer und den Eingangsordner auf neue PDFs.
- * Der Takt läuft kurz getaktet durch und vergleicht mit dem Intervall – so wirkt eine Änderung
- * in den Einstellungen sofort, ohne Neustart.
+ * Prüft den Eingangsordner im allgemeinen Intervall und jedes aktive Postfach in seinem eigenen (ohne eigenes ebenfalls
+ * im allgemeinen, siehe {@link de.aidocuments.mail.MailSchedule}) auf neue PDFs. Der Takt läuft kurz getaktet durch und
+ * vergleicht mit den Intervallen – so wirkt eine Änderung in den Einstellungen sofort, ohne Neustart.
  */
 @Component
 public class ImportScheduler {
@@ -32,16 +32,20 @@ public class ImportScheduler {
 
     @Scheduled(initialDelay = 15_000, fixedDelay = 15_000)
     void tick() {
+        try {
+            mailSync.syncDue();
+        } catch (RuntimeException e) {
+            log.error("Automatischer Postfach-Abruf fehlgeschlagen", e);
+        }
         Duration interval = settings.current().interval();
         if (lastRun != null && Duration.between(lastRun, Instant.now()).compareTo(interval) < 0) {
             return;
         }
         lastRun = Instant.now();
         try {
-            mailSync.syncAllEnabled();
             folderImport.scan();
         } catch (RuntimeException e) {
-            log.error("Automatischer Abruf fehlgeschlagen", e);
+            log.error("Automatische Prüfung des Eingangsordners fehlgeschlagen", e);
         }
     }
 

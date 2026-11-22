@@ -51,6 +51,8 @@
     "setup": {
       "title": "Konfiguracja AIDocuments",
       "subtitle": "Zacznij od utworzenia konta administratora. Kolejnych użytkowników możesz potem dodać w ustawieniach.",
+      "code": "Kod konfiguracji",
+      "codeHint": "Wyświetlany w dzienniku serwera przy uruchomieniu (Docker: docker compose logs).",
       "adminAccount": "Konto administratora",
       "repeatPassword": "Powtórz hasło",
       "submit": "Utwórz konto i zacznij",
@@ -59,6 +61,19 @@
         "ai": "AI tworzy podsumowania i nadaje tagi",
         "search": "Wyszukiwanie pełnotekstowe aż do treści dokumentu"
       }
+    },
+    "twoFactor": {
+      "title": "Potwierdź logowanie",
+      "subtitle": "Wpisz 6-cyfrowy kod z aplikacji uwierzytelniającej.",
+      "code": "Kod",
+      "codeHint": "Brak dostępu do aplikacji? Wpisz zamiast tego jeden z kodów odzyskiwania.",
+      "submit": "Potwierdź",
+      "back": "Powrót do logowania"
+    },
+    "twoFactorRequired": {
+      "title": "Skonfiguruj uwierzytelnianie dwuskładnikowe",
+      "subtitle": "Uwierzytelnianie dwuskładnikowe jest obowiązkowe dla administratorów. Skonfiguruj je teraz, aby kontynuować.",
+      "intro": "Potrzebujesz aplikacji uwierzytelniającej w telefonie (np. Google Authenticator, Microsoft Authenticator, 1Password lub Aegis)."
     }
   },
   "shell": {
@@ -68,8 +83,8 @@
       "dark": "Ciemny motyw"
     },
     "search": {
-      "placeholder": "Szukaj w dokumentach, tagach, treści …",
-      "placeholderAi": "Szukaj dokumentów własnymi słowami – np. „faktury od Kia z 2024”",
+      "placeholder": "Wyszukiwanie słów kluczowych: dokumenty, tagi, treść …",
+      "placeholderAi": "Wyszukiwanie AI: pytaj własnymi słowami – np. „faktury od Kia z 2024”",
       "labelAi": "AI",
       "label": "Szukaj dokumentów",
       "clear": "Wyczyść wyszukiwanie",
@@ -80,6 +95,7 @@
       "aiActive": "AI aktywne",
       "aiNotConfigured": "AI nie skonfigurowane",
       "changePassword": "Zmień hasło",
+      "licenses": "Licencje stron trzecich",
       "logout": "Wyloguj się"
     },
     "passwordDialog": {
@@ -270,8 +286,8 @@
     },
     "delete": {
       "title": "Usunąć dokument?",
-      "text": "Dokument „{{title}}” zostanie usunięty razem z plikiem PDF, pełnym tekstem i tagami. Tej operacji nie można cofnąć.",
-      "confirm": "Usuń na stałe"
+      "text": "„{{title}}” zostanie usunięty. W historii możesz to cofnąć przez 30 dni; potem zostanie usunięty na stałe.",
+      "confirm": "Usuń"
     },
     "chat": {
       "intro": "Zadaj pytanie o ten dokument – AI odpowie na podstawie jego treści.",
@@ -284,6 +300,25 @@
         "summary": "O czym jest ten dokument?",
         "deadlines": "Czy są jakieś terminy lub daty?",
         "amounts": "Jakie kwoty są wymienione?"
+      }
+    },
+    "versions": {
+      "title": "Wersje",
+      "intro": "Każda zmiana pliku PDF tworzy nową wersję. Starsze wersje są zachowywane i można je wyświetlić, pobrać lub przywrócić.",
+      "current": "bieżąca",
+      "view": "Wyświetl wersję {{number}}",
+      "download": "Pobierz wersję {{number}}",
+      "restore": "Przywróć wersję {{number}}",
+      "restoreTitle": "Przywrócić wersję {{number}}?",
+      "restoreText": "Ta wersja stanie się bieżącą. Obecna wersja zostanie zachowana, a krok można cofnąć w historii.",
+      "restoreConfirm": "Przywróć",
+      "restored": "Przywrócono wersję {{number}}",
+      "kinds": {
+        "IMPORTED": "Zaimportowano",
+        "EDITED": "Edytowano",
+        "ORIGINAL_RESTORED": "Przywrócono oryginał",
+        "VERSION_RESTORED": "Przywrócono wersję {{from}}",
+        "UNDONE": "Cofnięto zmianę"
       }
     }
   },
@@ -325,8 +360,23 @@
         "since": "Tylko wiadomości od",
         "sinceHint": "Opcjonalnie – starsze wiadomości są pomijane",
         "enabled": "Sprawdzaj automatycznie",
-        "enabledHint": "Skrzynka jest sprawdzana pod kątem nowych plików PDF w ustawionym odstępie czasu."
-      }
+        "enabledHint": "Skrzynka jest sprawdzana pod kątem nowych plików PDF w ustawionym odstępie czasu.",
+        "filter": {
+          "title": "Filtr",
+          "intro": "Przetwarzane są tylko wiadomości spełniające wszystkie warunki. Jedno wyrażenie w wierszu; wielkość liter nie ma znaczenia, wystarczy fragment tekstu. Puste pola niczego nie ograniczają.",
+          "subjectIncludes": "Temat zawiera jedno z tych wyrażeń",
+          "subjectExcludes": "Temat nie zawiera żadnego z tych wyrażeń",
+          "senderIncludes": "Nadawca zawiera jedno z tych wyrażeń",
+          "senderExcludes": "Nadawca nie zawiera żadnego z tych wyrażeń",
+          "senderHint": "Nazwa lub adres, np. „@example.com”",
+          "newOnly": "Filtr dotyczy wiadomości, które nadejdą po ostatnim pobraniu; już sprawdzone wiadomości nie są przetwarzane ponownie."
+        },
+        "interval": "Interwał pobierania w minutach",
+        "intervalHint": "Zostaw puste, aby użyć ogólnego interwału (obecnie {{interval}})."
+      },
+      "filterActive": "Filtr aktywny",
+      "schedule": "Pobieranie co {{interval}} · następne {{when}}",
+      "scheduleSoon": "Pobieranie co {{interval}} · następne wkrótce"
     },
     "import": {
       "title": "Harmonogram i folder importu",
@@ -335,7 +385,7 @@
       "saved": "Ustawienia zostały zapisane",
       "interval": {
         "title": "Odstęp sprawdzania",
-        "text": "Tak często aplikacja sprawdza wszystkie skrzynki pocztowe i folder importu pod kątem nowych plików PDF.",
+        "text": "Jak często aplikacja sprawdza folder wejściowy i wszystkie skrzynki bez własnego interwału w poszukiwaniu nowych plików PDF.",
         "label": "Co … minut",
         "nextRun": "Następne automatyczne sprawdzenie: {{when}}."
       },
@@ -472,7 +522,104 @@
         "active": "Konto aktywne",
         "activeHint": "Wyłączone konta nie mogą się logować; aktywne sesje kończą się natychmiast.",
         "create": "Utwórz"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Zresetuj uwierzytelnianie dwuskładnikowe",
+      "resetTwoFactorHint": "Dla tego konta uwierzytelnianie dwuskładnikowe jest włączone.",
+      "resetTwoFactorText": "{{name}} będzie się logować tylko hasłem i może ponownie skonfigurować uwierzytelnianie dwuskładnikowe – na przykład po utracie telefonu.",
+      "resetTwoFactorConfirm": "Zresetuj",
+      "twoFactorReset": "Uwierzytelnianie dwuskładnikowe zresetowane"
+    }
+  },
+  "history": {
+    "nav": "Historia",
+    "title": "Historia",
+    "subtitle": "Co się działo z twoimi dokumentami – najnowsze wpisy na górze.",
+    "empty": "Brak wpisów.",
+    "actions": {
+      "IMPORTED": "Zaimportowano",
+      "EDITED": "Edytowano",
+      "DELETED": "Usunięto"
+    },
+    "changes": {
+      "DETAILS": "Zmieniono dane",
+      "FILE": "Zmieniono PDF",
+      "ORIGINAL_RESTORED": "Przywrócono oryginał",
+      "DUPLICATE": "jako duplikat",
+      "VERSION_RESTORED": "Przywrócono wersję"
+    },
+    "by": "przez {{user}}",
+    "automatic": "automatycznie",
+    "more": "Wczytaj więcej",
+    "undo": "Cofnij",
+    "undone": "Cofnięto"
+  },
+  "duplicates": {
+    "title": "Możliwy duplikat",
+    "subtitle": "Oba dokumenty mają tę samą treść. Zachowaj jeden i usuń drugi – albo zaznacz, że to nie duplikaty.",
+    "older": "Wpłynął wcześniej",
+    "newer": "Wpłynął później",
+    "deleteThis": "Usuń ten",
+    "compare": "Porównaj obok siebie"
+  },
+  "twoFactor": {
+    "title": "Uwierzytelnianie dwuskładnikowe",
+    "on": "Włączone",
+    "off": "Wyłączone",
+    "intro": "Chroń konto drugim składnikiem: przy logowaniu wpiszesz dodatkowo kod z aplikacji uwierzytelniającej w telefonie (np. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Skonfiguruj",
+    "scan": "Zeskanuj kod QR aplikacją uwierzytelniającą lub wpisz klucz ręcznie. Następnie wpisz kod z aplikacji i swoje hasło.",
+    "qrAlt": "Kod QR dla aplikacji uwierzytelniającej",
+    "secret": "Klucz",
+    "confirmCode": "Kod z aplikacji",
+    "activate": "Aktywuj",
+    "recoveryTitle": "Kody odzyskiwania",
+    "recoveryText": "Przechowuj te kody odzyskiwania w bezpiecznym miejscu. Każdy działa raz, jeśli nie możesz użyć aplikacji – na przykład po utracie telefonu. Są wyświetlane tylko teraz.",
+    "download": "Zapisz jako plik",
+    "done": "Gotowe",
+    "enabled": "Uwierzytelnianie dwuskładnikowe jest włączone",
+    "disabled": "Uwierzytelnianie dwuskładnikowe jest wyłączone",
+    "disableHint": "Aby je wyłączyć, wpisz aktualny kod z aplikacji (lub kod odzyskiwania) i swoje hasło.",
+    "disable": "Wyłącz",
+    "recoveryLeft": "Niewykorzystane kody odzyskiwania: {{count}}",
+    "adminCannotDisable": "Jako administrator nie możesz wyłączyć uwierzytelniania dwuskładnikowego."
+  },
+  "confirmCode": {
+    "title": "Potwierdź zmianę",
+    "text": "Zmiany kont, skrzynek pocztowych i ustawień wymagają aktualnego kodu z aplikacji uwierzytelniającej. Potwierdzenie jest ważne 10 minut.",
+    "submit": "Potwierdź"
+  },
+  "share": {
+    "button": "Udostępnij",
+    "title": "Udostępnij dokument",
+    "intro": "Tworzy link, za pomocą którego osoba bez konta może otworzyć tylko ten dokument.",
+    "recipient": "Komu udostępniasz?",
+    "recipientHint": "Imię i nazwisko osoby – żeby później było widać, komu dałeś link.",
+    "permission": "Czy ta osoba może edytować dokument?",
+    "viewOnly": "Tylko podgląd",
+    "canEdit": "Może edytować",
+    "viewHint": "Osoba może wyświetlać, drukować i pobierać plik PDF.",
+    "editHint": "Osoba może też zaznaczać, pisać, podpisywać i zapisywać plik PDF. Każdy zapis tworzy nową wersję; tytuł, tagi i inne dane pozostają ukryte.",
+    "validity": "Ważny przez",
+    "unlimited": "Bez ograniczeń",
+    "create": "Utwórz link",
+    "link": "Link",
+    "linkHint": "Każdy, kto ma ten link, może otworzyć dokument – przekaż go tylko osobie {{name}}. W każdej chwili możesz go cofnąć w widoku dokumentu.",
+    "copy": "Kopiuj link",
+    "copied": "Skopiowano link",
+    "listTitle": "Udostępniono na zewnątrz",
+    "expired": "wygasł",
+    "validUntil": "ważny do {{date}}",
+    "noExpiry": "bez terminu",
+    "lastOpened": "ostatnio otwarty {{when}} (wyświetlenia: {{views}})",
+    "neverOpened": "jeszcze nie otwarty",
+    "revoke": "Cofnij link",
+    "revokeTitle": "Cofnąć link dla: {{name}}?",
+    "revokeText": "Link natychmiast przestaje działać. Kopie, które osoba już pobrała, pozostają u niej.",
+    "revoked": "Link cofnięty",
+    "page": {
+      "for": "Udostępniono dla: {{name}}",
+      "invalid": "Ten link jest nieprawidłowy lub wygasł albo dokument został usunięty. Skontaktuj się z osobą, która ci go dała."
     }
   }
 }

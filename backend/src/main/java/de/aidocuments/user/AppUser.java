@@ -1,22 +1,24 @@
 package de.aidocuments.user;
 
 import java.time.Instant;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "users")
+import java.util.ArrayList;
+import java.util.List;
+/** Ein Benutzerkonto (Tabelle users; der Benutzername ist eindeutig). */
 public class AppUser {
 
-    @Id
     private String id;
-    @Indexed(unique = true)
     private String username;
     private String passwordHash;
     private Role role;
     private boolean enabled;
     private Instant createdAt;
     private Instant lastLoginAt;
+    /** Schlüssel der Zwei-Faktor-Anmeldung, verschlüsselt; {@code null} = nicht eingerichtet. */
+    private String totpSecretEncrypted;
+    /** Zuletzt verwendetes 30-Sekunden-Intervall – ein Code gilt nur einmal. */
+    private Long totpLastStep;
+    /** SHA-256 der noch unbenutzten Wiederherstellungscodes. */
+    private List<String> recoveryCodeHashes = new ArrayList<>();
 
     protected AppUser() {
     }
@@ -28,6 +30,11 @@ public class AppUser {
         this.role = role;
         this.enabled = true;
         this.createdAt = Instant.now();
+    }
+
+    /** Für {@link AppUserRepository}: Anlagezeitpunkt aus der Tabellenzeile übernehmen. */
+    void restoreCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getId() {
@@ -72,5 +79,32 @@ public class AppUser {
 
     public void setLastLoginAt(Instant lastLoginAt) {
         this.lastLoginAt = lastLoginAt;
+    }
+
+    public boolean isTwoFactorEnabled() {
+        return totpSecretEncrypted != null;
+    }
+
+    public String getTotpSecretEncrypted() {
+        return totpSecretEncrypted;
+    }
+
+    public Long getTotpLastStep() {
+        return totpLastStep;
+    }
+
+    public void setTotpLastStep(Long totpLastStep) {
+        this.totpLastStep = totpLastStep;
+    }
+
+    public List<String> getRecoveryCodeHashes() {
+        return recoveryCodeHashes;
+    }
+
+    /** Schaltet die Zwei-Faktor-Anmeldung ein ({@code secret} verschlüsselt) oder mit {@code null} ab. */
+    public void setTwoFactor(String encryptedSecret, Long lastStep, List<String> recoveryHashes) {
+        this.totpSecretEncrypted = encryptedSecret;
+        this.totpLastStep = lastStep;
+        this.recoveryCodeHashes = recoveryHashes == null ? new ArrayList<>() : new ArrayList<>(recoveryHashes);
     }
 }

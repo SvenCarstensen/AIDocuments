@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 public final class MailDtos {
 
@@ -30,6 +31,12 @@ public final class MailDtos {
             String folder,
             LocalDate importSince,
             boolean enabled,
+            MailFilterDto filter,
+            /* eigenes Intervall oder null; effectiveIntervalMinutes ist das, was tatsächlich gilt */
+            Integer intervalMinutes,
+            int effectiveIntervalMinutes,
+            /* null = pausiert */
+            Instant nextSyncAt,
             Instant lastSyncAt,
             MailAccount.SyncStatus lastSyncStatus,
             String lastSyncMessage,
@@ -46,7 +53,37 @@ public final class MailDtos {
             @Size(max = 500, message = SIZE) String password,
             @NotBlank(message = NOT_BLANK) @Size(max = 255, message = SIZE) String folder,
             LocalDate importSince,
-            boolean enabled) {
+            boolean enabled,
+            /* null = keine Einschränkung */
+            @jakarta.validation.Valid MailFilterDto filter,
+            /* Minuten; null = das allgemeine Abrufintervall */
+            @Min(value = MailSchedule.MIN_INTERVAL_MINUTES, message = "{validation.interval.min}")
+            @Max(value = MailSchedule.MAX_INTERVAL_MINUTES, message = "{validation.interval.max}")
+            Integer intervalMinutes) {
+    }
+
+    /**
+     * Betreff- und Absenderfilter eines Postfachs, je Liste ein Begriff pro Eintrag (siehe {@link MailFilter}).
+     * Leere Listen schränken nicht ein.
+     */
+    public record MailFilterDto(
+            @Size(max = MailFilter.MAX_TERMS, message = SIZE)
+            List<@Size(max = MailFilter.MAX_TERM_LENGTH, message = SIZE) String> subjectIncludes,
+            @Size(max = MailFilter.MAX_TERMS, message = SIZE)
+            List<@Size(max = MailFilter.MAX_TERM_LENGTH, message = SIZE) String> subjectExcludes,
+            @Size(max = MailFilter.MAX_TERMS, message = SIZE)
+            List<@Size(max = MailFilter.MAX_TERM_LENGTH, message = SIZE) String> senderIncludes,
+            @Size(max = MailFilter.MAX_TERMS, message = SIZE)
+            List<@Size(max = MailFilter.MAX_TERM_LENGTH, message = SIZE) String> senderExcludes) {
+
+        static MailFilterDto of(MailFilter filter) {
+            return new MailFilterDto(filter.subjectIncludes(), filter.subjectExcludes(), filter.senderIncludes(),
+                    filter.senderExcludes());
+        }
+
+        MailFilter toFilter() {
+            return new MailFilter(subjectIncludes, subjectExcludes, senderIncludes, senderExcludes);
+        }
     }
 
     /** Verbindungstest; {@code accountId} erlaubt den Test mit dem bereits gespeicherten Passwort. */

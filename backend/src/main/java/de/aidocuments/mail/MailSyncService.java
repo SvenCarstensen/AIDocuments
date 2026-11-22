@@ -53,6 +53,14 @@ public class MailSyncService {
     private static final Logger log = LoggerFactory.getLogger(MailSyncService.class);
     private static final int FETCH_BATCH = 200;
     private static final int MAX_NESTING = 10;
+    /** Höchstens so viele PDF-Anhänge je Mail. */
+    static final int MAX_ATTACHMENTS = 25;
+    /**
+     * Spielraum für unterschiedlich gehende Uhren von Mailserver und Anwendung: E-Mails, die kurz vor dem letzten
+     * Abruf empfangen wurden, werden noch einmal angesehen (schon übernommene erkennt der UID-Stand bzw. die
+     * Duplikaterkennung).
+     */
+    public static final java.time.Duration CLOCK_TOLERANCE = java.time.Duration.ofMinutes(5);
 
     /** Ergebnis des Verbindungstests; die Meldung übersetzt der Controller in die Sprache der Anfrage. */
     public record TestResult(boolean ok, Msg message) {
@@ -61,17 +69,23 @@ public class MailSyncService {
     private final MailAccountRepository accounts;
     private final MailAccountService accountService;
     private final DocumentService documentService;
+    private final MailSchedule schedule;
     private final Set<String> running = ConcurrentHashMap.newKeySet();
 
     public MailSyncService(MailAccountRepository accounts, MailAccountService accountService,
-                           DocumentService documentService) {
+                           DocumentService documentService, MailSchedule schedule) {
         this.accounts = accounts;
         this.accountService = accountService;
         this.documentService = documentService;
+        this.schedule = schedule;
     }
 
-    public void syncAllEnabled() {
-        accounts.findByEnabledTrue().forEach(account -> sync(account.getId()));
+    /** Ruft nacheinander alle aktiven Postfächer ab, deren Intervall seit dem letzten Abruf verstrichen ist. */
+    public void syncDue() {
+        Instant now = Instant.now();
+        accounts.findByEnabledTrue().stream()
+                .filter(account -> schedule.isDue(account, now))
+                .forEach(account -> sync(account.getId()));
     }
 
     public boolean isRunning(String accountId) {
@@ -89,8 +103,13 @@ public class MailSyncService {
                 return;
             }
             accountService.markRunning(accountId);
+            Instant startedAt = Instant.now();
+            // auch ein von Hand gestarteter Abruf beginnt das Intervall neu
+            schedule.started(accountId, startedAt);
             try {
                 Counters counters = fetch(account);
+                // erst nach vollständigem Erfolg weiterrücken – sonst gingen E-Mails eines abgebrochenen Abrufs verloren
+                accountService.saveCheckedUntil(accountId, startedAt);
                 accountService.markFinished(accountId, MailAccount.SyncStatus.OK, counters.summary());
                 if (counters.imported > 0) {
                     log.info("Postfach {}: {} neue E-Mails geprüft, {} PDFs übernommen, {} bereits vorhanden, "
@@ -154,6 +173,8 @@ public class MailSyncService {
                 structure.add(FetchProfile.Item.CONTENT_INFO);
                 Instant importSince = account.getImportSince() == null ? null
                         : account.getImportSince().atStartOfDay(ZoneId.systemDefault()).toInstant();
+                Instant receivedAfter = account.getCheckedUntil() == null ? null
+                        : account.getCheckedUntil().minus(CLOCK_TOLERANCE);
 
                 for (int start = 0; start < fresh.size(); start += FETCH_BATCH) {
                     List<Message> batch = fresh.subList(start, Math.min(fresh.size(), start + FETCH_BATCH));
@@ -161,9 +182,11 @@ public class MailSyncService {
                     for (Message message : batch) {
                         long uid = uidFolder.getUID(message);
                         try {
-                            importMessage(account, message, importSince, counters);
-                        } catch (FolderClosedException | StoreClosedException e) {
-                            throw e; // Verbindung weg: abbrechen, beim nächsten Lauf hier weitermachen
+                            importMessage(account, message, importSince, receivedAfter, counters);
+                        } catch (FolderClosedException | StoreClosedException
+                                 | de.aidocuments.document.FileStorage.StorageFullException e) {
+                            // Verbindung weg oder Platte voll: abbrechen, beim nächsten Lauf hier weitermachen
+                            throw e;
                         } catch (MessagingException | IOException | RuntimeException e) {
                             counters.unreadable++;
                             log.warn("E-Mail UID {} in {} konnte nicht gelesen werden: {}", uid,
@@ -184,12 +207,24 @@ public class MailSyncService {
         return counters;
     }
 
-    private void importMessage(MailAccount account, Message message, Instant importSince, Counters counters)
-            throws MessagingException, IOException {
-        counters.checked++;
+    /**
+     * @param receivedAfter E-Mails, die davor empfangen wurden, sind schon bei einem früheren Abruf geprüft worden
+     *                      und werden übergangen, ohne mitgezählt zu werden; {@code null} = noch nie abgerufen
+     */
+    private void importMessage(MailAccount account, Message message, Instant importSince, Instant receivedAfter,
+                               Counters counters) throws MessagingException, IOException {
         Date received = message.getReceivedDate() != null ? message.getReceivedDate() : message.getSentDate();
         Instant receivedAt = received != null ? received.toInstant() : null;
+        if (receivedAfter != null && receivedAt != null && receivedAt.isBefore(receivedAfter)) {
+            return;
+        }
+        counters.checked++;
         if (importSince != null && receivedAt != null && receivedAt.isBefore(importSince)) {
+            return;
+        }
+        // erst Betreff und Absender prüfen (stehen schon im abgerufenen Umschlag), dann die Anhänge laden
+        if (!account.getFilter().matches(message.getSubject(), senders(message))) {
+            counters.filtered++;
             return;
         }
         List<Part> pdfParts = new ArrayList<>();
@@ -199,6 +234,12 @@ public class MailSyncService {
         }
         MailOrigin origin = new MailOrigin(account.getId(), clip(message.getSubject(), 1000),
                 clip(sender(message), 500), receivedAt);
+        if (pdfParts.size() > MAX_ATTACHMENTS) {
+            // Schutz vor Mails mit Hunderten Anhängen (jeder kostet Speicherplatz und eine KI-Analyse)
+            log.warn("Mail mit {} PDF-Anhängen – nur die ersten {} werden übernommen", pdfParts.size(), MAX_ATTACHMENTS);
+            counters.rejected += pdfParts.size() - MAX_ATTACHMENTS;
+            pdfParts = pdfParts.subList(0, MAX_ATTACHMENTS);
+        }
         for (Part part : pdfParts) {
             try (InputStream in = part.getInputStream()) {
                 Outcome outcome = documentService.ingest(in, filename(part), DocumentSource.MAIL, origin).outcome();
@@ -254,6 +295,19 @@ public class MailSyncService {
         } catch (UnsupportedEncodingException e) {
             return headerValue;
         }
+    }
+
+    /** Alle Absender als „Name &lt;Adresse&gt;“ – für den Absenderfilter. */
+    private static List<String> senders(Message message) throws MessagingException {
+        Address[] from = message.getFrom();
+        if (from == null) {
+            return List.of();
+        }
+        List<String> result = new ArrayList<>();
+        for (Address address : from) {
+            result.add(address instanceof InternetAddress internet ? internet.toUnicodeString() : address.toString());
+        }
+        return result;
     }
 
     private static String sender(Message message) throws MessagingException {
@@ -346,6 +400,7 @@ public class MailSyncService {
         int duplicates;
         int rejected;
         int unreadable;
+        int filtered;
 
         /**
          * Das Ergebnis als Folge von Sätzen der Form „Bezeichnung: Anzahl.“ – so stimmt es in jeder Sprache
@@ -357,6 +412,9 @@ public class MailSyncService {
             }
             List<Msg> sentences = new ArrayList<>();
             sentences.add(Msg.of("mailbox.sync.checked", checked));
+            if (filtered > 0) {
+                sentences.add(Msg.of("mailbox.sync.filtered", filtered));
+            }
             sentences.add(Msg.of("mailbox.sync.imported", imported));
             if (duplicates > 0) {
                 sentences.add(Msg.of("mailbox.sync.duplicates", duplicates));

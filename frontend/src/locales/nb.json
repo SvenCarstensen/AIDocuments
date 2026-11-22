@@ -49,6 +49,8 @@
     "setup": {
       "title": "Sett opp AIDocuments",
       "subtitle": "Start med å opprette administratorkontoen. Etterpå kan du legge til flere brukere i innstillingene.",
+      "code": "Oppsettskode",
+      "codeHint": "Vises i serverloggen ved oppstart (Docker: docker compose logs).",
       "adminAccount": "Administratorkonto",
       "repeatPassword": "Gjenta passord",
       "submit": "Opprett konto og kom i gang",
@@ -57,6 +59,19 @@
         "ai": "KI lager sammendrag og setter stikkord",
         "search": "Fulltekstsøk helt inn i dokumentet"
       }
+    },
+    "twoFactor": {
+      "title": "Bekreft pålogging",
+      "subtitle": "Skriv inn den 6-sifrede koden fra autentiseringsappen din.",
+      "code": "Kode",
+      "codeHint": "Ingen tilgang til appen? Skriv i stedet inn en av gjenopprettingskodene dine.",
+      "submit": "Bekreft",
+      "back": "Tilbake til pålogging"
+    },
+    "twoFactorRequired": {
+      "title": "Sett opp tofaktorautentisering",
+      "subtitle": "Tofaktorautentisering er obligatorisk for administratorer. Sett den opp nå for å fortsette.",
+      "intro": "Du trenger en autentiseringsapp på telefonen (f.eks. Google Authenticator, Microsoft Authenticator, 1Password eller Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Mørkt tema"
     },
     "search": {
-      "placeholder": "Søk i dokumenter, stikkord, innhold …",
-      "placeholderAi": "Søk etter dokumenter med egne ord – f.eks. «fakturaer fra Kia fra 2024»",
+      "placeholder": "Søk med stikkord: dokumenter, emneord, innhold …",
+      "placeholderAi": "KI-søk: spør med egne ord – f.eks. «fakturaer fra Kia fra 2024»",
       "labelAi": "KI",
       "label": "Søk i dokumenter",
       "clear": "Tøm søket",
@@ -78,6 +93,7 @@
       "aiActive": "KI aktiv",
       "aiNotConfigured": "KI ikke satt opp",
       "changePassword": "Endre passord",
+      "licenses": "Tredjepartslisenser",
       "logout": "Logg ut"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Slette dokumentet?",
-      "text": "«{{title}}» slettes sammen med PDF-filen, fullteksten og stikkordene. Dette kan ikke angres.",
-      "confirm": "Slett permanent"
+      "text": "«{{title}}» blir slettet. I historikken kan du angre dette i 30 dager; deretter fjernes det for godt.",
+      "confirm": "Slett"
     },
     "chat": {
       "intro": "Still et spørsmål om dette dokumentet – KI svarer ut fra innholdet.",
@@ -266,6 +282,25 @@
         "summary": "Hva handler dette dokumentet om?",
         "deadlines": "Er det frister eller datoer?",
         "amounts": "Hvilke beløp nevnes?"
+      }
+    },
+    "versions": {
+      "title": "Versjoner",
+      "intro": "Hver endring av PDF-en gir en ny versjon. Eldre versjoner beholdes og kan vises, lastes ned eller gjenopprettes.",
+      "current": "gjeldende",
+      "view": "Vis versjon {{number}}",
+      "download": "Last ned versjon {{number}}",
+      "restore": "Gjenopprett versjon {{number}}",
+      "restoreTitle": "Gjenopprette versjon {{number}}?",
+      "restoreText": "Versjonen blir den gjeldende. Den nåværende versjonen beholdes, og trinnet kan angres i historikken.",
+      "restoreConfirm": "Gjenopprett",
+      "restored": "Versjon {{number}} gjenopprettet",
+      "kinds": {
+        "IMPORTED": "Importert",
+        "EDITED": "Redigert",
+        "ORIGINAL_RESTORED": "Original gjenopprettet",
+        "VERSION_RESTORED": "Versjon {{from}} gjenopprettet",
+        "UNDONE": "Endring angret"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Bare e-post fra og med",
         "sinceHint": "Valgfritt – eldre e-post hoppes over",
         "enabled": "Sjekk automatisk",
-        "enabledHint": "Postkassen sjekkes for nye PDF-er med det innstilte intervallet."
-      }
+        "enabledHint": "Postkassen sjekkes for nye PDF-er med det innstilte intervallet.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Bare e-poster som oppfyller alle betingelsene, blir behandlet. Ett ord per linje; store og små bokstaver spiller ingen rolle, og en del av teksten er nok. Tomme felt begrenser ingenting.",
+          "subjectIncludes": "Emnet inneholder ett av disse ordene",
+          "subjectExcludes": "Emnet inneholder ingen av disse ordene",
+          "senderIncludes": "Avsenderen inneholder ett av disse ordene",
+          "senderExcludes": "Avsenderen inneholder ingen av disse ordene",
+          "senderHint": "Navn eller adresse, f.eks. «@example.com»",
+          "newOnly": "Filteret gjelder for e-post som kommer inn etter siste henting; e-post som allerede er kontrollert, behandles ikke på nytt."
+        },
+        "interval": "Henteintervall i minutter",
+        "intervalHint": "La feltet stå tomt for å bruke det generelle intervallet (nå {{interval}})."
+      },
+      "filterActive": "Filter aktivt",
+      "schedule": "Hentes hvert {{interval}} · neste {{when}}",
+      "scheduleSoon": "Hentes hvert {{interval}} · neste om litt"
     },
     "import": {
       "title": "Tidsplan & importmappe",
@@ -317,7 +367,7 @@
       "saved": "Innstillingene er lagret",
       "interval": {
         "title": "Sjekkintervall",
-        "text": "Så ofte sjekker programmet alle postkasser og importmappen for nye PDF-er.",
+        "text": "Så ofte sjekker programmet inngangsmappen og alle postkasser uten eget intervall for nye PDF-er.",
         "label": "Med … minutters mellomrom",
         "nextRun": "Neste automatiske sjekk {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Konto aktiv",
         "activeHint": "Deaktiverte kontoer kan ikke logge inn; aktive økter avsluttes umiddelbart.",
         "create": "Opprett"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Tilbakestill tofaktorautentisering",
+      "resetTwoFactorHint": "Tofaktorautentisering er på for denne kontoen.",
+      "resetTwoFactorText": "{{name}} logger deretter inn bare med passordet og kan sette opp tofaktorautentisering på nytt – for eksempel etter å ha mistet telefonen.",
+      "resetTwoFactorConfirm": "Tilbakestill",
+      "twoFactorReset": "Tofaktorautentisering tilbakestilt"
+    }
+  },
+  "history": {
+    "nav": "Historikk",
+    "title": "Historikk",
+    "subtitle": "Hva som har skjedd med dokumentene dine – nyeste oppføringer først.",
+    "empty": "Ingen oppføringer ennå.",
+    "actions": {
+      "IMPORTED": "Importert",
+      "EDITED": "Redigert",
+      "DELETED": "Slettet"
+    },
+    "changes": {
+      "DETAILS": "Opplysninger endret",
+      "FILE": "PDF endret",
+      "ORIGINAL_RESTORED": "Original gjenopprettet",
+      "DUPLICATE": "som duplikat",
+      "VERSION_RESTORED": "Versjon gjenopprettet"
+    },
+    "by": "av {{user}}",
+    "automatic": "automatisk",
+    "more": "Last inn flere",
+    "undo": "Angre",
+    "undone": "Angret"
+  },
+  "duplicates": {
+    "title": "Mulig duplikat",
+    "subtitle": "De to dokumentene har samme innhold. Behold det ene og slett det andre – eller noter at de ikke er duplikater.",
+    "older": "Kom tidligere",
+    "newer": "Kom senere",
+    "deleteThis": "Slett dette",
+    "compare": "Sammenlign side om side"
+  },
+  "twoFactor": {
+    "title": "Tofaktorautentisering",
+    "on": "På",
+    "off": "Av",
+    "intro": "Beskytt kontoen din med en ekstra faktor: ved pålogging skriver du da også inn en kode fra en autentiseringsapp på telefonen (f.eks. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Sett opp",
+    "scan": "Skann QR-koden med autentiseringsappen eller skriv inn nøkkelen manuelt. Skriv deretter inn koden fra appen og passordet ditt.",
+    "qrAlt": "QR-kode for autentiseringsappen",
+    "secret": "Nøkkel",
+    "confirmCode": "Kode fra appen",
+    "activate": "Aktiver",
+    "recoveryTitle": "Gjenopprettingskoder",
+    "recoveryText": "Oppbevar disse gjenopprettingskodene på et trygt sted. Hver kode virker én gang hvis du ikke kan bruke appen – for eksempel hvis du mister telefonen. De vises bare nå.",
+    "download": "Lagre som fil",
+    "done": "Ferdig",
+    "enabled": "Tofaktorautentisering er på",
+    "disabled": "Tofaktorautentisering er av",
+    "disableHint": "For å slå den av skriver du inn en gjeldende kode fra appen (eller en gjenopprettingskode) og passordet ditt.",
+    "disable": "Slå av",
+    "recoveryLeft": "Ubrukte gjenopprettingskoder: {{count}}",
+    "adminCannotDisable": "Som administrator kan du ikke slå av tofaktorautentisering."
+  },
+  "confirmCode": {
+    "title": "Bekreft endring",
+    "text": "Endringer i kontoer, postbokser og innstillinger krever en gjeldende kode fra autentiseringsappen din. Bekreftelsen gjelder i 10 minutter.",
+    "submit": "Bekreft"
+  },
+  "share": {
+    "button": "Del",
+    "title": "Del dokument",
+    "intro": "Oppretter en lenke som lar en person uten konto åpne akkurat dette dokumentet.",
+    "recipient": "Hvem deler du med?",
+    "recipientHint": "Navnet på personen – så du senere ser hvem du ga lenken til.",
+    "permission": "Får personen redigere dokumentet?",
+    "viewOnly": "Bare se",
+    "canEdit": "Får redigere",
+    "viewHint": "Personen kan se, skrive ut og laste ned PDF-en.",
+    "editHint": "Personen kan også markere, skrive i, signere og lagre PDF-en. Hver lagring blir en ny versjon; tittel, etiketter og andre opplysninger forblir skjult.",
+    "validity": "Gyldig i",
+    "unlimited": "Ubegrenset",
+    "create": "Opprett lenke",
+    "link": "Lenke",
+    "linkHint": "Alle som har denne lenken, kan åpne dokumentet – gi den bare til {{name}}. Du kan når som helst trekke den tilbake i dokumentvisningen.",
+    "copy": "Kopier lenke",
+    "copied": "Lenken er kopiert",
+    "listTitle": "Delt eksternt",
+    "expired": "utløpt",
+    "validUntil": "gyldig til {{date}}",
+    "noExpiry": "uten utløp",
+    "lastOpened": "sist åpnet {{when}} (visninger: {{views}})",
+    "neverOpened": "ikke åpnet ennå",
+    "revoke": "Trekk tilbake lenke",
+    "revokeTitle": "Trekke tilbake lenken for {{name}}?",
+    "revokeText": "Lenken slutter å virke med en gang. Kopier som personen allerede har lastet ned, blir hos personen.",
+    "revoked": "Lenken er trukket tilbake",
+    "page": {
+      "for": "Delt med {{name}}",
+      "invalid": "Denne lenken er ugyldig eller utløpt, eller dokumentet er slettet. Ta kontakt med personen som ga deg den."
     }
   }
 }

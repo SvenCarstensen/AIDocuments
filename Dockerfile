@@ -1,19 +1,11 @@
 # syntax=docker/dockerfile:1
 #
-# AIDocuments als ein Image: React-Oberfläche + Spring-Boot-Backend + (optional) eingebaute MongoDB
-# + eingebaute Texterkennung für Scans (Tesseract).
+# AIDocuments als ein Image: React-Oberfläche + Spring-Boot-Backend + eingebaute Texterkennung für Scans
+# (Tesseract). Die Datenbank ist eingebaut (SQLite, eine Datei im Datenverzeichnis); mit AIDOCS_DB_URL=jdbc:mariadb://…
+# wird stattdessen eine externe MariaDB verwendet (siehe README).
 #
 #   docker build -t aidocuments .
 #   docker run -d -p 8080:8080 -v aidocuments-data:/aidocuments aidocuments
-#
-# Mit -e MONGODB_URI=… wird stattdessen eine externe MongoDB verwendet (siehe README).
-
-# Version der eingebauten MongoDB (Basis des Laufzeit-Images).
-# MongoDB 7.0 läuft auf jedem Host. MongoDB 8.0 und neuer starten auf Linux-Kernel 6.19 bis 7.0.13 nicht
-# (SERVER-121912, betrifft u. a. aktuelle Docker-Desktop-Versionen); wer dort nicht betroffen ist, kann mit
-#   docker build --build-arg MONGO_VERSION=8.0 …
-# eine neuere eingebaute MongoDB wählen.
-ARG MONGO_VERSION=7.0
 
 # Sprachen der eingebauten Texterkennung (Tesseract-Kürzel, Leerzeichen-getrennt). Welche davon beim Lesen genutzt
 # werden, bestimmt AIDOCS_OCR_LANGUAGES; weitere lassen sich hier für einen eigenen Build ergänzen.
@@ -34,25 +26,35 @@ COPY backend/.mvn .mvn
 COPY backend/mvnw backend/pom.xml ./
 RUN --mount=type=cache,target=/root/.m2 ./mvnw -q -B dependency:go-offline
 COPY backend/src src
+COPY backend/tools tools
+COPY docker/THIRD-PARTY-RUNTIME.txt /tmp/notices/runtime.txt
 COPY --from=frontend /build/dist src/main/resources/static
+# Lizenzhinweise in einer Datei: Laufzeitumgebung, Java-Bibliotheken, Weboberfläche. Die Anwendung liefert sie unter
+# /THIRD-PARTY-NOTICES.txt aus, das Image enthält sie zusätzlich als /app/THIRD-PARTY-NOTICES.txt.
+RUN --mount=type=cache,target=/root/.m2 mv src/main/resources/static/THIRD-PARTY-NOTICES.txt /tmp/notices/frontend.txt \
+    && ./mvnw -q -B dependency:list -DincludeScope=runtime -DoutputFile=/tmp/notices/deps.txt \
+    && java tools/ThirdPartyNotices.java /tmp/notices/deps.txt /root/.m2/repository /tmp/notices/runtime.txt \
+        /tmp/notices/frontend.txt src/main/resources/static/THIRD-PARTY-NOTICES.txt \
+    && cp src/main/resources/static/THIRD-PARTY-NOTICES.txt /THIRD-PARTY-NOTICES.txt
 RUN --mount=type=cache,target=/root/.m2 ./mvnw -q -B -DskipTests package \
     && cp target/aidocuments-backend-*.jar /aidocuments.jar
 
-# ---------- 3. Laufzeit: MongoDB-Image als Basis, Java-Laufzeit dazu ----------
-FROM mongo:${MONGO_VERSION}
-COPY --from=eclipse-temurin:21-jre /opt/java/openjdk /opt/java/openjdk
+# ---------- 3. Laufzeit: Java-Laufzeit (Ubuntu) mit Tesseract ----------
+FROM eclipse-temurin:21-jre
 ARG OCR_LANGUAGES
-# Schriften und FreeType braucht die PDF-Vorschau (Rendern der ersten Seite), Tesseract die Texterkennung
+# Schriften und FreeType braucht die PDF-Vorschau (Rendern der ersten Seite), Tesseract die Texterkennung,
+# gosu das Abgeben der root-Rechte beim Start. Die Anwendung läuft als eigener Benutzer "aidocuments".
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core libfreetype6 \
+    && apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core libfreetype6 gosu \
         tesseract-ocr $(for lang in ${OCR_LANGUAGES}; do printf 'tesseract-ocr-%s ' "$lang"; done) \
     && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system --gid 999 aidocuments \
+    && useradd --system --uid 999 --gid aidocuments --home-dir /nonexistent --no-create-home aidocuments \
     && mkdir -p /aidocuments /import /app \
-    && chown mongodb:mongodb /aidocuments
+    && chown aidocuments:aidocuments /aidocuments \
+    && dpkg-query -W -f='${Package} ${Version}\n' > /app/THIRD-PARTY-OS-PACKAGES.txt
 
-ENV JAVA_HOME=/opt/java/openjdk \
-    PATH=/opt/java/openjdk/bin:$PATH \
-    SERVER_ADDRESS=0.0.0.0 \
+ENV SERVER_ADDRESS=0.0.0.0 \
     SERVER_PORT=8080 \
     AIDOCS_DATA_DIR=/aidocuments \
     AIDOCS_IMPORT_DIR=/import \
@@ -60,10 +62,11 @@ ENV JAVA_HOME=/opt/java/openjdk \
     JAVA_OPTS="-XX:MaxRAMPercentage=60"
 
 COPY --from=backend /aidocuments.jar /app/aidocuments.jar
+COPY --from=backend /THIRD-PARTY-NOTICES.txt /app/THIRD-PARTY-NOTICES.txt
 COPY docker/entrypoint.sh /usr/local/bin/aidocuments-entrypoint
 
 # Alles Bleibende liegt hier: PDFs, Vorschaubilder, Suchindex, Schlüsseldatei und – ohne externe
-# MongoDB – die Datenbank. Dieses eine Verzeichnis als Volume einbinden und sichern.
+# MariaDB – die Datenbank (aidocuments.db). Dieses eine Verzeichnis als Volume einbinden und sichern.
 VOLUME /aidocuments
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=3 \

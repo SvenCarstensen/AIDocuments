@@ -51,6 +51,8 @@
     "setup": {
       "title": "AIDocuments sąranka",
       "subtitle": "Pirmiausia sukurkite administratoriaus paskyrą. Daugiau naudotojų galėsite pridėti vėliau nustatymuose.",
+      "code": "Sąrankos kodas",
+      "codeHint": "Rodomas serverio žurnale paleidžiant (Docker: docker compose logs).",
       "adminAccount": "Administratoriaus paskyra",
       "repeatPassword": "Pakartokite slaptažodį",
       "submit": "Sukurti paskyrą ir pradėti",
@@ -59,6 +61,19 @@
         "ai": "DI juos apibendrina ir priskiria žymas",
         "search": "Viso teksto paieška pačiuose dokumentuose"
       }
+    },
+    "twoFactor": {
+      "title": "Patvirtinti prisijungimą",
+      "subtitle": "Įvesk 6 skaitmenų kodą iš autentifikavimo programėlės.",
+      "code": "Kodas",
+      "codeHint": "Negali pasiekti programėlės? Vietoj to įvesk vieną iš atkūrimo kodų.",
+      "submit": "Patvirtinti",
+      "back": "Atgal į prisijungimą"
+    },
+    "twoFactorRequired": {
+      "title": "Nustatyti dviejų veiksnių autentifikavimą",
+      "subtitle": "Administratoriams dviejų veiksnių autentifikavimas yra privalomas. Nustatyk jį dabar, kad galėtum tęsti.",
+      "intro": "Tau reikės autentifikavimo programėlės telefone (pvz., Google Authenticator, Microsoft Authenticator, 1Password arba Aegis)."
     }
   },
   "shell": {
@@ -68,8 +83,8 @@
       "dark": "Tamsi tema"
     },
     "search": {
-      "placeholder": "Ieškoti dokumentų, žymų, turinio…",
-      "placeholderAi": "Ieškok dokumentų savais žodžiais – pvz., „Kia sąskaitos iš 2024 m.“",
+      "placeholder": "Paieška pagal raktažodžius: dokumentai, žymės, turinys …",
+      "placeholderAi": "DI paieška: klausk savais žodžiais – pvz., „Kia sąskaitos iš 2024 m.“",
       "labelAi": "DI",
       "label": "Ieškoti dokumentų",
       "clear": "Išvalyti paiešką",
@@ -80,6 +95,7 @@
       "aiActive": "DI aktyvus",
       "aiNotConfigured": "DI nesukonfigūruotas",
       "changePassword": "Keisti slaptažodį",
+      "licenses": "Trečiųjų šalių licencijos",
       "logout": "Atsijungti"
     },
     "passwordDialog": {
@@ -270,8 +286,8 @@
     },
     "delete": {
       "title": "Ištrinti dokumentą?",
-      "text": "„{{title}}“ bus ištrintas kartu su PDF failu, visu tekstu ir žymomis. Šio veiksmo anuliuoti negalima.",
-      "confirm": "Ištrinti visam laikui"
+      "text": "„{{title}}“ bus ištrintas. Istorijoje tai galima atšaukti 30 dienų; po to jis pašalinamas visam laikui.",
+      "confirm": "Ištrinti"
     },
     "chat": {
       "intro": "Užduok klausimą apie šį dokumentą – DI atsakys pagal jo turinį.",
@@ -284,6 +300,25 @@
         "summary": "Apie ką šis dokumentas?",
         "deadlines": "Ar yra terminų ar datų?",
         "amounts": "Kokios sumos minimos?"
+      }
+    },
+    "versions": {
+      "title": "Versijos",
+      "intro": "Kiekvienas PDF pakeitimas sukuria naują versiją. Senesnės versijos išsaugomos, jas galima peržiūrėti, atsisiųsti arba atkurti.",
+      "current": "dabartinė",
+      "view": "Peržiūrėti {{number}} versiją",
+      "download": "Atsisiųsti {{number}} versiją",
+      "restore": "Atkurti {{number}} versiją",
+      "restoreTitle": "Atkurti {{number}} versiją?",
+      "restoreText": "Ši versija taps dabartine. Dabartinė versija išsaugoma, o veiksmą galima atšaukti istorijoje.",
+      "restoreConfirm": "Atkurti",
+      "restored": "{{number}} versija atkurta",
+      "kinds": {
+        "IMPORTED": "Importuota",
+        "EDITED": "Redaguota",
+        "ORIGINAL_RESTORED": "Originalas atkurtas",
+        "VERSION_RESTORED": "{{from}} versija atkurta",
+        "UNDONE": "Pakeitimas atšauktas"
       }
     }
   },
@@ -325,8 +360,23 @@
         "since": "Tik el. laiškai nuo",
         "sinceHint": "Neprivaloma – senesni el. laiškai praleidžiami",
         "enabled": "Tikrinti automatiškai",
-        "enabledHint": "Nustatytu intervalu tikrinama, ar pašto dėžutėje yra naujų PDF failų."
-      }
+        "enabledHint": "Nustatytu intervalu tikrinama, ar pašto dėžutėje yra naujų PDF failų.",
+        "filter": {
+          "title": "Filtras",
+          "intro": "Apdorojami tik tie el. laiškai, kurie atitinka visas sąlygas. Po vieną terminą eilutėje; didžiosios ir mažosios raidės nesvarbu, pakanka teksto dalies. Tušti laukai nieko neriboja.",
+          "subjectIncludes": "Tema turi vieną iš šių terminų",
+          "subjectExcludes": "Tema neturi nė vieno iš šių terminų",
+          "senderIncludes": "Siuntėjas turi vieną iš šių terminų",
+          "senderExcludes": "Siuntėjas neturi nė vieno iš šių terminų",
+          "senderHint": "Vardas arba adresas, pvz., „@example.com“",
+          "newOnly": "Filtras taikomas el. laiškams, gautiems po paskutinio tikrinimo; jau patikrinti laiškai iš naujo neapdorojami."
+        },
+        "interval": "Tikrinimo intervalas minutėmis",
+        "intervalHint": "Palikite tuščią, kad būtų naudojamas bendras intervalas (dabar {{interval}})."
+      },
+      "filterActive": "Filtras įjungtas",
+      "schedule": "Tikrinama kas {{interval}} · kitas: {{when}}",
+      "scheduleSoon": "Tikrinama kas {{interval}} · kitas netrukus"
     },
     "import": {
       "title": "Tvarkaraštis ir importavimo aplankas",
@@ -335,7 +385,7 @@
       "saved": "Nustatymai išsaugoti",
       "interval": {
         "title": "Tikrinimo intervalas",
-        "text": "Taip dažnai programa tikrina, ar visose pašto dėžutėse ir importavimo aplanke yra naujų PDF failų.",
+        "text": "Kaip dažnai programa tikrina gaunamų failų aplanką ir visas pašto dėžutes be savo intervalo, ar nėra naujų PDF.",
         "label": "Kas … min.",
         "nextRun": "Kitas automatinis tikrinimas {{when}}."
       },
@@ -472,7 +522,104 @@
         "active": "Paskyra aktyvi",
         "activeHint": "Su išjungtomis paskyromis prisijungti negalima; aktyvūs seansai nutraukiami iškart.",
         "create": "Sukurti"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Atkurti dviejų veiksnių autentifikavimą",
+      "resetTwoFactorHint": "Šiai paskyrai įjungtas dviejų veiksnių autentifikavimas.",
+      "resetTwoFactorText": "{{name}} po to jungsis tik slaptažodžiu ir galės iš naujo nustatyti dviejų veiksnių autentifikavimą – pavyzdžiui, pametus telefoną.",
+      "resetTwoFactorConfirm": "Atkurti",
+      "twoFactorReset": "Dviejų veiksnių autentifikavimas atkurtas"
+    }
+  },
+  "history": {
+    "nav": "Istorija",
+    "title": "Istorija",
+    "subtitle": "Kas nutiko tavo dokumentams – naujausi įrašai pirmiausia.",
+    "empty": "Įrašų dar nėra.",
+    "actions": {
+      "IMPORTED": "Importuota",
+      "EDITED": "Redaguota",
+      "DELETED": "Ištrinta"
+    },
+    "changes": {
+      "DETAILS": "Duomenys pakeisti",
+      "FILE": "PDF pakeistas",
+      "ORIGINAL_RESTORED": "Originalas atkurtas",
+      "DUPLICATE": "kaip dublikatas",
+      "VERSION_RESTORED": "Versija atkurta"
+    },
+    "by": "naudotojas {{user}}",
+    "automatic": "automatiškai",
+    "more": "Įkelti daugiau",
+    "undo": "Atšaukti",
+    "undone": "Atšaukta"
+  },
+  "duplicates": {
+    "title": "Galimas dublikatas",
+    "subtitle": "Abiejų dokumentų turinys sutampa. Palik vieną ir ištrink kitą – arba pažymėk, kad tai ne dublikatai.",
+    "older": "Gautas anksčiau",
+    "newer": "Gautas vėliau",
+    "deleteThis": "Ištrinti šį",
+    "compare": "Palyginti greta"
+  },
+  "twoFactor": {
+    "title": "Dviejų veiksnių autentifikavimas",
+    "on": "Įjungta",
+    "off": "Išjungta",
+    "intro": "Apsaugok paskyrą antruoju veiksniu: jungdamasis papildomai įvesi kodą iš telefono autentifikavimo programėlės (pvz., Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Nustatyti",
+    "scan": "Nuskaityk QR kodą autentifikavimo programėle arba įvesk raktą rankiniu būdu. Tada įvesk programėlės kodą ir savo slaptažodį.",
+    "qrAlt": "QR kodas autentifikavimo programėlei",
+    "secret": "Raktas",
+    "confirmCode": "Kodas iš programėlės",
+    "activate": "Aktyvinti",
+    "recoveryTitle": "Atkūrimo kodai",
+    "recoveryText": "Laikyk šiuos atkūrimo kodus saugioje vietoje. Kiekvienas veikia vieną kartą, jei negali naudotis programėle – pavyzdžiui, pametęs telefoną. Jie rodomi tik dabar.",
+    "download": "Išsaugoti kaip failą",
+    "done": "Baigta",
+    "enabled": "Dviejų veiksnių autentifikavimas įjungtas",
+    "disabled": "Dviejų veiksnių autentifikavimas išjungtas",
+    "disableHint": "Norėdamas išjungti, įvesk dabartinį programėlės kodą (arba atkūrimo kodą) ir savo slaptažodį.",
+    "disable": "Išjungti",
+    "recoveryLeft": "Nepanaudoti atkūrimo kodai: {{count}}",
+    "adminCannotDisable": "Būdamas administratorius negali išjungti dviejų veiksnių autentifikavimo."
+  },
+  "confirmCode": {
+    "title": "Patvirtinti pakeitimą",
+    "text": "Paskyrų, pašto dėžučių ir nustatymų pakeitimams reikia galiojančio autentifikavimo programėlės kodo. Patvirtinimas galioja 10 minučių.",
+    "submit": "Patvirtinti"
+  },
+  "share": {
+    "button": "Bendrinti",
+    "title": "Bendrinti dokumentą",
+    "intro": "Sukuria nuorodą, kuria asmuo be paskyros gali atidaryti būtent šį dokumentą.",
+    "recipient": "Su kuo bendrini?",
+    "recipientHint": "Asmens vardas – kad vėliau matytum, kam davei nuorodą.",
+    "permission": "Ar šis asmuo gali redaguoti dokumentą?",
+    "viewOnly": "Tik peržiūra",
+    "canEdit": "Gali redaguoti",
+    "viewHint": "Asmuo gali peržiūrėti, spausdinti ir atsisiųsti PDF.",
+    "editHint": "Asmuo taip pat gali žymėti, rašyti, pasirašyti ir išsaugoti PDF. Kiekvienas išsaugojimas tampa nauja versija; pavadinimas, žymos ir kiti duomenys lieka paslėpti.",
+    "validity": "Galioja",
+    "unlimited": "Neribotai",
+    "create": "Sukurti nuorodą",
+    "link": "Nuoroda",
+    "linkHint": "Kiekvienas, turintis šią nuorodą, gali atidaryti dokumentą – duok ją tik {{name}}. Bet kada gali ją atšaukti dokumento peržiūroje.",
+    "copy": "Kopijuoti nuorodą",
+    "copied": "Nuoroda nukopijuota",
+    "listTitle": "Bendrinama išorėje",
+    "expired": "nebegalioja",
+    "validUntil": "galioja iki {{date}}",
+    "noExpiry": "be galiojimo pabaigos",
+    "lastOpened": "paskutinį kartą atidaryta {{when}} (peržiūros: {{views}})",
+    "neverOpened": "dar neatidaryta",
+    "revoke": "Atšaukti nuorodą",
+    "revokeTitle": "Atšaukti nuorodą, skirtą {{name}}?",
+    "revokeText": "Nuoroda iškart nustoja veikti. Asmens jau atsisiųstos kopijos lieka jam.",
+    "revoked": "Nuoroda atšaukta",
+    "page": {
+      "for": "Bendrinama su: {{name}}",
+      "invalid": "Ši nuoroda negalioja arba baigėsi jos galiojimas, arba dokumentas ištrintas. Kreipkis į asmenį, kuris tau ją davė."
     }
   }
 }

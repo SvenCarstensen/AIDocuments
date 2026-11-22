@@ -49,6 +49,8 @@
     "setup": {
       "title": "Konfigurera AIDocuments",
       "subtitle": "Börja med att skapa administratörskontot. Sedan kan du lägga till fler användare i inställningarna.",
+      "code": "Installationskod",
+      "codeHint": "Visas i serverns logg vid start (Docker: docker compose logs).",
       "adminAccount": "Administratörskonto",
       "repeatPassword": "Upprepa lösenord",
       "submit": "Skapa konto och kom igång",
@@ -57,6 +59,19 @@
         "ai": "AI sammanfattar och taggar dem",
         "search": "Fulltextsökning ända in i dokumentet"
       }
+    },
+    "twoFactor": {
+      "title": "Bekräfta inloggning",
+      "subtitle": "Ange den 6-siffriga koden från din autentiseringsapp.",
+      "code": "Kod",
+      "codeHint": "Ingen åtkomst till appen? Ange i stället en av dina återställningskoder.",
+      "submit": "Bekräfta",
+      "back": "Tillbaka till inloggning"
+    },
+    "twoFactorRequired": {
+      "title": "Konfigurera tvåfaktorsautentisering",
+      "subtitle": "Tvåfaktorsautentisering är obligatorisk för administratörer. Konfigurera den nu för att fortsätta.",
+      "intro": "Du behöver en autentiseringsapp i telefonen (t.ex. Google Authenticator, Microsoft Authenticator, 1Password eller Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Mörkt tema"
     },
     "search": {
-      "placeholder": "Sök i dokument, taggar, innehåll …",
-      "placeholderAi": "Sök dokument med egna ord – t.ex. ”fakturor från Kia från 2024”",
+      "placeholder": "Sökning på nyckelord: dokument, taggar, innehåll …",
+      "placeholderAi": "AI-sökning: fråga med egna ord – t.ex. ”fakturor från Kia från 2024”",
       "labelAi": "AI",
       "label": "Sök i dokument",
       "clear": "Rensa sökning",
@@ -78,6 +93,7 @@
       "aiActive": "AI aktiv",
       "aiNotConfigured": "AI inte konfigurerad",
       "changePassword": "Byt lösenord",
+      "licenses": "Tredjepartslicenser",
       "logout": "Logga ut"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Radera dokumentet?",
-      "text": "”{{title}}” raderas tillsammans med PDF-filen, fulltexten och taggarna. Detta kan inte ångras.",
-      "confirm": "Radera permanent"
+      "text": "”{{title}}” tas bort. I historiken kan du ångra det i 30 dagar; därefter tas det bort permanent.",
+      "confirm": "Ta bort"
     },
     "chat": {
       "intro": "Ställ en fråga om det här dokumentet – AI svarar utifrån innehållet.",
@@ -266,6 +282,25 @@
         "summary": "Vad handlar det här dokumentet om?",
         "deadlines": "Finns det frister eller datum?",
         "amounts": "Vilka belopp nämns?"
+      }
+    },
+    "versions": {
+      "title": "Versioner",
+      "intro": "Varje ändring av PDF:en ger en ny version. Äldre versioner sparas och kan visas, laddas ned eller återställas.",
+      "current": "aktuell",
+      "view": "Visa version {{number}}",
+      "download": "Ladda ned version {{number}}",
+      "restore": "Återställ version {{number}}",
+      "restoreTitle": "Återställa version {{number}}?",
+      "restoreText": "Versionen blir den aktuella. Den nuvarande versionen sparas, och steget kan ångras i historiken.",
+      "restoreConfirm": "Återställ",
+      "restored": "Version {{number}} återställd",
+      "kinds": {
+        "IMPORTED": "Importerad",
+        "EDITED": "Redigerad",
+        "ORIGINAL_RESTORED": "Original återställt",
+        "VERSION_RESTORED": "Version {{from}} återställd",
+        "UNDONE": "Ändring ångrad"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Endast e-post från och med",
         "sinceHint": "Valfritt – äldre e-post hoppas över",
         "enabled": "Kontrollera automatiskt",
-        "enabledHint": "Brevlådan kontrolleras efter nya PDF-filer med det inställda intervallet."
-      }
+        "enabledHint": "Brevlådan kontrolleras efter nya PDF-filer med det inställda intervallet.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Bara e-post som uppfyller alla villkor behandlas. Ett ord per rad; stora och små bokstäver spelar ingen roll och en del av texten räcker. Tomma fält begränsar ingenting.",
+          "subjectIncludes": "Ämnet innehåller något av dessa ord",
+          "subjectExcludes": "Ämnet innehåller inget av dessa ord",
+          "senderIncludes": "Avsändaren innehåller något av dessa ord",
+          "senderExcludes": "Avsändaren innehåller inget av dessa ord",
+          "senderHint": "Namn eller adress, t.ex. ”@example.com”",
+          "newOnly": "Filtret gäller e-post som kommer in efter den senaste hämtningen; redan kontrollerad e-post behandlas inte igen."
+        },
+        "interval": "Hämtningsintervall i minuter",
+        "intervalHint": "Lämna tomt för att använda det allmänna intervallet (just nu {{interval}})."
+      },
+      "filterActive": "Filter aktivt",
+      "schedule": "Hämtas var {{interval}} · nästa {{when}}",
+      "scheduleSoon": "Hämtas var {{interval}} · nästa inom kort"
     },
     "import": {
       "title": "Schema & importmapp",
@@ -317,7 +367,7 @@
       "saved": "Inställningarna har sparats",
       "interval": {
         "title": "Kontrollintervall",
-        "text": "Så här ofta kontrollerar programmet alla brevlådor och importmappen efter nya PDF-filer.",
+        "text": "Så ofta kontrollerar programmet inkorgsmappen och alla brevlådor utan eget intervall efter nya PDF-filer.",
         "label": "Med … minuters mellanrum",
         "nextRun": "Nästa automatiska kontroll {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Kontot är aktivt",
         "activeHint": "Inaktiverade konton kan inte logga in; aktiva sessioner avslutas omedelbart.",
         "create": "Skapa"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Återställ tvåfaktorsautentisering",
+      "resetTwoFactorHint": "Tvåfaktorsautentisering är på för det här kontot.",
+      "resetTwoFactorText": "{{name}} loggar sedan in med bara lösenordet och kan konfigurera tvåfaktorsautentisering igen – till exempel efter att ha tappat bort telefonen.",
+      "resetTwoFactorConfirm": "Återställ",
+      "twoFactorReset": "Tvåfaktorsautentisering återställd"
+    }
+  },
+  "history": {
+    "nav": "Historik",
+    "title": "Historik",
+    "subtitle": "Vad som har hänt med dina dokument – nyaste posterna först.",
+    "empty": "Inga poster ännu.",
+    "actions": {
+      "IMPORTED": "Importerat",
+      "EDITED": "Redigerat",
+      "DELETED": "Borttaget"
+    },
+    "changes": {
+      "DETAILS": "Uppgifter ändrade",
+      "FILE": "PDF ändrad",
+      "ORIGINAL_RESTORED": "Original återställt",
+      "DUPLICATE": "som dubblett",
+      "VERSION_RESTORED": "Version återställd"
+    },
+    "by": "av {{user}}",
+    "automatic": "automatiskt",
+    "more": "Läs in fler",
+    "undo": "Ångra",
+    "undone": "Ångrat"
+  },
+  "duplicates": {
+    "title": "Möjlig dubblett",
+    "subtitle": "De två dokumenten har samma innehåll. Behåll det ena och ta bort det andra – eller notera att de inte är dubbletter.",
+    "older": "Kom tidigare",
+    "newer": "Kom senare",
+    "deleteThis": "Ta bort det här",
+    "compare": "Jämför sida vid sida"
+  },
+  "twoFactor": {
+    "title": "Tvåfaktorsautentisering",
+    "on": "På",
+    "off": "Av",
+    "intro": "Skydda ditt konto med en andra faktor: vid inloggning anger du då även en kod från en autentiseringsapp i telefonen (t.ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Konfigurera",
+    "scan": "Skanna QR-koden med din autentiseringsapp eller ange nyckeln manuellt. Ange sedan koden från appen och ditt lösenord.",
+    "qrAlt": "QR-kod för autentiseringsappen",
+    "secret": "Nyckel",
+    "confirmCode": "Kod från appen",
+    "activate": "Aktivera",
+    "recoveryTitle": "Återställningskoder",
+    "recoveryText": "Förvara dessa återställningskoder säkert. Varje kod fungerar en gång om du inte kan använda appen – till exempel om du tappar bort telefonen. De visas bara nu.",
+    "download": "Spara som fil",
+    "done": "Klar",
+    "enabled": "Tvåfaktorsautentisering är på",
+    "disabled": "Tvåfaktorsautentisering är av",
+    "disableHint": "För att stänga av den anger du en aktuell kod från appen (eller en återställningskod) och ditt lösenord.",
+    "disable": "Stäng av",
+    "recoveryLeft": "Oanvända återställningskoder: {{count}}",
+    "adminCannotDisable": "Som administratör kan du inte stänga av tvåfaktorsautentisering."
+  },
+  "confirmCode": {
+    "title": "Bekräfta ändring",
+    "text": "Ändringar av konton, brevlådor och inställningar kräver en aktuell kod från din autentiseringsapp. Bekräftelsen gäller i 10 minuter.",
+    "submit": "Bekräfta"
+  },
+  "share": {
+    "button": "Dela",
+    "title": "Dela dokument",
+    "intro": "Skapar en länk som en person utan konto kan använda för att öppna just det här dokumentet.",
+    "recipient": "Vem delar du med?",
+    "recipientHint": "Personens namn – så att du senare ser vem du gav länken till.",
+    "permission": "Får personen redigera dokumentet?",
+    "viewOnly": "Endast visa",
+    "canEdit": "Får redigera",
+    "viewHint": "Personen kan visa, skriva ut och ladda ner PDF-filen.",
+    "editHint": "Personen kan också markera, skriva i, signera och spara PDF-filen. Varje sparning blir en ny version; titel, taggar och andra uppgifter förblir dolda.",
+    "validity": "Giltig i",
+    "unlimited": "Obegränsat",
+    "create": "Skapa länk",
+    "link": "Länk",
+    "linkHint": "Alla som har den här länken kan öppna dokumentet – ge den bara till {{name}}. Du kan när som helst återkalla den i dokumentvyn.",
+    "copy": "Kopiera länk",
+    "copied": "Länken har kopierats",
+    "listTitle": "Delat externt",
+    "expired": "har gått ut",
+    "validUntil": "giltig till {{date}}",
+    "noExpiry": "utan slutdatum",
+    "lastOpened": "senast öppnad {{when}} (visningar: {{views}})",
+    "neverOpened": "inte öppnad än",
+    "revoke": "Återkalla länk",
+    "revokeTitle": "Återkalla länken för {{name}}?",
+    "revokeText": "Länken slutar fungera direkt. Kopior som personen redan har laddat ner finns kvar hos personen.",
+    "revoked": "Länken har återkallats",
+    "page": {
+      "for": "Delat med {{name}}",
+      "invalid": "Den här länken är ogiltig eller har gått ut, eller så har dokumentet raderats. Kontakta personen som gav dig den."
     }
   }
 }

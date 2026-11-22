@@ -6,8 +6,10 @@ import de.aidocuments.document.DocumentDtos.PageDto;
 import de.aidocuments.document.DocumentDtos.TextDto;
 import de.aidocuments.document.DocumentDtos.UpdateDocumentRequest;
 import de.aidocuments.document.DocumentDtos.UploadResultDto;
+import de.aidocuments.ai.AiRequestLimiter;
 import de.aidocuments.i18n.Messages;
 import de.aidocuments.search.SearchIndex;
+import de.aidocuments.user.UserPrincipal;
 import de.aidocuments.web.ApiException;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -29,6 +31,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,8 +56,12 @@ public class DocumentController {
     private final DocumentChatService chat;
     private final AiSearchService aiSearch;
 
+    private final AiRequestLimiter aiLimiter;
+
     public DocumentController(DocumentService service, DocumentFacets facets, FileStorage storage,
-                              Messages messages, DocumentChatService chat, AiSearchService aiSearch) {
+                              Messages messages, DocumentChatService chat, AiSearchService aiSearch,
+                              AiRequestLimiter aiLimiter) {
+        this.aiLimiter = aiLimiter;
         this.chat = chat;
         this.aiSearch = aiSearch;
         this.messages = messages;
@@ -67,6 +74,8 @@ public class DocumentController {
      * Liste und Suche in einem: ohne {@code q} die neuesten Dokumente, mit {@code q} eine Volltextsuche
      * über Inhalt, Titel, Schlagworte, Absender und Kerndaten. Alle Filter lassen sich kombinieren.
      */
+    private static final int MAX_QUERY_LENGTH = 300;
+
     @GetMapping
     public PageDto<DocumentDto> search(
             @RequestParam(required = false) String q,
@@ -85,9 +94,13 @@ public class DocumentController {
             case "date" -> SearchIndex.SortOrder.DOCUMENT_DATE;
             default -> SearchIndex.SortOrder.RELEVANCE;
         };
+        // längere Suchtexte ergeben riesige Abfragen (je Wort mehrere Felder) – ohne Nutzen für die Suche
+        if (q != null && q.length() > MAX_QUERY_LENGTH) {
+            q = q.substring(0, MAX_QUERY_LENGTH);
+        }
         return service.search(new SearchIndex.Criteria(q, category, correspondent,
                 tags == null ? List.of() : tags, status, from, to, order,
-                Math.max(0, page), Math.clamp(size, 1, 100), duplicates));
+                Math.clamp(page, 0, 10_000), Math.clamp(size, 1, 100), duplicates));
     }
 
     @GetMapping("/facets")
@@ -159,13 +172,16 @@ public class DocumentController {
 
     /** Fragen an ein Dokument – beantwortet von der eingerichteten KI anhand von Angaben und Volltext. */
     @PostMapping("/{id}/chat")
-    public ChatAnswer chat(@PathVariable String id, @Valid @RequestBody ChatRequest request) {
-        try {
-            return new ChatAnswer(chat.answer(id, request.messages().stream()
-                    .map(m -> new de.aidocuments.ai.AiAnalysisService.ChatTurn(m.fromUser(), m.text())).toList()));
-        } catch (de.aidocuments.ai.AiException e) {
-            throw aiFailure(e);
-        }
+    public ChatAnswer chat(@PathVariable String id, @Valid @RequestBody ChatRequest request,
+                           @AuthenticationPrincipal UserPrincipal principal) {
+        return aiLimiter.run(principal.id(), () -> {
+            try {
+                return new ChatAnswer(chat.answer(id, request.messages().stream()
+                        .map(m -> new de.aidocuments.ai.AiAnalysisService.ChatTurn(m.fromUser(), m.text())).toList()));
+            } catch (de.aidocuments.ai.AiException e) {
+                throw aiFailure(e);
+            }
+        });
     }
 
     public record AskRequest(@jakarta.validation.constraints.NotBlank
@@ -174,12 +190,15 @@ public class DocumentController {
 
     /** KI-Suche: übersetzt eine Frage in natürlicher Sprache in Filter; gesucht wird danach wie gewohnt. */
     @PostMapping("/ask")
-    public AiSearchService.Interpretation ask(@Valid @RequestBody AskRequest request) {
-        try {
-            return aiSearch.interpret(request.question());
-        } catch (de.aidocuments.ai.AiException e) {
-            throw aiFailure(e);
-        }
+    public AiSearchService.Interpretation ask(@Valid @RequestBody AskRequest request,
+                                              @AuthenticationPrincipal UserPrincipal principal) {
+        return aiLimiter.run(principal.id(), () -> {
+            try {
+                return aiSearch.interpret(request.question());
+            } catch (de.aidocuments.ai.AiException e) {
+                throw aiFailure(e);
+            }
+        });
     }
 
     /** Ohne eingerichtete KI ein Konflikt (die Funktion ist nicht verfügbar), sonst ein Fehler beim KI-Server. */
@@ -192,6 +211,45 @@ public class DocumentController {
     @PostMapping("/{id}/not-duplicate")
     public DocumentDto notDuplicate(@PathVariable String id) {
         return service.notDuplicate(id);
+    }
+
+    /** Eine Fassung der PDF-Datei, wie die Oberfläche sie anzeigt. */
+    public record VersionDto(int number, DocumentVersions.Kind kind, Integer restoredFrom, java.time.Instant createdAt,
+                             String createdBy, Long sizeBytes, Integer pageCount, boolean current) {
+    }
+
+    /** Alle Fassungen der PDF-Datei, die neueste zuerst. */
+    @GetMapping("/{id}/versions")
+    public List<VersionDto> versions(@PathVariable String id) {
+        Document doc = service.require(id);
+        return service.versions(id).reversed().stream()
+                .map(v -> new VersionDto(v.number(), v.kind(), v.restoredFrom(), v.createdAt(), v.createdBy(),
+                        v.current() ? Long.valueOf(doc.getSizeBytes()) : v.sizeBytes(),
+                        v.current() ? doc.getPageCount() : v.pageCount(), v.current()))
+                .toList();
+    }
+
+    /** Die Datei einer Fassung – zum Ansehen oder ({@code download=true}) zum Herunterladen. */
+    @GetMapping("/{id}/versions/{number}/file")
+    public ResponseEntity<Resource> versionFile(@PathVariable String id, @PathVariable int number,
+                                                @RequestParam(defaultValue = "false") boolean download) {
+        Document doc = service.require(id);
+        Path path = service.versionFile(id, number);
+        String name = doc.getOriginalFilename().replaceFirst("(?i)\\.pdf$", "") + " (" + messages.get(
+                "document.versionFileSuffix", number) + ").pdf";
+        ContentDisposition disposition = (download ? ContentDisposition.attachment() : ContentDisposition.inline())
+                .filename(name, StandardCharsets.UTF_8).build();
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .cacheControl(CacheControl.noCache().cachePrivate())
+                .body(new FileSystemResource(path));
+    }
+
+    /** Macht eine ältere Fassung wieder zur aktuellen (als neue Fassung). */
+    @PostMapping("/{id}/versions/{number}/restore")
+    public DocumentDto restoreVersion(@PathVariable String id, @PathVariable int number) throws IOException {
+        return service.restoreVersion(id, number);
     }
 
     @PostMapping("/{id}/restore-original")
@@ -215,14 +273,22 @@ public class DocumentController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<UploadResultDto> upload(@RequestParam("files") List<MultipartFile> files) {
         List<UploadResultDto> results = new ArrayList<>();
+        boolean storageFull = false;
         for (MultipartFile file : files) {
             String name = file.getOriginalFilename() != null ? file.getOriginalFilename() : "Dokument.pdf";
+            if (storageFull) {
+                results.add(new UploadResultDto(name, DocumentService.Outcome.REJECTED.name(), null,
+                        messages.get("upload.storeFailed")));
+                continue;
+            }
             try (InputStream in = file.getInputStream()) {
                 DocumentService.IngestResult result = service.ingest(in, name, DocumentSource.UPLOAD, null);
                 results.add(new UploadResultDto(name, result.outcome().name(),
                         result.document() != null ? result.document().getId() : null,
                         result.message() != null ? messages.render(result.message()) : null));
-            } catch (IOException e) {
+            } catch (IOException | FileStorage.StorageFullException e) {
+                // Platte (fast) voll: diese und alle weiteren Dateien ablehnen, die schon gespeicherten bleiben
+                storageFull = e instanceof FileStorage.StorageFullException;
                 results.add(new UploadResultDto(name, DocumentService.Outcome.REJECTED.name(), null,
                         messages.get("upload.storeFailed")));
             }
@@ -247,7 +313,7 @@ public class DocumentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String id) {
-        service.delete(id);
+    public void delete(@PathVariable String id, @RequestParam(defaultValue = "false") boolean duplicate) {
+        service.delete(id, duplicate);
     }
 }

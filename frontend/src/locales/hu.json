@@ -49,6 +49,8 @@
     "setup": {
       "title": "Az AIDocuments beállítása",
       "subtitle": "Először hozd létre az adminisztrátori fiókot. További felhasználókat később a beállításokban adhatsz hozzá.",
+      "code": "Telepítési kód",
+      "codeHint": "Induláskor megjelenik a szerver naplójában (Docker: docker compose logs).",
       "adminAccount": "Adminisztrátori fiók",
       "repeatPassword": "Jelszó megismétlése",
       "submit": "Fiók létrehozása és indítás",
@@ -57,6 +59,19 @@
         "ai": "Az MI összefoglalja és címkézi őket",
         "search": "Teljes szöveges keresés a dokumentumok tartalmában"
       }
+    },
+    "twoFactor": {
+      "title": "Bejelentkezés megerősítése",
+      "subtitle": "Add meg a hitelesítő alkalmazásod 6 jegyű kódját.",
+      "code": "Kód",
+      "codeHint": "Nem éred el az alkalmazást? Add meg helyette az egyik helyreállító kódodat.",
+      "submit": "Megerősítés",
+      "back": "Vissza a bejelentkezéshez"
+    },
+    "twoFactorRequired": {
+      "title": "Kétlépcsős azonosítás beállítása",
+      "subtitle": "Rendszergazdák számára a kétlépcsős azonosítás kötelező. A folytatáshoz állítsd be most.",
+      "intro": "Szükséged lesz egy hitelesítő alkalmazásra a telefonodon (pl. Google Authenticator, Microsoft Authenticator, 1Password vagy Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Sötét téma"
     },
     "search": {
-      "placeholder": "Keresés dokumentumokban, címkékben, tartalomban…",
-      "placeholderAi": "Keress dokumentumokat a saját szavaiddal – pl. „a Kia számlái 2024-ből”",
+      "placeholder": "Kulcsszavas keresés: dokumentumok, címkék, tartalom …",
+      "placeholderAi": "MI-keresés: kérdezz a saját szavaiddal – pl. „a Kia számlái 2024-ből”",
       "labelAi": "MI",
       "label": "Dokumentumok keresése",
       "clear": "Keresés törlése",
@@ -78,6 +93,7 @@
       "aiActive": "Az MI aktív",
       "aiNotConfigured": "Az MI nincs beállítva",
       "changePassword": "Jelszó módosítása",
+      "licenses": "Harmadik féltől származó licencek",
       "logout": "Kijelentkezés"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Törlöd a dokumentumot?",
-      "text": "„{{title}}” a PDF-fájllal, a teljes szöveggel és a címkékkel együtt törlődik. Ez nem vonható vissza.",
-      "confirm": "Végleges törlés"
+      "text": "A(z) „{{title}}” törlődik. Az előzményekben 30 napig visszavonhatod; utána véglegesen törlődik.",
+      "confirm": "Törlés"
     },
     "chat": {
       "intro": "Tegyél fel egy kérdést erről a dokumentumról – az MI a tartalma alapján válaszol.",
@@ -266,6 +282,25 @@
         "summary": "Miről szól ez a dokumentum?",
         "deadlines": "Vannak határidők vagy dátumok?",
         "amounts": "Milyen összegek szerepelnek benne?"
+      }
+    },
+    "versions": {
+      "title": "Verziók",
+      "intro": "A PDF minden módosítása új verziót hoz létre. A korábbi verziók megmaradnak, megtekinthetők, letölthetők vagy visszaállíthatók.",
+      "current": "aktuális",
+      "view": "{{number}}. verzió megtekintése",
+      "download": "{{number}}. verzió letöltése",
+      "restore": "{{number}}. verzió visszaállítása",
+      "restoreTitle": "Visszaállítod a(z) {{number}}. verziót?",
+      "restoreText": "Ez a verzió lesz az aktuális. A jelenlegi verzió megmarad, és a lépés az előzményekben visszavonható.",
+      "restoreConfirm": "Visszaállítás",
+      "restored": "{{number}}. verzió visszaállítva",
+      "kinds": {
+        "IMPORTED": "Importálva",
+        "EDITED": "Szerkesztve",
+        "ORIGINAL_RESTORED": "Eredeti visszaállítva",
+        "VERSION_RESTORED": "{{from}}. verzió visszaállítva",
+        "UNDONE": "Módosítás visszavonva"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Csak az ettől a naptól érkezett e-mailek",
         "sinceHint": "Nem kötelező – a régebbi e-mailek kimaradnak",
         "enabled": "Automatikus ellenőrzés",
-        "enabledHint": "A rendszer a beállított időközönként új PDF-eket keres a postafiókban."
-      }
+        "enabledHint": "A rendszer a beállított időközönként új PDF-eket keres a postafiókban.",
+        "filter": {
+          "title": "Szűrő",
+          "intro": "Csak azok az e-mailek kerülnek feldolgozásra, amelyek minden feltételnek megfelelnek. Soronként egy kifejezés; a kis- és nagybetű nem számít, a szöveg egy része is elég. Az üres mezők nem korlátoznak semmit.",
+          "subjectIncludes": "A tárgy tartalmazza valamelyik kifejezést",
+          "subjectExcludes": "A tárgy egyik kifejezést sem tartalmazza",
+          "senderIncludes": "A feladó tartalmazza valamelyik kifejezést",
+          "senderExcludes": "A feladó egyik kifejezést sem tartalmazza",
+          "senderHint": "Név vagy cím, pl. „@example.com”",
+          "newOnly": "A szűrő a legutóbbi lekérés után érkező e-mailekre vonatkozik; a már ellenőrzött e-maileket nem dolgozza fel újra."
+        },
+        "interval": "Lekérési időköz percben",
+        "intervalHint": "Hagyja üresen az általános időközhöz (jelenleg {{interval}})."
+      },
+      "filterActive": "Szűrő bekapcsolva",
+      "schedule": "Lekérés {{interval}} időközzel · következő: {{when}}",
+      "scheduleSoon": "Lekérés {{interval}} időközzel · következő hamarosan"
     },
     "import": {
       "title": "Ütemezés és importmappa",
@@ -317,7 +367,7 @@
       "saved": "Beállítások mentve",
       "interval": {
         "title": "Ellenőrzési időköz",
-        "text": "Az alkalmazás ilyen gyakran keres új PDF-eket az összes postafiókban és az importmappában.",
+        "text": "Milyen gyakran ellenőrzi az alkalmazás a bemeneti mappát és a saját időköz nélküli postafiókokat új PDF-ek után.",
         "label": "… percenként",
         "nextRun": "Következő automatikus ellenőrzés: {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Aktív fiók",
         "activeHint": "A letiltott fiókokkal nem lehet bejelentkezni; a futó munkamenetek azonnal véget érnek.",
         "create": "Létrehozás"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Kétlépcsős azonosítás visszaállítása",
+      "resetTwoFactorHint": "Ennél a fióknál be van kapcsolva a kétlépcsős azonosítás.",
+      "resetTwoFactorText": "{{name}} ezután csak jelszóval jelentkezik be, és újra beállíthatja a kétlépcsős azonosítást – például a telefon elvesztése után.",
+      "resetTwoFactorConfirm": "Visszaállítás",
+      "twoFactorReset": "Kétlépcsős azonosítás visszaállítva"
+    }
+  },
+  "history": {
+    "nav": "Előzmények",
+    "title": "Előzmények",
+    "subtitle": "Mi történt a dokumentumaiddal – a legújabb bejegyzések elöl.",
+    "empty": "Még nincsenek bejegyzések.",
+    "actions": {
+      "IMPORTED": "Importálva",
+      "EDITED": "Szerkesztve",
+      "DELETED": "Törölve"
+    },
+    "changes": {
+      "DETAILS": "Adatok módosítva",
+      "FILE": "PDF módosítva",
+      "ORIGINAL_RESTORED": "Eredeti visszaállítva",
+      "DUPLICATE": "másolatként",
+      "VERSION_RESTORED": "Verzió visszaállítva"
+    },
+    "by": "{{user}} által",
+    "automatic": "automatikusan",
+    "more": "Továbbiak betöltése",
+    "undo": "Visszavonás",
+    "undone": "Visszavonva"
+  },
+  "duplicates": {
+    "title": "Lehetséges másolat",
+    "subtitle": "A két dokumentum tartalma megegyezik. Tartsd meg az egyiket, és töröld a másikat – vagy jelöld, hogy nem másolatok.",
+    "older": "Korábban érkezett",
+    "newer": "Később érkezett",
+    "deleteThis": "Ennek a törlése",
+    "compare": "Összehasonlítás egymás mellett"
+  },
+  "twoFactor": {
+    "title": "Kétlépcsős azonosítás",
+    "on": "Bekapcsolva",
+    "off": "Kikapcsolva",
+    "intro": "Védd a fiókodat egy második tényezővel: bejelentkezéskor egy, a telefonodon lévő hitelesítő alkalmazás kódját is meg kell adnod (pl. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Beállítás",
+    "scan": "Olvasd be a QR-kódot a hitelesítő alkalmazással, vagy add meg kézzel a kulcsot. Ezután add meg az alkalmazás kódját és a jelszavadat.",
+    "qrAlt": "QR-kód a hitelesítő alkalmazáshoz",
+    "secret": "Kulcs",
+    "confirmCode": "Kód az alkalmazásból",
+    "activate": "Aktiválás",
+    "recoveryTitle": "Helyreállító kódok",
+    "recoveryText": "Tárold ezeket a helyreállító kódokat biztonságos helyen. Mindegyik egyszer használható, ha nem tudod használni az alkalmazást – például ha elveszíted a telefonodat. Csak most jelennek meg.",
+    "download": "Mentés fájlba",
+    "done": "Kész",
+    "enabled": "A kétlépcsős azonosítás be van kapcsolva",
+    "disabled": "A kétlépcsős azonosítás ki van kapcsolva",
+    "disableHint": "A kikapcsoláshoz add meg az alkalmazás aktuális kódját (vagy egy helyreállító kódot) és a jelszavadat.",
+    "disable": "Kikapcsolás",
+    "recoveryLeft": "Fel nem használt helyreállító kódok: {{count}}",
+    "adminCannotDisable": "Rendszergazdaként nem kapcsolhatod ki a kétlépcsős azonosítást."
+  },
+  "confirmCode": {
+    "title": "Módosítás megerősítése",
+    "text": "A fiókok, postafiókok és beállítások módosításához a hitelesítő alkalmazás aktuális kódja szükséges. A megerősítés 10 percig érvényes.",
+    "submit": "Megerősítés"
+  },
+  "share": {
+    "button": "Megosztás",
+    "title": "Dokumentum megosztása",
+    "intro": "Létrehoz egy linket, amellyel egy fiók nélküli személy pontosan ezt a dokumentumot nyithatja meg.",
+    "recipient": "Kivel osztod meg?",
+    "recipientHint": "A személy neve – hogy később lásd, kinek adtad a linket.",
+    "permission": "Szerkesztheti ez a személy a dokumentumot?",
+    "viewOnly": "Csak megtekintés",
+    "canEdit": "Szerkesztheti",
+    "viewHint": "A személy megtekintheti, kinyomtathatja és letöltheti a PDF-et.",
+    "editHint": "A személy a PDF-et meg is jelölheti, írhat bele, aláírhatja és mentheti. Minden mentés új verzió lesz; a cím, a címkék és a többi adat rejtve marad.",
+    "validity": "Érvényesség",
+    "unlimited": "Korlátlan",
+    "create": "Link létrehozása",
+    "link": "Link",
+    "linkHint": "Bárki, akinél ez a link van, megnyithatja a dokumentumot – csak {{name}} részére add tovább. Bármikor visszavonhatod a dokumentum nézetében.",
+    "copy": "Link másolása",
+    "copied": "Link másolva",
+    "listTitle": "Külsőleg megosztva",
+    "expired": "lejárt",
+    "validUntil": "érvényes eddig: {{date}}",
+    "noExpiry": "lejárat nélkül",
+    "lastOpened": "utoljára megnyitva {{when}} (megtekintések: {{views}})",
+    "neverOpened": "még nem nyitották meg",
+    "revoke": "Link visszavonása",
+    "revokeTitle": "Visszavonod {{name}} linkjét?",
+    "revokeText": "A link azonnal megszűnik működni. A személy által már letöltött másolatok nála maradnak.",
+    "revoked": "Link visszavonva",
+    "page": {
+      "for": "Megosztva vele: {{name}}",
+      "invalid": "Ez a link érvénytelen vagy lejárt, vagy a dokumentumot törölték. Fordulj ahhoz, aki a linket adta."
     }
   }
 }

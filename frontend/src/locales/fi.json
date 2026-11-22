@@ -49,6 +49,8 @@
     "setup": {
       "title": "AIDocumentsin käyttöönotto",
       "subtitle": "Luo ensin ylläpitäjän tili. Voit lisätä muita käyttäjiä myöhemmin asetuksissa.",
+      "code": "Asennuskoodi",
+      "codeHint": "Näkyy palvelimen lokissa käynnistyksen yhteydessä (Docker: docker compose logs).",
       "adminAccount": "Ylläpitäjän tili",
       "repeatPassword": "Toista salasana",
       "submit": "Luo tili ja aloita",
@@ -57,6 +59,19 @@
         "ai": "Tekoäly tiivistää ja lisää tunnisteet",
         "search": "Kokotekstihaku asiakirjojen sisällöstä"
       }
+    },
+    "twoFactor": {
+      "title": "Vahvista kirjautuminen",
+      "subtitle": "Anna todennussovelluksesi 6-numeroinen koodi.",
+      "code": "Koodi",
+      "codeHint": "Eikö sinulla ole pääsyä sovellukseen? Anna sen sijaan yksi palautuskoodeistasi.",
+      "submit": "Vahvista",
+      "back": "Takaisin kirjautumiseen"
+    },
+    "twoFactorRequired": {
+      "title": "Ota kaksivaiheinen tunnistautuminen käyttöön",
+      "subtitle": "Kaksivaiheinen tunnistautuminen on pakollinen ylläpitäjille. Ota se nyt käyttöön jatkaaksesi.",
+      "intro": "Tarvitset puhelimeesi todennussovelluksen (esim. Google Authenticator, Microsoft Authenticator, 1Password tai Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Tumma teema"
     },
     "search": {
-      "placeholder": "Hae asiakirjoja, tunnisteita, sisältöä…",
-      "placeholderAi": "Hae asiakirjoja omin sanoin – esim. ”Kian laskut vuodelta 2024”",
+      "placeholder": "Hakusanahaku: asiakirjat, tunnisteet, sisältö …",
+      "placeholderAi": "Tekoälyhaku: kysy omin sanoin – esim. ”Kian laskut vuodelta 2024”",
       "labelAi": "Tekoäly",
       "label": "Hae asiakirjoja",
       "clear": "Tyhjennä haku",
@@ -78,6 +93,7 @@
       "aiActive": "Tekoäly käytössä",
       "aiNotConfigured": "Tekoälyä ei ole määritetty",
       "changePassword": "Vaihda salasana",
+      "licenses": "Kolmansien osapuolten lisenssit",
       "logout": "Kirjaudu ulos"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Poistetaanko asiakirja?",
-      "text": "”{{title}}” poistetaan PDF-tiedostoineen, teksteineen ja tunnisteineen. Tätä ei voi kumota.",
-      "confirm": "Poista pysyvästi"
+      "text": "”{{title}}” poistetaan. Voit kumota poiston historiassa 30 päivän ajan; sen jälkeen se poistetaan pysyvästi.",
+      "confirm": "Poista"
     },
     "chat": {
       "intro": "Kysy jotain tästä asiakirjasta – tekoäly vastaa sen sisällön perusteella.",
@@ -266,6 +282,25 @@
         "summary": "Mistä tässä asiakirjassa on kyse?",
         "deadlines": "Onko määräaikoja tai päivämääriä?",
         "amounts": "Mitä summia mainitaan?"
+      }
+    },
+    "versions": {
+      "title": "Versiot",
+      "intro": "Jokainen PDF:n muutos luo uuden version. Vanhemmat versiot säilyvät, ja niitä voi katsella, ladata tai palauttaa.",
+      "current": "nykyinen",
+      "view": "Näytä versio {{number}}",
+      "download": "Lataa versio {{number}}",
+      "restore": "Palauta versio {{number}}",
+      "restoreTitle": "Palautetaanko versio {{number}}?",
+      "restoreText": "Versiosta tulee nykyinen. Nykyinen versio säilyy, ja vaiheen voi perua historiassa.",
+      "restoreConfirm": "Palauta",
+      "restored": "Versio {{number}} palautettu",
+      "kinds": {
+        "IMPORTED": "Tuotu",
+        "EDITED": "Muokattu",
+        "ORIGINAL_RESTORED": "Alkuperäinen palautettu",
+        "VERSION_RESTORED": "Versio {{from}} palautettu",
+        "UNDONE": "Muutos peruttu"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Vain viestit alkaen",
         "sinceHint": "Valinnainen – vanhemmat viestit ohitetaan",
         "enabled": "Tarkista automaattisesti",
-        "enabledHint": "Postilaatikosta tarkistetaan uudet PDF-tiedostot määritetyin välein."
-      }
+        "enabledHint": "Postilaatikosta tarkistetaan uudet PDF-tiedostot määritetyin välein.",
+        "filter": {
+          "title": "Suodatin",
+          "intro": "Käsitellään vain sähköpostit, jotka täyttävät kaikki ehdot. Yksi termi riviä kohden; isoilla ja pienillä kirjaimilla ei ole väliä, ja osa tekstistä riittää. Tyhjät kentät eivät rajaa mitään.",
+          "subjectIncludes": "Aihe sisältää jonkin näistä termeistä",
+          "subjectExcludes": "Aihe ei sisällä mitään näistä termeistä",
+          "senderIncludes": "Lähettäjä sisältää jonkin näistä termeistä",
+          "senderExcludes": "Lähettäjä ei sisällä mitään näistä termeistä",
+          "senderHint": "Nimi tai osoite, esim. ”@example.com”",
+          "newOnly": "Suodatin koskee sähköposteja, jotka saapuvat viimeisimmän noudon jälkeen; jo tarkistettuja sähköposteja ei käsitellä uudelleen."
+        },
+        "interval": "Noutoväli minuutteina",
+        "intervalHint": "Jätä tyhjäksi, niin käytetään yleistä noutoväliä (nyt {{interval}})."
+      },
+      "filterActive": "Suodatin käytössä",
+      "schedule": "Nouto {{interval}} välein · seuraava {{when}}",
+      "scheduleSoon": "Nouto {{interval}} välein · seuraava pian"
     },
     "import": {
       "title": "Aikataulu ja tuontikansio",
@@ -317,7 +367,7 @@
       "saved": "Asetukset tallennettu",
       "interval": {
         "title": "Tarkistusväli",
-        "text": "Näin usein sovellus tarkistaa kaikki postilaatikot ja tuontikansion uusien PDF-tiedostojen varalta.",
+        "text": "Kuinka usein sovellus tarkistaa saapuvien kansion ja kaikki postilaatikot, joilla ei ole omaa noutoväliä, uusien PDF-tiedostojen varalta.",
         "label": "… minuutin välein",
         "nextRun": "Seuraava automaattinen tarkistus {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Tili käytössä",
         "activeHint": "Käytöstä poistetuilla tileillä ei voi kirjautua sisään; avoimet istunnot päättyvät heti.",
         "create": "Luo"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Nollaa kaksivaiheinen tunnistautuminen",
+      "resetTwoFactorHint": "Tällä tilillä on kaksivaiheinen tunnistautuminen käytössä.",
+      "resetTwoFactorText": "{{name}} kirjautuu sen jälkeen pelkällä salasanalla ja voi ottaa kaksivaiheisen tunnistautumisen uudelleen käyttöön – esimerkiksi kadonneen puhelimen jälkeen.",
+      "resetTwoFactorConfirm": "Nollaa",
+      "twoFactorReset": "Kaksivaiheinen tunnistautuminen nollattu"
+    }
+  },
+  "history": {
+    "nav": "Historia",
+    "title": "Historia",
+    "subtitle": "Mitä asiakirjoillesi on tapahtunut – uusimmat merkinnät ensin.",
+    "empty": "Ei vielä merkintöjä.",
+    "actions": {
+      "IMPORTED": "Tuotu",
+      "EDITED": "Muokattu",
+      "DELETED": "Poistettu"
+    },
+    "changes": {
+      "DETAILS": "Tiedot muutettu",
+      "FILE": "PDF muutettu",
+      "ORIGINAL_RESTORED": "Alkuperäinen palautettu",
+      "DUPLICATE": "kaksoiskappaleena",
+      "VERSION_RESTORED": "Versio palautettu"
+    },
+    "by": "{{user}}",
+    "automatic": "automaattisesti",
+    "more": "Lataa lisää",
+    "undo": "Kumoa",
+    "undone": "Kumottu"
+  },
+  "duplicates": {
+    "title": "Mahdollinen kaksoiskappale",
+    "subtitle": "Asiakirjojen sisältö on sama. Säilytä toinen ja poista toinen – tai merkitse, etteivät ne ole kaksoiskappaleita.",
+    "older": "Saapui aiemmin",
+    "newer": "Saapui myöhemmin",
+    "deleteThis": "Poista tämä",
+    "compare": "Vertaa rinnakkain"
+  },
+  "twoFactor": {
+    "title": "Kaksivaiheinen tunnistautuminen",
+    "on": "Käytössä",
+    "off": "Pois",
+    "intro": "Suojaa tilisi toisella tekijällä: kirjautuessa annat silloin myös koodin puhelimesi todennussovelluksesta (esim. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Ota käyttöön",
+    "scan": "Skannaa QR-koodi todennussovelluksella tai anna avain käsin. Anna sitten sovelluksen näyttämä koodi ja salasanasi.",
+    "qrAlt": "QR-koodi todennussovellusta varten",
+    "secret": "Avain",
+    "confirmCode": "Sovelluksen koodi",
+    "activate": "Aktivoi",
+    "recoveryTitle": "Palautuskoodit",
+    "recoveryText": "Säilytä nämä palautuskoodit turvallisessa paikassa. Kukin toimii kerran, jos et voi käyttää sovellusta – esimerkiksi jos puhelin katoaa. Ne näytetään vain nyt.",
+    "download": "Tallenna tiedostoon",
+    "done": "Valmis",
+    "enabled": "Kaksivaiheinen tunnistautuminen on käytössä",
+    "disabled": "Kaksivaiheinen tunnistautuminen on poistettu käytöstä",
+    "disableHint": "Poista se käytöstä antamalla sovelluksen nykyinen koodi (tai palautuskoodi) ja salasanasi.",
+    "disable": "Poista käytöstä",
+    "recoveryLeft": "Käyttämättömiä palautuskoodeja: {{count}}",
+    "adminCannotDisable": "Ylläpitäjänä et voi poistaa kaksivaiheista tunnistautumista käytöstä."
+  },
+  "confirmCode": {
+    "title": "Vahvista muutos",
+    "text": "Tilien, postilaatikoiden ja asetusten muutokset vaativat todennussovelluksen voimassa olevan koodin. Vahvistus on voimassa 10 minuuttia.",
+    "submit": "Vahvista"
+  },
+  "share": {
+    "button": "Jaa",
+    "title": "Jaa asiakirja",
+    "intro": "Luo linkin, jolla tiliä vailla oleva henkilö voi avata juuri tämän asiakirjan.",
+    "recipient": "Kenen kanssa jaat?",
+    "recipientHint": "Henkilön nimi – näet myöhemmin, kenelle annoit linkin.",
+    "permission": "Saako henkilö muokata asiakirjaa?",
+    "viewOnly": "Vain katselu",
+    "canEdit": "Saa muokata",
+    "viewHint": "Henkilö voi katsella, tulostaa ja ladata PDF-tiedoston.",
+    "editHint": "Henkilö voi lisäksi merkitä, kirjoittaa, allekirjoittaa ja tallentaa PDF-tiedoston. Jokainen tallennus on uusi versio; otsikko, tunnisteet ja muut tiedot pysyvät piilossa.",
+    "validity": "Voimassa",
+    "unlimited": "Rajoittamaton",
+    "create": "Luo linkki",
+    "link": "Linkki",
+    "linkHint": "Kuka tahansa, jolla on tämä linkki, voi avata asiakirjan – anna se vain henkilölle {{name}}. Voit perua sen milloin tahansa asiakirjanäkymässä.",
+    "copy": "Kopioi linkki",
+    "copied": "Linkki kopioitu",
+    "listTitle": "Jaettu ulkopuolisille",
+    "expired": "vanhentunut",
+    "validUntil": "voimassa {{date}} asti",
+    "noExpiry": "ei vanhene",
+    "lastOpened": "avattu viimeksi {{when}} (avauksia: {{views}})",
+    "neverOpened": "ei vielä avattu",
+    "revoke": "Peru linkki",
+    "revokeTitle": "Perutaanko henkilön {{name}} linkki?",
+    "revokeText": "Linkki lakkaa toimimasta heti. Henkilön jo lataamat kopiot jäävät hänelle.",
+    "revoked": "Linkki peruttu",
+    "page": {
+      "for": "Jaettu: {{name}}",
+      "invalid": "Linkki on virheellinen tai vanhentunut, tai asiakirja on poistettu. Ota yhteyttä henkilöön, joka antoi sen sinulle."
     }
   }
 }

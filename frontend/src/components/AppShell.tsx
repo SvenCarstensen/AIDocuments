@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { FileUp, KeyRound, Loader2, LogOut, Moon, Search, Settings, Sparkles, Sun, Upload, X } from 'lucide-react'
+import { FileUp, KeyRound, Loader2, LogOut, Moon, Scale, Search, Settings, ShieldCheck, Sparkles, Sun, Upload, X } from 'lucide-react'
 import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { useAuth } from '../lib/auth'
 import { cx } from '../lib/format'
 import { useTheme } from '../lib/theme'
 import { useUpload } from '../lib/upload'
+import { TwoFactorDialog } from './TwoFactorDialog'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { Alert, Badge, Button, Field, IconButton, Input, Logo, Modal } from './ui'
 
@@ -183,8 +184,17 @@ function SearchBox() {
     else apply(text, false)
   }
 
+  /** Wechselt den Modus und beginnt von vorn: Feld leer, laufende Suche aus der Adresse entfernt. */
   function chooseMode(next: SearchMode) {
     setMode(next)
+    setText('')
+    lastPushed.current = ''
+    if (onList && (params.has('q') || params.has('ai'))) {
+      const rest = new URLSearchParams(params)
+      rest.delete('q')
+      rest.delete('ai')
+      navigate({ pathname: '/documents', search: rest.toString() }, { replace: true })
+    }
     try {
       localStorage.setItem('searchMode', next)
     } catch {
@@ -206,15 +216,15 @@ function SearchBox() {
     >
       {aiAvailable ? (
         // Mit eingerichteter KI: Schiebeschalter „KI“ vorn in der Zeile – an = Fragen an die KI, aus = Stichwortsuche.
-        // Beschriftung und Schalter sind ein einziger Knopf: Jeder Klick schaltet genau einmal um (ein umschließendes
-        // <label> würde den Klick in manchen Browsern ein zweites Mal an den Schalter weitergeben).
+        // Der Schalter ist ein einziger Knopf, damit jeder Klick genau einmal umschaltet; welcher Modus gilt, sagt der
+        // Platzhalter.
         <button
           type="button"
           role="switch"
           aria-checked={aiMode}
           aria-label={t('shell.search.labelAi')}
           onClick={() => chooseMode(aiMode ? 'keywords' : 'ai')}
-          className="flex shrink-0 cursor-pointer items-center gap-2 rounded-lg py-1 pr-2 pl-1 select-none hover:bg-line/40"
+          className="flex shrink-0 cursor-pointer items-center rounded-lg p-1 select-none hover:bg-line/40"
         >
           <span
             className={cx('relative h-6 w-11 shrink-0 rounded-full transition-colors', aiMode ? 'bg-brand' : 'bg-line-strong')}
@@ -234,9 +244,6 @@ function SearchBox() {
                 <Search className="size-3 text-subtle" />
               )}
             </span>
-          </span>
-          <span className={cx('hidden text-xs font-semibold sm:inline', aiMode ? 'text-brand-ink' : 'text-muted')} aria-hidden>
-            {t('shell.search.labelAi')}
           </span>
         </button>
       ) : (
@@ -283,6 +290,7 @@ function UserMenu() {
   const { user, isAdmin, logout } = useAuth()
   const [open, setOpen] = useState(false)
   const [passwordOpen, setPasswordOpen] = useState(false)
+  const [twoFactorOpen, setTwoFactorOpen] = useState(false)
   const container = useRef<HTMLDivElement>(null)
   const system = useQuery({ queryKey: ['system'], queryFn: api.system })
 
@@ -344,6 +352,25 @@ function UserMenu() {
             {t('shell.userMenu.changePassword')}
           </MenuItem>
           <MenuItem
+            icon={<ShieldCheck className="size-4" />}
+            onClick={() => {
+              setOpen(false)
+              setTwoFactorOpen(true)
+            }}
+          >
+            {t('twoFactor.title')}
+          </MenuItem>
+          <MenuItem
+            icon={<Scale className="size-4" />}
+            onClick={() => {
+              setOpen(false)
+              // vom Build erzeugt (vite-plugins/third-party-notices.ts, im Docker-Image ergänzt um Server und Laufzeit)
+              window.open('/THIRD-PARTY-NOTICES.txt', '_blank', 'noopener')
+            }}
+          >
+            {t('shell.userMenu.licenses')}
+          </MenuItem>
+          <MenuItem
             icon={<LogOut className="size-4" />}
             onClick={() => logout().catch((e) => toast.error(errorMessage(e)))}
           >
@@ -352,6 +379,7 @@ function UserMenu() {
         </div>
       )}
       <ChangePasswordDialog open={passwordOpen} onClose={() => setPasswordOpen(false)} />
+      <TwoFactorDialog open={twoFactorOpen} onClose={() => setTwoFactorOpen(false)} />
     </div>
   )
 }

@@ -59,7 +59,9 @@ public class ApiExceptionHandler {
     @ExceptionHandler(IllegalStateException.class)
     ProblemDetail handleIllegalState(IllegalStateException e) {
         log.error("Interner Fehler", e);
+        // interne Meldungen (Pfade, Klassennamen) gehen nur ins Protokoll, nicht an den Browser
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                e instanceof Localizable localizable ? messages.render(localizable.msg()) : e.getMessage());
+                e instanceof Localizable localizable ? messages.render(localizable.msg())
+                        : messages.get("error.internal"));
     }
 }

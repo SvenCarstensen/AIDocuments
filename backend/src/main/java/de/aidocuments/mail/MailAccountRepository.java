@@ -1,9 +1,125 @@
 package de.aidocuments.mail;
 
+import static de.aidocuments.persistence.Db.enumValue;
+import static de.aidocuments.persistence.Db.instant;
+import static de.aidocuments.persistence.Db.millis;
+import static de.aidocuments.persistence.Db.name;
+import static de.aidocuments.persistence.Db.nullableInt;
+import static de.aidocuments.persistence.Db.nullableLong;
+
+import de.aidocuments.persistence.Db;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import java.util.Map;
+import java.util.Optional;
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.stereotype.Repository;
 
-public interface MailAccountRepository extends MongoRepository<MailAccount, String> {
+/** Postfächer in der Tabelle {@code mail_accounts}. */
+@Repository
+public class MailAccountRepository {
 
-    List<MailAccount> findByEnabledTrue();
+    private final Db db;
+    private final JdbcClient jdbc;
+
+    public MailAccountRepository(Db db) {
+        this.db = db;
+        this.jdbc = db.jdbc();
+    }
+
+    public Optional<MailAccount> findById(String id) {
+        return jdbc.sql("SELECT * FROM mail_accounts WHERE id = ?").param(id)
+                .query(MailAccountRepository::map).optional();
+    }
+
+    public List<MailAccount> findAll() {
+        return jdbc.sql("SELECT * FROM mail_accounts ORDER BY created_at").query(MailAccountRepository::map).list();
+    }
+
+    public List<MailAccount> findByEnabledTrue() {
+        return jdbc.sql("SELECT * FROM mail_accounts WHERE enabled = ? ORDER BY created_at").param(true)
+                .query(MailAccountRepository::map).list();
+    }
+
+    public MailAccount save(MailAccount account) {
+        Map<String, Object> c = new LinkedHashMap<>();
+        c.put("id", account.getId());
+        c.put("name", account.getName());
+        c.put("host", account.getHost());
+        c.put("port", account.getPort());
+        c.put("security", name(account.getSecurity()));
+        c.put("username", account.getUsername());
+        c.put("password_encrypted", account.getPasswordEncrypted());
+        c.put("folder", account.getFolder());
+        c.put("import_since", account.getImportSince() == null ? null : account.getImportSince().toString());
+        c.put("enabled", account.isEnabled());
+        MailFilter filter = account.getFilter();
+        c.put("subject_include", MailFilter.join(filter.subjectIncludes()));
+        c.put("subject_exclude", MailFilter.join(filter.subjectExcludes()));
+        c.put("sender_include", MailFilter.join(filter.senderIncludes()));
+        c.put("sender_exclude", MailFilter.join(filter.senderExcludes()));
+        c.put("interval_minutes", account.getIntervalMinutes());
+        c.put("uid_validity", account.getUidValidity());
+        c.put("last_uid", account.getLastUid());
+        c.put("checked_until", millis(account.getCheckedUntil()));
+        c.put("last_sync_at", millis(account.getLastSyncAt()));
+        c.put("last_sync_status", name(account.getLastSyncStatus()));
+        c.put("last_sync_message", account.getLastSyncMessage());
+        c.put("created_at", millis(account.getCreatedAt()));
+        db.upsert("mail_accounts", c);
+        return account;
+    }
+
+    public void delete(MailAccount account) {
+        jdbc.sql("DELETE FROM mail_accounts WHERE id = ?").param(account.getId()).update();
+    }
+
+    // --- Abrufstand: gezielte Feld-Updates, damit ein parallel gespeichertes Formular nichts überschreibt ---
+
+    void markRunning(String id) {
+        jdbc.sql("UPDATE mail_accounts SET last_sync_status = ? WHERE id = ?")
+                .param(MailAccount.SyncStatus.RUNNING.name()).param(id).update();
+    }
+
+    void saveCursor(String id, long uidValidity, long lastUid) {
+        jdbc.sql("UPDATE mail_accounts SET uid_validity = ?, last_uid = ? WHERE id = ?")
+                .param(uidValidity).param(lastUid).param(id).update();
+    }
+
+    /** Nur nach einem erfolgreichen Abruf: E-Mails, die vor {@code startedAt} empfangen wurden, sind geprüft. */
+    void saveCheckedUntil(String id, Instant startedAt) {
+        jdbc.sql("UPDATE mail_accounts SET checked_until = ? WHERE id = ?").param(startedAt.toEpochMilli()).param(id)
+                .update();
+    }
+
+    void markFinished(String id, MailAccount.SyncStatus status, String message, Instant at) {
+        jdbc.sql("UPDATE mail_accounts SET last_sync_status = ?, last_sync_message = ?, last_sync_at = ? WHERE id = ?")
+                .param(status.name()).param(message).param(at.toEpochMilli()).param(id).update();
+    }
+
+    private static MailAccount map(ResultSet rs, int row) throws SQLException {
+        MailAccount account = new MailAccount(rs.getString("id"));
+        account.setName(rs.getString("name"));
+        account.setHost(rs.getString("host"));
+        account.setPort(rs.getInt("port"));
+        account.setSecurity(enumValue(rs, "security", MailSecurity.class));
+        account.setUsername(rs.getString("username"));
+        account.setPasswordEncrypted(rs.getString("password_encrypted"));
+        account.setFolder(rs.getString("folder"));
+        String since = rs.getString("import_since");
+        account.setImportSince(since == null ? null : LocalDate.parse(since));
+        account.setEnabled(rs.getBoolean("enabled"));
+        account.setFilter(new MailFilter(MailFilter.split(rs.getString("subject_include")),
+                MailFilter.split(rs.getString("subject_exclude")), MailFilter.split(rs.getString("sender_include")),
+                MailFilter.split(rs.getString("sender_exclude"))));
+        account.setIntervalMinutes(nullableInt(rs, "interval_minutes"));
+        account.restoreState(nullableLong(rs, "uid_validity"), nullableLong(rs, "last_uid"),
+                instant(rs, "checked_until"), instant(rs, "last_sync_at"), enumValue(rs, "last_sync_status", MailAccount.SyncStatus.class),
+                rs.getString("last_sync_message"), instant(rs, "created_at"));
+        return account;
+    }
 }

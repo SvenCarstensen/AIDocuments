@@ -49,6 +49,8 @@
     "setup": {
       "title": "AIDocumentsi seadistamine",
       "subtitle": "Loo esmalt administraatorikonto. Teisi kasutajaid saad hiljem lisada seadetes.",
+      "code": "Seadistuskood",
+      "codeHint": "Kuvatakse käivitamisel serveri logis (Docker: docker compose logs).",
       "adminAccount": "Administraatorikonto",
       "repeatPassword": "Korda parooli",
       "submit": "Loo konto ja alusta",
@@ -57,6 +59,19 @@
         "ai": "TI teeb kokkuvõtte ja lisab märksõnad",
         "search": "Täistekstiotsing otse dokumentide sisust"
       }
+    },
+    "twoFactor": {
+      "title": "Kinnita sisselogimine",
+      "subtitle": "Sisesta autentimisrakenduse 6-kohaline kood.",
+      "code": "Kood",
+      "codeHint": "Rakendusele pole ligipääsu? Sisesta selle asemel üks oma taastekoodidest.",
+      "submit": "Kinnita",
+      "back": "Tagasi sisselogimisse"
+    },
+    "twoFactorRequired": {
+      "title": "Seadista kaheastmeline autentimine",
+      "subtitle": "Administraatoritele on kaheastmeline autentimine kohustuslik. Jätkamiseks seadista see kohe.",
+      "intro": "Sul on vaja telefoni autentimisrakendust (nt Google Authenticator, Microsoft Authenticator, 1Password või Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Tume teema"
     },
     "search": {
-      "placeholder": "Otsi dokumente, märksõnu, sisu…",
-      "placeholderAi": "Otsi dokumente oma sõnadega – nt „Kia arved aastast 2024“",
+      "placeholder": "Märksõnaotsing: dokumendid, sildid, sisu …",
+      "placeholderAi": "Tehisintellekti otsing: küsi oma sõnadega – nt „Kia arved aastast 2024“",
       "labelAi": "TI",
       "label": "Otsi dokumente",
       "clear": "Tühjenda otsing",
@@ -78,6 +93,7 @@
       "aiActive": "TI aktiivne",
       "aiNotConfigured": "TI seadistamata",
       "changePassword": "Muuda parooli",
+      "licenses": "Kolmandate osapoolte litsentsid",
       "logout": "Logi välja"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Kas kustutada dokument?",
-      "text": "„{{title}}“ kustutatakse koos PDF-faili, täisteksti ja märksõnadega. Seda ei saa tagasi võtta.",
-      "confirm": "Kustuta jäädavalt"
+      "text": "„{{title}}“ kustutatakse. Ajaloos saad selle 30 päeva jooksul tagasi võtta; seejärel eemaldatakse see lõplikult.",
+      "confirm": "Kustuta"
     },
     "chat": {
       "intro": "Esita küsimus selle dokumendi kohta – tehisintellekt vastab selle sisu põhjal.",
@@ -266,6 +282,25 @@
         "summary": "Millest see dokument räägib?",
         "deadlines": "Kas on tähtaegu või kuupäevi?",
         "amounts": "Milliseid summasid mainitakse?"
+      }
+    },
+    "versions": {
+      "title": "Versioonid",
+      "intro": "Iga PDF-i muudatus loob uue versiooni. Vanemad versioonid säilivad ning neid saab vaadata, alla laadida või taastada.",
+      "current": "praegune",
+      "view": "Vaata versiooni {{number}}",
+      "download": "Laadi alla versioon {{number}}",
+      "restore": "Taasta versioon {{number}}",
+      "restoreTitle": "Kas taastada versioon {{number}}?",
+      "restoreText": "See versioon muutub praeguseks. Praegune versioon säilib ja sammu saab ajaloos tagasi võtta.",
+      "restoreConfirm": "Taasta",
+      "restored": "Versioon {{number}} taastatud",
+      "kinds": {
+        "IMPORTED": "Imporditud",
+        "EDITED": "Muudetud",
+        "ORIGINAL_RESTORED": "Originaal taastatud",
+        "VERSION_RESTORED": "Versioon {{from}} taastatud",
+        "UNDONE": "Muudatus tagasi võetud"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Ainult e-kirjad alates",
         "sinceHint": "Valikuline – vanemad e-kirjad jäetakse vahele",
         "enabled": "Kontrolli automaatselt",
-        "enabledHint": "Postkastist otsitakse määratud intervalliga uusi PDF-e."
-      }
+        "enabledHint": "Postkastist otsitakse määratud intervalliga uusi PDF-e.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Töödeldakse ainult e-kirju, mis vastavad kõigile tingimustele. Üks termin rea kohta; suur- ja väiketähtedel pole vahet ning piisab osast tekstist. Tühjad väljad ei piira midagi.",
+          "subjectIncludes": "Teema sisaldab ühte neist terminitest",
+          "subjectExcludes": "Teema ei sisalda ühtegi neist terminitest",
+          "senderIncludes": "Saatja sisaldab ühte neist terminitest",
+          "senderExcludes": "Saatja ei sisalda ühtegi neist terminitest",
+          "senderHint": "Nimi või aadress, nt „@example.com“",
+          "newOnly": "Filter kehtib e-kirjadele, mis saabuvad pärast viimast kontrolli; juba kontrollitud e-kirju uuesti ei töödelda."
+        },
+        "interval": "Kontrollimise intervall minutites",
+        "intervalHint": "Jäta tühjaks, et kasutada üldist intervalli (praegu {{interval}})."
+      },
+      "filterActive": "Filter on aktiivne",
+      "schedule": "Kontroll iga {{interval}} järel · järgmine {{when}}",
+      "scheduleSoon": "Kontroll iga {{interval}} järel · järgmine peagi"
     },
     "import": {
       "title": "Ajakava ja impordikaust",
@@ -317,7 +367,7 @@
       "saved": "Seaded salvestatud",
       "interval": {
         "title": "Kontrollimisintervall",
-        "text": "Nii sageli otsib rakendus kõigist postkastidest ja impordikaustast uusi PDF-e.",
+        "text": "Kui sageli rakendus kontrollib sisendkausta ja kõiki ilma oma intervallita postkaste uute PDF-ide suhtes.",
         "label": "Iga … minuti järel",
         "nextRun": "Järgmine automaatne kontroll {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Konto on aktiivne",
         "activeHint": "Keelatud kontoga ei saa sisse logida; aktiivsed seansid lõpevad kohe.",
         "create": "Loo"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Lähtesta kaheastmeline autentimine",
+      "resetTwoFactorHint": "Selle konto jaoks on kaheastmeline autentimine sees.",
+      "resetTwoFactorText": "{{name}} logib seejärel sisse ainult parooliga ja saab kaheastmelise autentimise uuesti seadistada – näiteks pärast telefoni kaotamist.",
+      "resetTwoFactorConfirm": "Lähtesta",
+      "twoFactorReset": "Kaheastmeline autentimine lähtestatud"
+    }
+  },
+  "history": {
+    "nav": "Ajalugu",
+    "title": "Ajalugu",
+    "subtitle": "Mis su dokumentidega on juhtunud – uusimad kirjed eespool.",
+    "empty": "Kirjeid veel pole.",
+    "actions": {
+      "IMPORTED": "Imporditud",
+      "EDITED": "Muudetud",
+      "DELETED": "Kustutatud"
+    },
+    "changes": {
+      "DETAILS": "Andmed muudetud",
+      "FILE": "PDF muudetud",
+      "ORIGINAL_RESTORED": "Originaal taastatud",
+      "DUPLICATE": "duplikaadina",
+      "VERSION_RESTORED": "Versioon taastatud"
+    },
+    "by": "kasutaja {{user}}",
+    "automatic": "automaatselt",
+    "more": "Laadi veel",
+    "undo": "Võta tagasi",
+    "undone": "Tagasi võetud"
+  },
+  "duplicates": {
+    "title": "Võimalik duplikaat",
+    "subtitle": "Kahe dokumendi sisu kattub. Jäta üks alles ja kustuta teine – või märgi, et need pole duplikaadid.",
+    "older": "Saabus varem",
+    "newer": "Saabus hiljem",
+    "deleteThis": "Kustuta see",
+    "compare": "Võrdle kõrvuti"
+  },
+  "twoFactor": {
+    "title": "Kaheastmeline autentimine",
+    "on": "Sees",
+    "off": "Väljas",
+    "intro": "Kaitse oma kontot teise teguriga: sisselogimisel sisestad siis ka koodi oma telefoni autentimisrakendusest (nt Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Seadista",
+    "scan": "Skanni QR-kood autentimisrakendusega või sisesta võti käsitsi. Seejärel sisesta rakenduse kood ja oma parool.",
+    "qrAlt": "QR-kood autentimisrakenduse jaoks",
+    "secret": "Võti",
+    "confirmCode": "Rakenduse kood",
+    "activate": "Aktiveeri",
+    "recoveryTitle": "Taastekoodid",
+    "recoveryText": "Hoia need taastekoodid turvalises kohas. Iga kood töötab üks kord, kui sa ei saa rakendust kasutada – näiteks kui telefon kaob. Neid näidatakse ainult praegu.",
+    "download": "Salvesta failina",
+    "done": "Valmis",
+    "enabled": "Kaheastmeline autentimine on sees",
+    "disabled": "Kaheastmeline autentimine on välja lülitatud",
+    "disableHint": "Väljalülitamiseks sisesta rakenduse kehtiv kood (või taastekood) ja oma parool.",
+    "disable": "Lülita välja",
+    "recoveryLeft": "Kasutamata taastekoode: {{count}}",
+    "adminCannotDisable": "Administraatorina ei saa sa kaheastmelist autentimist välja lülitada."
+  },
+  "confirmCode": {
+    "title": "Kinnita muudatus",
+    "text": "Kontode, postkastide ja seadete muutmiseks on vaja autentimisrakenduse kehtivat koodi. Kinnitus kehtib 10 minutit.",
+    "submit": "Kinnita"
+  },
+  "share": {
+    "button": "Jaga",
+    "title": "Jaga dokumenti",
+    "intro": "Loob lingi, millega kontota inimene saab avada just selle dokumendi.",
+    "recipient": "Kellega jagad?",
+    "recipientHint": "Inimese nimi – et hiljem näeksid, kellele lingi andsid.",
+    "permission": "Kas see inimene tohib dokumenti muuta?",
+    "viewOnly": "Ainult vaatamine",
+    "canEdit": "Tohib muuta",
+    "viewHint": "Inimene saab PDF-i vaadata, printida ja alla laadida.",
+    "editHint": "Inimene saab PDF-i ka märgistada, sinna kirjutada, allkirjastada ja salvestada. Iga salvestus on uus versioon; pealkiri, sildid ja muud andmed jäävad peidetuks.",
+    "validity": "Kehtib",
+    "unlimited": "Piiramatult",
+    "create": "Loo link",
+    "link": "Link",
+    "linkHint": "Igaüks, kellel see link on, saab dokumendi avada – anna see ainult inimesele {{name}}. Saad selle igal ajal dokumendivaates tühistada.",
+    "copy": "Kopeeri link",
+    "copied": "Link kopeeritud",
+    "listTitle": "Väliselt jagatud",
+    "expired": "aegunud",
+    "validUntil": "kehtib kuni {{date}}",
+    "noExpiry": "tähtajatu",
+    "lastOpened": "viimati avatud {{when}} (vaatamisi: {{views}})",
+    "neverOpened": "pole veel avatud",
+    "revoke": "Tühista link",
+    "revokeTitle": "Kas tühistada inimese {{name}} link?",
+    "revokeText": "Link lakkab kohe töötamast. Koopiad, mille inimene on juba alla laadinud, jäävad talle.",
+    "revoked": "Link tühistatud",
+    "page": {
+      "for": "Jagatud: {{name}}",
+      "invalid": "See link on vigane või aegunud või dokument on kustutatud. Pöördu inimese poole, kes selle sulle andis."
     }
   }
 }

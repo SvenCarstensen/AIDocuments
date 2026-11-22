@@ -51,6 +51,8 @@
     "setup": {
       "title": "Nastavitev AIDocuments",
       "subtitle": "Začnite z ustvarjanjem skrbniškega računa. Dodatne uporabnike lahko pozneje dodate v nastavitvah.",
+      "code": "Namestitvena koda",
+      "codeHint": "Izpiše se v dnevniku strežnika ob zagonu (Docker: docker compose logs).",
       "adminAccount": "Skrbniški račun",
       "repeatPassword": "Ponovite geslo",
       "submit": "Ustvari račun in začni",
@@ -59,6 +61,19 @@
         "ai": "UI jih povzame in opremi z oznakami",
         "search": "Iskanje po celotnem besedilu vse do vsebine dokumenta"
       }
+    },
+    "twoFactor": {
+      "title": "Potrdi prijavo",
+      "subtitle": "Vnesi 6-mestno kodo iz aplikacije za preverjanje pristnosti.",
+      "code": "Koda",
+      "codeHint": "Nimaš dostopa do aplikacije? Namesto tega vnesi eno od svojih obnovitvenih kod.",
+      "submit": "Potrdi",
+      "back": "Nazaj na prijavo"
+    },
+    "twoFactorRequired": {
+      "title": "Nastavi dvostopenjsko preverjanje",
+      "subtitle": "Za skrbnike je dvostopenjsko preverjanje obvezno. Nastavi ga zdaj, da nadaljuješ.",
+      "intro": "Potrebuješ aplikacijo za preverjanje pristnosti v telefonu (npr. Google Authenticator, Microsoft Authenticator, 1Password ali Aegis)."
     }
   },
   "shell": {
@@ -68,8 +83,8 @@
       "dark": "Temna tema"
     },
     "search": {
-      "placeholder": "Iskanje po dokumentih, oznakah, vsebini …",
-      "placeholderAi": "Išči dokumente s svojimi besedami – npr. »računi od Kie iz leta 2024«",
+      "placeholder": "Iskanje po ključnih besedah: dokumenti, oznake, vsebina …",
+      "placeholderAi": "Iskanje z UI: vprašaj s svojimi besedami – npr. »računi od Kie iz leta 2024«",
       "labelAi": "UI",
       "label": "Iskanje dokumentov",
       "clear": "Počisti iskanje",
@@ -80,6 +95,7 @@
       "aiActive": "UI je aktivna",
       "aiNotConfigured": "UI ni nastavljena",
       "changePassword": "Spremeni geslo",
+      "licenses": "Licence tretjih oseb",
       "logout": "Odjava"
     },
     "passwordDialog": {
@@ -270,8 +286,8 @@
     },
     "delete": {
       "title": "Izbrisati dokument?",
-      "text": "Dokument »{{title}}« bo izbrisan skupaj z datoteko PDF, celotnim besedilom in oznakami. Tega dejanja ni mogoče razveljaviti.",
-      "confirm": "Izbriši trajno"
+      "text": "»{{title}}« bo izbrisan. V zgodovini lahko to 30 dni razveljavite; nato bo dokončno odstranjen.",
+      "confirm": "Izbriši"
     },
     "chat": {
       "intro": "Postavi vprašanje o tem dokumentu – UI odgovori na podlagi njegove vsebine.",
@@ -284,6 +300,25 @@
         "summary": "O čem govori ta dokument?",
         "deadlines": "Ali so navedeni roki ali datumi?",
         "amounts": "Kateri zneski so navedeni?"
+      }
+    },
+    "versions": {
+      "title": "Različice",
+      "intro": "Vsaka sprememba PDF-ja ustvari novo različico. Starejše različice ostanejo shranjene in si jih lahko ogledaš, preneseš ali obnoviš.",
+      "current": "trenutna",
+      "view": "Ogled različice {{number}}",
+      "download": "Prenos različice {{number}}",
+      "restore": "Obnovi različico {{number}}",
+      "restoreTitle": "Obnovim različico {{number}}?",
+      "restoreText": "Ta različica postane trenutna. Sedanja različica ostane shranjena, korak pa lahko razveljaviš v zgodovini.",
+      "restoreConfirm": "Obnovi",
+      "restored": "Različica {{number}} obnovljena",
+      "kinds": {
+        "IMPORTED": "Uvoženo",
+        "EDITED": "Urejeno",
+        "ORIGINAL_RESTORED": "Izvirnik obnovljen",
+        "VERSION_RESTORED": "Različica {{from}} obnovljena",
+        "UNDONE": "Sprememba razveljavljena"
       }
     }
   },
@@ -325,8 +360,23 @@
         "since": "Samo e-pošta od",
         "sinceHint": "Neobvezno – starejša e-pošta se preskoči",
         "enabled": "Preverjaj samodejno",
-        "enabledHint": "Predal se v nastavljenem intervalu preverja za nove datoteke PDF."
-      }
+        "enabledHint": "Predal se v nastavljenem intervalu preverja za nove datoteke PDF.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Obdelajo se samo e-poštna sporočila, ki izpolnjujejo vse pogoje. En izraz na vrstico; velike in male črke niso pomembne, zadošča del besedila. Prazna polja ničesar ne omejujejo.",
+          "subjectIncludes": "Zadeva vsebuje enega od teh izrazov",
+          "subjectExcludes": "Zadeva ne vsebuje nobenega od teh izrazov",
+          "senderIncludes": "Pošiljatelj vsebuje enega od teh izrazov",
+          "senderExcludes": "Pošiljatelj ne vsebuje nobenega od teh izrazov",
+          "senderHint": "Ime ali naslov, npr. »@example.com«",
+          "newOnly": "Filter velja za e-poštna sporočila, ki prispejo po zadnjem prevzemu; že preverjena sporočila se ne obdelajo znova."
+        },
+        "interval": "Interval prevzema v minutah",
+        "intervalHint": "Pustite prazno za splošni interval (trenutno {{interval}})."
+      },
+      "filterActive": "Filter je vklopljen",
+      "schedule": "Prevzem vsakih {{interval}} · naslednji {{when}}",
+      "scheduleSoon": "Prevzem vsakih {{interval}} · naslednji kmalu"
     },
     "import": {
       "title": "Urnik in mapa za uvoz",
@@ -335,7 +385,7 @@
       "saved": "Nastavitve so shranjene",
       "interval": {
         "title": "Interval preverjanja",
-        "text": "Tako pogosto aplikacija preveri vse poštne predale in mapo za uvoz za nove datoteke PDF.",
+        "text": "Kako pogosto aplikacija preveri vhodno mapo in vse nabiralnike brez lastnega intervala za nove datoteke PDF.",
         "label": "Vsakih … minut",
         "nextRun": "Naslednje samodejno preverjanje {{when}}."
       },
@@ -472,7 +522,104 @@
         "active": "Račun je aktiven",
         "activeHint": "Onemogočeni računi se ne morejo prijaviti; aktivne seje se takoj končajo.",
         "create": "Ustvari"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Ponastavi dvostopenjsko preverjanje",
+      "resetTwoFactorHint": "Za ta račun je dvostopenjsko preverjanje vklopljeno.",
+      "resetTwoFactorText": "{{name}} se bo nato prijavljal samo z geslom in lahko znova nastavi dvostopenjsko preverjanje – na primer po izgubi telefona.",
+      "resetTwoFactorConfirm": "Ponastavi",
+      "twoFactorReset": "Dvostopenjsko preverjanje ponastavljeno"
+    }
+  },
+  "history": {
+    "nav": "Zgodovina",
+    "title": "Zgodovina",
+    "subtitle": "Kaj se je zgodilo z vašimi dokumenti – najnovejši vnosi najprej.",
+    "empty": "Še ni vnosov.",
+    "actions": {
+      "IMPORTED": "Uvoženo",
+      "EDITED": "Urejeno",
+      "DELETED": "Izbrisano"
+    },
+    "changes": {
+      "DETAILS": "Podatki spremenjeni",
+      "FILE": "PDF spremenjen",
+      "ORIGINAL_RESTORED": "Izvirnik obnovljen",
+      "DUPLICATE": "kot dvojnik",
+      "VERSION_RESTORED": "Različica obnovljena"
+    },
+    "by": "uporabnik {{user}}",
+    "automatic": "samodejno",
+    "more": "Naloži več",
+    "undo": "Razveljavi",
+    "undone": "Razveljavljeno"
+  },
+  "duplicates": {
+    "title": "Morebitni dvojnik",
+    "subtitle": "Dokumenta imata enako vsebino. Enega obdržite in drugega izbrišite – ali označite, da nista dvojnika.",
+    "older": "Prispel prej",
+    "newer": "Prispel pozneje",
+    "deleteThis": "Izbriši tega",
+    "compare": "Primerjaj drug ob drugem"
+  },
+  "twoFactor": {
+    "title": "Dvostopenjsko preverjanje",
+    "on": "Vklopljeno",
+    "off": "Izklopljeno",
+    "intro": "Zaščiti svoj račun z drugim dejavnikom: pri prijavi boš vnesel še kodo iz aplikacije za preverjanje pristnosti v telefonu (npr. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Nastavi",
+    "scan": "Skeniraj kodo QR z aplikacijo za preverjanje pristnosti ali ročno vnesi ključ. Nato vnesi kodo iz aplikacije in svoje geslo.",
+    "qrAlt": "Koda QR za aplikacijo za preverjanje pristnosti",
+    "secret": "Ključ",
+    "confirmCode": "Koda iz aplikacije",
+    "activate": "Aktiviraj",
+    "recoveryTitle": "Obnovitvene kode",
+    "recoveryText": "Te obnovitvene kode shrani na varno mesto. Vsaka deluje enkrat, če aplikacije ne moreš uporabiti – na primer ob izgubi telefona. Prikazane so samo zdaj.",
+    "download": "Shrani kot datoteko",
+    "done": "Končano",
+    "enabled": "Dvostopenjsko preverjanje je vklopljeno",
+    "disabled": "Dvostopenjsko preverjanje je izklopljeno",
+    "disableHint": "Za izklop vnesi trenutno kodo iz aplikacije (ali obnovitveno kodo) in svoje geslo.",
+    "disable": "Izklopi",
+    "recoveryLeft": "Neuporabljene obnovitvene kode: {{count}}",
+    "adminCannotDisable": "Kot skrbnik dvostopenjskega preverjanja ne moreš izklopiti."
+  },
+  "confirmCode": {
+    "title": "Potrdi spremembo",
+    "text": "Spremembe računov, poštnih predalov in nastavitev zahtevajo veljavno kodo iz aplikacije za preverjanje pristnosti. Potrditev velja 10 minut.",
+    "submit": "Potrdi"
+  },
+  "share": {
+    "button": "Deli",
+    "title": "Deli dokument",
+    "intro": "Ustvari povezavo, s katero lahko oseba brez računa odpre natanko ta dokument.",
+    "recipient": "S kom deliš?",
+    "recipientHint": "Ime osebe – da boš pozneje videl, komu si dal povezavo.",
+    "permission": "Ali sme ta oseba urejati dokument?",
+    "viewOnly": "Samo ogled",
+    "canEdit": "Sme urejati",
+    "viewHint": "Oseba lahko PDF pregleda, natisne in prenese.",
+    "editHint": "Oseba lahko PDF tudi označuje, vanj piše, ga podpiše in shrani. Vsako shranjevanje postane nova različica; naslov, oznake in drugi podatki ostanejo skriti.",
+    "validity": "Velja",
+    "unlimited": "Neomejeno",
+    "create": "Ustvari povezavo",
+    "link": "Povezava",
+    "linkHint": "Kdor ima to povezavo, lahko odpre dokument – daj jo samo osebi {{name}}. Kadar koli jo lahko prekličeš v pogledu dokumenta.",
+    "copy": "Kopiraj povezavo",
+    "copied": "Povezava kopirana",
+    "listTitle": "Deljeno zunanjim",
+    "expired": "poteklo",
+    "validUntil": "velja do {{date}}",
+    "noExpiry": "brez poteka",
+    "lastOpened": "nazadnje odprto {{when}} (ogledi: {{views}})",
+    "neverOpened": "še ni odprto",
+    "revoke": "Prekliči povezavo",
+    "revokeTitle": "Preklic povezave za {{name}}?",
+    "revokeText": "Povezava takoj preneha delovati. Kopije, ki jih je oseba že prenesla, ostanejo pri njej.",
+    "revoked": "Povezava preklicana",
+    "page": {
+      "for": "Deljeno z: {{name}}",
+      "invalid": "Ta povezava je neveljavna ali je potekla, ali pa je bil dokument izbrisan. Obrni se na osebo, ki ti jo je dala."
     }
   }
 }

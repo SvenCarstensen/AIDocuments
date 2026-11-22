@@ -51,6 +51,8 @@
     "setup": {
       "title": "Nastavení AIDocuments",
       "subtitle": "Začněte vytvořením účtu správce. Další uživatele můžete později přidat v nastavení.",
+      "code": "Instalační kód",
+      "codeHint": "Zobrazí se v protokolu serveru při spuštění (Docker: docker compose logs).",
       "adminAccount": "Účet správce",
       "repeatPassword": "Heslo znovu",
       "submit": "Vytvořit účet a začít",
@@ -59,6 +61,19 @@
         "ai": "AI je shrne a opatří štítky",
         "search": "Fulltextové vyhledávání až do obsahu dokumentu"
       }
+    },
+    "twoFactor": {
+      "title": "Potvrdit přihlášení",
+      "subtitle": "Zadej 6místný kód z ověřovací aplikace.",
+      "code": "Kód",
+      "codeHint": "Nemáš přístup k aplikaci? Zadej místo toho jeden ze svých záložních kódů.",
+      "submit": "Potvrdit",
+      "back": "Zpět k přihlášení"
+    },
+    "twoFactorRequired": {
+      "title": "Nastavit dvoufázové ověření",
+      "subtitle": "Pro administrátory je dvoufázové ověření povinné. Nastav ho teď, abys mohl pokračovat.",
+      "intro": "Potřebuješ ověřovací aplikaci v telefonu (např. Google Authenticator, Microsoft Authenticator, 1Password nebo Aegis)."
     }
   },
   "shell": {
@@ -68,8 +83,8 @@
       "dark": "Tmavý motiv"
     },
     "search": {
-      "placeholder": "Hledat v dokumentech, štítcích, obsahu …",
-      "placeholderAi": "Hledej dokumenty vlastními slovy – např. „faktury od Kia z roku 2024“",
+      "placeholder": "Vyhledávání podle klíčových slov: dokumenty, štítky, obsah …",
+      "placeholderAi": "Vyhledávání AI: ptej se vlastními slovy – např. „faktury od Kia z roku 2024“",
       "labelAi": "AI",
       "label": "Hledat dokumenty",
       "clear": "Vymazat hledání",
@@ -80,6 +95,7 @@
       "aiActive": "AI aktivní",
       "aiNotConfigured": "AI není nastavena",
       "changePassword": "Změnit heslo",
+      "licenses": "Licence třetích stran",
       "logout": "Odhlásit se"
     },
     "passwordDialog": {
@@ -270,8 +286,8 @@
     },
     "delete": {
       "title": "Smazat dokument?",
-      "text": "Dokument „{{title}}“ bude smazán včetně souboru PDF, celého textu a štítků. Tuto akci nelze vrátit zpět.",
-      "confirm": "Smazat trvale"
+      "text": "„{{title}}“ bude smazán. V historii to můžeš 30 dní vrátit zpět; potom bude odstraněn natrvalo.",
+      "confirm": "Smazat"
     },
     "chat": {
       "intro": "Zeptej se na tento dokument – AI odpoví podle jeho obsahu.",
@@ -284,6 +300,25 @@
         "summary": "O čem tento dokument je?",
         "deadlines": "Jsou tu nějaké lhůty nebo termíny?",
         "amounts": "Jaké částky jsou uvedeny?"
+      }
+    },
+    "versions": {
+      "title": "Verze",
+      "intro": "Každá změna PDF vytvoří novou verzi. Starší verze zůstávají zachovány a lze je zobrazit, stáhnout nebo obnovit.",
+      "current": "aktuální",
+      "view": "Zobrazit verzi {{number}}",
+      "download": "Stáhnout verzi {{number}}",
+      "restore": "Obnovit verzi {{number}}",
+      "restoreTitle": "Obnovit verzi {{number}}?",
+      "restoreText": "Tato verze se stane aktuální. Současná verze zůstane zachována a krok lze v historii vrátit zpět.",
+      "restoreConfirm": "Obnovit",
+      "restored": "Verze {{number}} obnovena",
+      "kinds": {
+        "IMPORTED": "Importováno",
+        "EDITED": "Upraveno",
+        "ORIGINAL_RESTORED": "Originál obnoven",
+        "VERSION_RESTORED": "Verze {{from}} obnovena",
+        "UNDONE": "Změna vrácena zpět"
       }
     }
   },
@@ -325,8 +360,23 @@
         "since": "Pouze e-maily od",
         "sinceHint": "Volitelné – starší e-maily se přeskočí",
         "enabled": "Kontrolovat automaticky",
-        "enabledHint": "Schránka se v nastaveném intervalu kontroluje, zda neobsahuje nové soubory PDF."
-      }
+        "enabledHint": "Schránka se v nastaveném intervalu kontroluje, zda neobsahuje nové soubory PDF.",
+        "filter": {
+          "title": "Filtr",
+          "intro": "Zpracují se jen e-maily, které splňují všechny podmínky. Jeden výraz na řádek; na velikosti písmen nezáleží, stačí část textu. Prázdná pole nic neomezují.",
+          "subjectIncludes": "Předmět obsahuje jeden z těchto výrazů",
+          "subjectExcludes": "Předmět neobsahuje žádný z těchto výrazů",
+          "senderIncludes": "Odesílatel obsahuje jeden z těchto výrazů",
+          "senderExcludes": "Odesílatel neobsahuje žádný z těchto výrazů",
+          "senderHint": "Jméno nebo adresa, např. „@example.com“",
+          "newOnly": "Filtr platí pro e-maily, které dorazí po posledním stahování; již zkontrolované e-maily se znovu nezpracují."
+        },
+        "interval": "Interval stahování v minutách",
+        "intervalHint": "Ponechte prázdné pro obecný interval (nyní {{interval}})."
+      },
+      "filterActive": "Filtr aktivní",
+      "schedule": "Stahování každých {{interval}} · další {{when}}",
+      "scheduleSoon": "Stahování každých {{interval}} · další za chvíli"
     },
     "import": {
       "title": "Plán a složka pro import",
@@ -335,7 +385,7 @@
       "saved": "Nastavení bylo uloženo",
       "interval": {
         "title": "Interval kontroly",
-        "text": "Takto často aplikace kontroluje všechny schránky a složku pro import, zda neobsahují nové soubory PDF.",
+        "text": "Jak často aplikace kontroluje vstupní složku a všechny schránky bez vlastního intervalu, zda nejsou nové soubory PDF.",
         "label": "Každých … minut",
         "nextRun": "Další automatická kontrola {{when}}."
       },
@@ -472,7 +522,104 @@
         "active": "Účet je aktivní",
         "activeHint": "Zakázané účty se nemohou přihlásit; aktivní relace se okamžitě ukončí.",
         "create": "Vytvořit"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Resetovat dvoufázové ověření",
+      "resetTwoFactorHint": "U tohoto účtu je dvoufázové ověření zapnuté.",
+      "resetTwoFactorText": "{{name}} se pak přihlásí jen heslem a může si dvoufázové ověření nastavit znovu – například po ztrátě telefonu.",
+      "resetTwoFactorConfirm": "Resetovat",
+      "twoFactorReset": "Dvoufázové ověření resetováno"
+    }
+  },
+  "history": {
+    "nav": "Historie",
+    "title": "Historie",
+    "subtitle": "Co se s tvými dokumenty stalo – nejnovější záznamy nahoře.",
+    "empty": "Zatím žádné záznamy.",
+    "actions": {
+      "IMPORTED": "Importováno",
+      "EDITED": "Upraveno",
+      "DELETED": "Smazáno"
+    },
+    "changes": {
+      "DETAILS": "Údaje změněny",
+      "FILE": "PDF změněno",
+      "ORIGINAL_RESTORED": "Originál obnoven",
+      "DUPLICATE": "jako duplikát",
+      "VERSION_RESTORED": "Verze obnovena"
+    },
+    "by": "uživatelem {{user}}",
+    "automatic": "automaticky",
+    "more": "Načíst další",
+    "undo": "Vrátit zpět",
+    "undone": "Vráceno zpět"
+  },
+  "duplicates": {
+    "title": "Možný duplikát",
+    "subtitle": "Oba dokumenty mají stejný obsah. Jeden si nech a druhý smaž – nebo zaznamenej, že nejde o duplikáty.",
+    "older": "Přišel dříve",
+    "newer": "Přišel později",
+    "deleteThis": "Smazat tento",
+    "compare": "Porovnat vedle sebe"
+  },
+  "twoFactor": {
+    "title": "Dvoufázové ověření",
+    "on": "Zapnuto",
+    "off": "Vypnuto",
+    "intro": "Chraň svůj účet druhým faktorem: při přihlášení pak zadáš i kód z ověřovací aplikace v telefonu (např. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Nastavit",
+    "scan": "Naskenuj QR kód ověřovací aplikací nebo zadej klíč ručně. Pak zadej kód z aplikace a své heslo.",
+    "qrAlt": "QR kód pro ověřovací aplikaci",
+    "secret": "Klíč",
+    "confirmCode": "Kód z aplikace",
+    "activate": "Aktivovat",
+    "recoveryTitle": "Záložní kódy",
+    "recoveryText": "Ulož si tyto záložní kódy na bezpečné místo. Každý funguje jednou, pokud nemůžeš použít aplikaci – například při ztrátě telefonu. Zobrazují se jen teď.",
+    "download": "Uložit jako soubor",
+    "done": "Hotovo",
+    "enabled": "Dvoufázové ověření je zapnuté",
+    "disabled": "Dvoufázové ověření je vypnuté",
+    "disableHint": "Pro vypnutí zadej aktuální kód z aplikace (nebo záložní kód) a své heslo.",
+    "disable": "Vypnout",
+    "recoveryLeft": "Nepoužité záložní kódy: {{count}}",
+    "adminCannotDisable": "Jako administrátor nemůžeš dvoufázové ověření vypnout."
+  },
+  "confirmCode": {
+    "title": "Potvrdit změnu",
+    "text": "Změny účtů, poštovních schránek a nastavení vyžadují aktuální kód z ověřovací aplikace. Potvrzení platí 10 minut.",
+    "submit": "Potvrdit"
+  },
+  "share": {
+    "button": "Sdílet",
+    "title": "Sdílet dokument",
+    "intro": "Vytvoří odkaz, kterým může osoba bez účtu otevřít právě tento dokument.",
+    "recipient": "S kým sdílíš?",
+    "recipientHint": "Jméno osoby – abys později věděl, komu jsi odkaz dal.",
+    "permission": "Smí tato osoba dokument upravovat?",
+    "viewOnly": "Jen zobrazit",
+    "canEdit": "Smí upravovat",
+    "viewHint": "Osoba může PDF zobrazit, vytisknout a stáhnout.",
+    "editHint": "Osoba může PDF také označovat, popisovat, podepsat a uložit. Každé uložení vytvoří novou verzi; název, štítky a další údaje zůstanou skryté.",
+    "validity": "Platnost",
+    "unlimited": "Neomezeně",
+    "create": "Vytvořit odkaz",
+    "link": "Odkaz",
+    "linkHint": "Kdo má tento odkaz, může dokument otevřít – předej ho jen osobě {{name}}. Kdykoli ho můžeš zrušit v zobrazení dokumentu.",
+    "copy": "Kopírovat odkaz",
+    "copied": "Odkaz zkopírován",
+    "listTitle": "Sdíleno externě",
+    "expired": "vypršel",
+    "validUntil": "platí do {{date}}",
+    "noExpiry": "bez omezení platnosti",
+    "lastOpened": "naposledy otevřen {{when}} (zobrazení: {{views}})",
+    "neverOpened": "zatím neotevřen",
+    "revoke": "Zrušit odkaz",
+    "revokeTitle": "Zrušit odkaz pro {{name}}?",
+    "revokeText": "Odkaz okamžitě přestane fungovat. Kopie, které si osoba už stáhla, jí zůstanou.",
+    "revoked": "Odkaz zrušen",
+    "page": {
+      "for": "Sdíleno s: {{name}}",
+      "invalid": "Tento odkaz je neplatný nebo vypršel, případně byl dokument smazán. Obrať se na osobu, která ti ho dala."
     }
   }
 }

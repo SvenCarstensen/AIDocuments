@@ -1,16 +1,10 @@
 package de.aidocuments.settings;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-/** In der Oberfläche gespeicherte KI-Einstellungen (genau ein Datensatz mit der ID "ai"). */
-@Document(collection = "settings")
+/** In der Oberfläche gespeicherte KI-Einstellungen (Datensatz "ai" der Tabelle settings). */
 public class AiSettings {
 
     public static final String ID = "ai";
 
-    @Id
-    private String id = ID;
     private LlmProvider provider;
     private String baseUrl;
     private String apiKeyEncrypted;

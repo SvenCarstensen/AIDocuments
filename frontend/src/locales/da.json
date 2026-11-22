@@ -49,6 +49,8 @@
     "setup": {
       "title": "Sæt AIDocuments op",
       "subtitle": "Opret først administratorkontoen. Bagefter kan du tilføje flere brugere under indstillingerne.",
+      "code": "Opsætningskode",
+      "codeHint": "Vises i serverens log ved start (Docker: docker compose logs).",
       "adminAccount": "Administratorkonto",
       "repeatPassword": "Gentag adgangskode",
       "submit": "Opret konto og kom i gang",
@@ -57,6 +59,19 @@
         "ai": "AI opsummerer og tagger dem",
         "search": "Fuldtekstsøgning helt ind i dokumentet"
       }
+    },
+    "twoFactor": {
+      "title": "Bekræft login",
+      "subtitle": "Indtast den 6-cifrede kode fra din godkendelsesapp.",
+      "code": "Kode",
+      "codeHint": "Ingen adgang til appen? Indtast i stedet en af dine gendannelseskoder.",
+      "submit": "Bekræft",
+      "back": "Tilbage til login"
+    },
+    "twoFactorRequired": {
+      "title": "Opsæt totrinsbekræftelse",
+      "subtitle": "Totrinsbekræftelse er obligatorisk for administratorer. Sæt den op nu for at fortsætte.",
+      "intro": "Du skal bruge en godkendelsesapp på din telefon (f.eks. Google Authenticator, Microsoft Authenticator, 1Password eller Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Mørkt tema"
     },
     "search": {
-      "placeholder": "Søg i dokumenter, tags, indhold …",
-      "placeholderAi": "Søg efter dokumenter med dine egne ord – f.eks. »fakturaer fra Kia fra 2024«",
+      "placeholder": "Søgning efter nøgleord: dokumenter, tags, indhold …",
+      "placeholderAi": "AI-søgning: spørg med dine egne ord – f.eks. »fakturaer fra Kia fra 2024«",
       "labelAi": "AI",
       "label": "Søg i dokumenter",
       "clear": "Ryd søgning",
@@ -78,6 +93,7 @@
       "aiActive": "AI aktiv",
       "aiNotConfigured": "AI ikke sat op",
       "changePassword": "Skift adgangskode",
+      "licenses": "Tredjepartslicenser",
       "logout": "Log ud"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Slet dokument?",
-      "text": "”{{title}}” bliver slettet sammen med PDF-filen, fuldteksten og tags. Dette kan ikke fortrydes.",
-      "confirm": "Slet permanent"
+      "text": "»{{title}}« bliver slettet. I historikken kan du fortryde det i 30 dage; derefter fjernes det endeligt.",
+      "confirm": "Slet"
     },
     "chat": {
       "intro": "Stil et spørgsmål om dette dokument – AI svarer ud fra indholdet.",
@@ -266,6 +282,25 @@
         "summary": "Hvad handler dette dokument om?",
         "deadlines": "Er der frister eller datoer?",
         "amounts": "Hvilke beløb nævnes?"
+      }
+    },
+    "versions": {
+      "title": "Versioner",
+      "intro": "Hver ændring af PDF'en giver en ny version. Ældre versioner bevares og kan vises, downloades eller gendannes.",
+      "current": "aktuel",
+      "view": "Vis version {{number}}",
+      "download": "Download version {{number}}",
+      "restore": "Gendan version {{number}}",
+      "restoreTitle": "Gendan version {{number}}?",
+      "restoreText": "Versionen bliver den aktuelle. Den nuværende version bevares, og trinnet kan fortrydes i historikken.",
+      "restoreConfirm": "Gendan",
+      "restored": "Version {{number}} gendannet",
+      "kinds": {
+        "IMPORTED": "Importeret",
+        "EDITED": "Redigeret",
+        "ORIGINAL_RESTORED": "Original gendannet",
+        "VERSION_RESTORED": "Version {{from}} gendannet",
+        "UNDONE": "Ændring fortrudt"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Kun e-mails fra",
         "sinceHint": "Valgfrit – ældre e-mails springes over",
         "enabled": "Tjek automatisk",
-        "enabledHint": "Postkassen tjekkes for nye PDF’er med det indstillede interval."
-      }
+        "enabledHint": "Postkassen tjekkes for nye PDF’er med det indstillede interval.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Kun e-mails, der opfylder alle betingelser, bliver behandlet. Ét ord pr. linje; store og små bogstaver er ligegyldige, og en del af teksten er nok. Tomme felter begrænser intet.",
+          "subjectIncludes": "Emnet indeholder et af disse ord",
+          "subjectExcludes": "Emnet indeholder ingen af disse ord",
+          "senderIncludes": "Afsenderen indeholder et af disse ord",
+          "senderExcludes": "Afsenderen indeholder ingen af disse ord",
+          "senderHint": "Navn eller adresse, f.eks. »@example.com«",
+          "newOnly": "Filteret gælder for e-mails, der kommer ind efter sidste hentning; allerede kontrollerede e-mails behandles ikke igen."
+        },
+        "interval": "Hentningsinterval i minutter",
+        "intervalHint": "Lad feltet stå tomt for at bruge det generelle interval (lige nu {{interval}})."
+      },
+      "filterActive": "Filter aktivt",
+      "schedule": "Hentes hver {{interval}} · næste {{when}}",
+      "scheduleSoon": "Hentes hver {{interval}} · næste om lidt"
     },
     "import": {
       "title": "Tidsplan & importmappe",
@@ -317,7 +367,7 @@
       "saved": "Indstillinger gemt",
       "interval": {
         "title": "Tjekinterval",
-        "text": "Så ofte tjekker programmet alle postkasser og importmappen for nye PDF’er.",
+        "text": "Så ofte tjekker programmet indgangsmappen og alle postkasser uden eget interval for nye PDF’er.",
         "label": "Med … minutters mellemrum",
         "nextRun": "Næste automatiske tjek {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Konto aktiv",
         "activeHint": "Deaktiverede konti kan ikke logge ind; aktive sessioner afsluttes med det samme.",
         "create": "Opret"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Nulstil totrinsbekræftelse",
+      "resetTwoFactorHint": "Totrinsbekræftelse er slået til for denne konto.",
+      "resetTwoFactorText": "{{name}} logger derefter kun ind med adgangskoden og kan sætte totrinsbekræftelse op igen – f.eks. efter at have mistet telefonen.",
+      "resetTwoFactorConfirm": "Nulstil",
+      "twoFactorReset": "Totrinsbekræftelse nulstillet"
+    }
+  },
+  "history": {
+    "nav": "Historik",
+    "title": "Historik",
+    "subtitle": "Hvad der er sket med dine dokumenter – nyeste poster først.",
+    "empty": "Ingen poster endnu.",
+    "actions": {
+      "IMPORTED": "Importeret",
+      "EDITED": "Redigeret",
+      "DELETED": "Slettet"
+    },
+    "changes": {
+      "DETAILS": "Oplysninger ændret",
+      "FILE": "PDF ændret",
+      "ORIGINAL_RESTORED": "Original gendannet",
+      "DUPLICATE": "som dublet",
+      "VERSION_RESTORED": "Version gendannet"
+    },
+    "by": "af {{user}}",
+    "automatic": "automatisk",
+    "more": "Indlæs flere",
+    "undo": "Fortryd",
+    "undone": "Fortrudt"
+  },
+  "duplicates": {
+    "title": "Mulig dublet",
+    "subtitle": "De to dokumenter har samme indhold. Behold det ene og slet det andet – eller noter, at de ikke er dubletter.",
+    "older": "Modtaget tidligere",
+    "newer": "Modtaget senere",
+    "deleteThis": "Slet dette",
+    "compare": "Sammenlign side om side"
+  },
+  "twoFactor": {
+    "title": "Totrinsbekræftelse",
+    "on": "Til",
+    "off": "Fra",
+    "intro": "Beskyt din konto med en ekstra faktor: Når du logger ind, indtaster du også en kode fra en godkendelsesapp på din telefon (f.eks. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Opsæt",
+    "scan": "Scan QR-koden med din godkendelsesapp, eller indtast nøglen manuelt. Indtast derefter koden fra appen og din adgangskode.",
+    "qrAlt": "QR-kode til godkendelsesappen",
+    "secret": "Nøgle",
+    "confirmCode": "Kode fra appen",
+    "activate": "Aktivér",
+    "recoveryTitle": "Gendannelseskoder",
+    "recoveryText": "Opbevar disse gendannelseskoder et sikkert sted. Hver kode virker én gang, hvis du ikke kan bruge appen – f.eks. hvis du mister din telefon. De vises kun nu.",
+    "download": "Gem som fil",
+    "done": "Færdig",
+    "enabled": "Totrinsbekræftelse er slået til",
+    "disabled": "Totrinsbekræftelse er slået fra",
+    "disableHint": "For at slå den fra skal du indtaste en aktuel kode fra appen (eller en gendannelseskode) og din adgangskode.",
+    "disable": "Slå fra",
+    "recoveryLeft": "Ubrugte gendannelseskoder: {{count}}",
+    "adminCannotDisable": "Som administrator kan du ikke slå totrinsbekræftelse fra."
+  },
+  "confirmCode": {
+    "title": "Bekræft ændring",
+    "text": "Ændringer af konti, postkasser og indstillinger kræver en aktuel kode fra din godkendelsesapp. Bekræftelsen gælder i 10 minutter.",
+    "submit": "Bekræft"
+  },
+  "share": {
+    "button": "Del",
+    "title": "Del dokument",
+    "intro": "Opretter et link, som en person uden konto kan bruge til at åbne netop dette dokument.",
+    "recipient": "Hvem deler du med?",
+    "recipientHint": "Personens navn – så du senere kan se, hvem du har givet linket.",
+    "permission": "Må personen redigere dokumentet?",
+    "viewOnly": "Kun se",
+    "canEdit": "Må redigere",
+    "viewHint": "Personen kan se, udskrive og downloade PDF'en.",
+    "editHint": "Personen kan også markere, skrive i, underskrive og gemme PDF'en. Hver gemning bliver en ny version; titel, mærker og andre oplysninger forbliver skjulte.",
+    "validity": "Gyldig i",
+    "unlimited": "Ubegrænset",
+    "create": "Opret link",
+    "link": "Link",
+    "linkHint": "Alle med dette link kan åbne dokumentet – giv det kun til {{name}}. Du kan til enhver tid tilbagekalde det i dokumentvisningen.",
+    "copy": "Kopiér link",
+    "copied": "Link kopieret",
+    "listTitle": "Delt eksternt",
+    "expired": "udløbet",
+    "validUntil": "gyldig til {{date}}",
+    "noExpiry": "uden udløb",
+    "lastOpened": "sidst åbnet {{when}} (visninger: {{views}})",
+    "neverOpened": "endnu ikke åbnet",
+    "revoke": "Tilbagekald link",
+    "revokeTitle": "Tilbagekald linket til {{name}}?",
+    "revokeText": "Linket holder straks op med at virke. Kopier, som personen allerede har downloadet, bliver hos personen.",
+    "revoked": "Link tilbagekaldt",
+    "page": {
+      "for": "Delt med {{name}}",
+      "invalid": "Dette link er ugyldigt eller udløbet, eller dokumentet er slettet. Kontakt den person, der gav dig det."
     }
   }
 }

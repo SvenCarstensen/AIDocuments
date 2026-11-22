@@ -50,6 +50,8 @@
     "setup": {
       "title": "Configurar AIDocuments",
       "subtitle": "Empieza creando la cuenta de administrador. Después podrás añadir más usuarios en los ajustes.",
+      "code": "Código de configuración",
+      "codeHint": "Aparece en el registro del servidor al iniciarse (Docker: docker compose logs).",
       "adminAccount": "Cuenta de administrador",
       "repeatPassword": "Repite la contraseña",
       "submit": "Crear cuenta y empezar",
@@ -58,6 +60,19 @@
         "ai": "La IA los resume y les asigna etiquetas",
         "search": "Búsqueda de texto completo hasta dentro del documento"
       }
+    },
+    "twoFactor": {
+      "title": "Confirmar inicio de sesión",
+      "subtitle": "Introduce el código de 6 dígitos de tu aplicación de autenticación.",
+      "code": "Código",
+      "codeHint": "¿Sin acceso a la aplicación? Introduce uno de tus códigos de recuperación.",
+      "submit": "Confirmar",
+      "back": "Volver al inicio de sesión"
+    },
+    "twoFactorRequired": {
+      "title": "Configurar la autenticación en dos pasos",
+      "subtitle": "La autenticación en dos pasos es obligatoria para los administradores. Configúrala ahora para continuar.",
+      "intro": "Necesitas una aplicación de autenticación en tu móvil (p. ej. Google Authenticator, Microsoft Authenticator, 1Password o Aegis)."
     }
   },
   "shell": {
@@ -67,8 +82,8 @@
       "dark": "Tema oscuro"
     },
     "search": {
-      "placeholder": "Buscar documentos, etiquetas, contenidos …",
-      "placeholderAi": "Busca documentos con tus palabras: p. ej. «facturas de Kia de 2024»",
+      "placeholder": "Búsqueda por palabras clave: documentos, etiquetas, contenido …",
+      "placeholderAi": "Búsqueda con IA: pregunta con tus palabras – p. ej. «facturas de Kia de 2024»",
       "labelAi": "IA",
       "label": "Buscar documentos",
       "clear": "Borrar la búsqueda",
@@ -79,6 +94,7 @@
       "aiActive": "IA activa",
       "aiNotConfigured": "IA sin configurar",
       "changePassword": "Cambiar contraseña",
+      "licenses": "Licencias de terceros",
       "logout": "Cerrar sesión"
     },
     "passwordDialog": {
@@ -261,8 +277,8 @@
     },
     "delete": {
       "title": "¿Eliminar el documento?",
-      "text": "«{{title}}» se eliminará junto con su archivo PDF, su texto completo y sus etiquetas. Esta acción no se puede deshacer.",
-      "confirm": "Eliminar definitivamente"
+      "text": "«{{title}}» se eliminará. Puedes deshacerlo en el historial durante 30 días; después se eliminará definitivamente.",
+      "confirm": "Eliminar"
     },
     "chat": {
       "intro": "Haz una pregunta sobre este documento: la IA responde según su contenido.",
@@ -275,6 +291,25 @@
         "summary": "¿De qué trata este documento?",
         "deadlines": "¿Hay plazos o fechas?",
         "amounts": "¿Qué importes se mencionan?"
+      }
+    },
+    "versions": {
+      "title": "Versiones",
+      "intro": "Cada cambio en el PDF crea una nueva versión. Las versiones anteriores se conservan y se pueden ver, descargar o restaurar.",
+      "current": "actual",
+      "view": "Ver la versión {{number}}",
+      "download": "Descargar la versión {{number}}",
+      "restore": "Restaurar la versión {{number}}",
+      "restoreTitle": "¿Restaurar la versión {{number}}?",
+      "restoreText": "Esta versión pasa a ser la actual. La versión actual se conserva y el paso se puede deshacer en el historial.",
+      "restoreConfirm": "Restaurar",
+      "restored": "Versión {{number}} restaurada",
+      "kinds": {
+        "IMPORTED": "Importado",
+        "EDITED": "Editado",
+        "ORIGINAL_RESTORED": "Original restaurado",
+        "VERSION_RESTORED": "Versión {{from}} restaurada",
+        "UNDONE": "Cambio deshecho"
       }
     }
   },
@@ -316,8 +351,23 @@
         "since": "Solo correos desde",
         "sinceHint": "Opcional: los correos más antiguos se omiten",
         "enabled": "Comprobar automáticamente",
-        "enabledHint": "El buzón se comprueba en busca de PDF nuevos con el intervalo configurado."
-      }
+        "enabledHint": "El buzón se comprueba en busca de PDF nuevos con el intervalo configurado.",
+        "filter": {
+          "title": "Filtro",
+          "intro": "Solo se procesan los correos que cumplen todas las condiciones. Un término por línea; las mayúsculas y minúsculas no importan y basta con una parte del texto. Los campos vacíos no restringen nada.",
+          "subjectIncludes": "El asunto contiene uno de estos términos",
+          "subjectExcludes": "El asunto no contiene ninguno de estos términos",
+          "senderIncludes": "El remitente contiene uno de estos términos",
+          "senderExcludes": "El remitente no contiene ninguno de estos términos",
+          "senderHint": "Nombre o dirección, p. ej. «@example.com»",
+          "newOnly": "El filtro se aplica a los correos que llegan después de la última consulta; los correos ya revisados no se vuelven a procesar."
+        },
+        "interval": "Intervalo de consulta en minutos",
+        "intervalHint": "Déjalo vacío para usar el intervalo general (actualmente {{interval}})."
+      },
+      "filterActive": "Filtro activo",
+      "schedule": "Consulta cada {{interval}} · próxima {{when}}",
+      "scheduleSoon": "Consulta cada {{interval}} · próxima en breve"
     },
     "import": {
       "title": "Programación y carpeta de importación",
@@ -326,7 +376,7 @@
       "saved": "Ajustes guardados",
       "interval": {
         "title": "Intervalo de comprobación",
-        "text": "Con esta frecuencia comprueba la aplicación todos los buzones y la carpeta de importación en busca de PDF nuevos.",
+        "text": "Con qué frecuencia la aplicación revisa la carpeta de entrada y todos los buzones sin intervalo propio en busca de PDF nuevos.",
         "label": "Cada … minutos",
         "nextRun": "Próxima comprobación automática {{when}}."
       },
@@ -461,7 +511,104 @@
         "active": "Cuenta activa",
         "activeHint": "Las cuentas desactivadas no pueden iniciar sesión; las sesiones activas terminan de inmediato.",
         "create": "Crear"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Restablecer la autenticación en dos pasos",
+      "resetTwoFactorHint": "La autenticación en dos pasos está activada para esta cuenta.",
+      "resetTwoFactorText": "{{name}} iniciará sesión solo con la contraseña y podrá volver a configurar la autenticación en dos pasos, por ejemplo tras perder el móvil.",
+      "resetTwoFactorConfirm": "Restablecer",
+      "twoFactorReset": "Autenticación en dos pasos restablecida"
+    }
+  },
+  "history": {
+    "nav": "Historial",
+    "title": "Historial",
+    "subtitle": "Lo que ha pasado con tus documentos: primero las entradas más recientes.",
+    "empty": "Todavía no hay entradas.",
+    "actions": {
+      "IMPORTED": "Importado",
+      "EDITED": "Editado",
+      "DELETED": "Eliminado"
+    },
+    "changes": {
+      "DETAILS": "Datos modificados",
+      "FILE": "PDF modificado",
+      "ORIGINAL_RESTORED": "Original restaurado",
+      "DUPLICATE": "como duplicado",
+      "VERSION_RESTORED": "Versión restaurada"
+    },
+    "by": "por {{user}}",
+    "automatic": "automáticamente",
+    "more": "Cargar más",
+    "undo": "Deshacer",
+    "undone": "Deshecho"
+  },
+  "duplicates": {
+    "title": "Posible duplicado",
+    "subtitle": "Los dos documentos coinciden en su contenido. Conserva uno y elimina el otro, o indica que no son duplicados.",
+    "older": "Llegó antes",
+    "newer": "Llegó después",
+    "deleteThis": "Eliminar este",
+    "compare": "Comparar lado a lado"
+  },
+  "twoFactor": {
+    "title": "Autenticación en dos pasos",
+    "on": "Activada",
+    "off": "Desactivada",
+    "intro": "Protege tu cuenta con un segundo factor: al iniciar sesión introducirás además un código de una aplicación de autenticación en tu móvil (p. ej. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Configurar",
+    "scan": "Escanea el código QR con tu aplicación de autenticación o introduce la clave a mano. Después introduce el código que muestra la aplicación y tu contraseña.",
+    "qrAlt": "Código QR para la aplicación de autenticación",
+    "secret": "Clave",
+    "confirmCode": "Código de la aplicación",
+    "activate": "Activar",
+    "recoveryTitle": "Códigos de recuperación",
+    "recoveryText": "Guarda estos códigos de recuperación en un lugar seguro. Cada uno funciona una vez si no puedes usar la aplicación, por ejemplo si pierdes el móvil. Solo se muestran ahora.",
+    "download": "Guardar como archivo",
+    "done": "Listo",
+    "enabled": "La autenticación en dos pasos está activada",
+    "disabled": "La autenticación en dos pasos está desactivada",
+    "disableHint": "Para desactivarla, introduce un código actual de la aplicación (o un código de recuperación) y tu contraseña.",
+    "disable": "Desactivar",
+    "recoveryLeft": "Códigos de recuperación sin usar: {{count}}",
+    "adminCannotDisable": "Como administrador no puedes desactivar la autenticación en dos pasos."
+  },
+  "confirmCode": {
+    "title": "Confirmar cambio",
+    "text": "Los cambios en cuentas, buzones y ajustes requieren un código actual de tu aplicación de autenticación. La confirmación es válida durante 10 minutos.",
+    "submit": "Confirmar"
+  },
+  "share": {
+    "button": "Compartir",
+    "title": "Compartir documento",
+    "intro": "Crea un enlace con el que una persona sin cuenta puede abrir solo este documento.",
+    "recipient": "¿Con quién lo compartes?",
+    "recipientHint": "El nombre de la persona, para que más tarde sepas a quién diste el enlace.",
+    "permission": "¿Puede esta persona editar el documento?",
+    "viewOnly": "Solo ver",
+    "canEdit": "Puede editar",
+    "viewHint": "La persona puede ver, imprimir y descargar el PDF.",
+    "editHint": "La persona también puede marcar, escribir, firmar y guardar el PDF. Cada guardado crea una nueva versión; el título, las etiquetas y otros datos quedan ocultos.",
+    "validity": "Válido durante",
+    "unlimited": "Sin límite",
+    "create": "Crear enlace",
+    "link": "Enlace",
+    "linkHint": "Cualquiera que tenga este enlace puede abrir el documento: pásalo solo a {{name}}. Puedes revocarlo en cualquier momento en la vista del documento.",
+    "copy": "Copiar enlace",
+    "copied": "Enlace copiado",
+    "listTitle": "Compartido externamente",
+    "expired": "caducado",
+    "validUntil": "válido hasta el {{date}}",
+    "noExpiry": "sin caducidad",
+    "lastOpened": "abierto por última vez {{when}} (visitas: {{views}})",
+    "neverOpened": "aún no abierto",
+    "revoke": "Revocar enlace",
+    "revokeTitle": "¿Revocar el enlace de {{name}}?",
+    "revokeText": "El enlace deja de funcionar de inmediato. Las copias que la persona ya haya descargado se quedan con ella.",
+    "revoked": "Enlace revocado",
+    "page": {
+      "for": "Compartido con {{name}}",
+      "invalid": "Este enlace no es válido o ha caducado, o el documento se ha eliminado. Ponte en contacto con la persona que te lo dio."
     }
   }
 }

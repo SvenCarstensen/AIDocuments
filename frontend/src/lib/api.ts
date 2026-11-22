@@ -28,10 +28,32 @@ async function send(path: string, init: RequestInit): Promise<Response> {
   return fetch(path, { ...init, headers, credentials: 'same-origin' })
 }
 
+/**
+ * Fragt einen frischen Code aus der Authenticator-App ab (siehe ConfirmCodeHost); true, sobald der Server ihn
+ * angenommen hat, false bei Abbruch.
+ */
+let confirmHandler: (() => Promise<boolean>) | null = null
+export function setConfirmHandler(handler: (() => Promise<boolean>) | null) {
+  confirmHandler = handler
+}
+
+async function needsConfirmation(response: Response): Promise<boolean> {
+  if (response.status !== 403) return false
+  try {
+    const problem = await response.clone().json()
+    return problem?.code === 'confirmationRequired'
+  } catch {
+    return false
+  }
+}
+
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   let response = await send(path, init)
   const isWrite = (init.method ?? 'GET').toUpperCase() !== 'GET'
-  if (response.status === 403 && isWrite && !path.startsWith('/api/auth/status')) {
+  if (await needsConfirmation(response)) {
+    // Änderungen an Konten, Postfächern und Einstellungen verlangen einen frischen Code – abfragen, einmal wiederholen
+    if (confirmHandler && (await confirmHandler())) response = await send(path, init)
+  } else if (response.status === 403 && isWrite && !path.startsWith('/api/auth/status')) {
     // Möglicherweise fehlte nur das CSRF-Cookie (z. B. nach der Abmeldung): neu holen, einmal wiederholen.
     await send('/api/auth/status', {})
     response = await send(path, init)
@@ -69,6 +91,57 @@ export interface User {
   enabled: boolean
   createdAt: string
   lastLoginAt: string | null
+  twoFactorEnabled: boolean
+}
+/** Antwort der Anmeldung: angemeldet, oder es fehlt noch der Code aus der Authenticator-App. */
+export type LoginResult = User | { twoFactorRequired: true }
+export interface TwoFactorStatus {
+  enabled: boolean
+  recoveryCodesLeft: number
+}
+export interface TwoFactorSetup {
+  secret: string
+  uri: string
+  /** QR-Code als data-URL (SVG) */
+  qrCode: string
+}
+export type VersionKind = 'IMPORTED' | 'EDITED' | 'ORIGINAL_RESTORED' | 'VERSION_RESTORED' | 'UNDONE'
+/** Eine Fassung der PDF-Datei eines Dokuments */
+/** Ein Link, mit dem eine nicht angemeldete Person das Dokument öffnet. */
+export interface DocShare {
+  id: string
+  recipient: string
+  canEdit: boolean
+  createdAt: string
+  createdBy: string | null
+  expiresAt: string | null
+  expired: boolean
+  lastAccessAt: string | null
+  accessCount: number
+  token: string
+}
+
+/** Was eine Person über einen Link vom Dokument sieht. */
+export interface SharedDoc {
+  title: string
+  filename: string
+  pageCount: number | null
+  sizeBytes: number
+  modifiedAt: string | null
+  canEdit: boolean
+  expiresAt: string | null
+  recipient: string
+}
+
+export interface DocVersion {
+  number: number
+  kind: VersionKind
+  restoredFrom: number | null
+  createdAt: string | null
+  createdBy: string | null
+  sizeBytes: number | null
+  pageCount: number | null
+  current: boolean
 }
 export interface AuthStatus {
   setupRequired: boolean
@@ -98,6 +171,8 @@ export interface Doc {
   sizeBytes: number
   ocrUsed: boolean
   hasThumbnail: boolean
+  /** Wann das Vorschaubild zuletzt geschrieben wurde (null bei älteren Dokumenten). */
+  thumbnailAt: string | null
   source: DocumentSource
   mailSubject: string | null
   mailFrom: string | null
@@ -128,6 +203,26 @@ export interface Facets {
   tags: FacetCount[]
 }
 export type SortOrder = 'relevance' | 'newest' | 'date'
+export type HistoryAction = 'IMPORTED' | 'EDITED' | 'DELETED'
+export type HistoryChange = 'DETAILS' | 'FILE' | 'ORIGINAL_RESTORED' | 'DUPLICATE'
+/** Ein Eintrag der Historie; Titel und Herkunft sind beim Eintragen festgehalten. */
+export interface HistoryEntry {
+  id: string
+  at: string
+  action: HistoryAction
+  documentId: string
+  documentTitle: string
+  source: DocumentSource | null
+  origin: string | null
+  change: HistoryChange | null
+  /** wer es getan hat; null = automatisch (Postfach, Eingangsordner) */
+  user: string | null
+  /** wann und von wem der Schritt rückgängig gemacht wurde */
+  undoneAt: string | null
+  undoneBy: string | null
+  /** lässt sich (jetzt) zurücknehmen – jeweils der neueste geltende Schritt eines Dokuments */
+  undoable: boolean
+}
 export interface ChatMessage {
   fromUser: boolean
   text: string
@@ -196,6 +291,13 @@ export interface MailAccount {
   folder: string
   importSince: string | null
   enabled: boolean
+  filter: MailFilter
+  /** eigenes Abrufintervall in Minuten; null = das allgemeine */
+  intervalMinutes: number | null
+  /** das tatsächlich geltende Intervall */
+  effectiveIntervalMinutes: number
+  /** null = pausiert */
+  nextSyncAt: string | null
   lastSyncAt: string | null
   lastSyncStatus: 'RUNNING' | 'OK' | 'ERROR' | null
   lastSyncMessage: string | null
@@ -211,6 +313,16 @@ export interface MailAccountInput {
   folder: string
   importSince: string | null
   enabled: boolean
+  filter: MailFilter
+  /** null = das allgemeine Abrufintervall */
+  intervalMinutes: number | null
+}
+/** Nur E-Mails, deren Betreff und Absender passen, werden ausgewertet; leere Listen schränken nicht ein. */
+export interface MailFilter {
+  subjectIncludes: string[]
+  subjectExcludes: string[]
+  senderIncludes: string[]
+  senderExcludes: string[]
 }
 export interface TestResult {
   ok: boolean
@@ -283,10 +395,18 @@ export const MAX_PAGE_SIZE = 100
 
 export const api = {
   authStatus: () => request<AuthStatus>('/api/auth/status'),
-  setup: (username: string, password: string) =>
-    request<User>('/api/auth/setup', json('POST', { username, password })),
+  setup: (username: string, password: string, setupCode: string) =>
+    request<User>('/api/auth/setup', json('POST', { username, password, setupCode })),
   login: (username: string, password: string) =>
-    request<User>('/api/auth/login', json('POST', { username, password })),
+    request<LoginResult>('/api/auth/login', json('POST', { username, password })),
+  loginTwoFactor: (code: string) => request<User>('/api/auth/login/two-factor', json('POST', { code })),
+  confirmCode: (code: string) => request<void>('/api/auth/confirm', json('POST', { code })),
+  twoFactorStatus: () => request<TwoFactorStatus>('/api/auth/two-factor'),
+  twoFactorSetup: () => request<TwoFactorSetup>('/api/auth/two-factor/setup', { method: 'POST' }),
+  twoFactorEnable: (password: string, code: string) =>
+    request<{ recoveryCodes: string[] }>('/api/auth/two-factor/enable', json('POST', { password, code })),
+  twoFactorDisable: (password: string, code: string) =>
+    request<void>('/api/auth/two-factor/disable', json('POST', { password, code })),
   logout: () => request<void>('/api/auth/logout', { method: 'POST' }),
   changePassword: (currentPassword: string, newPassword: string) =>
     request<void>('/api/auth/password', json('POST', { currentPassword, newPassword })),
@@ -312,13 +432,17 @@ export const api = {
   document: (id: string) => request<Doc>(`/api/documents/${id}`),
   documentText: (id: string) => request<{ content: string }>(`/api/documents/${id}/text`),
   updateDocument: (id: string, body: DocumentUpdate) => request<Doc>(`/api/documents/${id}`, json('PUT', body)),
-  deleteDocument: (id: string) => request<void>(`/api/documents/${id}`, { method: 'DELETE' }),
+  /** Löscht in den Papierkorb; über die Historie 30 Tage lang zurückholbar. */
+  deleteDocument: (id: string, asDuplicate = false) =>
+    request<void>(`/api/documents/${id}${asDuplicate ? '?duplicate=true' : ''}`, { method: 'DELETE' }),
   reprocess: (id: string) => request<Doc>(`/api/documents/${id}/reprocess`, { method: 'POST' }),
   /** Fragen an ein Dokument; die Antwort kommt von der eingerichteten KI. */
   chat: (id: string, messages: ChatMessage[]) =>
     request<{ answer: string }>(`/api/documents/${id}/chat`, json('POST', { messages })),
   /** KI-Suche: übersetzt eine Frage in natürlicher Sprache in Filter. */
   askSearch: (question: string) => request<AskResult>('/api/documents/ask', json('POST', { question })),
+  history: (page: number, size: number) => request<Page<HistoryEntry>>(`/api/history?page=${page}&size=${size}`),
+  undoHistory: (entryId: string) => request<Doc>(`/api/history/${entryId}/undo`, { method: 'POST' }),
   /** Der Anwender bestätigt: kein Duplikat. */
   notDuplicate: (id: string) => request<Doc>(`/api/documents/${id}/not-duplicate`, { method: 'POST' }),
   reprocessUnanalyzed: () => request<{ count: number }>('/api/documents/reprocess-unanalyzed', { method: 'POST' }),
@@ -354,6 +478,22 @@ export const api = {
       body: new Blob([pdf as BlobPart], { type: 'application/pdf' }),
     }),
   restoreOriginal: (id: string) => request<Doc>(`/api/documents/${id}/restore-original`, { method: 'POST' }),
+  versions: (id: string) => request<DocVersion[]>(`/api/documents/${id}/versions`),
+  restoreVersion: (id: string, number: number) =>
+    request<Doc>(`/api/documents/${id}/versions/${number}/restore`, { method: 'POST' }),
+
+  shares: (id: string) => request<DocShare[]>(`/api/documents/${id}/shares`),
+  createShare: (id: string, body: { recipient: string; canEdit: boolean; expiresInDays: number | null }) =>
+    request<DocShare>(`/api/documents/${id}/shares`, json('POST', body)),
+  revokeShare: (id: string, shareId: string) =>
+    request<void>(`/api/documents/${id}/shares/${shareId}`, { method: 'DELETE' }),
+  sharedDocument: (token: string) => request<SharedDoc>(`/api/share/${encodeURIComponent(token)}`),
+  saveSharedFile: (token: string, pdf: Uint8Array) =>
+    request<SharedDoc>(`/api/share/${encodeURIComponent(token)}/file`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/pdf' },
+      body: new Blob([pdf as BlobPart], { type: 'application/pdf' }),
+    }),
 
   users: () => request<User[]>('/api/users'),
   createUser: (body: { username: string; password: string; role: Role }) =>
@@ -361,12 +501,19 @@ export const api = {
   updateUser: (id: string, body: { role: Role; enabled: boolean; password: string | null }) =>
     request<User>(`/api/users/${id}`, json('PUT', body)),
   deleteUser: (id: string) => request<void>(`/api/users/${id}`, { method: 'DELETE' }),
+  resetTwoFactor: (id: string) => request<User>(`/api/users/${id}/two-factor`, { method: 'DELETE' }),
 }
 
 export const fileUrl = (id: string, download = false) => `/api/documents/${id}/file${download ? '?download=true' : ''}`
 export const originalUrl = (id: string) => `/api/documents/${id}/original`
-export const thumbnailUrl = (doc: Pick<Doc, 'id' | 'processedAt' | 'modifiedAt'>) =>
-  `/api/documents/${doc.id}/thumbnail?v=${encodeURIComponent(`${doc.processedAt ?? ''}${doc.modifiedAt ?? ''}`)}`
+export const sharedFileUrl = (token: string) => `/api/share/${encodeURIComponent(token)}/file`
+/** Der Link zum Weitergeben – vollständig, mit der Adresse, unter der die Anwendung gerade läuft. */
+export const shareLink = (token: string) => `${window.location.origin}/s/${token}`
+export const versionUrl = (id: string, number: number, download = false) =>
+  `/api/documents/${id}/versions/${number}/file${download ? '?download=true' : ''}`
+/** Die Adresse ändert sich mit jedem neu geschriebenen Vorschaubild – so zeigt der Browser nie ein altes aus seinem Zwischenspeicher. */
+export const thumbnailUrl = (doc: Pick<Doc, 'id' | 'processedAt' | 'modifiedAt' | 'thumbnailAt'>) =>
+  `/api/documents/${doc.id}/thumbnail?v=${encodeURIComponent(doc.thumbnailAt ?? `${doc.processedAt ?? ''}${doc.modifiedAt ?? ''}`)}`
 
 export function errorMessage(error: unknown): string {
   if (error instanceof ApiError) return error.message

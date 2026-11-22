@@ -15,8 +15,35 @@ const URL_ = `https://github.com/mozilla/pdf.js/releases/download/v${VERSION}/pd
 
 const target = fileURLToPath(new URL('../public/pdfjs/', import.meta.url))
 const marker = join(target, 'VERSION')
+// Stand der eigenen Anpassungen (harden unten); erhöhen, wenn sich daran etwas ändert
+const HARDENING = '1'
+const hardeningMarker = join(target, '.hardening')
+
+/**
+ * Sichere Voreinstellungen direkt im Betrachter: keine Skripte aus PDFs, keine XFA-Formulare. Die Dokumentseite
+ * setzt beides zwar auch, aber wer viewer.html direkt in einem Tab öffnet (etwa über einen zugeschickten Link),
+ * bekäme sonst die Voreinstellungen von PDF.js.
+ */
+const harden = () => {
+  const viewer = join(target, 'web', 'viewer.mjs')
+  let code = readFileSync(viewer, 'utf8')
+  for (const option of ['enableScripting', 'enableXfa']) {
+    const pattern = new RegExp(`(\\["${option}", \\{\\s*value: )true`)
+    if (!pattern.test(code)) {
+      console.error(`PDF.js: Voreinstellung ${option} nicht gefunden – Anpassung prüfen`)
+      process.exit(1)
+    }
+    code = code.replace(pattern, '$1false')
+  }
+  writeFileSync(viewer, code)
+  writeFileSync(hardeningMarker, HARDENING + '\n')
+}
 
 if (existsSync(marker) && readFileSync(marker, 'utf8').trim() === VERSION) {
+  if (!existsSync(hardeningMarker) || readFileSync(hardeningMarker, 'utf8').trim() !== HARDENING) {
+    harden()
+    console.log('PDF.js: sichere Voreinstellungen gesetzt')
+  }
   process.exit(0)
 }
 
@@ -52,5 +79,6 @@ const removeUnneeded = (dir) => {
   }
 }
 removeUnneeded(target)
+harden()
 writeFileSync(marker, VERSION + '\n')
 console.log(`PDF.js ${VERSION} liegt in public/pdfjs`)

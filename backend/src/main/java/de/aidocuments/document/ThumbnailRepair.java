@@ -68,8 +68,11 @@ public class ThumbnailRepair {
                 return false;
             }
             Files.move(fresh, thumbnail, StandardCopyOption.REPLACE_EXISTING);
+            // neue Adresse für das Bild – sonst zeigt der Browser noch eine Stunde lang das leere aus seinem Zwischenspeicher
+            doc.setThumbnailAt(storage.thumbnailWrittenAt(doc.getId()));
+            documents.save(doc);
             return true;
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException | RuntimeException | OutOfMemoryError | StackOverflowError e) {
             log.warn("Vorschaubild von {} konnte nicht geprüft werden: {}", doc.getId(), e.toString());
             return false;
         } finally {

@@ -49,6 +49,8 @@
     "setup": {
       "title": "AIDocuments kurulumu",
       "subtitle": "Önce yönetici hesabını oluşturun. Diğer kullanıcıları daha sonra ayarlardan ekleyebilirsiniz.",
+      "code": "Kurulum kodu",
+      "codeHint": "Başlangıçta sunucu günlüğünde gösterilir (Docker: docker compose logs).",
       "adminAccount": "Yönetici hesabı",
       "repeatPassword": "Parolayı tekrarlayın",
       "submit": "Hesabı oluştur ve başla",
@@ -57,6 +59,19 @@
         "ai": "Yapay zeka özetler ve etiketler",
         "search": "Belgelerin içinde tam metin araması"
       }
+    },
+    "twoFactor": {
+      "title": "Oturum açmayı onayla",
+      "subtitle": "Kimlik doğrulama uygulamandaki 6 haneli kodu gir.",
+      "code": "Kod",
+      "codeHint": "Uygulamaya erişemiyor musun? Bunun yerine kurtarma kodlarından birini gir.",
+      "submit": "Onayla",
+      "back": "Oturum açmaya dön"
+    },
+    "twoFactorRequired": {
+      "title": "İki adımlı doğrulamayı kur",
+      "subtitle": "Yöneticiler için iki adımlı doğrulama zorunludur. Devam etmek için şimdi kur.",
+      "intro": "Telefonunda bir kimlik doğrulama uygulamasına ihtiyacın var (ör. Google Authenticator, Microsoft Authenticator, 1Password veya Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Koyu tema"
     },
     "search": {
-      "placeholder": "Belgelerde, etiketlerde, içerikte ara…",
-      "placeholderAi": "Belgeleri kendi sözlerinizle arayın – ör. “Kia’nın 2024 faturaları”",
+      "placeholder": "Anahtar kelime araması: belgeler, etiketler, içerik …",
+      "placeholderAi": "Yapay zekâ araması: kendi sözlerinizle sorun – ör. “Kia’nın 2024 faturaları”",
       "labelAi": "YZ",
       "label": "Belgelerde ara",
       "clear": "Aramayı temizle",
@@ -78,6 +93,7 @@
       "aiActive": "Yapay zeka etkin",
       "aiNotConfigured": "Yapay zeka ayarlanmadı",
       "changePassword": "Parolayı değiştir",
+      "licenses": "Üçüncü taraf lisansları",
       "logout": "Oturumu kapat"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Belge silinsin mi?",
-      "text": "“{{title}}”; PDF dosyası, tam metni ve etiketleriyle birlikte silinecek. Bu işlem geri alınamaz.",
-      "confirm": "Kalıcı olarak sil"
+      "text": "“{{title}}” silinecek. Bunu geçmişte 30 gün boyunca geri alabilirsiniz; ardından kalıcı olarak kaldırılır.",
+      "confirm": "Sil"
     },
     "chat": {
       "intro": "Bu belge hakkında bir soru sorun – yapay zekâ içeriğine göre yanıtlar.",
@@ -266,6 +282,25 @@
         "summary": "Bu belge ne hakkında?",
         "deadlines": "Süreler veya tarihler var mı?",
         "amounts": "Hangi tutarlar geçiyor?"
+      }
+    },
+    "versions": {
+      "title": "Sürümler",
+      "intro": "PDF'deki her değişiklik yeni bir sürüm oluşturur. Eski sürümler korunur; görüntülenebilir, indirilebilir veya geri yüklenebilir.",
+      "current": "güncel",
+      "view": "Sürüm {{number}} görüntüle",
+      "download": "Sürüm {{number}} indir",
+      "restore": "Sürüm {{number}} geri yükle",
+      "restoreTitle": "Sürüm {{number}} geri yüklensin mi?",
+      "restoreText": "Bu sürüm güncel sürüm olur. Şimdiki sürüm korunur ve adım geçmişte geri alınabilir.",
+      "restoreConfirm": "Geri yükle",
+      "restored": "Sürüm {{number}} geri yüklendi",
+      "kinds": {
+        "IMPORTED": "İçe aktarıldı",
+        "EDITED": "Düzenlendi",
+        "ORIGINAL_RESTORED": "Orijinal geri yüklendi",
+        "VERSION_RESTORED": "Sürüm {{from}} geri yüklendi",
+        "UNDONE": "Değişiklik geri alındı"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Yalnızca şu tarihten sonraki e-postalar",
         "sinceHint": "İsteğe bağlı – daha eski e-postalar atlanır",
         "enabled": "Otomatik kontrol et",
-        "enabledHint": "Posta kutusu, ayarlanan aralıklarla yeni PDF’ler için kontrol edilir."
-      }
+        "enabledHint": "Posta kutusu, ayarlanan aralıklarla yeni PDF’ler için kontrol edilir.",
+        "filter": {
+          "title": "Filtre",
+          "intro": "Yalnızca tüm koşulları karşılayan e-postalar işlenir. Her satıra bir terim; büyük/küçük harf fark etmez, metnin bir kısmı yeterlidir. Boş alanlar hiçbir şeyi kısıtlamaz.",
+          "subjectIncludes": "Konu bu terimlerden birini içeriyor",
+          "subjectExcludes": "Konu bu terimlerden hiçbirini içermiyor",
+          "senderIncludes": "Gönderen bu terimlerden birini içeriyor",
+          "senderExcludes": "Gönderen bu terimlerden hiçbirini içermiyor",
+          "senderHint": "Ad veya adres, ör. “@example.com”",
+          "newOnly": "Filtre, son almadan sonra gelen e-postalar için geçerlidir; daha önce kontrol edilmiş e-postalar yeniden işlenmez."
+        },
+        "interval": "Dakika cinsinden alma aralığı",
+        "intervalHint": "Genel aralığı kullanmak için boş bırakın (şu anda {{interval}})."
+      },
+      "filterActive": "Filtre etkin",
+      "schedule": "Her {{interval}} alınır · sonraki: {{when}}",
+      "scheduleSoon": "Her {{interval}} alınır · sonraki birazdan"
     },
     "import": {
       "title": "Zamanlama ve içe aktarma klasörü",
@@ -317,7 +367,7 @@
       "saved": "Ayarlar kaydedildi",
       "interval": {
         "title": "Kontrol aralığı",
-        "text": "Uygulama, tüm posta kutularını ve içe aktarma klasörünü bu sıklıkla yeni PDF’ler için kontrol eder.",
+        "text": "Uygulamanın giriş klasörünü ve kendi aralığı olmayan tüm posta kutularını yeni PDF’ler için ne sıklıkla kontrol ettiği.",
         "label": "Her … dakikada bir",
         "nextRun": "Sonraki otomatik kontrol: {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Hesap etkin",
         "activeHint": "Devre dışı hesaplarla oturum açılamaz; etkin oturumlar hemen sona erer.",
         "create": "Oluştur"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "İki adımlı doğrulamayı sıfırla",
+      "resetTwoFactorHint": "Bu hesap için iki adımlı doğrulama açık.",
+      "resetTwoFactorText": "{{name}} bundan sonra yalnızca parolayla oturum açar ve iki adımlı doğrulamayı yeniden kurabilir – örneğin telefonunu kaybettikten sonra.",
+      "resetTwoFactorConfirm": "Sıfırla",
+      "twoFactorReset": "İki adımlı doğrulama sıfırlandı"
+    }
+  },
+  "history": {
+    "nav": "Geçmiş",
+    "title": "Geçmiş",
+    "subtitle": "Belgelerinize neler oldu – en yeni kayıtlar önce.",
+    "empty": "Henüz kayıt yok.",
+    "actions": {
+      "IMPORTED": "İçe aktarıldı",
+      "EDITED": "Düzenlendi",
+      "DELETED": "Silindi"
+    },
+    "changes": {
+      "DETAILS": "Bilgiler değiştirildi",
+      "FILE": "PDF değiştirildi",
+      "ORIGINAL_RESTORED": "Orijinal geri yüklendi",
+      "DUPLICATE": "kopya olarak",
+      "VERSION_RESTORED": "Sürüm geri yüklendi"
+    },
+    "by": "{{user}} tarafından",
+    "automatic": "otomatik",
+    "more": "Daha fazla yükle",
+    "undo": "Geri al",
+    "undone": "Geri alındı"
+  },
+  "duplicates": {
+    "title": "Olası kopya",
+    "subtitle": "İki belgenin içeriği aynı. Birini tutup diğerini silin – ya da kopya olmadıklarını işaretleyin.",
+    "older": "Daha önce geldi",
+    "newer": "Daha sonra geldi",
+    "deleteThis": "Bunu sil",
+    "compare": "Yan yana karşılaştır"
+  },
+  "twoFactor": {
+    "title": "İki adımlı doğrulama",
+    "on": "Açık",
+    "off": "Kapalı",
+    "intro": "Hesabını ikinci bir faktörle koru: oturum açarken telefonundaki bir kimlik doğrulama uygulamasından da kod girersin (ör. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Kur",
+    "scan": "QR kodunu kimlik doğrulama uygulamanla tara veya anahtarı elle gir. Ardından uygulamadaki kodu ve parolanı gir.",
+    "qrAlt": "Kimlik doğrulama uygulaması için QR kodu",
+    "secret": "Anahtar",
+    "confirmCode": "Uygulamadaki kod",
+    "activate": "Etkinleştir",
+    "recoveryTitle": "Kurtarma kodları",
+    "recoveryText": "Bu kurtarma kodlarını güvenli bir yerde sakla. Uygulamayı kullanamazsan – örneğin telefonunu kaybedersen – her biri bir kez çalışır. Yalnızca şimdi gösterilirler.",
+    "download": "Dosya olarak kaydet",
+    "done": "Tamam",
+    "enabled": "İki adımlı doğrulama açık",
+    "disabled": "İki adımlı doğrulama kapatıldı",
+    "disableHint": "Kapatmak için uygulamadaki güncel bir kodu (veya bir kurtarma kodunu) ve parolanı gir.",
+    "disable": "Kapat",
+    "recoveryLeft": "Kullanılmamış kurtarma kodları: {{count}}",
+    "adminCannotDisable": "Yönetici olarak iki adımlı doğrulamayı kapatamazsın."
+  },
+  "confirmCode": {
+    "title": "Değişikliği onayla",
+    "text": "Hesaplar, posta kutuları ve ayarlardaki değişiklikler için kimlik doğrulama uygulamandan güncel bir kod gerekir. Onay 10 dakika geçerlidir.",
+    "submit": "Onayla"
+  },
+  "share": {
+    "button": "Paylaş",
+    "title": "Belgeyi paylaş",
+    "intro": "Hesabı olmayan bir kişinin yalnızca bu belgeyi açabileceği bir bağlantı oluşturur.",
+    "recipient": "Kiminle paylaşıyorsun?",
+    "recipientHint": "Kişinin adı – bağlantıyı kime verdiğini daha sonra görebilmen için.",
+    "permission": "Bu kişi belgeyi düzenleyebilir mi?",
+    "viewOnly": "Yalnızca görüntüleme",
+    "canEdit": "Düzenleyebilir",
+    "viewHint": "Kişi PDF'yi görüntüleyebilir, yazdırabilir ve indirebilir.",
+    "editHint": "Kişi ayrıca PDF'yi işaretleyebilir, üzerine yazabilir, imzalayabilir ve kaydedebilir. Her kayıt yeni bir sürüm olur; başlık, etiketler ve diğer bilgiler gizli kalır.",
+    "validity": "Geçerlilik",
+    "unlimited": "Sınırsız",
+    "create": "Bağlantı oluştur",
+    "link": "Bağlantı",
+    "linkHint": "Bu bağlantıya sahip olan herkes belgeyi açabilir – yalnızca {{name}} ile paylaş. Belge görünümünde istediğin zaman geri alabilirsin.",
+    "copy": "Bağlantıyı kopyala",
+    "copied": "Bağlantı kopyalandı",
+    "listTitle": "Dışarıyla paylaşıldı",
+    "expired": "süresi doldu",
+    "validUntil": "{{date}} tarihine kadar geçerli",
+    "noExpiry": "süresiz",
+    "lastOpened": "en son {{when}} açıldı (görüntülenme: {{views}})",
+    "neverOpened": "henüz açılmadı",
+    "revoke": "Bağlantıyı geri al",
+    "revokeTitle": "{{name}} için bağlantı geri alınsın mı?",
+    "revokeText": "Bağlantı hemen çalışmayı bırakır. Kişinin daha önce indirdiği kopyalar onda kalır.",
+    "revoked": "Bağlantı geri alındı",
+    "page": {
+      "for": "Paylaşılan kişi: {{name}}",
+      "invalid": "Bu bağlantı geçersiz ya da süresi dolmuş veya belge silinmiş. Bağlantıyı sana veren kişiye başvur."
     }
   }
 }

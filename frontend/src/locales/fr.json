@@ -50,6 +50,8 @@
     "setup": {
       "title": "Configurer AIDocuments",
       "subtitle": "Commencez par créer le compte administrateur. Vous pourrez ensuite ajouter d’autres utilisateurs dans les paramètres.",
+      "code": "Code de configuration",
+      "codeHint": "Affiché dans le journal du serveur au démarrage (Docker : docker compose logs).",
       "adminAccount": "Compte administrateur",
       "repeatPassword": "Répéter le mot de passe",
       "submit": "Créer le compte et commencer",
@@ -58,6 +60,19 @@
         "ai": "L’IA les résume et leur attribue des mots-clés",
         "search": "Recherche en texte intégral jusque dans le contenu du document"
       }
+    },
+    "twoFactor": {
+      "title": "Confirmer la connexion",
+      "subtitle": "Saisis le code à 6 chiffres de ton application d'authentification.",
+      "code": "Code",
+      "codeHint": "Pas d'accès à l'application ? Saisis plutôt l'un de tes codes de récupération.",
+      "submit": "Confirmer",
+      "back": "Retour à la connexion"
+    },
+    "twoFactorRequired": {
+      "title": "Configurer l'authentification à deux facteurs",
+      "subtitle": "L'authentification à deux facteurs est obligatoire pour les administrateurs. Configure-la maintenant pour continuer.",
+      "intro": "Il te faut une application d'authentification sur ton téléphone (p. ex. Google Authenticator, Microsoft Authenticator, 1Password ou Aegis)."
     }
   },
   "shell": {
@@ -67,8 +82,8 @@
       "dark": "Thème sombre"
     },
     "search": {
-      "placeholder": "Rechercher des documents, mots-clés, contenus …",
-      "placeholderAi": "Recherchez des documents en langage naturel – p. ex. « factures de Kia de 2024 »",
+      "placeholder": "Recherche par mots-clés : documents, mots-clés, contenus …",
+      "placeholderAi": "Recherche IA : posez votre question – p. ex. « factures de Kia de 2024 »",
       "labelAi": "IA",
       "label": "Rechercher des documents",
       "clear": "Effacer la recherche",
@@ -79,6 +94,7 @@
       "aiActive": "IA active",
       "aiNotConfigured": "IA non configurée",
       "changePassword": "Changer le mot de passe",
+      "licenses": "Licences tierces",
       "logout": "Se déconnecter"
     },
     "passwordDialog": {
@@ -261,8 +277,8 @@
     },
     "delete": {
       "title": "Supprimer le document ?",
-      "text": "« {{title}} » sera supprimé avec son fichier PDF, son texte intégral et ses mots-clés. Cette action est irréversible.",
-      "confirm": "Supprimer définitivement"
+      "text": "« {{title}} » sera supprimé. Vous pouvez annuler cette action dans l’historique pendant 30 jours ; ensuite, il sera définitivement supprimé.",
+      "confirm": "Supprimer"
     },
     "chat": {
       "intro": "Posez une question sur ce document – l’IA répond d’après son contenu.",
@@ -275,6 +291,25 @@
         "summary": "De quoi parle ce document ?",
         "deadlines": "Y a-t-il des délais ou des dates ?",
         "amounts": "Quels montants sont mentionnés ?"
+      }
+    },
+    "versions": {
+      "title": "Versions",
+      "intro": "Chaque modification du PDF crée une nouvelle version. Les anciennes versions sont conservées et peuvent être consultées, téléchargées ou restaurées.",
+      "current": "actuelle",
+      "view": "Afficher la version {{number}}",
+      "download": "Télécharger la version {{number}}",
+      "restore": "Restaurer la version {{number}}",
+      "restoreTitle": "Restaurer la version {{number}} ?",
+      "restoreText": "Cette version devient la version actuelle. La version actuelle est conservée, et l'étape peut être annulée dans l'historique.",
+      "restoreConfirm": "Restaurer",
+      "restored": "Version {{number}} restaurée",
+      "kinds": {
+        "IMPORTED": "Importé",
+        "EDITED": "Modifié",
+        "ORIGINAL_RESTORED": "Original restauré",
+        "VERSION_RESTORED": "Version {{from}} restaurée",
+        "UNDONE": "Modification annulée"
       }
     }
   },
@@ -316,8 +351,23 @@
         "since": "Uniquement les e-mails à partir du",
         "sinceHint": "Facultatif – les e-mails plus anciens sont ignorés",
         "enabled": "Vérifier automatiquement",
-        "enabledHint": "La boîte mail est vérifiée à l’intervalle configuré pour rechercher de nouveaux PDF."
-      }
+        "enabledHint": "La boîte mail est vérifiée à l’intervalle configuré pour rechercher de nouveaux PDF.",
+        "filter": {
+          "title": "Filtre",
+          "intro": "Seuls les e-mails qui remplissent toutes les conditions sont traités. Un terme par ligne ; majuscules et minuscules sont indifférentes, une partie du texte suffit. Un champ vide ne restreint rien.",
+          "subjectIncludes": "L’objet contient l’un de ces termes",
+          "subjectExcludes": "L’objet ne contient aucun de ces termes",
+          "senderIncludes": "L’expéditeur contient l’un de ces termes",
+          "senderExcludes": "L’expéditeur ne contient aucun de ces termes",
+          "senderHint": "Nom ou adresse, p. ex. « @example.com »",
+          "newOnly": "Le filtre s’applique aux e-mails reçus après la dernière relève ; les e-mails déjà vérifiés ne sont pas traités à nouveau."
+        },
+        "interval": "Intervalle de relève en minutes",
+        "intervalHint": "Laisser vide pour utiliser l’intervalle général (actuellement {{interval}})."
+      },
+      "filterActive": "Filtre actif",
+      "schedule": "Relève toutes les {{interval}} · prochaine {{when}}",
+      "scheduleSoon": "Relève toutes les {{interval}} · prochaine sous peu"
     },
     "import": {
       "title": "Planification et dossier d’import",
@@ -326,7 +376,7 @@
       "saved": "Paramètres enregistrés",
       "interval": {
         "title": "Intervalle de vérification",
-        "text": "C’est la fréquence à laquelle l’application vérifie toutes les boîtes mail et le dossier d’import à la recherche de nouveaux PDF.",
+        "text": "Fréquence à laquelle l’application vérifie le dossier d’entrée et toutes les boîtes sans intervalle propre à la recherche de nouveaux PDF.",
         "label": "Toutes les … minutes",
         "nextRun": "Prochaine vérification automatique {{when}}."
       },
@@ -461,7 +511,104 @@
         "active": "Compte actif",
         "activeHint": "Les comptes désactivés ne peuvent pas se connecter ; les sessions en cours se terminent immédiatement.",
         "create": "Créer"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Réinitialiser l'authentification à deux facteurs",
+      "resetTwoFactorHint": "L'authentification à deux facteurs est activée pour ce compte.",
+      "resetTwoFactorText": "{{name}} se connectera ensuite avec le mot de passe seul et pourra reconfigurer l'authentification à deux facteurs – par exemple après la perte du téléphone.",
+      "resetTwoFactorConfirm": "Réinitialiser",
+      "twoFactorReset": "Authentification à deux facteurs réinitialisée"
+    }
+  },
+  "history": {
+    "nav": "Historique",
+    "title": "Historique",
+    "subtitle": "Ce qui est arrivé à vos documents – entrées les plus récentes en premier.",
+    "empty": "Aucune entrée pour l’instant.",
+    "actions": {
+      "IMPORTED": "Importé",
+      "EDITED": "Modifié",
+      "DELETED": "Supprimé"
+    },
+    "changes": {
+      "DETAILS": "Informations modifiées",
+      "FILE": "PDF modifié",
+      "ORIGINAL_RESTORED": "Original restauré",
+      "DUPLICATE": "comme doublon",
+      "VERSION_RESTORED": "Version restaurée"
+    },
+    "by": "par {{user}}",
+    "automatic": "automatiquement",
+    "more": "Charger plus",
+    "undo": "Annuler",
+    "undone": "Annulé"
+  },
+  "duplicates": {
+    "title": "Doublon possible",
+    "subtitle": "Les deux documents ont le même contenu. Conservez-en un et supprimez l’autre – ou indiquez qu’il ne s’agit pas de doublons.",
+    "older": "Reçu plus tôt",
+    "newer": "Reçu plus tard",
+    "deleteThis": "Supprimer celui-ci",
+    "compare": "Comparer côte à côte"
+  },
+  "twoFactor": {
+    "title": "Authentification à deux facteurs",
+    "on": "Activée",
+    "off": "Désactivée",
+    "intro": "Protège ton compte avec un second facteur : à la connexion, tu saisis en plus un code d'une application d'authentification sur ton téléphone (p. ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Configurer",
+    "scan": "Scanne le code QR avec ton application d'authentification ou saisis la clé manuellement. Saisis ensuite le code affiché et ton mot de passe.",
+    "qrAlt": "Code QR pour l'application d'authentification",
+    "secret": "Clé",
+    "confirmCode": "Code de l'application",
+    "activate": "Activer",
+    "recoveryTitle": "Codes de récupération",
+    "recoveryText": "Conserve ces codes de récupération en lieu sûr. Chacun fonctionne une fois si tu ne peux pas utiliser l'application – par exemple si tu perds ton téléphone. Ils ne sont affichés que maintenant.",
+    "download": "Enregistrer dans un fichier",
+    "done": "Terminé",
+    "enabled": "L'authentification à deux facteurs est activée",
+    "disabled": "L'authentification à deux facteurs est désactivée",
+    "disableHint": "Pour la désactiver, saisis un code actuel de l'application (ou un code de récupération) et ton mot de passe.",
+    "disable": "Désactiver",
+    "recoveryLeft": "Codes de récupération inutilisés : {{count}}",
+    "adminCannotDisable": "En tant qu'administrateur, tu ne peux pas désactiver l'authentification à deux facteurs."
+  },
+  "confirmCode": {
+    "title": "Confirmer la modification",
+    "text": "Les modifications des comptes, boîtes mail et paramètres nécessitent un code actuel de ton application d'authentification. La confirmation est valable 10 minutes.",
+    "submit": "Confirmer"
+  },
+  "share": {
+    "button": "Partager",
+    "title": "Partager le document",
+    "intro": "Crée un lien qui permet à une personne sans compte d'ouvrir uniquement ce document.",
+    "recipient": "Avec qui partages-tu ?",
+    "recipientHint": "Le nom de la personne – pour savoir plus tard à qui tu as donné le lien.",
+    "permission": "Cette personne peut-elle modifier le document ?",
+    "viewOnly": "Lecture seule",
+    "canEdit": "Peut modifier",
+    "viewHint": "La personne peut afficher, imprimer et télécharger le PDF.",
+    "editHint": "La personne peut aussi annoter, écrire, signer et enregistrer le PDF. Chaque enregistrement crée une nouvelle version ; le titre, les mots-clés et les autres informations restent masqués.",
+    "validity": "Valable",
+    "unlimited": "Illimité",
+    "create": "Créer le lien",
+    "link": "Lien",
+    "linkHint": "Toute personne disposant de ce lien peut ouvrir le document – ne le transmets qu'à {{name}}. Tu peux le révoquer à tout moment dans la vue du document.",
+    "copy": "Copier le lien",
+    "copied": "Lien copié",
+    "listTitle": "Partagé à l'extérieur",
+    "expired": "expiré",
+    "validUntil": "valable jusqu'au {{date}}",
+    "noExpiry": "sans expiration",
+    "lastOpened": "ouvert pour la dernière fois {{when}} (consultations : {{views}})",
+    "neverOpened": "pas encore ouvert",
+    "revoke": "Révoquer le lien",
+    "revokeTitle": "Révoquer le lien pour {{name}} ?",
+    "revokeText": "Le lien cesse de fonctionner immédiatement. Les copies déjà téléchargées par la personne restent chez elle.",
+    "revoked": "Lien révoqué",
+    "page": {
+      "for": "Partagé avec {{name}}",
+      "invalid": "Ce lien n'est pas valide ou a expiré, ou le document a été supprimé. Adresse-toi à la personne qui te l'a donné."
     }
   }
 }

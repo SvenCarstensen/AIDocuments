@@ -1,9 +1,5 @@
 package de.aidocuments.mail;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-import de.aidocuments.document.Document;
 import de.aidocuments.document.DocumentRepository;
 import de.aidocuments.i18n.Messages;
 import de.aidocuments.i18n.Msg;
@@ -17,8 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,16 +21,16 @@ public class MailAccountService {
     private final MailAccountRepository accounts;
     private final DocumentRepository documents;
     private final SecretCipher cipher;
-    private final MongoTemplate mongo;
     private final Messages messages;
+    private final MailSchedule schedule;
 
     public MailAccountService(MailAccountRepository accounts, DocumentRepository documents, SecretCipher cipher,
-                              MongoTemplate mongo, Messages messages) {
+                              Messages messages, MailSchedule schedule) {
         this.messages = messages;
+        this.schedule = schedule;
         this.accounts = accounts;
         this.documents = documents;
         this.cipher = cipher;
-        this.mongo = mongo;
     }
 
     public List<MailAccountDto> list() {
@@ -61,13 +55,18 @@ public class MailAccountService {
 
     public MailAccountDto update(String id, MailAccountRequest request) {
         MailAccount account = require(id);
+        boolean newPassword = request.password() != null && !request.password().isBlank();
+        if (!newPassword && !mayReusePassword(account, request.host(), request.security())) {
+            throw ApiException.badRequest("error.mailbox.passwordForNewServer");
+        }
         boolean mailboxChanged = !Objects.equals(account.getHost(), request.host().strip())
                 || !Objects.equals(account.getUsername(), request.username().strip())
                 || !Objects.equals(account.getFolder(), request.folder().strip())
                 || !Objects.equals(account.getImportSince(), request.importSince());
         apply(account, request);
         if (mailboxChanged) {
-            // anderes Postfach oder anderer Zeitraum: von vorn prüfen (Duplikate werden ohnehin erkannt)
+            // anderes Postfach oder bewusst anderer Zeitraum: von vorn prüfen (Duplikate werden ohnehin erkannt).
+            // Ein geänderter Filter gilt dagegen nur für E-Mails, die nach dem letzten Abruf eingehen.
             account.resetCursor();
         }
         return toDto(accounts.save(account));
@@ -76,24 +75,39 @@ public class MailAccountService {
     public void delete(String id) {
         MailAccount account = require(id);
         accounts.delete(account);
+        schedule.forget(id);
         // importierte Dokumente bleiben erhalten, verlieren aber den Verweis auf das Postfach
-        mongo.updateMulti(query(where("mailAccountId").is(id)), new Update().unset("mailAccountId"), Document.class);
+        documents.clearMailAccount(id);
     }
 
     public String password(MailAccount account) {
         return cipher.decrypt(account.getPasswordEncrypted());
     }
 
+    /**
+     * Ob das gespeicherte Passwort für diese Verbindung verwendet werden darf: nur für denselben Server und nicht
+     * unverschlüsselt, wenn es bisher verschlüsselt ging. Sonst ließe sich das Passwort mit einer geänderten Adresse
+     * an einen fremden Server schicken und dort mitlesen.
+     */
+    public boolean mayReusePassword(MailAccount account, String host, MailSecurity security) {
+        boolean sameHost = account.getHost() != null && host != null
+                && account.getHost().strip().equalsIgnoreCase(host.strip());
+        boolean downgrade = security == MailSecurity.NONE && account.getSecurity() != MailSecurity.NONE;
+        return sameHost && !downgrade;
+    }
+
     // --- Abrufstand: gezielte Feld-Updates, damit ein parallel gespeichertes Formular nichts überschreibt ---
 
     void markRunning(String id) {
-        mongo.updateFirst(query(where("_id").is(id)),
-                new Update().set("lastSyncStatus", MailAccount.SyncStatus.RUNNING), MailAccount.class);
+        accounts.markRunning(id);
     }
 
     void saveCursor(String id, long uidValidity, long lastUid) {
-        mongo.updateFirst(query(where("_id").is(id)),
-                new Update().set("uidValidity", uidValidity).set("lastUid", lastUid), MailAccount.class);
+        accounts.saveCursor(id, uidValidity, lastUid);
+    }
+
+    void saveCheckedUntil(String id, Instant startedAt) {
+        accounts.saveCheckedUntil(id, startedAt);
     }
 
     /**
@@ -101,10 +115,7 @@ public class MailAccountService {
      *               übersetzt wird beim Ausliefern (siehe {@link #toDto})
      */
     void markFinished(String id, MailAccount.SyncStatus status, List<Msg> result) {
-        mongo.updateFirst(query(where("_id").is(id)), new Update()
-                .set("lastSyncStatus", status)
-                .set("lastSyncMessage", MsgCodec.encode(result))
-                .set("lastSyncAt", Instant.now()), MailAccount.class);
+        accounts.markFinished(id, status, MsgCodec.encode(result), Instant.now());
     }
 
     private void apply(MailAccount account, MailAccountRequest request) {
@@ -116,14 +127,21 @@ public class MailAccountService {
         account.setFolder(request.folder().strip());
         account.setImportSince(request.importSince());
         account.setEnabled(request.enabled());
+        account.setFilter(filter(request));
+        account.setIntervalMinutes(request.intervalMinutes());
         if (request.password() != null && !request.password().isBlank()) {
             account.setPasswordEncrypted(cipher.encrypt(request.password()));
         }
     }
 
+    private static MailFilter filter(MailAccountRequest request) {
+        return request.filter() == null ? MailFilter.NONE : request.filter().toFilter();
+    }
+
     private MailAccountDto toDto(MailAccount a) {
         return new MailAccountDto(a.getId(), a.getName(), a.getHost(), a.getPort(), a.getSecurity(),
-                a.getUsername(), a.getFolder(), a.getImportSince(), a.isEnabled(), a.getLastSyncAt(),
+                a.getUsername(), a.getFolder(), a.getImportSince(), a.isEnabled(), MailDtos.MailFilterDto.of(a.getFilter()),
+                a.getIntervalMinutes(), schedule.intervalMinutes(a), schedule.nextSyncAt(a), a.getLastSyncAt(),
                 a.getLastSyncStatus(), messages.localize(a.getLastSyncMessage()),
                 documents.countByMailAccountId(a.getId()));
     }

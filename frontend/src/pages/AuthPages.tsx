@@ -2,6 +2,7 @@ import { FileSearch, Inbox, ShieldCheck, Sparkles } from 'lucide-react'
 import { type FormEvent, type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
+import { TwoFactorSetupFlow } from '../components/TwoFactorDialog'
 import { Alert, Button, Field, Input, Logo } from '../components/ui'
 import { api, errorMessage, type User } from '../lib/api'
 
@@ -34,17 +35,38 @@ export function LoginPage({ onDone }: { onDone: (user: User) => void }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  // Passwort geprüft, es fehlt noch der Code aus der Authenticator-App
+  const [needsCode, setNeedsCode] = useState(false)
 
   async function submit(event: FormEvent) {
     event.preventDefault()
     setBusy(true)
     setError(null)
     try {
-      onDone(await api.login(username, password))
+      const result = await api.login(username, password)
+      if ('twoFactorRequired' in result) {
+        setNeedsCode(true)
+        setPassword('')
+        setBusy(false)
+      } else {
+        onDone(result)
+      }
     } catch (e) {
       setError(errorMessage(e))
       setBusy(false)
     }
+  }
+
+  if (needsCode) {
+    return (
+      <TwoFactorStep
+        onDone={onDone}
+        onBack={() => {
+          setNeedsCode(false)
+          setError(null)
+        }}
+      />
+    )
   }
 
   return (
@@ -84,11 +106,64 @@ export function LoginPage({ onDone }: { onDone: (user: User) => void }) {
   )
 }
 
+function TwoFactorStep({ onDone, onBack }: { onDone: (user: User) => void; onBack: () => void }) {
+  const { t } = useTranslation()
+  const [code, setCode] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  async function submit(event: FormEvent) {
+    event.preventDefault()
+    setBusy(true)
+    setError(null)
+    try {
+      onDone(await api.loginTwoFactor(code))
+    } catch (e) {
+      setError(errorMessage(e))
+      setCode('')
+      setBusy(false)
+    }
+  }
+
+  return (
+    <AuthLayout title={t('auth.twoFactor.title')} subtitle={t('auth.twoFactor.subtitle')}>
+      <form onSubmit={submit} className="flex flex-col gap-4">
+        {error && <Alert tone="danger">{error}</Alert>}
+        <Field label={t('auth.twoFactor.code')} hint={t('auth.twoFactor.codeHint')}>
+          {(id) => (
+            <Input
+              id={id}
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              autoComplete="one-time-code"
+              inputMode="text"
+              autoCapitalize="none"
+              spellCheck={false}
+              placeholder="123456"
+              className="font-mono tracking-wider"
+              maxLength={50}
+              autoFocus
+              required
+            />
+          )}
+        </Field>
+        <Button type="submit" variant="primary" loading={busy} className="mt-1 w-full">
+          {t('auth.twoFactor.submit')}
+        </Button>
+        <button type="button" onClick={onBack} className="text-sm text-muted hover:text-ink hover:underline">
+          {t('auth.twoFactor.back')}
+        </button>
+      </form>
+    </AuthLayout>
+  )
+}
+
 export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
   const { t } = useTranslation()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [repeat, setRepeat] = useState('')
+  const [setupCode, setSetupCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -100,7 +175,7 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
     setBusy(true)
     setError(null)
     try {
-      onDone(await api.setup(username, password))
+      onDone(await api.setup(username, password, setupCode))
     } catch (e) {
       setError(errorMessage(e))
       setBusy(false)
@@ -136,6 +211,22 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
           {t('auth.setup.adminAccount')}
         </div>
         {error && <Alert tone="danger">{error}</Alert>}
+        <Field label={t('auth.setup.code')} hint={t('auth.setup.codeHint')}>
+          {(id) => (
+            <Input
+              id={id}
+              value={setupCode}
+              onChange={(e) => setSetupCode(e.target.value)}
+              autoComplete="one-time-code"
+              autoCapitalize="characters"
+              spellCheck={false}
+              placeholder="XXXX-XXXX-XXXX"
+              className="font-mono tracking-wider"
+              autoFocus
+              required
+            />
+          )}
+        </Field>
         <Field label={t('common.username')} hint={t('common.usernameHint')}>
           {(id) => (
             <Input
@@ -145,7 +236,6 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
               autoComplete="username"
               autoCapitalize="none"
               pattern="[A-Za-z0-9._@\-]{3,50}"
-              autoFocus
               required
             />
           )}
@@ -179,6 +269,21 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
           {t('auth.setup.submit')}
         </Button>
       </form>
+    </AuthLayout>
+  )
+}
+
+/** Für Administratoren ist die Zwei-Faktor-Anmeldung Pflicht: Ohne sie zeigt die Anwendung nur diese Einrichtung. */
+export function TwoFactorRequiredPage({ onDone, onLogout }: { onDone: () => void; onLogout: () => void }) {
+  const { t } = useTranslation()
+  return (
+    <AuthLayout title={t('auth.twoFactorRequired.title')} subtitle={t('auth.twoFactorRequired.subtitle')}>
+      <TwoFactorSetupFlow
+        intro={t('auth.twoFactorRequired.intro')}
+        onCancel={onLogout}
+        cancelLabel={t('shell.userMenu.logout')}
+        onFinished={onDone}
+      />
     </AuthLayout>
   )
 }

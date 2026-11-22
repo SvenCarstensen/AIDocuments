@@ -23,22 +23,23 @@ for scans the full text as well) and makes them searchable.
 
 ## Technology
 
-- **Backend:** Spring Boot 4 (Java 21), MongoDB, Apache Lucene (full-text search), PDFBox, Anthropic Java SDK,
-  a custom client for OpenAI-compatible servers
+- **Backend:** Spring Boot 4 (Java 21), SQLite (built in) or MariaDB, Apache Lucene (full-text search), PDFBox,
+  Anthropic Java SDK, a custom client for OpenAI-compatible servers
 - **Frontend:** React 19, TypeScript, Vite, Tailwind CSS 4, TanStack Query
 
 ## Features
 
 | Area | What the application does |
 |---|---|
-| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread), new files from a watched folder, upload by button or drag & drop (several files at once). Files with identical content are recognised and not stored twice; the same letter scanned twice is marked as a possible duplicate (see [Duplicates](#duplicates)). |
+| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread; optionally only e-mails whose subject and sender match a filter, see [Mailbox filter](#mailbox-filter)), new files from a watched folder, upload by button or drag & drop (several files at once). Files with identical content are recognised and not stored twice; the same letter scanned twice is marked as a possible duplicate (see [Duplicates](#duplicates)). |
 | AI | Summary, document type, correspondent, document date, tags and key facts (amounts, deadlines, numbers …). Existing tags and correspondents are reused. Scans without a text layer are transcribed and thus become full-text searchable – by the built-in text recognition as long as no AI is set up. |
 | Search | Full text across content, title, tags, correspondent and key facts – with German stemming, results while typing and partial matches in the middle of a word. Filters for document type, tags, correspondent and period (collapsible). With an AI set up, the search box also understands questions in natural language – see [AI search](#ai-search). |
 | View | Grid and list view with thumbnails, detail page with PDF viewer, light and dark theme. Metadata can be edited by hand; tags can be removed and added directly on the document. |
 | Edit | Highlight, add text, draw, insert images or sign directly in the PDF viewer and save the changes. The original is always kept and can be downloaded or restored at any time. |
+| Share | Send a link to one document to someone without an account – view only or with permission to edit, valid for a chosen period, revocable at any time. The document page shows with whom it is shared. See [Sharing documents](#sharing-documents). |
 | Ask | With an AI set up, ask questions about an open document (“When is the payment due?”) – answered from its content. |
-| Users | Initial setup with an administrator account, further accounts with the roles **Admin** and **User**. |
-| Settings | Mailboxes, check interval and import folder, AI/LLM server, users – all in the user interface. |
+| Users | Initial setup with an administrator account, further accounts with the roles **Admin** and **User**; two-factor authentication with an authenticator app (mandatory for administrators). |
+| Settings | Mailboxes (each with its own check interval if you like), check interval and import folder, AI/LLM server, users – all in the user interface. |
 | Languages | User interface and server messages in 36 European languages. The first start uses the system language, English if there is no matching translation; switchable in the user menu. See [Languages](#languages). |
 
 ### Roles
@@ -46,7 +47,8 @@ for scans the full text as well) and makes them searchable.
 | | User | Admin |
 |---|:-:|:-:|
 | View, search and upload documents, edit metadata | ✓ | ✓ |
-| Annotate PDFs and restore originals, ask questions, mark “not a duplicate” | ✓ | ✓ |
+| Annotate PDFs, restore originals and older versions, ask questions, mark “not a duplicate” | ✓ | ✓ |
+| Share documents by link and revoke links | ✓ | ✓ |
 | Delete documents, analyze them again | | ✓ |
 | Settings (mailboxes, schedule, AI), user management | | ✓ |
 
@@ -76,70 +78,73 @@ Without an AI the search box is always a keyword search.
 
 ## Development
 
-Requirements: Java 21, Node.js 22+, Docker (for MongoDB).
+Requirements: Java 21, Node.js 22+. No database server is needed – the backend keeps its data in an SQLite file
+(`backend/data/aidocuments.db`).
 
 ```bash
-# 1. Start MongoDB (localhost:27017)
-docker compose -f docker-compose.dev.yml up -d
-
-# 2. Start the backend (http://127.0.0.1:8080)
+# 1. Start the backend (http://127.0.0.1:8080)
 cd backend && ./mvnw spring-boot:run
 
-# 3. Start the frontend (http://127.0.0.1:5173, forwards /api to the backend)
+# 2. Start the frontend (http://127.0.0.1:5173, forwards /api to the backend)
 cd frontend && npm install && npm run dev
 ```
 
 On the first visit to <http://127.0.0.1:5173> the application asks for the name and password of the
-administrator account.
+administrator account, together with the **setup code** that the backend prints to its log on startup. The code
+makes sure that only someone with access to the server can claim a freshly started instance.
 
 **LLM server of the debug build:** If `backend/config/debug.yml` exists, it is loaded automatically on a local
 start (template: `backend/config/debug.example.yml`). The file is not in Git and does not end up in the Docker
 image – the right place for the server address and API key of the development environment.
 
-Tests (need a running Docker for Testcontainers):
+Tests:
 
 ```bash
 cd backend && ./mvnw test
 ```
 
 The integration test runs through initial setup, roles, upload, search, IMAP retrieval (against an embedded
-test mail server) and the import folder against a real MongoDB.
+test mail server) and the import folder – once against the built-in SQLite database and once more against a
+real MariaDB (Testcontainers, needs a running Docker).
 
 ## Production with Docker
 
-One image contains the user interface, the backend, the built-in text recognition (Tesseract) and – optionally –
-MongoDB.
+One image contains the user interface, the backend, the built-in text recognition (Tesseract) and the built-in
+database (SQLite).
 
-### Option A: MongoDB inside the container
+### Option A: built-in database
 
 ```bash
 docker compose up -d --build
 ```
 
-Without `MONGODB_URI` a built-in MongoDB starts inside the container. Everything persistent lives in the
-volume `/aidocuments`:
+Without `AIDOCS_DB_URL` the application keeps its data in an SQLite file – nothing else to install or run.
+Everything persistent lives in the volume `/aidocuments`:
 
 ```
 /aidocuments
-├── mongo/        database (only with the built-in MongoDB)
-├── files/        the PDF files
-├── thumbnails/   thumbnails
-├── index/        search index (rebuilt from the database when needed)
-└── secret.key    key for stored mailbox passwords and API keys
+├── aidocuments.db  database (only with the built-in database)
+├── files/          the PDF files
+├── thumbnails/     thumbnails
+├── index/          search index (rebuilt from the database when needed)
+└── secret.key      key for stored mailbox passwords and API keys
 ```
 
-### Option B: external MongoDB
+### Option B: external MariaDB
 
 ```bash
-docker compose -f docker-compose.external-mongo.yml up -d --build
+echo "MARIADB_PASSWORD=$(openssl rand -base64 24)" > .env   # once – the compose file refuses to start without it
+docker compose -f docker-compose.mariadb.yml up -d --build
 ```
 
-With `MONGODB_URI` set, only the application runs in the container. The volume `/aidocuments` is still needed
-(PDFs, search index, key file).
+With `AIDOCS_DB_URL` set, the application uses an existing MariaDB (10.6 or newer). The database has to exist;
+the application creates its tables on the first start. The volume `/aidocuments` is still needed (PDFs, search
+index, key file).
 
 ```bash
 docker run -d -p 8080:8080 \
-  -e MONGODB_URI='mongodb://user:password@db.example.com:27017/aidocuments?authSource=admin' \
+  -e AIDOCS_DB_URL='jdbc:mariadb://db.example.com:3306/aidocuments' \
+  -e AIDOCS_DB_USER=aidocuments -e AIDOCS_DB_PASSWORD='…' \
   -v aidocuments-data:/aidocuments \
   aidocuments
 ```
@@ -151,20 +156,66 @@ use it as the import folder. Switch it off or change it under *Settings → Sche
 
 ### Backup
 
-Back up `/aidocuments` – with an external MongoDB the database as well. The file `secret.key` belongs in the
+Back up `/aidocuments` – with an external MariaDB the database as well. Stop the container before copying the
+directory, so the built-in database is not copied in the middle of a write. The file `secret.key` belongs in the
 backup: without it, stored mailbox passwords and API keys can no longer be decrypted.
+
+### First start
+
+As long as no account exists, the application prints a one-time **setup code** to its log
+(`docker compose logs aidocuments`). The setup page asks for it along with the administrator account – without
+the code nobody can take over an instance that is already reachable from the internet before you set it up.
 
 ### Behind a reverse proxy (HTTPS)
 
-The application itself speaks HTTP. For use on a network, put a reverse proxy with TLS in front of it and set
-`SERVER_FORWARD_HEADERS_STRATEGY=framework` and `SERVER_SERVLET_SESSION_COOKIE_SECURE=true`.
+The application itself speaks HTTP. Before making it reachable from the internet, put a reverse proxy with TLS in
+front of it (Caddy, nginx, Traefik …) and do not publish port 8080 to the internet itself – for example
+`ports: ["127.0.0.1:8080:8080"]` when the proxy runs on the same host, or no `ports` at all when it runs in the
+same Docker network. On Linux, ports published by Docker bypass host firewalls such as ufw, so a "deny 8080" rule
+does not protect a plain `"8080:8080"`.
 
-### Note on the MongoDB version
+Behind a proxy, `AIDOCS_TRUSTED_PROXIES` is **required** – it tells the application which proxy it may trust:
 
-The built-in MongoDB is version 7.0. MongoDB 8.0 and newer do not start on hosts with Linux kernel 6.19 to
-7.0.13 ([SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)) – this affects current Docker Desktop
-versions, among others. If you are not affected, you can build in a newer version with
-`docker build --build-arg MONGO_VERSION=8.0 -t aidocuments .`.
+- a comma-separated list of IP addresses (no ranges). For a proxy in the same Docker network, its container
+  address, e.g. `AIDOCS_TRUSTED_PROXIES=172.18.0.5`. For a proxy on the host with
+  `ports: ["127.0.0.1:8080:8080"]`, the address of the Docker gateway as seen from the container (e.g. `172.17.0.1`).
+- `private` – any address from a private network (10.x, 172.16–31.x, 192.168.x, localhost). Convenient in Docker
+  networks, as long as port 8080 is **not** published and nobody else on those networks can reach the
+  application directly – they could fake their IP address.
+
+Only from those addresses does the application take `X-Forwarded-For`, `X-Forwarded-Proto`, `X-Forwarded-Host` and
+`X-Forwarded-Port` into account: cookies are marked `Secure`, HSTS is sent, and the sign-in lockout sees the
+browser's IP address. Without the variable, every browser appears with the proxy's address, and 20 failed sign-ins
+would pause sign-in for everyone for 15 minutes; the log warns once when forwarded headers arrive from an address
+that is not listed. Entries that are not IP addresses stop the start with an error.
+
+Built-in protection:
+
+- **Initial setup:** only with the one-time setup code from the server log.
+- **Two-factor authentication:** mandatory for administrators – after signing in, an administrator without it can
+  only set it up; the server refuses everything else until then, and administrators cannot switch it off. Users can
+  switch it on in the user menu. Any authenticator app works (e.g. Google Authenticator, Microsoft Authenticator,
+  1Password, Aegis). Sign-in then also asks for the six-digit code; ten one-time recovery codes help if the phone is
+  lost, and an administrator can reset it for an account (an administrator then sets it up again at next sign-in).
+- **Sign-in lockout:** per account and IP address (5 failed attempts in 5 minutes), per IP address (20 in
+  15 minutes; IPv6 per /64 network) and per account overall (100 in an hour – addresses the account has already
+  signed in from are exempt). This also covers parallel attempts. Whoever gets to the code step already knows the
+  password, so wrong authenticator codes are limited further: ten per account in 24 hours (again with known
+  addresses exempt), each one logged as a warning.
+- **Confirmation for administration:** changes to accounts, mailboxes and settings need an authenticator code that
+  is at most 10 minutes old (signing in with the code counts). An unattended administrator session alone is not
+  enough to create accounts, reset passwords or two-factor authentication, or redirect the AI to another server;
+  five wrong codes end the session.
+- **Requests:** CSRF protection (token renewed at sign-in) and a strict Content Security Policy.
+- **Sessions:** end when an account is changed, disabled or deleted, or its password is changed.
+- **Stored secrets:** mailbox passwords and API keys are only used for the host name they were saved for, and
+  not for a switch from encrypted to unencrypted.
+- **PDFs:** scripts and XFA forms in the viewer are off; crafted files (compression bombs, gigantic pages) are
+  rejected instead of exhausting memory.
+- **Limits:** 50 MB per file uploaded in the browser (250 MB for edited PDFs, e-mail attachments and the import
+  folder), 25 PDF attachments per e-mail, and a limit on AI requests per user (2 at a time, 60 per hour). Below
+  1 GB of free disk space no new files or versions are accepted, so the database never runs out of space; mail
+  import then pauses and picks up where it left off.
 
 ## Configuration
 
@@ -173,15 +224,17 @@ values saved in the user interface take precedence.
 
 | Variable | Meaning | Default |
 |---|---|---|
-| `MONGODB_URI` | Connection to MongoDB | `mongodb://localhost:27017/aidocuments` (in the image: built-in MongoDB) |
-| `AIDOCS_DATA_DIR` | Storage for PDFs, search index, key file | `./data` (in the image: `/aidocuments`) |
+| `AIDOCS_DB_URL` | Database: empty = built-in SQLite file in the data directory; `jdbc:mariadb://host:3306/aidocuments` for an external MariaDB | built-in |
+| `AIDOCS_DB_USER` / `AIDOCS_DB_PASSWORD` | Credentials for the external MariaDB | empty |
+| `AIDOCS_DATA_DIR` | Storage for PDFs, search index, key file and the built-in database | `./data` (in the image: `/aidocuments`) |
 | `AIDOCS_IMPORT_DIR` | Watched import folder | empty = off (in the image: `/import`) |
-| `AIDOCS_IMPORT_INTERVAL` | Check interval, e.g. `5m` | `5m` |
+| `AIDOCS_IMPORT_INTERVAL` | General check interval (import folder and mailboxes without their own), e.g. `5m`; only until it is changed in the interface | `5m` |
 | `AIDOCS_AI_PROVIDER` | LLM provider: `anthropic`, `openai`, `moonshot`, `lm-studio`, `openai-compatible` | `anthropic` |
 | `AIDOCS_AI_BASE_URL` | Address of the LLM server | the provider's default address |
 | `AIDOCS_AI_API_KEY` | API key of the LLM server (`ANTHROPIC_API_KEY` is read as well) | empty |
 | `AIDOCS_AI_MODEL` | Model ID | `claude-opus-5-5` |
 | `AIDOCS_OCR` / `AIDOCS_OCR_LANGUAGES` | Built-in text recognition – see [below](#built-in-text-recognition) | `on` / `deu+eng` |
+| `AIDOCS_TRUSTED_PROXIES` | Reverse proxies whose `X-Forwarded-*` headers are trusted: IP addresses or `private` – required behind a proxy, see [above](#behind-a-reverse-proxy-https) | empty = none |
 | `SERVER_ADDRESS` / `SERVER_PORT` | Bind address and port | `127.0.0.1` / `8080` (in the image: `0.0.0.0`) |
 
 ## AI integration
@@ -257,6 +310,36 @@ AI”* lets Tesseract read new scans first, so they are searchable within second
 tags based on that text. Independently of this setting, reading PDFs, thumbnails and text recognition run in their
 own queue, so new documents never wait behind long AI analyses.
 
+## Mailbox filter
+
+Each mailbox can be limited to the e-mails you want evaluated (*Filter* in the mailbox dialog). There are four
+lists, one term per line:
+
+| Field | An e-mail is evaluated only if … |
+|---|---|
+| Subject contains one of these terms | its subject contains at least one of them (empty: any subject) |
+| Subject contains none of these terms | its subject contains none of them |
+| Sender contains one of these terms | its sender – name or address – contains at least one of them, e.g. `@example.com` (empty: any sender) |
+| Sender contains none of these terms | its sender contains none of them |
+
+All conditions must hold. Upper and lower case do not matter, and part of the text is enough (`scan` matches
+“Scan 17” and “Rescan”). E-mails that do not match are skipped before their attachments are downloaded; the result
+of each check says how many. A changed filter applies to e-mails that arrive after the last check; e-mails that were
+already checked are not evaluated again.
+
+**Only new e-mails:** for each mailbox, AIDocuments remembers which e-mails it has checked (by their IMAP number) and
+when the last successful check started. The next check evaluates only e-mails received after that time – even if
+the IMAP numbering changes, for example after a move to another mail server. A check that fails does not move the
+time forward, so nothing is lost; five minutes of overlap make up for clocks that differ between mail server and
+AIDocuments (PDFs that are already there are recognised and not stored twice). Changing the server, user name,
+folder or *Only e-mails from* starts over and checks the whole mailbox again.
+
+**Check interval:** by default, every mailbox is checked in the general interval set under *Settings → Schedule &
+import folder*. A mailbox can have its own interval instead (*Check interval in minutes* in the mailbox dialog, 1 to 1440),
+for example every minute for the scanner mailbox and once an hour for a mailbox that rarely gets invoices. The
+interval counts from the start of the last check, including one started with *Check now*; after a restart, from the
+last check before it. The mailbox list shows the interval and when the next check is due.
+
 ## Duplicates
 
 Files with identical content are recognised on import and not stored twice. Beyond that, the application recognises
@@ -267,17 +350,45 @@ marked as a possible duplicate; the overview offers the filter *Possible duplica
 the other document. *Not a duplicate* removes the mark for good. Existing documents are checked once in the
 background on start-up.
 
-## Editing PDFs and keeping the original
+## Editing PDFs and versions
 
 The PDF viewer on the document page ([PDF.js](https://mozilla.github.io/pdf.js/), Apache 2.0, served by the
 application itself) can highlight, add text, draw, insert images and sign. As soon as the document has changed, a
-bar offers *Save changes* or *Discard*. On the first save the original file is kept next to it
-(`files/…/<id>.original.pdf`); further saves never touch it. The document page offers to download or restore the
-original. Title, tags and other details stay as they are; the full text follows the saved version unless it came
-from text recognition. The viewer's toolbar adapts to the available width so that it is always completely visible.
+bar offers *Save changes* or *Discard*. Title, tags and other details stay as they are; the full text follows the
+saved version unless it came from text recognition. The viewer's toolbar adapts to the available width so that it
+is always completely visible. Scripts and XFA forms embedded in PDFs are never run.
+
+**Versions:** every change to the PDF – saving edits, restoring the original or an older version, undoing a step
+in the history – creates a new numbered version. No version is ever overwritten. *Versions* on the document page
+lists them with date, user and kind of change; each one can be viewed, downloaded or restored. Restoring makes a
+copy of the old version the newest one, so the step can itself be undone. The files live next to the document
+(`files/…/<id>.original.pdf`, `<id>.ver<n>.pdf`, …) and are removed only when the document is deleted for good.
+Changes to title, tags and other details are recorded in the history, where they can be undone.
 
 PDF.js is fetched in a fixed version with checksum by `frontend/scripts/fetch-pdfjs.mjs` (runs automatically before
 `npm run dev` and `npm run build`) into `frontend/public/pdfjs/`, which is not in Git.
+
+## Sharing documents
+
+*Share* on the document page creates a link for a person without an account. You enter their name, choose
+whether they may only **view** the document or also **edit** it, and how long the link is valid (7, 30, 90 or 365
+days, or without expiry). The link opens exactly this one document – title and PDF, nothing else: no summary, tags,
+text, history or other documents. With an editing link the person can annotate the PDF in the same viewer and save
+it; every save becomes a new [version](#editing-pdfs-and-versions) named “Link: &lt;name&gt;” and appears in the
+history under that name, so it can be undone like any other change.
+
+The document page lists everyone it is shared with – permission, expiry, when the link was last opened and how
+often – and lets you copy a link again or revoke it. Revoked and expired links, links to documents in the trash and
+unknown links all answer with the same “not found”; a document restored from the trash is reachable through its
+links again – revoke them first if that is not wanted.
+
+Keep in mind: **anyone who has the link can open the document** – the name is a label, not a check. Send links only
+through a channel you trust and revoke them when they are no longer needed. Links are 256-bit random values; the
+database stores only their hash for lookup and an encrypted copy (AES-256-GCM, same key as the mailbox passwords),
+so you can copy a link again later. Shared pages are marked `noindex` and are never cached. The link is part of the
+address, so it also appears in the recipient's browser history and in the access log of a reverse proxy – prefer an
+expiry date over unlimited links. Saving through one link is limited to 30 times per hour, 500 MB per day and 50 MB
+per file, so an edit link cannot fill the disk.
 
 ## Languages
 
@@ -327,3 +438,15 @@ backend/     Spring Boot application
 frontend/    React user interface
 docker/      start script of the container
 ```
+
+## License
+
+AIDocuments is **source-available**, not open source in the OSI sense: it is licensed under the
+[PolyForm Noncommercial License 1.0.0](LICENSE.md). You may use, change and share it for any noncommercial
+purpose – personal use, and use by charities, educational and research institutions and public authorities.
+Commercial use requires a separate license; please get in touch via the issue tracker.
+
+Contributions are welcome under the [contributor agreement](CONTRIBUTING.md#contributor-agreement). Please report security problems privately as described in [SECURITY.md](SECURITY.md), never in a public issue.
+
+Third-party components keep their own licenses – see `THIRD-PARTY-NOTICES.txt` (in the Docker image, and in the user
+menu under "Third-party licenses").

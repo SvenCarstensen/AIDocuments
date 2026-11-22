@@ -19,3 +19,6 @@ frontend/dist/
 
 # PDF.js-Betrachter – wird von frontend/scripts/fetch-pdfjs.mjs in fester Version geholt
 frontend/public/pdfjs/
+
+# Geheimnisse für docker compose (z. B. MARIADB_PASSWORD)
+.env

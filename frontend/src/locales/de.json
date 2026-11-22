@@ -49,6 +49,8 @@
     "setup": {
       "title": "AIDocuments einrichten",
       "subtitle": "Lege zuerst das Administratorkonto an. Weitere Benutzer kannst du danach in den Einstellungen hinzufügen.",
+      "code": "Einrichtungscode",
+      "codeHint": "Steht beim Start im Protokoll des Servers (Docker: docker compose logs).",
       "adminAccount": "Administratorkonto",
       "repeatPassword": "Passwort wiederholen",
       "submit": "Konto anlegen und starten",
@@ -57,6 +59,19 @@
         "ai": "KI fasst zusammen und verschlagwortet",
         "search": "Volltextsuche bis ins Dokument"
       }
+    },
+    "twoFactor": {
+      "title": "Anmeldung bestätigen",
+      "subtitle": "Gib den 6-stelligen Code aus deiner Authenticator-App ein.",
+      "code": "Code",
+      "codeHint": "Kein Zugriff auf die App? Gib stattdessen einen deiner Wiederherstellungscodes ein.",
+      "submit": "Bestätigen",
+      "back": "Zurück zur Anmeldung"
+    },
+    "twoFactorRequired": {
+      "title": "Zwei-Faktor-Anmeldung einrichten",
+      "subtitle": "Für Administratoren ist die Zwei-Faktor-Anmeldung Pflicht. Richte sie jetzt ein, um fortzufahren.",
+      "intro": "Du brauchst dafür eine Authenticator-App auf deinem Handy (z. B. Google Authenticator, Microsoft Authenticator, 1Password oder Aegis)."
     }
   },
   "shell": {
@@ -66,8 +81,8 @@
       "dark": "Dunkles Design"
     },
     "search": {
-      "placeholder": "Dokumente, Schlagworte, Inhalte durchsuchen …",
-      "placeholderAi": "Frag nach Dokumenten – z. B. „Rechnungen von Kia aus 2024“",
+      "placeholder": "Stichwortsuche: Dokumente, Schlagworte, Inhalte …",
+      "placeholderAi": "KI-Suche: Frag in eigenen Worten – z. B. „Rechnungen von Kia aus 2024“",
       "labelAi": "KI",
       "label": "Dokumente durchsuchen",
       "clear": "Suche leeren",
@@ -78,6 +93,7 @@
       "aiActive": "KI aktiv",
       "aiNotConfigured": "KI nicht eingerichtet",
       "changePassword": "Passwort ändern",
+      "licenses": "Lizenzen von Drittanbietern",
       "logout": "Abmelden"
     },
     "passwordDialog": {
@@ -252,8 +268,8 @@
     },
     "delete": {
       "title": "Dokument löschen?",
-      "text": "„{{title}}“ wird mitsamt PDF-Datei, Volltext und Schlagworten gelöscht. Das lässt sich nicht rückgängig machen.",
-      "confirm": "Endgültig löschen"
+      "text": "„{{title}}“ wird gelöscht. In der Historie lässt sich das 30 Tage lang rückgängig machen, danach wird es endgültig entfernt.",
+      "confirm": "Löschen"
     },
     "chat": {
       "intro": "Stell eine Frage zu diesem Dokument – die KI antwortet anhand seines Inhalts.",
@@ -266,6 +282,25 @@
         "summary": "Worum geht es in diesem Dokument?",
         "deadlines": "Gibt es Fristen oder Termine?",
         "amounts": "Welche Beträge werden genannt?"
+      }
+    },
+    "versions": {
+      "title": "Fassungen",
+      "intro": "Jede Änderung am PDF ergibt eine neue Fassung. Ältere Fassungen bleiben erhalten und lassen sich ansehen, herunterladen oder wiederherstellen.",
+      "current": "aktuell",
+      "view": "Fassung {{number}} ansehen",
+      "download": "Fassung {{number}} herunterladen",
+      "restore": "Fassung {{number}} wiederherstellen",
+      "restoreTitle": "Fassung {{number}} wiederherstellen?",
+      "restoreText": "Die Fassung wird zur aktuellen. Die jetzige Fassung bleibt erhalten, und der Schritt lässt sich in der Historie rückgängig machen.",
+      "restoreConfirm": "Wiederherstellen",
+      "restored": "Fassung {{number}} wiederhergestellt",
+      "kinds": {
+        "IMPORTED": "Importiert",
+        "EDITED": "Bearbeitet",
+        "ORIGINAL_RESTORED": "Original wiederhergestellt",
+        "VERSION_RESTORED": "Fassung {{from}} wiederhergestellt",
+        "UNDONE": "Änderung rückgängig gemacht"
       }
     }
   },
@@ -307,8 +342,23 @@
         "since": "Nur E-Mails ab",
         "sinceHint": "Optional – ältere E-Mails werden übersprungen",
         "enabled": "Automatisch abrufen",
-        "enabledHint": "Das Postfach wird im eingestellten Intervall auf neue PDFs geprüft."
-      }
+        "enabledHint": "Das Postfach wird im eingestellten Intervall auf neue PDFs geprüft.",
+        "filter": {
+          "title": "Filter",
+          "intro": "Ausgewertet werden nur E-Mails, die alle Bedingungen erfüllen. Ein Begriff pro Zeile; Groß- und Kleinschreibung spielen keine Rolle, ein Teil des Textes genügt. Leere Felder schränken nichts ein.",
+          "subjectIncludes": "Betreff enthält einen dieser Begriffe",
+          "subjectExcludes": "Betreff enthält keinen dieser Begriffe",
+          "senderIncludes": "Absender enthält einen dieser Begriffe",
+          "senderExcludes": "Absender enthält keinen dieser Begriffe",
+          "senderHint": "Name oder Adresse, z. B. „@example.com“",
+          "newOnly": "Der Filter gilt für E-Mails, die nach dem letzten Abruf eingehen; schon geprüfte E-Mails werden nicht erneut ausgewertet."
+        },
+        "interval": "Abrufintervall in Minuten",
+        "intervalHint": "Leer lassen für das allgemeine Intervall (zurzeit {{interval}})."
+      },
+      "filterActive": "Filter aktiv",
+      "schedule": "Abruf alle {{interval}} · nächster {{when}}",
+      "scheduleSoon": "Abruf alle {{interval}} · nächster in Kürze"
     },
     "import": {
       "title": "Abruf & Eingangsordner",
@@ -317,7 +367,7 @@
       "saved": "Einstellungen gespeichert",
       "interval": {
         "title": "Abrufintervall",
-        "text": "So oft prüft die Anwendung alle Postfächer und den Eingangsordner auf neue PDFs.",
+        "text": "So oft prüft die Anwendung den Eingangsordner und alle Postfächer ohne eigenes Intervall auf neue PDFs.",
         "label": "Alle … Minuten",
         "nextRun": "Nächster automatischer Abruf {{when}}."
       },
@@ -450,7 +500,104 @@
         "active": "Konto aktiv",
         "activeHint": "Deaktivierte Konten können sich nicht anmelden; laufende Sitzungen enden sofort.",
         "create": "Anlegen"
-      }
+      },
+      "twoFactor": "2FA",
+      "resetTwoFactor": "Zwei-Faktor-Anmeldung zurücksetzen",
+      "resetTwoFactorHint": "Für dieses Konto ist die Zwei-Faktor-Anmeldung aktiv.",
+      "resetTwoFactorText": "{{name}} meldet sich danach nur mit dem Passwort an und kann die Zwei-Faktor-Anmeldung neu einrichten – etwa nach dem Verlust des Handys mit der App.",
+      "resetTwoFactorConfirm": "Zurücksetzen",
+      "twoFactorReset": "Zwei-Faktor-Anmeldung zurückgesetzt"
+    }
+  },
+  "history": {
+    "nav": "Historie",
+    "title": "Historie",
+    "subtitle": "Was mit deinen Dokumenten passiert ist – neueste Einträge zuerst.",
+    "empty": "Noch keine Einträge.",
+    "actions": {
+      "IMPORTED": "Importiert",
+      "EDITED": "Bearbeitet",
+      "DELETED": "Gelöscht"
+    },
+    "changes": {
+      "DETAILS": "Angaben geändert",
+      "FILE": "PDF geändert",
+      "ORIGINAL_RESTORED": "Original wiederhergestellt",
+      "DUPLICATE": "als Duplikat",
+      "VERSION_RESTORED": "Fassung wiederhergestellt"
+    },
+    "by": "von {{user}}",
+    "automatic": "automatisch",
+    "more": "Weitere laden",
+    "undo": "Rückgängig machen",
+    "undone": "Rückgängig gemacht"
+  },
+  "duplicates": {
+    "title": "Mögliches Duplikat",
+    "subtitle": "Die beiden Dokumente gleichen sich inhaltlich. Behalte eines und lösche das andere – oder vermerke, dass es keine Duplikate sind.",
+    "older": "Früher eingegangen",
+    "newer": "Später eingegangen",
+    "deleteThis": "Dieses löschen",
+    "compare": "Nebeneinander vergleichen"
+  },
+  "twoFactor": {
+    "title": "Zwei-Faktor-Anmeldung",
+    "on": "Aktiv",
+    "off": "Aus",
+    "intro": "Schütze dein Konto mit einem zweiten Faktor: Bei der Anmeldung gibst du dann zusätzlich einen Code aus einer Authenticator-App auf deinem Handy ein (z. B. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Einrichten",
+    "scan": "Scanne den QR-Code mit deiner Authenticator-App oder gib den Schlüssel von Hand ein. Gib dann den Code aus der App und dein Passwort ein.",
+    "qrAlt": "QR-Code für die Authenticator-App",
+    "secret": "Schlüssel",
+    "confirmCode": "Code aus der App",
+    "activate": "Aktivieren",
+    "recoveryTitle": "Wiederherstellungscodes",
+    "recoveryText": "Bewahre diese Wiederherstellungscodes sicher auf. Jeder funktioniert einmal, falls du die App nicht nutzen kannst – etwa wenn dein Handy verloren geht. Sie werden nur jetzt angezeigt.",
+    "download": "Als Datei speichern",
+    "done": "Fertig",
+    "enabled": "Zwei-Faktor-Anmeldung ist aktiv",
+    "disabled": "Zwei-Faktor-Anmeldung ist abgeschaltet",
+    "disableHint": "Zum Abschalten einen aktuellen Code aus der App (oder einen Wiederherstellungscode) und dein Passwort eingeben.",
+    "disable": "Abschalten",
+    "recoveryLeft": "Unbenutzte Wiederherstellungscodes: {{count}}",
+    "adminCannotDisable": "Als Administrator kannst du die Zwei-Faktor-Anmeldung nicht abschalten."
+  },
+  "confirmCode": {
+    "title": "Änderung bestätigen",
+    "text": "Änderungen an Konten, Postfächern und Einstellungen brauchen einen aktuellen Code aus deiner Authenticator-App. Die Bestätigung gilt 10 Minuten.",
+    "submit": "Bestätigen"
+  },
+  "share": {
+    "button": "Teilen",
+    "title": "Dokument teilen",
+    "intro": "Erstellt einen Link, mit dem eine Person ohne Konto genau dieses Dokument öffnen kann.",
+    "recipient": "Mit wem teilst du?",
+    "recipientHint": "Name der Person – damit du später siehst, wem du den Link gegeben hast.",
+    "permission": "Darf die Person das Dokument bearbeiten?",
+    "viewOnly": "Nur ansehen",
+    "canEdit": "Darf bearbeiten",
+    "viewHint": "Die Person kann das PDF ansehen, drucken und herunterladen.",
+    "editHint": "Die Person kann das PDF zusätzlich markieren, beschriften, unterschreiben und speichern. Jede Speicherung wird eine neue Fassung; Titel, Schlagworte und andere Angaben sieht sie nicht.",
+    "validity": "Gültig für",
+    "unlimited": "Unbegrenzt",
+    "create": "Link erstellen",
+    "link": "Link",
+    "linkHint": "Wer diesen Link hat, kann das Dokument öffnen – gib ihn nur an {{name}} weiter. Entziehen kannst du ihn jederzeit in der Dokumentansicht.",
+    "copy": "Link kopieren",
+    "copied": "Link kopiert",
+    "listTitle": "Extern geteilt",
+    "expired": "abgelaufen",
+    "validUntil": "gültig bis {{date}}",
+    "noExpiry": "unbegrenzt gültig",
+    "lastOpened": "zuletzt geöffnet {{when}} (Aufrufe: {{views}})",
+    "neverOpened": "noch nicht geöffnet",
+    "revoke": "Link entziehen",
+    "revokeTitle": "Link für {{name}} entziehen?",
+    "revokeText": "Der Link funktioniert sofort nicht mehr. Kopien, die die Person schon heruntergeladen hat, bleiben bei ihr.",
+    "revoked": "Link entzogen",
+    "page": {
+      "for": "Geteilt mit {{name}}",
+      "invalid": "Dieser Link ist ungültig oder abgelaufen, oder das Dokument wurde gelöscht. Bitte wende dich an die Person, die ihn dir gegeben hat."
     }
   }
 }
