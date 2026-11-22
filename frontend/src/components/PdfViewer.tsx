@@ -3,7 +3,7 @@ import { Download, RotateCcw, Save, Undo2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { api, type Doc, errorMessage, fileUrl, originalUrl } from '../lib/api'
+import { api, canEdit, type Doc, errorMessage, fileUrl, originalUrl } from '../lib/api'
 import { formatDateTime } from '../lib/format'
 import { usePdfJsFrame, viewerSrc } from '../lib/pdfjs'
 import { Button, ConfirmDialog } from './ui'
@@ -24,7 +24,9 @@ export function PdfViewer({ doc }: { doc: Doc }) {
   // Jede gespeicherte Fassung hat eine eigene Adresse – so zeigt der Betrachter nie eine zwischengespeicherte alte.
   const version = `${doc.modifiedAt ?? 'original'}-${reloads}`
   const src = viewerSrc(`${fileUrl(doc.id)}?v=${encodeURIComponent(version)}`)
-  const { frame, modified, forgetChanges, savedBytes } = usePdfJsFrame(src)
+  // Nur mit Bearbeitungsrecht lässt sich das PDF beschriften und speichern
+  const editable = canEdit(doc)
+  const { frame, modified, forgetChanges, savedBytes } = usePdfJsFrame(src, editable)
 
   const save = useMutation({
     mutationFn: async () => api.replaceFile(doc.id, await savedBytes()),
@@ -73,13 +75,15 @@ export function PdfViewer({ doc }: { doc: Doc }) {
           <a href={originalUrl(doc.id)} download className="inline-flex items-center gap-1 font-medium text-brand-ink hover:underline">
             <Download className="size-3.5" aria-hidden /> {t('document.pdf.downloadOriginal')}
           </a>
-          <button
-            type="button"
-            onClick={() => setConfirmRestore(true)}
-            className="inline-flex items-center gap-1 font-medium text-brand-ink hover:underline"
-          >
-            <RotateCcw className="size-3.5" aria-hidden /> {t('document.pdf.restoreOriginal')}
-          </button>
+          {editable && (
+            <button
+              type="button"
+              onClick={() => setConfirmRestore(true)}
+              className="inline-flex items-center gap-1 font-medium text-brand-ink hover:underline"
+            >
+              <RotateCcw className="size-3.5" aria-hidden /> {t('document.pdf.restoreOriginal')}
+            </button>
+          )}
         </div>
       )}
       <iframe ref={frame} key={src} src={src} title={t('document.pdfTitle', { title: doc.title })} className="min-h-0 w-full flex-1" />

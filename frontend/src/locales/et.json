@@ -44,7 +44,9 @@
     "login": {
       "title": "Tere tulemast tagasi",
       "subtitle": "Logi sisse, et oma dokumentidele ligi pääseda.",
-      "submit": "Logi sisse"
+      "submit": "Logi sisse",
+      "or": "või",
+      "passkey": "Logi sisse pääsuvõtmega"
     },
     "setup": {
       "title": "AIDocumentsi seadistamine",
@@ -81,12 +83,12 @@
       "dark": "Tume teema"
     },
     "search": {
-      "placeholder": "Märksõnaotsing: dokumendid, sildid, sisu …",
-      "placeholderAi": "Tehisintellekti otsing: küsi oma sõnadega – nt „Kia arved aastast 2024“",
+      "placeholder": "Sõnaotsing: dokumendid, märksõnad, sisu…",
+      "placeholderAi": "TI-otsing: küsi oma sõnadega – nt „Kia arved aastast 2024“",
       "labelAi": "TI",
       "label": "Otsi dokumente",
       "clear": "Tühjenda otsing",
-      "askFailed": "Otsitakse märksõnade järgi."
+      "askFailed": "Kasutatakse sõnaotsingut."
     },
     "userMenu": {
       "label": "Kasutajamenüü ({{name}})",
@@ -102,26 +104,49 @@
       "changed": "Parool muudetud"
     },
     "dropzone": {
-      "title": "Lohista PDF-id siia",
-      "hint": "Korraga võib lisada mitu faili. Need salvestatakse, analüüsitakse ja varustatakse märksõnadega."
+      "title": "Lohista PDF-id või fotod siia",
+      "hint": "Korraga võib lisada mitu faili. Fotod (JPG, PNG, HEIC) teisendatakse PDF-ideks. Kõik salvestatakse, analüüsitakse ja varustatakse märksõnadega."
+    },
+    "remindersDue_one": "Tähtaeg käes: {{count, number}} meeldetuletus",
+    "remindersDue_other": "Tähtaeg käes: {{count, number}} meeldetuletust",
+    "profile": {
+      "email": "E-posti aadress",
+      "saved": "Salvestatud"
+    },
+    "notifications": {
+      "title": "E-posti teavitused",
+      "emailHint": "Siia saadetakse sulle määratud meeldetuletused, mille tähtaeg on käes, ja allpool sisse lülitatud teavitused – selles keeles, milles praegu rakendust kasutad. Jäta tühjaks, kui sa e-kirju ei soovi.",
+      "digest": "Uued dokumendid iga päev",
+      "digestHint": "Kord päevas loend dokumentidest, mis on sinu valdkondadesse lisandunud – ainult päevadel, mil on uusi dokumente.",
+      "admin": "Teated administraatoritele",
+      "adminHint": "Kui säilitustähtajad lõppevad (midagi ei kustutata automaatselt) ja kui postkasti ei õnnestu korduvalt kontrollida.",
+      "needsEmail": "Ilma aadressita e-kirju ei saadeta."
     }
   },
   "upload": {
-    "onlyPdf": "Lisada saab ainult PDF-faile.",
+    "onlyPdf": "Lisada saab ainult PDF-faile ja fotosid (JPG, PNG, HEIC).",
     "uploadingFile": "Faili „{{name}}“ üleslaadimine…",
-    "uploadingFiles_one": "{{count, number}} PDF-i üleslaadimine…",
-    "uploadingFiles_other": "{{count, number}} PDF-i üleslaadimine…",
+    "uploadingFiles_one": "{{count, number}} faili üleslaadimine…",
+    "uploadingFiles_other": "{{count, number}} faili üleslaadimine…",
     "created_one": "Lisatud {{count, number}} dokument",
     "created_other": "Lisatud {{count, number}} dokumenti",
     "processingInBackground": "Töötlemine jätkub taustal.",
     "duplicates_one": "{{count, number}} on juba olemas",
     "duplicates_other": "{{count, number}} on juba olemas",
-    "rejected_one": "{{count, number}} fail ei ole kehtiv PDF",
-    "rejected_other": "{{count, number}} faili ei ole kehtivad PDF-id",
+    "rejected_one": "{{count, number}} fail jäi lisamata",
+    "rejected_other": "{{count, number}} faili jäi lisamata",
     "onlyDuplicates_one": "See dokument on juba olemas.",
     "onlyDuplicates_other": "Need dokumendid on juba olemas.",
-    "noneValid": "Ükski fail ei ole kehtiv PDF.",
-    "failed": "Üleslaadimine ebaõnnestus"
+    "noneValid": "Ühtegi faili ei õnnestunud lisada.",
+    "failed": "Üleslaadimine ebaõnnestus",
+    "intoArea": "Valdkond: {{area}}",
+    "combine": {
+      "title": "Kas ühendada fotod üheks dokumendiks?",
+      "text": "Valisid mitu fotot. Kui need on ühe dokumendi leheküljed – näiteks mitmeleheküljelise kirja omad –, tehakse neist failinimede järjekorras üks PDF; järjekorda saab hiljem muuta jaotises „Leheküljed“. Muidu saab igast fotost eraldi dokument.",
+      "one": "Ühe dokumendina",
+      "separate": "Iga foto eraldi",
+      "tooMuch": "Ühe dokumendi jaoks on fotosid liiga palju või need on liiga suured (kõige rohkem 100 fotot ja kokku 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -133,7 +158,7 @@
     "ocrBadge": "Tekstituvastus",
     "aiNotice": {
       "text": "TI ei ole veel seadistatud. Uusi dokumente saab otsida teksti järgi, kuid neist ei tehta kokkuvõtet ja neile ei lisata märksõnu.",
-      "builtinOcr": "Tekstikihita skaneeringud loeb sisseehitatud tekstituvastus, nii et ka neist saab otsida.",
+      "builtinOcr": "Tekstikihita skannid loeb sisseehitatud tekstituvastus, nii et ka neist saab otsida.",
       "action": "Seadista kohe"
     },
     "searchResults_one": "<count>{{count, number}} tulemus</count> <query>otsingule „{{query}}“</query>",
@@ -175,12 +200,13 @@
       "activeTo": "kuni {{date}}",
       "removeOne": "Eemalda filter „{{label}}“",
       "removeAll": "Eemalda kõik filtrid",
-      "clear": "Eemalda filtrid"
+      "clear": "Eemalda filtrid",
+      "retentionExpired": "Säilitustähtaeg möödas"
     },
     "empty": {
       "libraryTitle": "Dokumente veel pole",
-      "libraryHint": "Lohista PDF-failid lihtsalt sellesse aknasse või kasuta nuppu „Laadi üles“.",
-      "libraryHintAdmin": "Lohista PDF-failid lihtsalt sellesse aknasse või kasuta nuppu „Laadi üles“. Seadetes saad seadistada postkasti või impordikausta, kust uued PDF-id automaatselt imporditakse.",
+      "libraryHint": "Lohista PDF-failid või fotod lihtsalt sellesse aknasse või kasuta nuppu „Laadi üles“.",
+      "libraryHintAdmin": "Lohista PDF-failid või fotod lihtsalt sellesse aknasse või kasuta nuppu „Laadi üles“. Seadetes saad seadistada postkasti või impordikausta, kust uued dokumendid automaatselt imporditakse.",
       "noResultsTitle": "Midagi ei leitud",
       "noResultsSearch": "Sellele otsingule ei vasta ükski dokument. Otsing leiab ka sõnaosi – proovi lühemat otsisõna või vähem sõnu.",
       "noResultsFilters": "Valitud filtritele ei vasta ükski dokument."
@@ -189,7 +215,26 @@
     "loadingAll_other": "{{count, number}} dokumendist on laaditud {{loaded, number}}…",
     "loadMore": "Laadi veel ({{remaining, number}})",
     "aiSearch": {
-      "notice": "Tehisintellekti otsing: „{{question}}“. Filtrid näitavad, kuidas küsimust mõisteti."
+      "notice": "TI-otsing: „{{question}}“. Filtrid näitavad, kuidas küsimust mõisteti."
+    },
+    "export": {
+      "label_one": "Ekspordi {{count, number}} dokument ZIP-failina",
+      "label_other": "Ekspordi kõik selle loendi {{count, number}} dokumenti ZIP-failina",
+      "started_one": "{{count, number}} dokumendi eksport algas",
+      "started_other": "{{count, number}} dokumendi eksport algas",
+      "contents": "ZIP-fail sisaldab PDF-e ning kõiki andmeid tabelina (documents.csv) ja failina documents.json.",
+      "failed": "Eksport ebaõnnestus"
+    },
+    "mailboxNotice": {
+      "text_one": "Postkasti „{{names}}“ kontrollimine on mitu korda järjest ebaõnnestunud – sealt ei saabu praegu dokumente.",
+      "text_other": "Nende postkastide kontrollimine on mitu korda järjest ebaõnnestunud: {{names}}. Neist ei saabu praegu dokumente.",
+      "action": "Vaata postkaste"
+    },
+    "backupNotice": {
+      "never": "Sinu dokumentidest pole veel ühtegi varukoopiat.",
+      "overdue": "Viimane varukoopia: {{when}}. See on vanem, kui seadetes määratud.",
+      "failed": "Automaatne varundamine ebaõnnestus: {{reason}}",
+      "action": "Ava varundus"
     }
   },
   "document": {
@@ -264,7 +309,9 @@
     "noText": "Selle dokumendi kohta teksti ei ole – tõenäoliselt on see tekstikihita skann. Kui TI on seadistatud ja tekstituvastus sisse lülitatud, transkribeeritakse sisu analüüsi käigus.",
     "edit": {
       "title": "Dokumendi muutmine",
-      "saved": "Muudatused salvestatud"
+      "saved": "Muudatused salvestatud",
+      "areaHint": "Määrab, kes dokumenti näeb.",
+      "areaMoveHint": "Pärast seda näevad seda ainult valdkonna „{{area}}“ liikmed ja administraatorid."
     },
     "delete": {
       "title": "Kas kustutada dokument?",
@@ -272,11 +319,11 @@
       "confirm": "Kustuta"
     },
     "chat": {
-      "intro": "Esita küsimus selle dokumendi kohta – tehisintellekt vastab selle sisu põhjal.",
-      "placeholder": "Küsi selle dokumendi kohta …",
+      "intro": "Esita küsimus selle dokumendi kohta – TI vastab selle sisu põhjal.",
+      "placeholder": "Küsi selle dokumendi kohta…",
       "send": "Saada",
-      "thinking": "Tehisintellekt loeb dokumenti …",
-      "notConfigured": "Dokumendi kohta küsimiseks peab olema seadistatud tehisintellekt.",
+      "thinking": "TI loeb dokumenti…",
+      "notConfigured": "Dokumendi kohta küsimiseks peab TI olema seadistatud.",
       "restart": "Alusta uuesti",
       "suggestions": {
         "summary": "Millest see dokument räägib?",
@@ -300,16 +347,25 @@
         "EDITED": "Muudetud",
         "ORIGINAL_RESTORED": "Originaal taastatud",
         "VERSION_RESTORED": "Versioon {{from}} taastatud",
-        "UNDONE": "Muudatus tagasi võetud"
+        "UNDONE": "Muudatus tagasi võetud",
+        "PAGES": "Leheküljed muudetud",
+        "MERGED": "Dokumendid liidetud"
       }
-    }
+    },
+    "retention": {
+      "label": "Säilitamine",
+      "until": "kuni {{date}} – enne seda ei saa kustutada",
+      "expired": "tähtaeg möödus {{date}}",
+      "locked": "Tuleb säilitada kuni {{date}} – kustutada saab alles pärast seda"
+    },
+    "readOnly": "Selles valdkonnas võid seda dokumenti ainult vaadata."
   },
   "settings": {
     "title": "Seaded",
     "mailboxes": {
       "title": "Postkastid",
-      "navHint": "IMAP-serverid, kust imporditakse PDF-manused",
-      "intro": "Nendest IMAP-postkastidest imporditakse PDF-manused automaatselt. Postkaste ainult loetakse – e-kirjad jäävad muutmata ja lugemata.",
+      "navHint": "IMAP-serverid, kust imporditakse PDF-manused ja fotod",
+      "intro": "Nendest IMAP-postkastidest imporditakse automaatselt PDF-manused ja manustatud fotod (PDF-ina); e-kirjade teksti ja põimitud logosid mitte. Postkaste ainult loetakse – e-kirjad jäävad muutmata ja lugemata.",
       "add": "Lisa postkast",
       "emptyTitle": "Ühtegi postkasti pole veel seadistatud",
       "emptyText": "Sisesta IMAP-postkasti juurdepääsuandmed – näiteks selle postkasti omad, kuhu sinu skanner dokumente saadab.",
@@ -342,7 +398,7 @@
         "since": "Ainult e-kirjad alates",
         "sinceHint": "Valikuline – vanemad e-kirjad jäetakse vahele",
         "enabled": "Kontrolli automaatselt",
-        "enabledHint": "Postkastist otsitakse määratud intervalliga uusi PDF-e.",
+        "enabledHint": "Postkastist otsitakse määratud intervalliga uusi manuseid.",
         "filter": {
           "title": "Filter",
           "intro": "Töödeldakse ainult e-kirju, mis vastavad kõigile tingimustele. Üks termin rea kohta; suur- ja väiketähtedel pole vahet ning piisab osast tekstist. Tühjad väljad ei piira midagi.",
@@ -354,7 +410,8 @@
           "newOnly": "Filter kehtib e-kirjadele, mis saabuvad pärast viimast kontrolli; juba kontrollitud e-kirju uuesti ei töödelda."
         },
         "interval": "Kontrollimise intervall minutites",
-        "intervalHint": "Jäta tühjaks, et kasutada üldist intervalli (praegu {{interval}})."
+        "intervalHint": "Jäta tühjaks, et kasutada üldist intervalli (praegu {{interval}}).",
+        "areaHint": "Imporditud dokumendid lähevad sellesse valdkonda."
       },
       "filterActive": "Filter on aktiivne",
       "schedule": "Kontroll iga {{interval}} järel · järgmine {{when}}",
@@ -363,17 +420,17 @@
     "import": {
       "title": "Ajakava ja impordikaust",
       "navHint": "Kontrollimisintervall ja jälgitav kaust",
-      "intro": "Määrab, kui sageli rakendus uusi PDF-faile otsib – postkastidest ja impordikaustast.",
+      "intro": "Määrab, kui sageli rakendus uusi dokumente otsib – postkastidest ja impordikaustast.",
       "saved": "Seaded salvestatud",
       "interval": {
         "title": "Kontrollimisintervall",
-        "text": "Kui sageli rakendus kontrollib sisendkausta ja kõiki ilma oma intervallita postkaste uute PDF-ide suhtes.",
+        "text": "Kui sageli rakendus kontrollib impordikausta ja kõiki ilma oma intervallita postkaste uute dokumentide suhtes.",
         "label": "Iga … minuti järel",
         "nextRun": "Järgmine automaatne kontroll {{when}}."
       },
       "folder": {
         "title": "Impordikaust",
-        "text": "Serveris asuv kaust, mida jälgitakse uute PDF-failide leidmiseks – näiteks võrguskanneri sihtkaust. Otsitakse ka alamkaustadest.",
+        "text": "Serveris asuv kaust, mida jälgitakse uute PDF-failide ja fotode (JPG, PNG, HEIC) leidmiseks – näiteks võrguskanneri sihtkaust. Otsitakse ka alamkaustadest.",
         "enable": "Jälgi impordikausta",
         "path": "Tee serveris",
         "pathHint": "Absoluutne tee. Dockeri konteineris on see ühendatud kaust, tavaliselt {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Kausta kontrollimine…",
         "neverScanned": "Pole veel kontrollitud.",
         "scanNow": "Kontrolli kohe",
-        "scanStarted": "Impordikausta kontrollitakse."
+        "scanStarted": "Impordikausta kontrollitakse.",
+        "areaHint": "Kaustast tulevad dokumendid lähevad sellesse valdkonda."
       }
     },
     "ai": {
@@ -394,7 +452,7 @@
       "intro": "Tehisintellekt (TI) loeb iga uut PDF-i, teeb sellest kokkuvõtte, määrab dokumendiliigi ja märksõnad ning toob välja põhiandmed, näiteks summad ja tähtajad.",
       "configured": "Seadistatud",
       "notConfigured": "Seadistamata",
-      "saved": "TI seaded salvestatud",
+      "saved": "TI-seaded salvestatud",
       "server": {
         "title": "LLM-server",
         "provider": "Teenusepakkuja",
@@ -462,8 +520,8 @@
         "outputLanguageHint": "Selles keeles kirjutab TI pealkirja, kokkuvõtte ja märksõnad.",
         "ocr": "Skannide tekstituvastus",
         "ocrHint": "Rakendus laseb TI-l tekstikihita skannitud PDF-id transkribeerida – alles siis leiab neid täistekstiotsinguga. Iga skann võtab rohkem aega ja maksab rohkem.",
-        "quickOcrFirst": "Esmalt kiire tekstituvastus, seejärel täpsustamine tehisintellektiga",
-        "quickOcrFirstHint": "Uued skaneeringud loeb esmalt sisseehitatud tekstituvastus (Tesseract) – mõne sekundi pärast saab neist otsida. Seejärel lisab tehisintellekt selle teksti põhjal pealkirja, kokkuvõtte ja märksõnad."
+        "quickOcrFirst": "Esmalt kiire tekstituvastus, seejärel täpsustamine TI-ga",
+        "quickOcrFirstHint": "Uued skannid loeb esmalt sisseehitatud tekstituvastus (Tesseract) – mõne sekundi pärast saab neist otsida. Seejärel lisab TI selle teksti põhjal pealkirja, kokkuvõtte ja märksõnad."
       },
       "unanalyzed_one": "{{count, number}} dokument on TI-ga veel analüüsimata.",
       "unanalyzed_other": "{{count, number}} dokumenti on TI-ga veel analüüsimata.",
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} logib seejärel sisse ainult parooliga ja saab kaheastmelise autentimise uuesti seadistada – näiteks pärast telefoni kaotamist.",
       "resetTwoFactorConfirm": "Lähtesta",
       "twoFactorReset": "Kaheastmeline autentimine lähtestatud"
+    },
+    "areas": {
+      "title": "Valdkonnad",
+      "navHint": "Kes milliseid dokumente näeb",
+      "intro": "Iga dokument kuulub täpselt ühte valdkonda. Kasutajad näevad ainult nende valdkondade dokumente, mille liikmed nad on, ning kõigile avatud valdkondade dokumente.",
+      "add": "Lisa valdkond",
+      "everyone": "Kõigile",
+      "restricted": "Piiratud",
+      "visibleForAll": "nähtav kõigile sisseloginutele",
+      "members": "Liikmed: {{names}}",
+      "adminsOnly": "ainult administraatorid",
+      "adminHint": "Administraatorid näevad kõiki valdkondi ka siis, kui nad pole nende liikmed.",
+      "edit": "Muuda valdkonda {{name}}",
+      "saved": "Valdkond salvestatud",
+      "created": "Valdkond loodud",
+      "deleted": "Valdkond kustutatud",
+      "delete": {
+        "label": "Kustuta valdkond {{name}}",
+        "title": "Kas kustutada valdkond?",
+        "text": "Valdkond „{{name}}“ kustutatakse. See on võimalik ainult siis, kui seda ei kasuta ükski dokument, postkast ega impordikaust."
+      },
+      "dialog": {
+        "name": "Nimi",
+        "namePlaceholder": "nt Raamatupidamine",
+        "generalNameHint": "Jäta tühjaks, siis on valdkonna nimi igas keeles „Üldine“.",
+        "everyone": "Nähtav kõigile",
+        "everyoneHint": "Selle valdkonna dokumente näevad kõik sisseloginud kasutajad.",
+        "members": "Liikmed",
+        "membersHint": "Selle valdkonna dokumente näevad ainult liikmed ja administraatorid. Määra iga liikme jaoks, kas ta võib ainult lugeda, ka muuta või lisaks kustutada.",
+        "noUsers": "Administraatori rollita kasutajaid veel pole.",
+        "create": "Loo",
+        "everyoneAccess": "Kõigi õigus",
+        "accessOf": "Õigus: {{name}}",
+        "membersHintEveryone": "Selle valdkonna dokumente näevad kõik. Lisa siia liikmeid, kui neil peab olema rohkem õigusi kui teistel."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Säilitamine",
+      "navHint": "Tähtajad ja kustutuslukk",
+      "intro": "Määra, kui kaua tuleb teatud liiki dokumente säilitada – näiteks arveid kümme aastat. Tähtaega arvestatakse selle aasta lõpust, millest dokument pärineb. Seni ei saa keegi seda kustutada.",
+      "permanent": "Lukku ei saa eemaldada – isegi mitte administraatorid. Kui reeglit lühendatakse või see kustutatakse või muutub dokumendi liik, jääb juba määratud tähtaeg kehtima.",
+      "add": "Lisa reegel",
+      "years_one": "{{count, number}} aasta",
+      "years_other": "{{count, number}} aastat",
+      "edit": "Muuda reeglit: {{category}}",
+      "saved": "Reegel salvestatud",
+      "created": "Reegel loodud",
+      "deleted": "Reegel kustutatud",
+      "emptyTitle": "Säilitusreegleid veel pole",
+      "emptyText": "Ilma reeglita saab dokumente igal ajal kustutada.",
+      "delete": {
+        "label": "Kustuta reegel: {{category}}",
+        "title": "Kas kustutada reegel?",
+        "text": "Liigi „{{category}}“ uued dokumendid ei saa enam tähtaega. Juba lukustatud dokumendid jäävad lukustatuks oma tähtaja lõpuni."
+      },
+      "dialog": {
+        "categoryHint": "Nii, nagu see on dokumendil märgitud; suur- ja väiketähtedel pole vahet.",
+        "years": "Säilitustähtaeg aastates",
+        "yearsHint": "Arvestatakse dokumendi kuupäeva aasta lõpust (kuupäeva puudumisel lisamise päevast).",
+        "shorterHint": "Lühem tähtaeg kehtib ainult dokumentidele, millel veel tähtaega pole. Juba lukustatud jäävad lukustatuks oma senise tähtaja lõpuni.",
+        "create": "Loo"
+      }
+    },
+    "mailOut": {
+      "title": "E-kirjade saatmine",
+      "navHint": "Teavitused e-postiga",
+      "intro": "Selle SMTP-serveri kaudu saadab rakendus teavitusi meeldetuletuste kohta, mille tähtaeg on käes – iga meeldetuletuse kohta ühe korra, koondatuna ühte e-kirja inimese kohta. Saaja on see, kes meeldetuletusega tegeleb ja on kasutajamenüüs oma aadressi sisestanud.",
+      "enabled": "Saada teavitusi e-postiga",
+      "enabledHint": "Väljalülitatuna on meeldetuletused näha ainult rakenduses.",
+      "host": "SMTP-server",
+      "port": "Port",
+      "security": "Krüptimine",
+      "unencrypted": "Puudub",
+      "usernameHint": "Jäta tühjaks, kui server sisselogimist ei nõua.",
+      "passwordKeepHint": "Jäta tühjaks, et säilitada salvestatud parool.",
+      "from": "Saatja aadress",
+      "fromHint": "Server peab seda sinu kontol lubama.",
+      "appUrl": "Rakenduse aadress",
+      "appUrlHint": "E-kirjades olevate linkide jaoks, nt https://docs.example.com. Tühi = linke pole.",
+      "digestHour": "Saatmine",
+      "fromHour": "alates {{hour}}",
+      "saved": "E-kirjade saatmise seaded salvestatud",
+      "test": "Testsõnum aadressile {{address}}",
+      "testNeedsAddress": "Testsõnumi jaoks sisesta kasutajamenüüs oma e-posti aadress.",
+      "testSavedHint": "Test kasutab salvestatud seadeid – salvesta palun enne."
+    },
+    "backup": {
+      "title": "Varundus ja import",
+      "navHint": "Varunda kõik korraga, impordi eksporte",
+      "intro": "Varukoopia sisaldab kõike, mida on vaja AIDocumentsi täpselt praegusel kujul taastamiseks. Import toob dokumendid üle teise paigalduse ekspordist – koos nende andmetega.",
+      "backupTitle": "Varukoopia ühe klõpsuga",
+      "backupText": "ZIP-fail andmebaasi, kõigi dokumentide koos varasemate versioonidega, eelvaatepiltide ja salvestatud paroolide võtmega. Rakendus töötab samal ajal edasi.",
+      "size": "Maht",
+      "sizeValue_one": "umbes {{size}} {{count, number}} failis",
+      "sizeValue_other": "umbes {{size}} {{count, number}} failis",
+      "last": "Viimane varukoopia",
+      "never": "pole kunagi tehtud",
+      "keyWarning": "Varukoopia ei ole krüptitud ja sisaldab salvestatud paroolide võtit (postkastid, TI, kaheastmeline autentimine). Hoia seda sama turvaliselt kui dokumente endid.",
+      "restore": "Taastamiseks peata AIDocuments, paki ZIP-faili sisu lahti tühja andmekausta ja käivita rakendus uuesti. Juhend on ZIP-failis (README.txt).",
+      "download": "Laadi varukoopia alla",
+      "started": "Varukoopiat laaditakse alla.",
+      "externalDatabase": "Varukoopia ühe klõpsuga on saadaval ainult sisseehitatud andmebaasiga. MariaDB puhul varunda andmebaas selle enda tööriistadega (nt mariadb-dump) ja lisaks andmekaust.",
+      "importTitle": "Impordi eksport",
+      "importText": "Dokumendiloendi funktsiooniga „Ekspordi“ loodud ZIP-fail – ka teisest paigaldusest. Pealkiri, dokumendiliik, märksõnad ja muud andmed säilivad; TI ei loe dokumente uuesti. Juba olemasolevad failid jäetakse vahele.",
+      "file": "ZIP-fail",
+      "areaHint": "Dokumendid lähevad siia – või ainult need, mille valdkonda siin pole.",
+      "matchAreas": "Paiguta samanimelistesse valdkondadesse",
+      "matchAreasHint": "Kui siin on valdkond, mille nimi on sama mis ekspordis, lähevad dokumendid sinna.",
+      "import": "Impordi",
+      "importing": "Importimine…",
+      "result": "Imporditud: {{imported, number}} · juba olemas: {{duplicates, number}} · importimata: {{failed, number}}",
+      "auto": {
+        "title": "Automaatne varundus",
+        "text": "Kord päevas salvestab AIDocuments täieliku varukoopia ZIP-failina kausta ja jätab alles uusimad. Kõige parem on, kui kaust asub teisel kettal või võrgukettal – muidu kaovad andmetega ketta rikke korral ka varukoopiad.",
+        "enable": "Varunda iga päev automaatselt",
+        "hour": "Kellaaeg",
+        "keep": "Säilita",
+        "keepHint": "Varukoopiate arv; vanemad kustutatakse.",
+        "directory": "Kaust",
+        "directoryHint": "Täielik tee serveris. Vaikekausta kasutamiseks jäta tühjaks. Dockeri konteineris peab kaust olema ühendatud.",
+        "warnAfterDays": "Hoiata pärast (päeva)",
+        "warnAfterDaysHint": "Teade dokumendiloendis, kui nii kaua pole varundatud – ei käsitsi ega automaatselt. 0 = ära hoiata kunagi.",
+        "lastRun": "Viimane käivitus",
+        "nextRun": "Järgmine käivitus",
+        "running": "Varundamine käib…",
+        "ok": "õnnestus, {{when}}",
+        "failed": "ebaõnnestus, {{when}}",
+        "stored_one": "{{count, number}} varukoopia kaustas {{directory}}",
+        "stored_other": "{{count, number}} varukoopiat kaustas {{directory}}",
+        "runNow": "Varunda kohe",
+        "saveFirst": "Salvesta esmalt muudatused.",
+        "runStarted": "Varundamine käib taustal.",
+        "done": "Varukoopia salvestatud.",
+        "saved": "Seaded salvestatud.",
+        "externalDatabase": "Automaatne varundus on saadaval ainult sisseehitatud andmebaasiga. MariaDB puhul varunda andmebaas selle enda tööriistadega (nt igal ööl käivitatava mariadb-dump-käsuga) ja lisaks andmekaust."
+      }
     }
   },
   "history": {
@@ -565,7 +760,8 @@
   "confirmCode": {
     "title": "Kinnita muudatus",
     "text": "Kontode, postkastide ja seadete muutmiseks on vaja autentimisrakenduse kehtivat koodi. Kinnitus kehtib 10 minutit.",
-    "submit": "Kinnita"
+    "submit": "Kinnita",
+    "passkey": "Kinnita pääsuvõtmega"
   },
   "share": {
     "button": "Jaga",
@@ -577,7 +773,7 @@
     "viewOnly": "Ainult vaatamine",
     "canEdit": "Tohib muuta",
     "viewHint": "Inimene saab PDF-i vaadata, printida ja alla laadida.",
-    "editHint": "Inimene saab PDF-i ka märgistada, sinna kirjutada, allkirjastada ja salvestada. Iga salvestus on uus versioon; pealkiri, sildid ja muud andmed jäävad peidetuks.",
+    "editHint": "Inimene saab PDF-i ka märgistada, sinna kirjutada, allkirjastada ja salvestada. Iga salvestus on uus versioon; pealkiri, märksõnad ja muud andmed jäävad peidetuks.",
     "validity": "Kehtib",
     "unlimited": "Piiramatult",
     "create": "Loo link",
@@ -598,6 +794,193 @@
     "page": {
       "for": "Jagatud: {{name}}",
       "invalid": "See link on vigane või aegunud või dokument on kustutatud. Pöördu inimese poole, kes selle sulle andis."
+    }
+  },
+  "areas": {
+    "general": "Üldine",
+    "unknown": "Muu valdkond",
+    "label": "Valdkond",
+    "target": "Sihtvaldkond",
+    "access": {
+      "READ": "Ainult lugemine",
+      "EDIT": "Lugemine ja muutmine",
+      "DELETE": "Muutmine ja kustutamine"
+    }
+  },
+  "reminders": {
+    "title": "Meeldetuletused",
+    "cardTitle": "Meeldetuletus",
+    "add": "Lisa meeldetuletus",
+    "edit": "Muuda meeldetuletust",
+    "create": "Loo",
+    "created": "Meeldetuletus lisatud",
+    "saved": "Meeldetuletus salvestatud",
+    "deleted": "Meeldetuletus kustutatud",
+    "markedDone": "Tehtud",
+    "dueDate": "Tähtaeg",
+    "note": "Märkus",
+    "notePlaceholder": "nt kontrolli makset",
+    "assignee": "Kes sellega tegeleb?",
+    "assigneeHint": "See inimene näeb meeldetuletust jaotises „Minu“ ja saab teavituse e-postiga. Valida saab kõigi seast, kes dokumenti näevad.",
+    "me": "{{name}} (mina)",
+    "assignedTo": "kellele: {{name}}",
+    "doneBy": "tegi {{name}}",
+    "markDone": "Märgi tehtuks",
+    "reopen": "Ava uuesti",
+    "delete": {
+      "label": "Kustuta meeldetuletus",
+      "title": "Kas kustutada meeldetuletus?",
+      "text": "Meeldetuletus eemaldatakse. Dokument jääb muutmata."
+    },
+    "accept": "Lisa",
+    "dismiss": "Loobu soovitusest",
+    "suggestionsHint": "TI leidis sellest dokumendist tähtaegu:",
+    "none": "Avatud meeldetuletusi pole.",
+    "showDone_one": "Näita {{count, number}} tehtud meeldetuletust",
+    "showDone_other": "Näita {{count, number}} tehtud meeldetuletust",
+    "hideDone": "Peida tehtud",
+    "scope": {
+      "label": "Millised meeldetuletused",
+      "mine": "Minu",
+      "all": "Kõik"
+    },
+    "dueTitle": "Tähtaeg käes",
+    "nothingDue": "Täna pole ühegi meeldetuletuse tähtaeg käes.",
+    "upcomingTitle": "Peagi",
+    "suggestionsTitle": "Soovitatud tähtajad",
+    "suggestionsPageHint": "Järgmise kuue kuu tähtajad, mille TI dokumentidest leidis. Lisa need meeldetuletusena või loobu neist.",
+    "emptyTitle": "Meeldetuletusi pole",
+    "emptyText": "Lisa dokumendile meeldetuletus – või võta üle mõni TI soovitatud tähtaeg.",
+    "repeat": {
+      "label": "Korda",
+      "hint": "Kui märgid meeldetuletuse tehtuks, luuakse järgmine sama vahega.",
+      "none": "Ühekordne",
+      "m1": "Iga kuu",
+      "m3": "Kord kvartalis",
+      "m6": "Iga poole aasta tagant",
+      "m12": "Kord aastas",
+      "m24": "Iga kahe aasta tagant",
+      "months_one": "Iga kuu",
+      "months_other": "Iga {{count}} kuu tagant"
+    },
+    "fromContract": "lepingust"
+  },
+  "pages": {
+    "button": "Leheküljed",
+    "title": "Muuda lehekülgi",
+    "intro": "Lohista lehekülgi või liiguta neid nooltega, pööra või eemalda neid. Salvestamisel luuakse uus versioon – eelmine säilib.",
+    "page": "Lehekülg {{number}}",
+    "wasPage": "varem {{number}}",
+    "moveLeft": "Ettepoole",
+    "moveRight": "Tahapoole",
+    "rotate": "Pööra 90°",
+    "remove": "Eemalda lehekülg",
+    "keep": "Jäta lehekülg alles",
+    "noneLeft": "Alles peab jääma vähemalt üks lehekülg.",
+    "saveFirst": "Salvesta esmalt muudatused",
+    "saved": "Leheküljed salvestatud",
+    "split": {
+      "here": "Siit alates eraldi dokument",
+      "title": "Kas jagada dokument?",
+      "text": "Lehekülg {{page}} ja kõik järgnevad leheküljed muutuvad samas valdkonnas eraldi dokumendiks. Seda loetakse ja liigitatakse nagu äsja saabunud dokumenti; sellesse dokumenti jäävad eelnevad leheküljed.",
+      "confirm": "Jaga",
+      "done": "Dokument jagatud",
+      "open": "Ava uus dokument"
+    },
+    "merge": {
+      "button": "Liida dokumente",
+      "title": "Liida dokumente",
+      "intro": "Valitud dokumentide leheküljed lisatakse selles järjekorras dokumendi „{{title}}“ lõppu.",
+      "search": "Otsi dokumente…",
+      "none": "Sobivaid dokumente pole.",
+      "noDeleteRight": "Sul pole õigust seda kustutada – seega ei saa sa seda ka liita.",
+      "hint": "Liidetud dokumendid viiakse seejärel prügikasti; ajaloost saab neid 30 päeva jooksul taastada.",
+      "confirm_one": "Liida {{count}} dokument",
+      "confirm_other": "Liida {{count}} dokumenti",
+      "done_one": "{{count}} dokument liidetud",
+      "done_other": "{{count}} dokumenti liidetud"
+    }
+  },
+  "contracts": {
+    "nav": "Lepingud",
+    "title": "Lepingud",
+    "pageIntro": "Kõigi sulle nähtavate lepingute kehtivusajad ja etteteatamisajad – eespool need, millega on peagi vaja midagi teha.",
+    "scope": {
+      "label": "Näita",
+      "running": "Kehtivad",
+      "all": "Kõik"
+    },
+    "emptyTitle": "Lepinguid pole veel lisatud",
+    "emptyText": "Ava dokument, näiteks elektri- või mobiilsideleping, ja sisesta seal kehtivusaeg ja etteteatamisaeg. Siis ilmub aegsasti enne tähtaega meeldetuletus.",
+    "cardTitle": "Leping",
+    "none": "Kas see on leping? Kui sisestad kehtivusaja ja etteteatamisaja, tuletab AIDocuments sulle ülesütlemist aegsasti meelde.",
+    "add": "Lisa lepinguna",
+    "edit": "Muuda lepingut",
+    "intro": "Kehtivusaja lõpust ja etteteatamisajast tuleneb kuupäev, milleks leping tuleb üles öelda. Enne seda ilmub meeldetuletus; kui lepingut kehtivusaja jooksul üles ei öelda, pikeneb see automaatselt.",
+    "saved": "Leping salvestatud",
+    "removed": "Lepingu andmed eemaldatud",
+    "remove": {
+      "label": "Eemalda lepingu andmed",
+      "title": "Kas eemaldada lepingu andmed?",
+      "text": "Kehtivusaeg, etteteatamisaeg ja nendega seotud avatud meeldetuletus eemaldatakse. Dokument ise jääb alles."
+    },
+    "openEnded": "tähtajatu",
+    "months_one": "{{count}} kuu",
+    "months_other": "{{count}} kuud",
+    "amountHint": "nt „49,90 € kuus“",
+    "endDateHint": "Praeguse kehtivusaja lõpp; tühi = tähtajatu",
+    "noticeHint": "Mitu kuud enne kehtivusaja lõppu; tühi = kuni kehtivusaja lõpuni",
+    "renewalHint": "Kui lepingut üles ei öelda, pikeneb see nii mitme kuu võrra; 0 = leping lõpeb",
+    "cancelledHint": "Siis leping enam ei pikene ja meeldetuletusi enam ei tule.",
+    "fields": {
+      "partner": "Lepingupartner",
+      "amount": "Summa",
+      "startDate": "Lepingu algus",
+      "endDate": "Kehtib kuni",
+      "notice": "Etteteatamisaeg (kuud)",
+      "renewal": "Pikenemine (kuud)",
+      "deadline": "Üles öelda hiljemalt",
+      "reminderDays": "Meeldetuletus (päeva enne)",
+      "cancelled": "Üles öeldud"
+    },
+    "status": {
+      "ACTIVE": "Kehtib",
+      "DUE_SOON": "Tähtaeg läheneb",
+      "NOTICE_MISSED": "Tähtaeg möödas",
+      "CANCELLED": "Üles öeldud",
+      "ENDED": "Lõppenud",
+      "OPEN_ENDED": "Tähtajatu"
+    },
+    "row": {
+      "cancelBy": "üles öelda hiljemalt {{date}}",
+      "endsOn": "lõpeb {{date}}",
+      "term": "kehtib kuni {{date}}",
+      "renews_one": "pikeneb {{count}} kuu võrra",
+      "renews_other": "pikeneb {{count}} kuu võrra"
+    }
+  },
+  "passkeys": {
+    "title": "Pääsuvõtmed",
+    "intro": "Pääsuvõtmega logid sisse ilma paroolita – see avatakse sõrmejälje, näotuvastuse või seadme PIN-koodiga. See töötab ainult sellel aadressil; võltsitud sait ei saa seda kasutada.",
+    "none": "Pääsuvõtmeid pole veel lisatud.",
+    "add": "Lisa pääsuvõti",
+    "create": "Loo pääsuvõti",
+    "name": "Nimi",
+    "nameHint": "Et see hiljem ära tunda, nt „Sülearvuti“ või „Paroolihaldur“.",
+    "password": "Sinu parool",
+    "passwordHint": "Kes pääsuvõtme lisab, pääseb edaspidi sisse ilma paroolita – seepärast kinnita see üks kord parooliga.",
+    "added": "Pääsuvõti lisatud",
+    "removed": "Pääsuvõti eemaldatud",
+    "synced": "sünkroonitud",
+    "lastUsed": "viimati kasutatud {{time}}",
+    "created": "lisatud {{time}}, pole veel kasutatud",
+    "unsupported": "See brauser ei saa siin pääsuvõtmeid kasutada. Pääsuvõtmed töötavad ainult HTTPS-i kaudu (või localhostis).",
+    "unsupportedIp": "Pääsuvõtmed töötavad ainult HTTPS-i kaudu ja siis, kui aadressis on nimi – IP-aadressiga mitte.",
+    "remove": {
+      "label": "Eemalda pääsuvõti",
+      "title": "Kas eemaldada pääsuvõti?",
+      "text": "Pääsuvõtmega „{{name}}“ ei saa pärast seda keegi enam sisse logida. See jääb paroolihaldurisse või seadmesse salvestatuks, kuni sa selle sealt kustutad.",
+      "confirm": "Eemalda"
     }
   }
 }

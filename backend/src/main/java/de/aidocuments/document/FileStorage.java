@@ -73,6 +73,15 @@ public class FileStorage {
         }
     }
 
+    /** Freier Platz im Datenverzeichnis; unbekannt = sehr viel. */
+    public long usableSpace() {
+        try {
+            return Files.getFileStore(root).getUsableSpace();
+        } catch (IOException e) {
+            return Long.MAX_VALUE;
+        }
+    }
+
     /** Wirft {@link StorageFullException}, wenn weniger als {@link #MIN_FREE_BYTES} plus {@code needed} frei sind. */
     public void requireFreeSpace(long needed) {
         long usable;
@@ -125,6 +134,19 @@ public class FileStorage {
             read = in.readNBytes(head, 0, head.length);
         }
         return new String(head, 0, read, StandardCharsets.ISO_8859_1).contains("%PDF-");
+    }
+
+    /**
+     * Ersetzt den Inhalt einer empfangenen Datei durch eine daraus erzeugte (etwa das PDF zu einem Foto). Die
+     * Prüfsumme bleibt die der empfangenen Datei – so wird dasselbe Foto beim nächsten Mal als vorhanden erkannt.
+     */
+    public Received converted(Received received, Path file) throws IOException {
+        return new Received(file, received.sha256(), Files.size(file));
+    }
+
+    /** Ein freier Name für eine Zwischendatei neben der empfangenen. */
+    public Path tempSibling(Received received, String suffix) {
+        return received.tempFile().resolveSibling(received.tempFile().getFileName() + suffix);
     }
 
     /** Verschiebt die Datei an ihren endgültigen Platz und liefert den relativen Pfad. */

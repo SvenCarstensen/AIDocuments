@@ -31,7 +31,9 @@ public record HistoryEntry(
         Details before,
         String previousFile,
         Instant undoneAt,
-        String undoneBy) {
+        String undoneBy,
+        /* der Bereich des Dokuments – danach richtet sich, wer den Eintrag sieht */
+        String areaId) {
 
     public enum Action {
         IMPORTED, EDITED, DELETED
@@ -51,12 +53,13 @@ public record HistoryEntry(
     }
 
     /** Die von Hand bearbeitbaren Angaben eines Dokuments. */
+    /** @param areaId der Bereich vorher; fehlt bei Einträgen aus älteren Versionen */
     public record Details(String title, String summary, String category, String correspondent, LocalDate documentDate,
-                          List<String> tags) {
+                          List<String> tags, String areaId) {
     }
 
     HistoryEntry undone(String by) {
         return new HistoryEntry(id, at, action, documentId, documentTitle, source, origin, change, user, before,
-                previousFile, Instant.now(), by);
+                previousFile, Instant.now(), by, areaId);
     }
 }

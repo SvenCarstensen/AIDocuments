@@ -24,7 +24,7 @@
     "documentCount_many": "{{count, number}} de documents",
     "documentCount_other": "{{count, number}} documents",
     "role": {
-      "ADMIN": "Admin.",
+      "ADMIN": "Admin",
       "USER": "Usuari"
     },
     "fileSize": {
@@ -45,7 +45,9 @@
     "login": {
       "title": "Et donem la benvinguda de nou",
       "subtitle": "Inicia la sessió per accedir als teus documents.",
-      "submit": "Inicia la sessió"
+      "submit": "Inicia la sessió",
+      "or": "o",
+      "passkey": "Inicia la sessió amb una clau d’accés"
     },
     "setup": {
       "title": "Configura AIDocuments",
@@ -62,17 +64,17 @@
       }
     },
     "twoFactor": {
-      "title": "Confirma l'inici de sessió",
-      "subtitle": "Introdueix el codi de 6 xifres de la teva aplicació d'autenticació.",
+      "title": "Confirma l’inici de sessió",
+      "subtitle": "Introdueix el codi de 6 xifres de la teva aplicació d’autenticació.",
       "code": "Codi",
-      "codeHint": "No tens accés a l'aplicació? Introdueix un dels teus codis de recuperació.",
+      "codeHint": "No tens accés a l’aplicació? Introdueix un dels teus codis de recuperació.",
       "submit": "Confirma",
-      "back": "Torna a l'inici de sessió"
+      "back": "Torna a l’inici de sessió"
     },
     "twoFactorRequired": {
-      "title": "Configura l'autenticació en dos passos",
-      "subtitle": "Per als administradors l'autenticació en dos passos és obligatòria. Configura-la ara per continuar.",
-      "intro": "Necessites una aplicació d'autenticació al mòbil (p. ex. Google Authenticator, Microsoft Authenticator, 1Password o Aegis)."
+      "title": "Configura l’autenticació en dos passos",
+      "subtitle": "Per als administradors l’autenticació en dos passos és obligatòria. Configura-la ara per continuar.",
+      "intro": "Necessites una aplicació d’autenticació al mòbil (p. ex. Google Authenticator, Microsoft Authenticator, 1Password o Aegis)."
     }
   },
   "shell": {
@@ -82,7 +84,7 @@
       "dark": "Tema fosc"
     },
     "search": {
-      "placeholder": "Cerca per paraules clau: documents, etiquetes, contingut …",
+      "placeholder": "Cerca per paraules clau: documents, etiquetes, contingut…",
       "placeholderAi": "Cerca amb IA: pregunta amb les teves paraules – p. ex. «factures de Kia del 2024»",
       "labelAi": "IA",
       "label": "Cerca documents",
@@ -103,16 +105,32 @@
       "changed": "Contrasenya canviada"
     },
     "dropzone": {
-      "title": "Deixa anar els PDF aquí",
-      "hint": "Pots deixar anar diversos fitxers alhora. Es desen, s’analitzen i s’etiqueten."
+      "title": "Deixa anar aquí PDF o fotos",
+      "hint": "Pots deixar anar diversos fitxers alhora. Les fotos (JPG, PNG, HEIC) es converteixen en PDF. Tot es desa, s’analitza i s’etiqueta."
+    },
+    "remindersDue_one": "{{count, number}} recordatori pendent",
+    "remindersDue_many": "{{count, number}} de recordatoris pendents",
+    "remindersDue_other": "{{count, number}} recordatoris pendents",
+    "profile": {
+      "email": "Adreça de correu",
+      "saved": "Desat"
+    },
+    "notifications": {
+      "title": "Notificacions per correu",
+      "emailHint": "Aquí s’envien els recordatoris pendents que tens assignats i les notificacions que activis a continuació – en l’idioma en què ara fas servir l’aplicació. Deixa-ho en blanc si no vols rebre correus.",
+      "digest": "Documents nous cada dia",
+      "digestHint": "Un cop al dia, una llista dels documents que han arribat a les teves àrees – només els dies que n’hi ha de nous.",
+      "admin": "Avisos per als administradors",
+      "adminHint": "Quan vencen els terminis de conservació (no s’elimina res automàticament) i quan una bústia no es pot comprovar diverses vegades seguides.",
+      "needsEmail": "Sense adreça no s’envia cap correu."
     }
   },
   "upload": {
-    "onlyPdf": "Només es poden afegir fitxers PDF.",
-    "uploadingFile": "S’està pujant «{{name}}» …",
-    "uploadingFiles_one": "S’està pujant {{count, number}} PDF …",
-    "uploadingFiles_many": "S’estan pujant {{count, number}} de PDF …",
-    "uploadingFiles_other": "S’estan pujant {{count, number}} PDF …",
+    "onlyPdf": "Només es poden afegir PDF i fotos (JPG, PNG, HEIC).",
+    "uploadingFile": "S’està pujant «{{name}}»…",
+    "uploadingFiles_one": "S’està pujant {{count, number}} fitxer…",
+    "uploadingFiles_many": "S’estan pujant {{count, number}} de fitxers…",
+    "uploadingFiles_other": "S’estan pujant {{count, number}} fitxers…",
     "created_one": "{{count, number}} document afegit",
     "created_many": "{{count, number}} de documents afegits",
     "created_other": "{{count, number}} documents afegits",
@@ -120,14 +138,22 @@
     "duplicates_one": "{{count, number}} ja existeix",
     "duplicates_many": "{{count, number}} ja existeixen",
     "duplicates_other": "{{count, number}} ja existeixen",
-    "rejected_one": "{{count, number}} fitxer no és un PDF vàlid",
-    "rejected_many": "{{count, number}} de fitxers no són PDF vàlids",
-    "rejected_other": "{{count, number}} fitxers no són PDF vàlids",
+    "rejected_one": "{{count, number}} fitxer no afegit",
+    "rejected_many": "{{count, number}} de fitxers no afegits",
+    "rejected_other": "{{count, number}} fitxers no afegits",
     "onlyDuplicates_one": "Aquest document ja existeix.",
     "onlyDuplicates_many": "Aquests documents ja existeixen.",
     "onlyDuplicates_other": "Aquests documents ja existeixen.",
-    "noneValid": "Cap dels fitxers és un PDF vàlid.",
-    "failed": "Error en pujar"
+    "noneValid": "No s’ha pogut afegir cap dels fitxers.",
+    "failed": "Error en pujar",
+    "intoArea": "Àrea: {{area}}",
+    "combine": {
+      "title": "Vols combinar les fotos en un sol document?",
+      "text": "Has seleccionat diverses fotos. Si són les pàgines d’un mateix document – per exemple, una carta de diverses pàgines –, es converteixen en un sol PDF en l’ordre dels noms de fitxer; després pots canviar l’ordre a «Pàgines». Si no, cada foto es converteix en un document independent.",
+      "one": "En un sol document",
+      "separate": "Cada foto per separat",
+      "tooMuch": "Hi ha massa fotos, o són massa grans, per a un sol document (com a màxim 100 fotos i 240 MB en total)."
+    }
   },
   "documents": {
     "status": {
@@ -139,7 +165,7 @@
     "ocrBadge": "Reconeixement de text",
     "aiNotice": {
       "text": "La IA encara no està configurada. Els documents nous es poden cercar pel text, però no es resumeixen ni s’etiqueten.",
-      "builtinOcr": "Els escanejats sense capa de text els llegeix el reconeixement de text integrat, de manera que també s’hi pot cercar.",
+      "builtinOcr": "Els escanejos sense capa de text els llegeix el reconeixement de text integrat, de manera que també s’hi pot cercar.",
       "action": "Configura-la ara"
     },
     "searchResults_one": "<count>{{count, number}} resultat</count> <query>per a «{{query}}»</query>",
@@ -182,22 +208,45 @@
       "activeTo": "fins al {{date}}",
       "removeOne": "Treu el filtre «{{label}}»",
       "removeAll": "Treu tots els filtres",
-      "clear": "Treu els filtres"
+      "clear": "Treu els filtres",
+      "retentionExpired": "Termini vençut"
     },
     "empty": {
       "libraryTitle": "Encara no hi ha cap document",
-      "libraryHint": "Arrossega fitxers PDF a aquesta finestra o fes servir «Puja».",
-      "libraryHintAdmin": "Arrossega fitxers PDF a aquesta finestra o fes servir «Puja». A la configuració pots configurar una bústia de correu o una carpeta d’importació des de les quals els PDF nous s’importen automàticament.",
+      "libraryHint": "Arrossega PDF o fotos a aquesta finestra o fes servir «Puja».",
+      "libraryHintAdmin": "Arrossega PDF o fotos a aquesta finestra o fes servir «Puja». A la configuració pots afegir una bústia de correu o una carpeta d’importació des de les quals els documents nous s’importen automàticament.",
       "noResultsTitle": "No s’ha trobat res",
       "noResultsSearch": "Cap document coincideix amb aquesta cerca. La cerca també troba parts de paraules: prova amb un terme més curt o amb menys paraules.",
       "noResultsFilters": "Cap document coincideix amb els filtres seleccionats."
     },
-    "loadingAll_one": "{{loaded, number}} de {{count, number}} document carregat …",
-    "loadingAll_many": "{{loaded, number}} de {{count, number}} de documents carregats …",
-    "loadingAll_other": "{{loaded, number}} de {{count, number}} documents carregats …",
+    "loadingAll_one": "{{loaded, number}} de {{count, number}} document carregat…",
+    "loadingAll_many": "{{loaded, number}} de {{count, number}} de documents carregats…",
+    "loadingAll_other": "{{loaded, number}} de {{count, number}} documents carregats…",
     "loadMore": "Carrega’n més ({{remaining, number}})",
     "aiSearch": {
       "notice": "Cerca amb IA: «{{question}}». Els filtres mostren com s’ha entès la pregunta."
+    },
+    "export": {
+      "label_one": "Exporta {{count, number}} document com a ZIP",
+      "label_many": "Exporta els {{count, number}} de documents d’aquesta llista com a ZIP",
+      "label_other": "Exporta els {{count, number}} documents d’aquesta llista com a ZIP",
+      "started_one": "S’ha iniciat l’exportació de {{count, number}} document",
+      "started_many": "S’ha iniciat l’exportació de {{count, number}} de documents",
+      "started_other": "S’ha iniciat l’exportació de {{count, number}} documents",
+      "contents": "El fitxer ZIP conté els PDF i totes les dades en forma de taula (documents.csv) i com a documents.json.",
+      "failed": "L’exportació ha fallat"
+    },
+    "mailboxNotice": {
+      "text_one": "La bústia «{{names}}» no s’ha pogut comprovar diverses vegades seguides – ara no n’arriba cap document.",
+      "text_many": "Aquestes bústies no s’han pogut comprovar diverses vegades seguides: {{names}}. Ara no n’arriba cap document.",
+      "text_other": "Aquestes bústies no s’han pogut comprovar diverses vegades seguides: {{names}}. Ara no n’arriba cap document.",
+      "action": "Mostra les bústies"
+    },
+    "backupNotice": {
+      "never": "Encara no hi ha cap còpia de seguretat dels teus documents.",
+      "overdue": "Última còpia: {{when}}. Fa més temps del que s’ha configurat.",
+      "failed": "La còpia de seguretat automàtica ha fallat: {{reason}}",
+      "action": "Ves a la còpia de seguretat"
     }
   },
   "document": {
@@ -246,7 +295,7 @@
       "allWith": "Tots els documents amb l’etiqueta «{{tag}}»",
       "none": "Sense etiquetes. <add>Afegeix-ne</add>",
       "inputHint": "Confirma amb Retorn o amb una coma. Els suggeriments són etiquetes que ja s’utilitzen.",
-      "inputPlaceholder": "Escriu una etiqueta …",
+      "inputPlaceholder": "Escriu una etiqueta…",
       "remove": "Treu l’etiqueta «{{tag}}»"
     },
     "keyFacts": "Dades clau",
@@ -273,18 +322,20 @@
     "noText": "Aquest document no té text: probablement és un escaneig sense capa de text. Amb la IA configurada i el reconeixement de text activat, el contingut es transcriu durant l’anàlisi.",
     "edit": {
       "title": "Edita el document",
-      "saved": "Canvis desats"
+      "saved": "Canvis desats",
+      "areaHint": "Determina qui pot veure el document.",
+      "areaMoveHint": "Després, només el podran veure els membres de «{{area}}» i els administradors."
     },
     "delete": {
       "title": "Vols eliminar el document?",
-      "text": "«{{title}}» se suprimirà. A l’historial ho pots desfer durant 30 dies; després s’elimina definitivament.",
-      "confirm": "Suprimeix"
+      "text": "«{{title}}» s’eliminarà. Ho pots desfer a l’historial durant 30 dies; després s’eliminarà definitivament.",
+      "confirm": "Elimina"
     },
     "chat": {
       "intro": "Fes una pregunta sobre aquest document: la IA respon a partir del seu contingut.",
-      "placeholder": "Pregunta alguna cosa sobre aquest document …",
+      "placeholder": "Pregunta alguna cosa sobre aquest document…",
       "send": "Envia",
-      "thinking": "La IA està llegint el document …",
+      "thinking": "La IA està llegint el document…",
       "notConfigured": "Per fer preguntes sobre el document cal configurar una IA.",
       "restart": "Torna a començar",
       "suggestions": {
@@ -301,7 +352,7 @@
       "download": "Baixa la versió {{number}}",
       "restore": "Restaura la versió {{number}}",
       "restoreTitle": "Vols restaurar la versió {{number}}?",
-      "restoreText": "Aquesta versió passa a ser l'actual. La versió actual es conserva i el pas es pot desfer a l'historial.",
+      "restoreText": "Aquesta versió torna a ser l’actual. La versió que hi havia fins ara es conserva i el pas es pot desfer a l’historial.",
       "restoreConfirm": "Restaura",
       "restored": "Versió {{number}} restaurada",
       "kinds": {
@@ -309,22 +360,31 @@
         "EDITED": "Editat",
         "ORIGINAL_RESTORED": "Original restaurat",
         "VERSION_RESTORED": "Versió {{from}} restaurada",
-        "UNDONE": "Canvi desfet"
+        "UNDONE": "Canvi desfet",
+        "PAGES": "Pàgines modificades",
+        "MERGED": "Documents fusionats"
       }
-    }
+    },
+    "retention": {
+      "label": "Conservació",
+      "until": "fins al {{date}} – no es pot eliminar abans",
+      "expired": "termini vençut el {{date}}",
+      "locked": "S’ha de conservar fins al {{date}} – només es podrà eliminar després"
+    },
+    "readOnly": "En aquesta àrea només pots veure aquest document."
   },
   "settings": {
     "title": "Configuració",
     "mailboxes": {
       "title": "Bústies de correu",
-      "navHint": "Servidors IMAP des dels quals s’importen els adjunts PDF",
-      "intro": "Els adjunts PDF s’importen automàticament d’aquestes bústies de correu IMAP. Les bústies només es llegeixen: els correus es mantenen sense canvis i sense llegir.",
+      "navHint": "Servidors IMAP des dels quals s’importen els adjunts PDF i les fotos",
+      "intro": "Els adjunts PDF i les fotos adjuntes (com a PDF) s’importen automàticament d’aquestes bústies de correu IMAP; el text dels correus i els logotips incrustats, no. Les bústies només es llegeixen: els correus es mantenen sense canvis i sense llegir.",
       "add": "Afegeix una bústia de correu",
       "emptyTitle": "Encara no hi ha cap bústia configurada",
       "emptyText": "Introdueix les dades d’accés d’una bústia IMAP, per exemple la bústia a la qual l’escàner envia els documents.",
       "paused": "En pausa",
       "syncNow": "Comprova ara",
-      "syncing": "S’està comprovant la bústia …",
+      "syncing": "S’està comprovant la bústia…",
       "neverSynced": "Encara no s’ha comprovat.",
       "saved": "Bústia desada",
       "added": "Bústia afegida",
@@ -351,7 +411,7 @@
         "since": "Només correus des del",
         "sinceHint": "Opcional: els correus més antics s’ometen",
         "enabled": "Comprova automàticament",
-        "enabledHint": "La bústia es comprova a la recerca de PDF nous amb l’interval configurat.",
+        "enabledHint": "La bústia es comprova a la recerca d’adjunts nous amb l’interval configurat.",
         "filter": {
           "title": "Filtre",
           "intro": "Només es processen els correus que compleixen totes les condicions. Un terme per línia; les majúscules i minúscules no importen i n’hi ha prou amb una part del text. Els camps buits no restringeixen res.",
@@ -360,29 +420,30 @@
           "senderIncludes": "El remitent conté un d’aquests termes",
           "senderExcludes": "El remitent no conté cap d’aquests termes",
           "senderHint": "Nom o adreça, p. ex. «@example.com»",
-          "newOnly": "El filtre s’aplica als correus que arriben després de l’última consulta; els correus ja revisats no es tornen a processar."
+          "newOnly": "El filtre s’aplica als correus que arriben després de l’última comprovació; els correus ja revisats no es tornen a processar."
         },
-        "interval": "Interval de consulta en minuts",
-        "intervalHint": "Deixa-ho buit per fer servir l’interval general (ara {{interval}})."
+        "interval": "Interval de comprovació en minuts",
+        "intervalHint": "Deixa-ho en blanc per fer servir l’interval general (ara {{interval}}).",
+        "areaHint": "Els documents importats van a aquesta àrea."
       },
       "filterActive": "Filtre actiu",
-      "schedule": "Consulta cada {{interval}} · propera {{when}}",
-      "scheduleSoon": "Consulta cada {{interval}} · propera aviat"
+      "schedule": "Comprovació cada {{interval}} · propera {{when}}",
+      "scheduleSoon": "Comprovació cada {{interval}} · propera aviat"
     },
     "import": {
-      "title": "Programació i carpeta d’importació",
+      "title": "Comprovació i carpeta d’importació",
       "navHint": "Interval de comprovació i carpeta vigilada",
-      "intro": "Defineix amb quina freqüència l’aplicació cerca fitxers PDF nous: a les bústies de correu i a la carpeta d’importació.",
+      "intro": "Defineix amb quina freqüència l’aplicació cerca documents nous: a les bústies de correu i a la carpeta d’importació.",
       "saved": "Configuració desada",
       "interval": {
         "title": "Interval de comprovació",
-        "text": "Amb quina freqüència l’aplicació revisa la carpeta d’entrada i totes les bústies sense interval propi per trobar PDF nous.",
+        "text": "Amb quina freqüència l’aplicació revisa la carpeta d’importació i totes les bústies sense interval propi per trobar documents nous.",
         "label": "Cada … minuts",
         "nextRun": "Propera comprovació automàtica {{when}}."
       },
       "folder": {
         "title": "Carpeta d’importació",
-        "text": "Un directori del servidor que es vigila a la recerca de fitxers PDF nous, per exemple la destinació d’un escàner de xarxa. També es cerca a les subcarpetes.",
+        "text": "Un directori del servidor que es vigila a la recerca de PDF i fotos (JPG, PNG, HEIC) nous, per exemple la destinació d’un escàner de xarxa. També es cerca a les subcarpetes.",
         "enable": "Vigila la carpeta d’importació",
         "path": "Ruta al servidor",
         "pathHint": "Ruta absoluta. Al contenidor Docker és la carpeta muntada, normalment {{path}}.",
@@ -391,10 +452,11 @@
         "move": "Mou a «{{folder}}»",
         "keepHint": "Els fitxers es mantenen sense canvis. L’aplicació recorda el que ja ha importat.",
         "moveHint": "Els fitxers importats es mouen a la subcarpeta «{{folder}}»: la carpeta d’importació es manté endreçada.",
-        "scanning": "S’està comprovant la carpeta …",
+        "scanning": "S’està comprovant la carpeta…",
         "neverScanned": "Encara no s’ha comprovat.",
         "scanNow": "Comprova ara",
-        "scanStarted": "S’està comprovant la carpeta d’importació."
+        "scanStarted": "S’està comprovant la carpeta d’importació.",
+        "areaHint": "Els documents de la carpeta van a aquesta àrea."
       }
     },
     "ai": {
@@ -426,11 +488,11 @@
         },
         "OPENAI": {
           "urlHint": "L’API d’OpenAI. Canvia-la només si tens una passarel·la pròpia al davant.",
-          "modelHint": "L’ID del model tal com el anomena OpenAI. Quan desis la clau, aquí apareixeran els models disponibles."
+          "modelHint": "L’ID del model tal com l’anomena OpenAI. Quan desis la clau, aquí apareixeran els models disponibles."
         },
         "MOONSHOT": {
           "urlHint": "L’API de Moonshot AI (Kimi). Per a comptes de la plataforma xinesa: {{url}}",
-          "modelHint": "L’ID del model tal com el anomena Moonshot. Quan desis la clau, aquí apareixeran els models disponibles."
+          "modelHint": "L’ID del model tal com l’anomena Moonshot. Quan desis la clau, aquí apareixeran els models disponibles."
         },
         "LM_STUDIO": {
           "urlHint": "El servidor local de LM Studio (inicia’l a LM Studio, a «Developer»). Si AIDocuments s’executa a Docker: {{url}}",
@@ -438,7 +500,7 @@
         },
         "OPENAI_COMPATIBLE": {
           "urlHint": "Adreça d’un servidor que parla la interfície d’OpenAI, normalment acabada en /v1, p. ex. {{url}}",
-          "modelHint": "L’ID del model tal com el anomena el servidor. Després de desar, aquí apareixeran els models que ofereix."
+          "modelHint": "L’ID del model tal com l’anomena el servidor. Després de desar, aquí apareixeran els models que ofereix."
         }
       },
       "apiKey": {
@@ -449,8 +511,8 @@
         "placeholderNotNeeded": "no cal",
         "placeholderIfRequired": "només si el servidor en demana una",
         "hintShown": "Predefinida a la configuració del servidor.",
-        "hintRemoving": "La clau desada se suprimirà en desar.",
-        "hintStored": "Hi ha una clau desada de forma xifrada. Deixa-ho en blanc per conservar-la – <remove>suprimeix la clau</remove>",
+        "hintRemoving": "La clau desada s’eliminarà en desar.",
+        "hintStored": "Hi ha una clau desada de forma xifrada. Deixa-ho en blanc per conservar-la – <remove>elimina la clau</remove>",
         "hintEnvironment": "Ara la clau prové de la configuració del servidor (variable d’entorn o fitxer de configuració). Una clau introduïda aquí té prioritat.",
         "hintPreset": "A la configuració del servidor hi ha una clau predefinida per a aquest proveïdor. Deixa-ho en blanc per fer-la servir.",
         "hintDiscardedOnSwitch": "La clau desada fins ara pertany a {{previous}} i es descartarà si canvies de proveïdor.",
@@ -472,7 +534,7 @@
         "ocr": "Reconeixement de text per a escanejos",
         "ocrHint": "L’aplicació fa que la IA transcrigui els PDF escanejats sense capa de text: només així es poden trobar amb la cerca de text complet. Cada escaneig requereix més temps i costa més.",
         "quickOcrFirst": "Primer reconeixement de text ràpid, després refinar amb la IA",
-        "quickOcrFirstHint": "Els escanejats nous els llegeix primer el reconeixement de text integrat (Tesseract): en pocs segons ja s’hi pot cercar. Després, la IA hi afegeix el títol, el resum i les etiquetes a partir d’aquest text."
+        "quickOcrFirstHint": "Els escanejos nous els llegeix primer el reconeixement de text integrat (Tesseract): en pocs segons ja s’hi pot cercar. Després, la IA hi afegeix el títol, el resum i les etiquetes a partir d’aquest text."
       },
       "unanalyzed_one": "{{count, number}} document encara no ha estat analitzat per la IA.",
       "unanalyzed_many": "{{count, number}} de documents encara no han estat analitzats per la IA.",
@@ -513,11 +575,151 @@
         "create": "Crea"
       },
       "twoFactor": "2FA",
-      "resetTwoFactor": "Restableix l'autenticació en dos passos",
-      "resetTwoFactorHint": "Aquest compte té activada l'autenticació en dos passos.",
-      "resetTwoFactorText": "{{name}} iniciarà sessió després només amb la contrasenya i podrà tornar a configurar l'autenticació en dos passos, per exemple després de perdre el mòbil.",
+      "resetTwoFactor": "Restableix l’autenticació en dos passos",
+      "resetTwoFactorHint": "Aquest compte té activada l’autenticació en dos passos.",
+      "resetTwoFactorText": "Després, {{name}} iniciarà la sessió només amb la contrasenya i podrà tornar a configurar l’autenticació en dos passos, per exemple si ha perdut el mòbil amb l’aplicació.",
       "resetTwoFactorConfirm": "Restableix",
       "twoFactorReset": "Autenticació en dos passos restablerta"
+    },
+    "areas": {
+      "title": "Àrees",
+      "navHint": "Qui veu quins documents",
+      "intro": "Cada document és en una sola àrea. Els usuaris només veuen els documents de les àrees de què són membres i els de les àrees obertes a tothom.",
+      "add": "Crea una àrea",
+      "everyone": "Per a tothom",
+      "restricted": "Restringida",
+      "visibleForAll": "visible per a tots els usuaris amb la sessió iniciada",
+      "members": "Membres: {{names}}",
+      "adminsOnly": "només administradors",
+      "adminHint": "Els administradors veuen totes les àrees, encara que no en siguin membres.",
+      "edit": "Edita {{name}}",
+      "saved": "Àrea desada",
+      "created": "Àrea creada",
+      "deleted": "Àrea eliminada",
+      "delete": {
+        "label": "Elimina {{name}}",
+        "title": "Vols eliminar l’àrea?",
+        "text": "S’eliminarà l’àrea «{{name}}». Només és possible mentre cap document, bústia ni carpeta d’importació no la faci servir."
+      },
+      "dialog": {
+        "name": "Nom",
+        "namePlaceholder": "p. ex. Comptabilitat",
+        "generalNameHint": "Deixa-ho en blanc perquè l’àrea es digui «General» en tots els idiomes.",
+        "everyone": "Visible per a tothom",
+        "everyoneHint": "Tots els usuaris amb la sessió iniciada veuen els documents d’aquesta àrea.",
+        "members": "Membres",
+        "membersHint": "Només els membres i els administradors veuen els documents d’aquesta àrea. Per a cada membre, tria si només pot llegir, també editar o, a més, eliminar.",
+        "noUsers": "Encara no hi ha usuaris sense el rol d’administrador.",
+        "create": "Crea",
+        "everyoneAccess": "Permís per a tothom",
+        "accessOf": "Permís de {{name}}",
+        "membersHintEveryone": "Tothom veu els documents d’aquesta àrea. Afegeix-hi membres si han de poder fer més coses que la resta."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Conservació",
+      "navHint": "Terminis i bloqueig de l’eliminació",
+      "intro": "Defineix quant de temps s’han de conservar els documents d’un tipus; per exemple, les factures, deu anys. El termini es compta des del final de l’any al qual pertany el document. Fins aleshores, ningú no el pot eliminar.",
+      "permanent": "Ningú no pot aixecar un bloqueig, ni tan sols els administradors. Si una regla s’escurça o s’elimina, o si canvia el tipus d’un document, el termini ja fixat es manté.",
+      "add": "Crea una regla",
+      "years_one": "{{count, number}} any",
+      "years_many": "{{count, number}} d’anys",
+      "years_other": "{{count, number}} anys",
+      "edit": "Edita la regla per a {{category}}",
+      "saved": "Regla desada",
+      "created": "Regla creada",
+      "deleted": "Regla eliminada",
+      "emptyTitle": "Encara no hi ha regles de conservació",
+      "emptyText": "Sense una regla, els documents es poden eliminar en qualsevol moment.",
+      "delete": {
+        "label": "Elimina la regla per a {{category}}",
+        "title": "Vols eliminar la regla?",
+        "text": "Els documents nous del tipus «{{category}}» ja no rebran cap termini. Els documents ja bloquejats continuen bloquejats fins que acabi el seu termini."
+      },
+      "dialog": {
+        "categoryHint": "Tal com apareix al document; les majúscules i minúscules no importen.",
+        "years": "Termini de conservació en anys",
+        "yearsHint": "Es compta des del final de l’any de la data del document (sense data: del dia en què es va afegir).",
+        "shorterHint": "Un termini més curt només s’aplica als documents que encara no en tenen. Els documents ja bloquejats continuen bloquejats fins al final del seu termini actual.",
+        "create": "Crea"
+      }
+    },
+    "mailOut": {
+      "title": "Enviament de correu",
+      "navHint": "Avisos per correu",
+      "intro": "L’aplicació envia els avisos dels recordatoris pendents a través d’aquest servidor SMTP: una sola vegada per recordatori, agrupats en un correu per persona. El destinatari és qui s’ocupa del recordatori i ha indicat una adreça al menú d’usuari.",
+      "enabled": "Envia avisos per correu",
+      "enabledHint": "Si es desactiva, els recordatoris només apareixen a l’aplicació.",
+      "host": "Servidor SMTP",
+      "port": "Port",
+      "security": "Xifratge",
+      "unencrypted": "Cap",
+      "usernameHint": "Deixa-ho en blanc si el servidor no requereix inici de sessió.",
+      "passwordKeepHint": "Deixa-ho en blanc per conservar la contrasenya desada.",
+      "from": "Adreça del remitent",
+      "fromHint": "El teu servidor l’ha de permetre per al teu compte.",
+      "appUrl": "Adreça de l’aplicació",
+      "appUrlHint": "Per als enllaços dels correus, p. ex. https://docs.example.com. Buit = sense enllaços.",
+      "digestHour": "Enviament",
+      "fromHour": "des de {{hour}}",
+      "saved": "Configuració d’enviament desada",
+      "test": "Missatge de prova a {{address}}",
+      "testNeedsAddress": "Per al missatge de prova, indica la teva adreça de correu al menú d’usuari.",
+      "testSavedHint": "La prova fa servir la configuració desada: desa-la primer."
+    },
+    "backup": {
+      "title": "Còpia de seguretat i importació",
+      "navHint": "Desa-ho tot d’un cop, importa exportacions",
+      "intro": "Una còpia de seguretat conté tot el necessari per restaurar AIDocuments exactament tal com és. Una importació incorpora documents de l’exportació d’una altra instal·lació, amb les seves dades.",
+      "backupTitle": "Còpia de seguretat amb un clic",
+      "backupText": "Un ZIP amb la base de dades, tots els documents amb les versions anteriors, les miniatures i la clau de les contrasenyes desades. Mentrestant, l’aplicació continua funcionant.",
+      "size": "Mida",
+      "sizeValue_one": "uns {{size}}, {{count, number}} fitxer",
+      "sizeValue_many": "uns {{size}}, {{count, number}} de fitxers",
+      "sizeValue_other": "uns {{size}}, {{count, number}} fitxers",
+      "last": "Última còpia",
+      "never": "mai",
+      "keyWarning": "La còpia de seguretat no està xifrada i conté la clau de les contrasenyes desades (bústies, IA, autenticació en dos passos). Guarda-la amb la mateixa cura que els documents.",
+      "restore": "Per restaurar-la: atura AIDocuments, extreu el contingut del ZIP en un directori de dades buit i torna’l a iniciar. El ZIP inclou les instruccions (README.txt).",
+      "download": "Baixa la còpia de seguretat",
+      "started": "S’està baixant la còpia de seguretat.",
+      "externalDatabase": "La còpia de seguretat amb un clic només està disponible amb la base de dades integrada. Amb MariaDB, fes la còpia de la base de dades amb les seves pròpies eines (com ara mariadb-dump) i, a més, del directori de dades.",
+      "importTitle": "Importa una exportació",
+      "importText": "Un ZIP creat amb «Exporta» a la llista de documents – també d’una altra instal·lació. El títol, el tipus de document, les etiquetes i la resta de dades es mantenen; la IA no torna a llegir els documents. Els fitxers que ja existeixen s’ometen.",
+      "file": "Fitxer ZIP",
+      "areaHint": "Els documents van aquí – o només aquells l’àrea dels quals no existeix aquí.",
+      "matchAreas": "Posa’ls a les àrees amb el mateix nom",
+      "matchAreasHint": "Si aquí hi ha una àrea amb el mateix nom que a l’exportació, els documents hi van.",
+      "import": "Importa",
+      "importing": "S’està important…",
+      "result": "Importats: {{imported, number}} · ja existents: {{duplicates, number}} · no importats: {{failed, number}}",
+      "auto": {
+        "title": "Còpia de seguretat automàtica",
+        "text": "Un cop al dia, AIDocuments desa una còpia de seguretat completa en format ZIP en una carpeta i en conserva les més recents. L’ideal és que la carpeta sigui en un altre disc o en una unitat de xarxa – si no, quan falli el disc amb les dades, també es perdran les còpies.",
+        "enable": "Fes una còpia de seguretat automàtica cada dia",
+        "hour": "Hora",
+        "keep": "Conserva",
+        "keepHint": "Nombre de còpies; les més antigues s’eliminen.",
+        "directory": "Carpeta",
+        "directoryHint": "Ruta completa al servidor. Deixa-ho en blanc per fer servir la predeterminada. Al contenidor Docker, la carpeta ha d’estar muntada.",
+        "warnAfterDays": "Avisa després de (dies)",
+        "warnAfterDaysHint": "Avís a la llista de documents quan faci tant de temps que no es fa cap còpia, manual o automàtica. 0 = no avisar mai.",
+        "lastRun": "Última execució",
+        "nextRun": "Propera execució",
+        "running": "S’està fent la còpia de seguretat…",
+        "ok": "correcta, {{when}}",
+        "failed": "amb error, {{when}}",
+        "stored_one": "{{count, number}} còpia a {{directory}}",
+        "stored_many": "{{count, number}} de còpies a {{directory}}",
+        "stored_other": "{{count, number}} còpies a {{directory}}",
+        "runNow": "Fes una còpia ara",
+        "saveFirst": "Primer desa els canvis.",
+        "runStarted": "La còpia de seguretat s’està fent en segon pla.",
+        "done": "Còpia de seguretat desada.",
+        "saved": "Configuració desada.",
+        "externalDatabase": "La còpia de seguretat automàtica només està disponible amb la base de dades integrada. Amb MariaDB, fes la còpia de la base de dades amb les seves pròpies eines (com ara un mariadb-dump cada nit) i, a més, del directori de dades."
+      }
     }
   },
   "history": {
@@ -528,7 +730,7 @@
     "actions": {
       "IMPORTED": "Importat",
       "EDITED": "Editat",
-      "DELETED": "Suprimit"
+      "DELETED": "Eliminat"
     },
     "changes": {
       "DETAILS": "Dades modificades",
@@ -545,45 +747,46 @@
   },
   "duplicates": {
     "title": "Possible duplicat",
-    "subtitle": "Els dos documents tenen el mateix contingut. Conserva’n un i suprimeix l’altre, o indica que no són duplicats.",
+    "subtitle": "Els dos documents tenen el mateix contingut. Conserva’n un i elimina l’altre, o indica que no són duplicats.",
     "older": "Va arribar abans",
     "newer": "Va arribar després",
-    "deleteThis": "Suprimeix aquest",
+    "deleteThis": "Elimina aquest",
     "compare": "Compara’ls de costat"
   },
   "twoFactor": {
     "title": "Autenticació en dos passos",
     "on": "Activada",
     "off": "Desactivada",
-    "intro": "Protegeix el teu compte amb un segon factor: en iniciar sessió introduiràs també un codi d'una aplicació d'autenticació del mòbil (p. ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Protegeix el teu compte amb un segon factor: en iniciar la sessió introduiràs també un codi d’una aplicació d’autenticació del mòbil (p. ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Configura",
-    "scan": "Escaneja el codi QR amb l'aplicació d'autenticació o introdueix la clau a mà. Després introdueix el codi que mostra l'aplicació i la teva contrasenya.",
-    "qrAlt": "Codi QR per a l'aplicació d'autenticació",
+    "scan": "Escaneja el codi QR amb l’aplicació d’autenticació o introdueix la clau a mà. Després introdueix el codi que mostra l’aplicació i la teva contrasenya.",
+    "qrAlt": "Codi QR per a l’aplicació d’autenticació",
     "secret": "Clau",
-    "confirmCode": "Codi de l'aplicació",
+    "confirmCode": "Codi de l’aplicació",
     "activate": "Activa",
     "recoveryTitle": "Codis de recuperació",
-    "recoveryText": "Guarda aquests codis de recuperació en un lloc segur. Cadascun funciona una vegada si no pots fer servir l'aplicació, per exemple si perds el mòbil. Només es mostren ara.",
+    "recoveryText": "Guarda aquests codis de recuperació en un lloc segur. Cadascun funciona una sola vegada, si no pots fer servir l’aplicació, per exemple si perds el mòbil. Només es mostren ara.",
     "download": "Desa com a fitxer",
     "done": "Fet",
-    "enabled": "L'autenticació en dos passos està activada",
-    "disabled": "L'autenticació en dos passos està desactivada",
-    "disableHint": "Per desactivar-la, introdueix un codi actual de l'aplicació (o un codi de recuperació) i la teva contrasenya.",
+    "enabled": "L’autenticació en dos passos està activada",
+    "disabled": "L’autenticació en dos passos està desactivada",
+    "disableHint": "Per desactivar-la, introdueix un codi actual de l’aplicació (o un codi de recuperació) i la teva contrasenya.",
     "disable": "Desactiva",
     "recoveryLeft": "Codis de recuperació sense fer servir: {{count}}",
-    "adminCannotDisable": "Com a administrador no pots desactivar l'autenticació en dos passos."
+    "adminCannotDisable": "Com a administrador no pots desactivar l’autenticació en dos passos."
   },
   "confirmCode": {
     "title": "Confirma el canvi",
-    "text": "Els canvis en comptes, bústies i configuració requereixen un codi actual de la teva aplicació d'autenticació. La confirmació és vàlida durant 10 minuts.",
-    "submit": "Confirma"
+    "text": "Els canvis en comptes, bústies i configuració requereixen un codi actual de la teva aplicació d’autenticació. La confirmació és vàlida durant 10 minuts.",
+    "submit": "Confirma",
+    "passkey": "Confirma amb una clau d’accés"
   },
   "share": {
     "button": "Comparteix",
     "title": "Comparteix el document",
     "intro": "Crea un enllaç amb què una persona sense compte pot obrir només aquest document.",
     "recipient": "Amb qui el comparteixes?",
-    "recipientHint": "El nom de la persona, perquè més endavant sàpigues a qui has donat l'enllaç.",
+    "recipientHint": "El nom de la persona, perquè més endavant sàpigues a qui has donat l’enllaç.",
     "permission": "Aquesta persona pot editar el document?",
     "viewOnly": "Només veure",
     "canEdit": "Pot editar",
@@ -591,24 +794,217 @@
     "editHint": "La persona també pot marcar, escriure, signar i desar el PDF. Cada desament esdevé una versió nova; el títol, les etiquetes i altres dades queden amagats.",
     "validity": "Vàlid durant",
     "unlimited": "Sense límit",
-    "create": "Crea l'enllaç",
+    "create": "Crea l’enllaç",
     "link": "Enllaç",
-    "linkHint": "Qualsevol persona que tingui aquest enllaç pot obrir el document: dona'l només a {{name}}. Pots revocar-lo en qualsevol moment a la vista del document.",
-    "copy": "Copia l'enllaç",
+    "linkHint": "Qualsevol persona que tingui aquest enllaç pot obrir el document: dona’l només a {{name}}. Pots revocar-lo en qualsevol moment a la vista del document.",
+    "copy": "Copia l’enllaç",
     "copied": "Enllaç copiat",
     "listTitle": "Compartit externament",
     "expired": "caducat",
     "validUntil": "vàlid fins al {{date}}",
     "noExpiry": "sense caducitat",
     "lastOpened": "obert per última vegada {{when}} (visites: {{views}})",
-    "neverOpened": "encara no s'ha obert",
-    "revoke": "Revoca l'enllaç",
-    "revokeTitle": "Vols revocar l'enllaç de {{name}}?",
-    "revokeText": "L'enllaç deixa de funcionar immediatament. Les còpies que la persona ja hagi baixat es queden amb ella.",
+    "neverOpened": "encara no s’ha obert",
+    "revoke": "Revoca l’enllaç",
+    "revokeTitle": "Vols revocar l’enllaç de {{name}}?",
+    "revokeText": "L’enllaç deixa de funcionar immediatament. Les còpies que la persona ja hagi baixat es queden amb ella.",
     "revoked": "Enllaç revocat",
     "page": {
       "for": "Compartit amb {{name}}",
-      "invalid": "Aquest enllaç no és vàlid o ha caducat, o el document s'ha suprimit. Posa't en contacte amb la persona que te'l va donar."
+      "invalid": "Aquest enllaç no és vàlid o ha caducat, o el document s’ha eliminat. Posa’t en contacte amb la persona que te’l va donar."
+    }
+  },
+  "areas": {
+    "general": "General",
+    "unknown": "Una altra àrea",
+    "label": "Àrea",
+    "target": "Àrea de destinació",
+    "access": {
+      "READ": "Només lectura",
+      "EDIT": "Lectura i edició",
+      "DELETE": "Edició i eliminació"
+    }
+  },
+  "reminders": {
+    "title": "Recordatoris",
+    "cardTitle": "Recordatori",
+    "add": "Afegeix un recordatori",
+    "edit": "Edita el recordatori",
+    "create": "Crea",
+    "created": "Recordatori afegit",
+    "saved": "Recordatori desat",
+    "deleted": "Recordatori eliminat",
+    "markedDone": "Fet",
+    "dueDate": "Data límit",
+    "note": "Nota",
+    "notePlaceholder": "p. ex. comprovar el pagament",
+    "assignee": "Qui se n’encarrega?",
+    "assigneeHint": "Aquesta persona veu el recordatori a «Els meus» i rep l’avís per correu. Es pot triar qualsevol persona que vegi el document.",
+    "me": "{{name}} (jo)",
+    "assignedTo": "per a {{name}}",
+    "doneBy": "fet per {{name}}",
+    "markDone": "Marca com a fet",
+    "reopen": "Torna a obrir",
+    "delete": {
+      "label": "Elimina el recordatori",
+      "title": "Vols eliminar el recordatori?",
+      "text": "Es traurà el recordatori. El document no canvia."
+    },
+    "accept": "Afegeix",
+    "dismiss": "Descarta el suggeriment",
+    "suggestionsHint": "La IA ha trobat dates en aquest document:",
+    "none": "No hi ha recordatoris oberts.",
+    "showDone_one": "Mostra {{count, number}} recordatori fet",
+    "showDone_many": "Mostra {{count, number}} de recordatoris fets",
+    "showDone_other": "Mostra {{count, number}} recordatoris fets",
+    "hideDone": "Amaga els fets",
+    "scope": {
+      "label": "Quins recordatoris",
+      "mine": "Els meus",
+      "all": "Tots"
+    },
+    "dueTitle": "Pendents",
+    "nothingDue": "Avui no hi ha res pendent.",
+    "upcomingTitle": "Properament",
+    "suggestionsTitle": "Dates suggerides",
+    "suggestionsPageHint": "Terminis dels propers sis mesos que la IA ha trobat als documents. Afegeix-los com a recordatori o descarta’ls.",
+    "emptyTitle": "Cap recordatori",
+    "emptyText": "Afegeix un recordatori a un document, o accepta’n un que suggereixi la IA.",
+    "repeat": {
+      "label": "Repeteix",
+      "hint": "Quan marques el recordatori com a fet, es crea el següent amb el mateix interval.",
+      "none": "Una vegada",
+      "m1": "Cada mes",
+      "m3": "Cada tres mesos",
+      "m6": "Cada sis mesos",
+      "m12": "Cada any",
+      "m24": "Cada dos anys",
+      "months_one": "Cada mes",
+      "months_many": "Cada {{count}} de mesos",
+      "months_other": "Cada {{count}} mesos"
+    },
+    "fromContract": "del contracte"
+  },
+  "pages": {
+    "button": "Pàgines",
+    "title": "Edita les pàgines",
+    "intro": "Arrossega les pàgines o mou-les amb les fletxes, gira-les o treu-les. En desar es crea una versió nova – l’anterior es conserva.",
+    "page": "Pàgina {{number}}",
+    "wasPage": "era la {{number}}",
+    "moveLeft": "Mou endavant",
+    "moveRight": "Mou enrere",
+    "rotate": "Gira 90°",
+    "remove": "Treu la pàgina",
+    "keep": "Conserva la pàgina",
+    "noneLeft": "Ha de quedar almenys una pàgina.",
+    "saveFirst": "Primer desa els canvis",
+    "saved": "Pàgines desades",
+    "split": {
+      "here": "Document nou des d’aquí",
+      "title": "Vols dividir el document?",
+      "text": "La pàgina {{page}} i totes les següents es converteixen en un document independent a la mateixa àrea. Es llegeix i es classifica com un document acabat de rebre; aquest document conserva les pàgines anteriors.",
+      "confirm": "Divideix",
+      "done": "Document dividit",
+      "open": "Obre el document nou"
+    },
+    "merge": {
+      "button": "Fusiona documents",
+      "title": "Fusiona documents",
+      "intro": "Les pàgines dels documents triats s’afegeixen en aquest ordre al final de «{{title}}».",
+      "search": "Cerca documents…",
+      "none": "No hi ha documents coincidents.",
+      "noDeleteRight": "No el pots eliminar – per tant, no el pots fusionar.",
+      "hint": "Després, els documents fusionats van a la paperera; es poden restaurar des de l’historial durant 30 dies.",
+      "confirm_one": "Fusiona {{count}} document",
+      "confirm_many": "Fusiona {{count}} de documents",
+      "confirm_other": "Fusiona {{count}} documents",
+      "done_one": "{{count}} document fusionat",
+      "done_many": "{{count}} de documents fusionats",
+      "done_other": "{{count}} documents fusionats"
+    }
+  },
+  "contracts": {
+    "nav": "Contractes",
+    "title": "Contractes",
+    "pageIntro": "Durada i preavís de tots els contractes que pots veure – primer els que aviat requereixen alguna acció.",
+    "scope": {
+      "label": "Mostra",
+      "running": "Vigents",
+      "all": "Tots"
+    },
+    "emptyTitle": "Encara no hi ha contractes registrats",
+    "emptyText": "Obre un document, per exemple un contracte de llum o de mòbil, i registra-hi la durada i el preavís. Aleshores apareixerà un recordatori amb prou antelació abans que venci el termini.",
+    "cardTitle": "Contracte",
+    "none": "És un contracte? Amb la durada i el preavís, AIDocuments et recorda a temps que l’has de rescindir.",
+    "add": "Registra com a contracte",
+    "edit": "Edita el contracte",
+    "intro": "La fi de la durada i el preavís determinen fins quan es pot rescindir. Abans apareix un recordatori; si la durada s’acaba sense rescissió, el contracte es prorroga automàticament.",
+    "saved": "Contracte desat",
+    "removed": "Dades del contracte eliminades",
+    "remove": {
+      "label": "Elimina les dades del contracte",
+      "title": "Vols eliminar les dades del contracte?",
+      "text": "S’eliminen la durada, el preavís i el recordatori obert corresponent. El document es manté."
+    },
+    "openEnded": "indefinit",
+    "months_one": "{{count}} mes",
+    "months_many": "{{count}} de mesos",
+    "months_other": "{{count}} mesos",
+    "amountHint": "p. ex. «49,90 € al mes»",
+    "endDateHint": "Fi de la durada actual; buit = indefinit",
+    "noticeHint": "Mesos abans de la fi de la durada; buit = fins a la fi de la durada",
+    "renewalHint": "Sense rescissió, el contracte es prorroga aquest nombre de mesos; 0 = s’acaba",
+    "cancelledHint": "Aleshores ja no es prorroga i no apareixen més recordatoris.",
+    "fields": {
+      "partner": "Contrapart",
+      "amount": "Import",
+      "startDate": "Inici del contracte",
+      "endDate": "Vigent fins al",
+      "notice": "Preavís (mesos)",
+      "renewal": "Pròrroga (mesos)",
+      "deadline": "Rescindir com a tard el",
+      "reminderDays": "Recordatori (dies abans)",
+      "cancelled": "Rescindit"
+    },
+    "status": {
+      "ACTIVE": "Vigent",
+      "DUE_SOON": "Termini proper",
+      "NOTICE_MISSED": "Fora de termini",
+      "CANCELLED": "Rescindit",
+      "ENDED": "Finalitzat",
+      "OPEN_ENDED": "Indefinit"
+    },
+    "row": {
+      "cancelBy": "rescindir com a tard el {{date}}",
+      "endsOn": "acaba el {{date}}",
+      "term": "vigent fins al {{date}}",
+      "renews_one": "es prorroga {{count}} mes",
+      "renews_many": "es prorroga {{count}} de mesos",
+      "renews_other": "es prorroga {{count}} mesos"
+    }
+  },
+  "passkeys": {
+    "title": "Claus d’accés",
+    "intro": "Amb una clau d’accés inicies la sessió sense contrasenya – la desbloqueges amb l’empremta digital, la cara o el PIN del dispositiu. Només funciona per a aquesta adreça; un lloc web fals no la pot fer servir.",
+    "none": "Encara no s’ha afegit cap clau d’accés.",
+    "add": "Afegeix una clau d’accés",
+    "create": "Crea la clau d’accés",
+    "name": "Nom",
+    "nameHint": "Perquè la reconeguis més endavant, p. ex. «Portàtil» o «Gestor de contrasenyes».",
+    "password": "La teva contrasenya",
+    "passwordHint": "Qui afegeix una clau d’accés podrà iniciar la sessió sense contrasenya a partir d’ara; per això, confirma-ho una vegada.",
+    "added": "Clau d’accés afegida",
+    "removed": "Clau d’accés eliminada",
+    "synced": "sincronitzada",
+    "lastUsed": "últim ús {{time}}",
+    "created": "afegida {{time}}, encara no s’ha fet servir",
+    "unsupported": "Aquest navegador no pot fer servir claus d’accés aquí. Les claus d’accés només funcionen amb HTTPS (o localhost).",
+    "unsupportedIp": "Les claus d’accés només funcionen amb HTTPS i amb un nom a l’adreça, no amb una adreça IP.",
+    "remove": {
+      "label": "Elimina la clau d’accés",
+      "title": "Vols eliminar la clau d’accés?",
+      "text": "Després ningú no podrà iniciar la sessió amb «{{name}}». Continua desada al gestor de contrasenyes o al dispositiu fins que l’eliminis d’allà.",
+      "confirm": "Elimina"
     }
   }
 }

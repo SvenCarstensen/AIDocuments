@@ -10,6 +10,8 @@ import { DocumentPage } from './pages/DocumentPage'
 import { DocumentsPage } from './pages/DocumentsPage'
 import { DuplicatePage } from './pages/DuplicatePage'
 import { HistoryPage } from './pages/HistoryPage'
+import { RemindersPage } from './pages/RemindersPage'
+import { ContractsPage } from './pages/ContractsPage'
 import { SettingsPage } from './pages/SettingsPage'
 
 export default function App() {
@@ -64,6 +66,8 @@ export default function App() {
           <Route path="/documents" element={<DocumentsPage />} />
           <Route path="/documents/:id" element={<DocumentPage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/reminders" element={<RemindersPage />} />
+          <Route path="/contracts" element={<ContractsPage />} />
           <Route path="/duplicates/:id" element={<DuplicatePage />} />
           {isAdmin && <Route path="/settings/:section?" element={<SettingsPage />} />}
           <Route path="*" element={<Navigate to="/documents" replace />} />

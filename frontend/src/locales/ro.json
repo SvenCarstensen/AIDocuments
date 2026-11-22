@@ -1,17 +1,17 @@
 {
   "common": {
-    "save": "Salvează",
-    "cancel": "Anulează",
-    "close": "Închide",
-    "edit": "Editează",
-    "delete": "Șterge",
-    "remove": "Elimină",
-    "add": "Adaugă",
+    "save": "Salvați",
+    "cancel": "Anulați",
+    "close": "Închideți",
+    "edit": "Editați",
+    "delete": "Ștergeți",
+    "remove": "Eliminați",
+    "add": "Adăugați",
     "back": "Înapoi",
-    "retry": "Încearcă din nou",
+    "retry": "Încercați din nou",
     "loading": "Se încarcă",
     "language": "Limbă",
-    "testConnection": "Testează conexiunea",
+    "testConnection": "Testați conexiunea",
     "saveFirst": "Salvați mai întâi",
     "username": "Nume de utilizator",
     "usernameHint": "3–50 de caractere: litere, cifre, punct, cratimă, liniuță de subliniere, @",
@@ -45,7 +45,9 @@
     "login": {
       "title": "Bine ați revenit",
       "subtitle": "Autentificați-vă pentru a accesa documentele dvs.",
-      "submit": "Autentificare"
+      "submit": "Autentificare",
+      "or": "sau",
+      "passkey": "Autentificare cu o cheie de acces"
     },
     "setup": {
       "title": "Configurați AIDocuments",
@@ -54,7 +56,7 @@
       "codeHint": "Apare în jurnalul serverului la pornire (Docker: docker compose logs).",
       "adminAccount": "Cont de administrator",
       "repeatPassword": "Repetați parola",
-      "submit": "Creează contul și începe",
+      "submit": "Creați contul și începeți",
       "features": {
         "import": "PDF-uri din căsuța dvs. de e-mail și din folderul de import",
         "ai": "IA le rezumă și le etichetează",
@@ -62,38 +64,38 @@
       }
     },
     "twoFactor": {
-      "title": "Confirmă autentificarea",
-      "subtitle": "Introdu codul de 6 cifre din aplicația de autentificare.",
+      "title": "Confirmați autentificarea",
+      "subtitle": "Introduceți codul de 6 cifre din aplicația de autentificare.",
       "code": "Cod",
-      "codeHint": "Nu ai acces la aplicație? Introdu în schimb unul dintre codurile de recuperare.",
-      "submit": "Confirmă",
+      "codeHint": "Nu aveți acces la aplicație? Introduceți în schimb unul dintre codurile de recuperare.",
+      "submit": "Confirmați",
       "back": "Înapoi la autentificare"
     },
     "twoFactorRequired": {
-      "title": "Configurează autentificarea în doi pași",
-      "subtitle": "Pentru administratori autentificarea în doi pași este obligatorie. Configureaz-o acum pentru a continua.",
-      "intro": "Ai nevoie de o aplicație de autentificare pe telefon (de ex. Google Authenticator, Microsoft Authenticator, 1Password sau Aegis)."
+      "title": "Configurați autentificarea în doi pași",
+      "subtitle": "Pentru administratori, autentificarea în doi pași este obligatorie. Configurați-o acum pentru a continua.",
+      "intro": "Aveți nevoie de o aplicație de autentificare pe telefon (de ex. Google Authenticator, Microsoft Authenticator, 1Password sau Aegis)."
     }
   },
   "shell": {
-    "upload": "Încarcă",
+    "upload": "Încărcați",
     "theme": {
       "light": "Temă luminoasă",
       "dark": "Temă întunecată"
     },
     "search": {
-      "placeholder": "Căutare după cuvinte cheie: documente, etichete, conținut …",
-      "placeholderAi": "Căutare cu IA: întreabă cu propriile cuvinte – de ex. „facturi de la Kia din 2024”",
+      "placeholder": "Căutare după cuvinte cheie: documente, etichete, conținut…",
+      "placeholderAi": "Căutare cu IA: întrebați cu propriile cuvinte – de ex. „facturi de la Kia din 2024”",
       "labelAi": "IA",
       "label": "Căutare documente",
-      "clear": "Șterge căutarea",
+      "clear": "Ștergeți căutarea",
       "askFailed": "Se caută după cuvinte cheie."
     },
     "userMenu": {
       "label": "Meniul utilizatorului ({{name}})",
       "aiActive": "IA activă",
       "aiNotConfigured": "IA neconfigurată",
-      "changePassword": "Schimbă parola",
+      "changePassword": "Schimbați parola",
       "licenses": "Licențe terțe",
       "logout": "Deconectare"
     },
@@ -103,16 +105,32 @@
       "changed": "Parola a fost schimbată"
     },
     "dropzone": {
-      "title": "Trageți PDF-urile aici",
-      "hint": "Puteți trage mai multe fișiere deodată. Acestea sunt salvate, analizate și etichetate."
+      "title": "Trageți aici PDF-uri sau fotografii",
+      "hint": "Puteți trage mai multe fișiere deodată. Fotografiile (JPG, PNG, HEIC) sunt transformate în PDF-uri. Totul este salvat, analizat și etichetat."
+    },
+    "remindersDue_one": "{{count, number}} memento scadent",
+    "remindersDue_few": "{{count, number}} mementouri scadente",
+    "remindersDue_other": "{{count, number}} de mementouri scadente",
+    "profile": {
+      "email": "Adresă de e-mail",
+      "saved": "Salvat"
+    },
+    "notifications": {
+      "title": "Notificări prin e-mail",
+      "emailHint": "Aici se trimit mementourile scadente care vă sunt atribuite și notificările pe care le activați mai jos – în limba în care folosiți acum aplicația. Lăsați gol dacă nu doriți să primiți e-mailuri.",
+      "digest": "Documente noi în fiecare zi",
+      "digestHint": "O dată pe zi, o listă cu documentele adăugate în spațiile dvs. – doar în zilele în care există documente noi.",
+      "admin": "Notificări pentru administratori",
+      "adminHint": "Când expiră termenele de păstrare (nu se șterge nimic automat) și când o căsuță de e-mail nu poate fi verificată în mod repetat.",
+      "needsEmail": "Fără adresă nu se trimite niciun e-mail."
     }
   },
   "upload": {
-    "onlyPdf": "Se pot adăuga doar fișiere PDF.",
-    "uploadingFile": "Se încarcă „{{name}}” …",
-    "uploadingFiles_one": "Se încarcă {{count, number}} PDF …",
-    "uploadingFiles_few": "Se încarcă {{count, number}} PDF-uri …",
-    "uploadingFiles_other": "Se încarcă {{count, number}} de PDF-uri …",
+    "onlyPdf": "Se pot adăuga doar PDF-uri și fotografii (JPG, PNG, HEIC).",
+    "uploadingFile": "Se încarcă „{{name}}”…",
+    "uploadingFiles_one": "Se încarcă {{count, number}} fișier…",
+    "uploadingFiles_few": "Se încarcă {{count, number}} fișiere…",
+    "uploadingFiles_other": "Se încarcă {{count, number}} de fișiere…",
     "created_one": "{{count, number}} document adăugat",
     "created_few": "{{count, number}} documente adăugate",
     "created_other": "{{count, number}} de documente adăugate",
@@ -120,14 +138,22 @@
     "duplicates_one": "{{count, number}} există deja",
     "duplicates_few": "{{count, number}} există deja",
     "duplicates_other": "{{count, number}} există deja",
-    "rejected_one": "{{count, number}} fișier nu este un PDF valid",
-    "rejected_few": "{{count, number}} fișiere nu sunt PDF-uri valide",
-    "rejected_other": "{{count, number}} de fișiere nu sunt PDF-uri valide",
+    "rejected_one": "{{count, number}} fișier nu a fost adăugat",
+    "rejected_few": "{{count, number}} fișiere nu au fost adăugate",
+    "rejected_other": "{{count, number}} de fișiere nu au fost adăugate",
     "onlyDuplicates_one": "Acest document există deja.",
     "onlyDuplicates_few": "Aceste documente există deja.",
     "onlyDuplicates_other": "Aceste documente există deja.",
-    "noneValid": "Niciunul dintre fișiere nu este un PDF valid.",
-    "failed": "Încărcarea a eșuat"
+    "noneValid": "Niciunul dintre fișiere nu a putut fi adăugat.",
+    "failed": "Încărcarea a eșuat",
+    "intoArea": "Spațiu: {{area}}",
+    "combine": {
+      "title": "Combinați fotografiile într-un singur document?",
+      "text": "Ați selectat mai multe fotografii. Dacă sunt paginile unui singur document – de exemplu o scrisoare de mai multe pagini –, ele devin un singur PDF, în ordinea numelor de fișier; ordinea poate fi schimbată ulterior la „Pagini”. Altfel, fiecare fotografie devine un document separat.",
+      "one": "Ca un singur document",
+      "separate": "Fiecare fotografie separat",
+      "tooMuch": "Fotografiile sunt prea multe sau prea mari pentru un singur document (cel mult 100 de fotografii și 240 MB în total)."
+    }
   },
   "documents": {
     "status": {
@@ -139,8 +165,8 @@
     "ocrBadge": "Recunoaștere text",
     "aiNotice": {
       "text": "IA nu a fost încă configurată. Documentele noi pot fi căutate după text, dar nu sunt rezumate și nici etichetate.",
-      "builtinOcr": "Scanările fără strat de text sunt citite de recunoașterea de text integrată, astfel încât și în ele se poate căuta.",
-      "action": "Configurează acum"
+      "builtinOcr": "Scanările fără strat de text sunt citite de recunoașterea integrată a textului, astfel încât și în ele se poate căuta.",
+      "action": "Configurați acum"
     },
     "searchResults_one": "<count>{{count, number}} rezultat</count> <query>pentru „{{query}}”</query>",
     "searchResults_few": "<count>{{count, number}} rezultate</count> <query>pentru „{{query}}”</query>",
@@ -169,64 +195,87 @@
     "filters": {
       "title": "Filtre",
       "titleWithCount": "Filtre ({{active, number}})",
-      "apply": "Afișează",
+      "apply": "Afișați",
       "hint": "După ce documentele au fost analizate, tipurile de document, etichetele și expeditorii vor apărea aici ca filtre.",
       "dateFrom": "de la",
       "dateTo": "până la",
       "status": "Stare",
       "failed": "Eșuate",
       "duplicates": "Posibile duplicate",
-      "showAll": "Afișează tot",
-      "showLess": "Afișează mai puțin",
+      "showAll": "Afișați tot",
+      "showLess": "Afișați mai puțin",
       "activeFrom": "din {{date}}",
       "activeTo": "până la {{date}}",
-      "removeOne": "Elimină filtrul „{{label}}”",
-      "removeAll": "Elimină toate filtrele",
-      "clear": "Elimină filtrele"
+      "removeOne": "Eliminați filtrul „{{label}}”",
+      "removeAll": "Eliminați toate filtrele",
+      "clear": "Eliminați filtrele",
+      "retentionExpired": "Păstrare expirată"
     },
     "empty": {
       "libraryTitle": "Niciun document încă",
-      "libraryHint": "Trageți pur și simplu fișiere PDF în această fereastră sau folosiți „Încarcă”.",
-      "libraryHintAdmin": "Trageți pur și simplu fișiere PDF în această fereastră sau folosiți „Încarcă”. În setări puteți configura o căsuță de e-mail sau un folder de import din care PDF-urile noi sunt importate automat.",
+      "libraryHint": "Trageți pur și simplu PDF-uri sau fotografii în această fereastră sau folosiți „Încărcați”.",
+      "libraryHintAdmin": "Trageți pur și simplu PDF-uri sau fotografii în această fereastră sau folosiți „Încărcați”. În setări puteți configura o căsuță de e-mail sau un folder de import din care documentele noi sunt importate automat.",
       "noResultsTitle": "Nu s-a găsit nimic",
       "noResultsSearch": "Niciun document nu corespunde acestei căutări. Căutarea găsește și fragmente de cuvinte – încercați un termen mai scurt sau mai puține cuvinte.",
       "noResultsFilters": "Niciun document nu corespunde filtrelor selectate."
     },
-    "loadingAll_one": "{{loaded, number}} din {{count, number}} document încărcat …",
-    "loadingAll_few": "{{loaded, number}} din {{count, number}} documente încărcate …",
-    "loadingAll_other": "{{loaded, number}} din {{count, number}} de documente încărcate …",
-    "loadMore": "Încarcă mai multe ({{remaining, number}})",
+    "loadingAll_one": "{{loaded, number}} din {{count, number}} document încărcat…",
+    "loadingAll_few": "{{loaded, number}} din {{count, number}} documente încărcate…",
+    "loadingAll_other": "{{loaded, number}} din {{count, number}} de documente încărcate…",
+    "loadMore": "Afișați mai multe ({{remaining, number}})",
     "aiSearch": {
       "notice": "Căutare cu IA: „{{question}}”. Filtrele arată cum a fost înțeleasă întrebarea."
+    },
+    "export": {
+      "label_one": "Exportați {{count, number}} document ca ZIP",
+      "label_few": "Exportați toate cele {{count, number}} documente din această listă ca ZIP",
+      "label_other": "Exportați toate cele {{count, number}} de documente din această listă ca ZIP",
+      "started_one": "A început exportul pentru {{count, number}} document",
+      "started_few": "A început exportul pentru {{count, number}} documente",
+      "started_other": "A început exportul pentru {{count, number}} de documente",
+      "contents": "Fișierul ZIP conține PDF-urile și toate datele sub formă de tabel (documents.csv) și ca documents.json.",
+      "failed": "Exportul a eșuat"
+    },
+    "mailboxNotice": {
+      "text_one": "Căsuța de e-mail „{{names}}” nu a putut fi verificată de mai multe ori la rând – de acolo nu mai sosesc documente.",
+      "text_few": "Aceste căsuțe de e-mail nu au putut fi verificate de mai multe ori la rând: {{names}}. De acolo nu mai sosesc documente.",
+      "text_other": "Aceste căsuțe de e-mail nu au putut fi verificate de mai multe ori la rând: {{names}}. De acolo nu mai sosesc documente.",
+      "action": "Vedeți căsuțele de e-mail"
+    },
+    "backupNotice": {
+      "never": "Încă nu există niciun backup al documentelor dvs.",
+      "overdue": "Ultimul backup: {{when}}. A trecut mai mult timp decât este setat.",
+      "failed": "Backupul automat a eșuat: {{reason}}",
+      "action": "Mergeți la backup"
     }
   },
   "document": {
     "backToList": "Înapoi la prezentarea generală",
-    "download": "Descarcă",
-    "reprocess": "Analizează din nou",
-    "reprocessHint": "Citește din nou PDF-ul și pune IA să îl analizeze",
+    "download": "Descărcați",
+    "reprocess": "Analizați din nou",
+    "reprocessHint": "PDF-ul este citit din nou și analizat de IA",
     "reprocessStarted": "Documentul este analizat din nou.",
     "deleted": "Document șters",
     "pdfTitle": "PDF: {{title}}",
     "pdf": {
       "unsaved": "Modificări nesalvate în document",
-      "discard": "Renunță",
-      "save": "Salvează modificările",
+      "discard": "Renunțați",
+      "save": "Salvați modificările",
       "saved": "Modificări salvate – originalul se păstrează.",
       "modified": "Modificat la {{when}} – originalul este păstrat.",
-      "downloadOriginal": "Descarcă originalul",
-      "restoreOriginal": "Restaurează originalul",
+      "downloadOriginal": "Descărcați originalul",
+      "restoreOriginal": "Restaurați originalul",
       "restoreTitle": "Restaurați originalul?",
       "restoreText": "Versiunea modificată va fi eliminată. Documentul va fi apoi exact așa cum a sosit.",
       "restored": "Original restaurat"
     },
     "duplicate": {
       "notice": "Posibil duplicat: conținutul acestui document corespunde cu „{{title}}”.",
-      "open": "Mergi la celălalt document",
+      "open": "Mergeți la celălalt document",
       "dismiss": "Nu este duplicat",
       "dismissed": "Notat: nu este duplicat"
     },
-    "openInNewTab": "Deschide într-o filă nouă",
+    "openInNewTab": "Deschideți într-o filă nouă",
     "processingNotice": "Documentul este în curs de procesare. Rezumatul și etichetele vor apărea aici imediat ce analiza se încheie.",
     "textOnlyNotice": "Indexat fără IA: documentul poate fi căutat după text, dar nu are rezumat și nici etichete automate.",
     "tabs": {
@@ -244,10 +293,10 @@
     },
     "tags": {
       "allWith": "Toate documentele cu eticheta „{{tag}}”",
-      "none": "Nicio etichetă. <add>Adaugă</add>",
+      "none": "Nicio etichetă. <add>Adăugați</add>",
       "inputHint": "Confirmați cu Enter sau cu virgulă. Sugestiile sunt etichete deja folosite.",
-      "inputPlaceholder": "Introduceți o etichetă …",
-      "remove": "Elimină eticheta „{{tag}}”"
+      "inputPlaceholder": "Introduceți o etichetă…",
+      "remove": "Eliminați eticheta „{{tag}}”"
     },
     "keyFacts": "Date esențiale",
     "details": {
@@ -272,21 +321,23 @@
     },
     "noText": "Documentul nu conține text – probabil este o scanare fără strat de text. Dacă IA este configurată și recunoașterea textului este activată, conținutul este transcris în timpul analizei.",
     "edit": {
-      "title": "Editează documentul",
-      "saved": "Modificările au fost salvate"
+      "title": "Editați documentul",
+      "saved": "Modificările au fost salvate",
+      "areaHint": "Stabilește cine poate vedea documentul.",
+      "areaMoveHint": "După aceea, doar membrii spațiului „{{area}}” și administratorii îl mai pot vedea."
     },
     "delete": {
       "title": "Ștergeți documentul?",
-      "text": "„{{title}}” va fi șters. În istoric poți anula acțiunea timp de 30 de zile; după aceea este eliminat definitiv.",
-      "confirm": "Șterge"
+      "text": "„{{title}}” va fi șters. În istoric puteți anula acțiunea timp de 30 de zile; după aceea este eliminat definitiv.",
+      "confirm": "Ștergeți"
     },
     "chat": {
-      "intro": "Pune o întrebare despre acest document – IA răspunde pe baza conținutului său.",
-      "placeholder": "Întreabă ceva despre acest document …",
-      "send": "Trimite",
-      "thinking": "IA citește documentul …",
+      "intro": "Puneți o întrebare despre acest document – IA răspunde pe baza conținutului său.",
+      "placeholder": "Întrebați ceva despre acest document…",
+      "send": "Trimiteți",
+      "thinking": "IA citește documentul…",
       "notConfigured": "Pentru întrebări despre document trebuie configurată o IA.",
-      "restart": "Ia de la capăt",
+      "restart": "Începeți din nou",
       "suggestions": {
         "summary": "Despre ce este acest document?",
         "deadlines": "Există termene sau date?",
@@ -297,34 +348,43 @@
       "title": "Versiuni",
       "intro": "Fiecare modificare a PDF-ului creează o versiune nouă. Versiunile mai vechi se păstrează și pot fi vizualizate, descărcate sau restaurate.",
       "current": "actuală",
-      "view": "Vezi versiunea {{number}}",
-      "download": "Descarcă versiunea {{number}}",
-      "restore": "Restaurează versiunea {{number}}",
-      "restoreTitle": "Restaurezi versiunea {{number}}?",
+      "view": "Vedeți versiunea {{number}}",
+      "download": "Descărcați versiunea {{number}}",
+      "restore": "Restaurați versiunea {{number}}",
+      "restoreTitle": "Restaurați versiunea {{number}}?",
       "restoreText": "Versiunea devine cea actuală. Versiunea de acum se păstrează, iar pasul poate fi anulat în istoric.",
-      "restoreConfirm": "Restaurează",
+      "restoreConfirm": "Restaurați",
       "restored": "Versiunea {{number}} a fost restaurată",
       "kinds": {
         "IMPORTED": "Importat",
         "EDITED": "Editat",
         "ORIGINAL_RESTORED": "Original restaurat",
         "VERSION_RESTORED": "Versiunea {{from}} restaurată",
-        "UNDONE": "Modificare anulată"
+        "UNDONE": "Modificare anulată",
+        "PAGES": "Pagini modificate",
+        "MERGED": "Documente anexate"
       }
-    }
+    },
+    "retention": {
+      "label": "Păstrare",
+      "until": "până la {{date}} – nu poate fi șters înainte",
+      "expired": "termen expirat la {{date}}",
+      "locked": "Trebuie păstrat până la {{date}} – poate fi șters abia după aceea"
+    },
+    "readOnly": "În acest spațiu puteți doar să vizualizați documentul."
   },
   "settings": {
     "title": "Setări",
     "mailboxes": {
       "title": "Căsuțe de e-mail",
-      "navHint": "Servere IMAP din care se importă atașamentele PDF",
-      "intro": "Atașamentele PDF sunt importate automat din aceste căsuțe de e-mail IMAP. Căsuțele sunt doar citite – mesajele rămân neschimbate și necitite.",
-      "add": "Adaugă căsuță de e-mail",
+      "navHint": "Servere IMAP din care se importă atașamentele PDF și fotografiile",
+      "intro": "Atașamentele PDF și fotografiile atașate (ca PDF) sunt importate automat din aceste căsuțe de e-mail IMAP; textul e-mailurilor și siglele încorporate nu. Căsuțele sunt doar citite – e-mailurile rămân neschimbate și necitite.",
+      "add": "Adăugați o căsuță de e-mail",
       "emptyTitle": "Nicio căsuță de e-mail configurată încă",
       "emptyText": "Introduceți datele de acces ale unei căsuțe de e-mail IMAP – de exemplu cea la care scannerul dvs. trimite documentele.",
       "paused": "În pauză",
-      "syncNow": "Verifică acum",
-      "syncing": "Se verifică căsuța de e-mail …",
+      "syncNow": "Verificați acum",
+      "syncing": "Se verifică căsuța de e-mail…",
       "neverSynced": "Încă neverificată.",
       "saved": "Căsuța de e-mail a fost salvată",
       "added": "Căsuța de e-mail a fost adăugată",
@@ -335,7 +395,7 @@
         "text": "„{{name}}” nu va mai fi verificată. Documentele deja importate se păstrează."
       },
       "dialog": {
-        "editTitle": "Editează căsuța de e-mail",
+        "editTitle": "Editați căsuța de e-mail",
         "description": "Datele de acces le primiți de la furnizorul dvs. de e-mail. Parola este stocată criptat.",
         "name": "Nume",
         "nameHint": "Oricare doriți, de ex. „Scanner” sau „Facturi”",
@@ -344,14 +404,14 @@
         "port": "Port",
         "security": "Criptare",
         "securityNone": "Niciuna",
-        "securityNoneWarning": "Fără criptare, numele de utilizator și parola sunt transmise în text simplu.",
+        "securityNoneWarning": "Fără criptare, numele de utilizator și parola sunt transmise în clar.",
         "passwordKeepHint": "Lăsați gol pentru a păstra parola stocată",
         "folder": "Folder",
         "folderHint": "De obicei {{folder}} (căsuța de intrare)",
         "since": "Doar e-mailurile din",
         "sinceHint": "Opțional – e-mailurile mai vechi sunt ignorate",
-        "enabled": "Verifică automat",
-        "enabledHint": "Căsuța de e-mail este verificată pentru PDF-uri noi la intervalul configurat.",
+        "enabled": "Verificare automată",
+        "enabledHint": "Căsuța de e-mail este verificată pentru atașamente noi la intervalul configurat.",
         "filter": {
           "title": "Filtru",
           "intro": "Sunt procesate doar e-mailurile care îndeplinesc toate condițiile. Câte un termen pe rând; literele mari și mici nu contează, ajunge o parte din text. Câmpurile goale nu restrâng nimic.",
@@ -363,7 +423,8 @@
           "newOnly": "Filtrul se aplică e-mailurilor primite după ultima verificare; e-mailurile deja verificate nu sunt procesate din nou."
         },
         "interval": "Interval de verificare în minute",
-        "intervalHint": "Lasă gol pentru intervalul general (în prezent {{interval}})."
+        "intervalHint": "Lăsați gol pentru intervalul general (în prezent {{interval}}).",
+        "areaHint": "Documentele importate ajung în acest spațiu."
       },
       "filterActive": "Filtru activ",
       "schedule": "Verificare la fiecare {{interval}} · următoarea {{when}}",
@@ -372,29 +433,30 @@
     "import": {
       "title": "Program și folder de import",
       "navHint": "Intervalul de verificare și folderul monitorizat",
-      "intro": "Stabilește cât de des caută aplicația fișiere PDF noi – în căsuțele de e-mail și în folderul de import.",
+      "intro": "Stabilește cât de des caută aplicația documente noi – în căsuțele de e-mail și în folderul de import.",
       "saved": "Setările au fost salvate",
       "interval": {
         "title": "Interval de verificare",
-        "text": "Cât de des verifică aplicația folderul de intrare și toate căsuțele fără interval propriu pentru PDF-uri noi.",
+        "text": "Cât de des verifică aplicația folderul de import și toate căsuțele fără interval propriu pentru documente noi.",
         "label": "La fiecare … minute",
         "nextRun": "Următoarea verificare automată {{when}}."
       },
       "folder": {
         "title": "Folder de import",
-        "text": "Un director de pe server care este monitorizat pentru fișiere PDF noi – de exemplu destinația unui scanner de rețea. Sunt căutate și subfolderele.",
-        "enable": "Monitorizează folderul de import",
+        "text": "Un director de pe server care este monitorizat pentru PDF-uri și fotografii noi (JPG, PNG, HEIC) – de exemplu destinația unui scanner de rețea. Sunt căutate și subfolderele.",
+        "enable": "Monitorizarea folderului de import",
         "path": "Calea de pe server",
         "pathHint": "Cale absolută. În containerul Docker este folderul montat, de obicei {{path}}.",
         "afterImport": "După import",
-        "keep": "Lasă fișierul pe loc",
-        "move": "Mută în „{{folder}}”",
+        "keep": "Lăsați fișierul pe loc",
+        "move": "Mutați în „{{folder}}”",
         "keepHint": "Fișierele rămân neschimbate. Aplicația reține ce a importat deja.",
         "moveHint": "Fișierele importate sunt mutate în subfolderul „{{folder}}” – folderul de import rămâne ordonat.",
-        "scanning": "Se verifică folderul …",
+        "scanning": "Se verifică folderul…",
         "neverScanned": "Încă neverificat.",
-        "scanNow": "Verifică acum",
-        "scanStarted": "Folderul de import este în curs de verificare."
+        "scanNow": "Verificați acum",
+        "scanStarted": "Folderul de import este în curs de verificare.",
+        "areaHint": "Documentele din folder ajung în acest spațiu."
       }
     },
     "ai": {
@@ -450,7 +512,7 @@
         "placeholderIfRequired": "doar dacă serverul o cere",
         "hintShown": "Presetată în configurația serverului.",
         "hintRemoving": "Cheia stocată va fi eliminată la salvare.",
-        "hintStored": "O cheie este stocată criptat. Lăsați gol pentru a o păstra – <remove>elimină cheia</remove>",
+        "hintStored": "O cheie este stocată criptat. Lăsați gol pentru a o păstra – <remove>eliminați cheia</remove>",
         "hintEnvironment": "Cheia provine în prezent din configurația serverului (variabilă de mediu sau fișier de configurare). O cheie introdusă aici are prioritate.",
         "hintPreset": "În configurația serverului este presetată o cheie pentru acest furnizor. Lăsați gol pentru a o folosi.",
         "hintDiscardedOnSwitch": "Cheia stocată până acum aparține {{previous}} și va fi eliminată dacă schimbați furnizorul.",
@@ -472,12 +534,12 @@
         "ocr": "Recunoaștere text pentru scanări",
         "ocrHint": "Aplicația pune IA să transcrie PDF-urile scanate fără strat de text – doar așa pot fi găsite prin căutarea în textul integral. Fiecare scanare durează mai mult și costă mai mult.",
         "quickOcrFirst": "Mai întâi recunoaștere rapidă a textului, apoi rafinare cu IA",
-        "quickOcrFirstHint": "Scanările noi sunt citite mai întâi de recunoașterea de text integrată (Tesseract) – în câteva secunde se poate căuta în ele. Apoi IA adaugă titlul, rezumatul și etichetele pe baza acestui text."
+        "quickOcrFirstHint": "Scanările noi sunt citite mai întâi de recunoașterea integrată a textului (Tesseract) – în câteva secunde se poate căuta în ele. Apoi IA adaugă titlul, rezumatul și etichetele pe baza acestui text."
       },
       "unanalyzed_one": "{{count, number}} document nu a fost încă analizat de IA.",
       "unanalyzed_few": "{{count, number}} documente nu au fost încă analizate de IA.",
       "unanalyzed_other": "{{count, number}} de documente nu au fost încă analizate de IA.",
-      "analyzeNow": "Analizează acum",
+      "analyzeNow": "Analizați acum",
       "analysisStarted_one": "{{count, number}} document este acum în curs de analiză.",
       "analysisStarted_few": "{{count, number}} documente sunt acum în curs de analiză.",
       "analysisStarted_other": "{{count, number}} de documente sunt acum în curs de analiză."
@@ -486,13 +548,13 @@
       "title": "Utilizatori",
       "navHint": "Conturi și roluri",
       "intro": "Fiecare persoană se autentifică cu propriul cont. Administratorii gestionează aplicația, utilizatorii lucrează cu documentele.",
-      "add": "Creează utilizator",
+      "add": "Creați un utilizator",
       "you": "Dvs.",
       "disabled": "Dezactivat",
       "lastLogin": "Ultima autentificare {{when}}",
       "neverLoggedIn": "Niciodată autentificat",
-      "editUser": "Editează {{name}}",
-      "deleteUser": "Șterge {{name}}",
+      "editUser": "Editați {{name}}",
+      "deleteUser": "Ștergeți {{name}}",
       "saved": "Utilizatorul a fost salvat",
       "created": "Utilizatorul a fost creat",
       "deleted": "Utilizatorul a fost șters",
@@ -510,20 +572,160 @@
         },
         "active": "Cont activ",
         "activeHint": "Conturile dezactivate nu se pot autentifica; sesiunile active se încheie imediat.",
-        "create": "Creează"
+        "create": "Creați"
       },
       "twoFactor": "2FA",
-      "resetTwoFactor": "Resetează autentificarea în doi pași",
+      "resetTwoFactor": "Resetați autentificarea în doi pași",
       "resetTwoFactorHint": "Pentru acest cont autentificarea în doi pași este activă.",
       "resetTwoFactorText": "{{name}} se va autentifica apoi doar cu parola și poate configura din nou autentificarea în doi pași – de exemplu după pierderea telefonului.",
-      "resetTwoFactorConfirm": "Resetează",
+      "resetTwoFactorConfirm": "Resetați",
       "twoFactorReset": "Autentificarea în doi pași a fost resetată"
+    },
+    "areas": {
+      "title": "Spații",
+      "navHint": "Cine vede ce documente",
+      "intro": "Fiecare document se află într-un singur spațiu. Utilizatorii văd doar documentele din spațiile ai căror membri sunt, plus pe cele din spațiile deschise tuturor.",
+      "add": "Creați un spațiu",
+      "everyone": "Pentru toți",
+      "restricted": "Restricționat",
+      "visibleForAll": "vizibil pentru toți utilizatorii autentificați",
+      "members": "Membri: {{names}}",
+      "adminsOnly": "doar administratori",
+      "adminHint": "Administratorii văd toate spațiile, chiar dacă nu sunt membri.",
+      "edit": "Editați {{name}}",
+      "saved": "Spațiul a fost salvat",
+      "created": "Spațiul a fost creat",
+      "deleted": "Spațiul a fost șters",
+      "delete": {
+        "label": "Ștergeți {{name}}",
+        "title": "Ștergeți spațiul?",
+        "text": "Spațiul „{{name}}” va fi șters. Acest lucru este posibil doar cât timp nu îl folosește niciun document, nicio căsuță de e-mail și niciun folder de import."
+      },
+      "dialog": {
+        "name": "Nume",
+        "namePlaceholder": "de ex. Contabilitate",
+        "generalNameHint": "Lăsați gol pentru ca spațiul să se numească „General” în toate limbile.",
+        "everyone": "Vizibil pentru toți",
+        "everyoneHint": "Toți utilizatorii autentificați văd documentele din acest spațiu.",
+        "members": "Membri",
+        "membersHint": "Doar membrii și administratorii văd documentele din acest spațiu. Pentru fiecare membru stabiliți dacă poate doar să vizualizeze, să și editeze sau să și șteargă.",
+        "noUsers": "Nu există încă utilizatori fără rolul de administrator.",
+        "create": "Creați",
+        "everyoneAccess": "Drepturi pentru toți",
+        "accessOf": "Drepturi pentru {{name}}",
+        "membersHintEveryone": "Toți văd documentele din acest spațiu. Adăugați aici membri dacă aceștia trebuie să aibă mai multe drepturi decât ceilalți."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Păstrare",
+      "navHint": "Termene și blocarea ștergerii",
+      "intro": "Stabiliți cât timp trebuie păstrate documentele de un anumit tip – de exemplu facturile, zece ani. Termenul se calculează de la sfârșitul anului din care provine documentul. Până atunci nimeni nu îl poate șterge.",
+      "permanent": "O blocare nu poate fi ridicată – nici măcar de administratori. Dacă o regulă este scurtată sau ștearsă ori dacă tipul unui document se schimbă, termenul deja stabilit rămâne valabil.",
+      "add": "Creați o regulă",
+      "years_one": "{{count, number}} an",
+      "years_few": "{{count, number}} ani",
+      "years_other": "{{count, number}} de ani",
+      "edit": "Editați regula pentru {{category}}",
+      "saved": "Regula a fost salvată",
+      "created": "Regula a fost creată",
+      "deleted": "Regula a fost ștearsă",
+      "emptyTitle": "Încă nu există reguli de păstrare",
+      "emptyText": "Fără o regulă, documentele pot fi șterse oricând.",
+      "delete": {
+        "label": "Ștergeți regula pentru {{category}}",
+        "title": "Ștergeți regula?",
+        "text": "Documentele noi de tipul „{{category}}” nu vor mai primi un termen de păstrare. Documentele deja blocate rămân blocate până la sfârșitul termenului lor."
+      },
+      "dialog": {
+        "categoryHint": "Așa cum apare la document; literele mari și mici nu contează.",
+        "years": "Termen de păstrare în ani",
+        "yearsHint": "Se calculează de la sfârșitul anului datei documentului (fără dată: al zilei în care a fost adăugat).",
+        "shorterHint": "Un termen mai scurt se aplică doar documentelor care nu au încă un termen. Documentele deja blocate rămân blocate până la sfârșitul termenului actual.",
+        "create": "Creați"
+      }
+    },
+    "mailOut": {
+      "title": "Trimitere e-mail",
+      "navHint": "Notificări prin e-mail",
+      "intro": "Aplicația trimite notificări despre mementourile scadente prin acest server SMTP – o singură dată pentru fiecare memento, grupate într-un e-mail pentru fiecare persoană. Destinatarul este cel care se ocupă de memento și și-a introdus o adresă în meniul utilizatorului.",
+      "enabled": "Trimiterea notificărilor prin e-mail",
+      "enabledHint": "Dacă opțiunea este dezactivată, mementourile apar doar în aplicație.",
+      "host": "Server SMTP",
+      "port": "Port",
+      "security": "Criptare",
+      "unencrypted": "Niciuna",
+      "usernameHint": "Lăsați gol dacă serverul nu necesită autentificare.",
+      "passwordKeepHint": "Lăsați gol pentru a păstra parola stocată.",
+      "from": "Adresa expeditorului",
+      "fromHint": "Serverul trebuie să o permită pentru contul dvs.",
+      "appUrl": "Adresa aplicației",
+      "appUrlHint": "Pentru linkurile din e-mailuri, de ex. https://docs.example.com. Gol = fără linkuri.",
+      "digestHour": "Trimitere",
+      "fromHour": "de la {{hour}}",
+      "saved": "Setările de trimitere au fost salvate",
+      "test": "Mesaj de test către {{address}}",
+      "testNeedsAddress": "Pentru mesajul de test, introduceți propria adresă de e-mail în meniul utilizatorului.",
+      "testSavedHint": "Testul folosește setările salvate – salvați mai întâi."
+    },
+    "backup": {
+      "title": "Backup și import",
+      "navHint": "Salvare completă, preluare de exporturi",
+      "intro": "Un backup conține tot ce este necesar pentru a restaura AIDocuments exact așa cum este. Un import preia documente din exportul altei instalări – împreună cu datele lor.",
+      "backupTitle": "Backup cu un clic",
+      "backupText": "Un ZIP cu baza de date, toate documentele inclusiv versiunile anterioare, miniaturile și cheia pentru parolele stocate. Între timp, aplicația continuă să funcționeze.",
+      "size": "Dimensiune",
+      "sizeValue_one": "circa {{size}} în {{count, number}} fișier",
+      "sizeValue_few": "circa {{size}} în {{count, number}} fișiere",
+      "sizeValue_other": "circa {{size}} în {{count, number}} de fișiere",
+      "last": "Ultimul backup",
+      "never": "niciodată",
+      "keyWarning": "Backupul nu este criptat și conține cheia pentru parolele stocate (căsuțe de e-mail, IA, autentificare în doi pași). Păstrați-l la fel de sigur ca documentele însele.",
+      "restore": "Pentru restaurare: opriți AIDocuments, extrageți conținutul ZIP-ului într-un director de date gol și porniți-l din nou. Instrucțiunile se află în ZIP (README.txt).",
+      "download": "Descărcați backupul",
+      "started": "Backupul se descarcă.",
+      "externalDatabase": "Backupul cu un clic este disponibil doar cu baza de date integrată. Cu MariaDB, salvați baza de date cu instrumentele proprii ale acesteia (de ex. mariadb-dump) și, în plus, directorul de date.",
+      "importTitle": "Importați un export",
+      "importText": "Un ZIP creat cu „Exportați” din lista de documente – inclusiv dintr-o altă instalare. Titlul, tipul de document, etichetele și celelalte date se păstrează; IA nu mai citește documentele încă o dată. Fișierele care există deja sunt omise.",
+      "file": "Fișier ZIP",
+      "areaHint": "Documentele ajung aici – sau doar cele al căror spațiu nu există aici.",
+      "matchAreas": "Plasare în spații cu același nume",
+      "matchAreasHint": "Dacă aici există un spațiu cu același nume ca în export, documentele ajung acolo.",
+      "import": "Importați",
+      "importing": "Se importă…",
+      "result": "Importate: {{imported, number}} · existau deja: {{duplicates, number}} · neimportate: {{failed, number}}",
+      "auto": {
+        "title": "Backup automat",
+        "text": "O dată pe zi, AIDocuments salvează un backup complet ca ZIP într-un folder și păstrează cele mai recente. Ideal, folderul se află pe un alt disc sau pe o unitate de rețea – altfel, dacă se defectează discul cu datele, se pierd și backupurile.",
+        "enable": "Backup automat zilnic",
+        "hour": "Ora",
+        "keep": "Păstrați",
+        "keepHint": "Numărul de backupuri; cele mai vechi sunt șterse.",
+        "directory": "Folder",
+        "directoryHint": "Calea completă de pe server. Lăsați gol pentru valoarea implicită. În containerul Docker, folderul trebuie să fie montat.",
+        "warnAfterDays": "Avertizare după (zile)",
+        "warnAfterDaysHint": "Notificare în lista de documente dacă de atâta timp nu s-a făcut niciun backup, manual sau automat. 0 = fără avertizare.",
+        "lastRun": "Ultima rulare",
+        "nextRun": "Următoarea rulare",
+        "running": "Se face backupul…",
+        "ok": "reușită, {{when}}",
+        "failed": "eșuată, {{when}}",
+        "stored_one": "{{count, number}} backup în {{directory}}",
+        "stored_few": "{{count, number}} backupuri în {{directory}}",
+        "stored_other": "{{count, number}} de backupuri în {{directory}}",
+        "runNow": "Faceți backup acum",
+        "saveFirst": "Salvați mai întâi modificările.",
+        "runStarted": "Backupul rulează în fundal.",
+        "done": "Backup creat.",
+        "saved": "Setări salvate.",
+        "externalDatabase": "Backupul automat este disponibil doar cu baza de date integrată. Cu MariaDB, salvați baza de date cu instrumentele proprii ale acesteia (de ex. un mariadb-dump în fiecare noapte) și, în plus, directorul de date."
+      }
     }
   },
   "history": {
     "nav": "Istoric",
     "title": "Istoric",
-    "subtitle": "Ce s-a întâmplat cu documentele tale – cele mai noi intrări primele.",
+    "subtitle": "Ce s-a întâmplat cu documentele dvs. – cele mai noi intrări primele.",
     "empty": "Încă nu există intrări.",
     "actions": {
       "IMPORTED": "Importat",
@@ -539,62 +741,63 @@
     },
     "by": "de {{user}}",
     "automatic": "automat",
-    "more": "Încarcă mai multe",
-    "undo": "Anulează",
+    "more": "Afișați mai multe",
+    "undo": "Anulați",
     "undone": "Anulat"
   },
   "duplicates": {
     "title": "Posibil duplicat",
-    "subtitle": "Cele două documente au același conținut. Păstrează unul și șterge-l pe celălalt – sau notează că nu sunt duplicate.",
+    "subtitle": "Cele două documente au același conținut. Păstrați unul și ștergeți-l pe celălalt – sau marcați că nu sunt duplicate.",
     "older": "Sosit mai devreme",
     "newer": "Sosit mai târziu",
-    "deleteThis": "Șterge-l pe acesta",
-    "compare": "Compară alăturat"
+    "deleteThis": "Ștergeți-l pe acesta",
+    "compare": "Comparați alăturat"
   },
   "twoFactor": {
     "title": "Autentificare în doi pași",
     "on": "Activă",
     "off": "Dezactivată",
-    "intro": "Protejează-ți contul cu un al doilea factor: la autentificare vei introduce și un cod dintr-o aplicație de autentificare de pe telefon (de ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
-    "enable": "Configurează",
-    "scan": "Scanează codul QR cu aplicația de autentificare sau introdu cheia manual. Apoi introdu codul afișat de aplicație și parola ta.",
+    "intro": "Protejați-vă contul cu un al doilea factor: la autentificare veți introduce și un cod dintr-o aplicație de autentificare de pe telefon (de ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "enable": "Configurați",
+    "scan": "Scanați codul QR cu aplicația de autentificare sau introduceți cheia manual. Apoi introduceți codul afișat de aplicație și parola dvs.",
     "qrAlt": "Cod QR pentru aplicația de autentificare",
     "secret": "Cheie",
     "confirmCode": "Cod din aplicație",
-    "activate": "Activează",
+    "activate": "Activați",
     "recoveryTitle": "Coduri de recuperare",
-    "recoveryText": "Păstrează aceste coduri de recuperare într-un loc sigur. Fiecare funcționează o singură dată dacă nu poți folosi aplicația – de exemplu dacă îți pierzi telefonul. Sunt afișate doar acum.",
-    "download": "Salvează ca fișier",
+    "recoveryText": "Păstrați aceste coduri de recuperare într-un loc sigur. Fiecare funcționează o singură dată dacă nu puteți folosi aplicația – de exemplu dacă vă pierdeți telefonul. Sunt afișate doar acum.",
+    "download": "Salvați ca fișier",
     "done": "Gata",
     "enabled": "Autentificarea în doi pași este activă",
     "disabled": "Autentificarea în doi pași este dezactivată",
-    "disableHint": "Pentru dezactivare introdu un cod actual din aplicație (sau un cod de recuperare) și parola ta.",
-    "disable": "Dezactivează",
+    "disableHint": "Pentru dezactivare, introduceți un cod actual din aplicație (sau un cod de recuperare) și parola dvs.",
+    "disable": "Dezactivați",
     "recoveryLeft": "Coduri de recuperare nefolosite: {{count}}",
-    "adminCannotDisable": "Ca administrator nu poți dezactiva autentificarea în doi pași."
+    "adminCannotDisable": "Ca administrator, nu puteți dezactiva autentificarea în doi pași."
   },
   "confirmCode": {
-    "title": "Confirmă modificarea",
-    "text": "Modificările conturilor, căsuțelor poștale și setărilor necesită un cod actual din aplicația de autentificare. Confirmarea este valabilă 10 minute.",
-    "submit": "Confirmă"
+    "title": "Confirmați modificarea",
+    "text": "Modificările conturilor, căsuțelor de e-mail și setărilor necesită un cod actual din aplicația de autentificare. Confirmarea este valabilă 10 minute.",
+    "submit": "Confirmați",
+    "passkey": "Confirmați cu o cheie de acces"
   },
   "share": {
-    "button": "Partajează",
-    "title": "Partajează documentul",
-    "intro": "Creează un link cu care o persoană fără cont poate deschide exact acest document.",
-    "recipient": "Cu cine partajezi?",
-    "recipientHint": "Numele persoanei – ca să vezi mai târziu cui i-ai dat linkul.",
-    "permission": "Poate această persoană să modifice documentul?",
+    "button": "Partajați",
+    "title": "Partajați documentul",
+    "intro": "Se creează un link cu care o persoană fără cont poate deschide exact acest document.",
+    "recipient": "Cu cine partajați?",
+    "recipientHint": "Numele persoanei – ca să vedeți mai târziu cui i-ați dat linkul.",
+    "permission": "Poate această persoană să editeze documentul?",
     "viewOnly": "Doar vizualizare",
-    "canEdit": "Poate modifica",
+    "canEdit": "Poate edita",
     "viewHint": "Persoana poate vizualiza, tipări și descărca PDF-ul.",
     "editHint": "Persoana poate și marca, scrie, semna și salva PDF-ul. Fiecare salvare devine o versiune nouă; titlul, etichetele și celelalte date rămân ascunse.",
     "validity": "Valabil",
     "unlimited": "Nelimitat",
-    "create": "Creează link",
+    "create": "Creați linkul",
     "link": "Link",
-    "linkHint": "Oricine are acest link poate deschide documentul – dă-l doar lui {{name}}. Îl poți revoca oricând din vizualizarea documentului.",
-    "copy": "Copiază linkul",
+    "linkHint": "Oricine are acest link poate deschide documentul – dați-l doar lui {{name}}. Îl puteți revoca oricând din vizualizarea documentului.",
+    "copy": "Copiați linkul",
     "copied": "Link copiat",
     "listTitle": "Partajat extern",
     "expired": "expirat",
@@ -602,13 +805,206 @@
     "noExpiry": "fără expirare",
     "lastOpened": "deschis ultima dată {{when}} (accesări: {{views}})",
     "neverOpened": "nedeschis încă",
-    "revoke": "Revocă linkul",
-    "revokeTitle": "Revoci linkul pentru {{name}}?",
+    "revoke": "Revocați linkul",
+    "revokeTitle": "Revocați linkul pentru {{name}}?",
     "revokeText": "Linkul nu mai funcționează imediat. Copiile pe care persoana le-a descărcat deja rămân la ea.",
     "revoked": "Link revocat",
     "page": {
       "for": "Partajat cu {{name}}",
-      "invalid": "Acest link nu este valid sau a expirat, ori documentul a fost șters. Adresează-te persoanei care ți l-a dat."
+      "invalid": "Acest link nu este valid sau a expirat, ori documentul a fost șters. Adresați-vă persoanei care vi l-a dat."
+    }
+  },
+  "areas": {
+    "general": "General",
+    "unknown": "Alt spațiu",
+    "label": "Spațiu",
+    "target": "Spațiu de destinație",
+    "access": {
+      "READ": "Doar vizualizare",
+      "EDIT": "Vizualizare și editare",
+      "DELETE": "Editare și ștergere"
+    }
+  },
+  "reminders": {
+    "title": "Mementouri",
+    "cardTitle": "Memento",
+    "add": "Adăugați un memento",
+    "edit": "Editați mementoul",
+    "create": "Creați",
+    "created": "Mementoul a fost adăugat",
+    "saved": "Mementoul a fost salvat",
+    "deleted": "Mementoul a fost șters",
+    "markedDone": "Rezolvat",
+    "dueDate": "Scadență",
+    "note": "Notă",
+    "notePlaceholder": "de ex. verificare plată",
+    "assignee": "Cine se ocupă?",
+    "assigneeHint": "Această persoană vede mementoul la „Ale mele” și primește notificarea prin e-mail. Poate fi aleasă orice persoană care vede documentul.",
+    "me": "{{name}} (eu)",
+    "assignedTo": "pentru {{name}}",
+    "doneBy": "rezolvat de {{name}}",
+    "markDone": "Marcați ca rezolvat",
+    "reopen": "Redeschideți",
+    "delete": {
+      "label": "Ștergeți mementoul",
+      "title": "Ștergeți mementoul?",
+      "text": "Mementoul va fi eliminat. Documentul rămâne neschimbat."
+    },
+    "accept": "Adăugați",
+    "dismiss": "Respingeți sugestia",
+    "suggestionsHint": "IA a găsit date în acest document:",
+    "none": "Niciun memento deschis.",
+    "showDone_one": "Afișați {{count, number}} memento rezolvat",
+    "showDone_few": "Afișați {{count, number}} mementouri rezolvate",
+    "showDone_other": "Afișați {{count, number}} de mementouri rezolvate",
+    "hideDone": "Ascundeți rezolvatele",
+    "scope": {
+      "label": "Ce mementouri",
+      "mine": "Ale mele",
+      "all": "Toate"
+    },
+    "dueTitle": "Scadente",
+    "nothingDue": "Astăzi nu este nimic scadent.",
+    "upcomingTitle": "În curând",
+    "suggestionsTitle": "Date sugerate",
+    "suggestionsPageHint": "Termene din următoarele șase luni pe care IA le-a găsit în documente. Adăugați-le ca memento sau respingeți-le.",
+    "emptyTitle": "Niciun memento",
+    "emptyText": "Adăugați un memento la un document – sau acceptați unul sugerat de IA.",
+    "repeat": {
+      "label": "Repetare",
+      "hint": "Când bifați mementoul ca rezolvat, următorul este creat la același interval.",
+      "none": "O singură dată",
+      "m1": "Lunar",
+      "m3": "Trimestrial",
+      "m6": "Semestrial",
+      "m12": "Anual",
+      "m24": "La fiecare doi ani",
+      "months_one": "În fiecare lună",
+      "months_few": "La fiecare {{count}} luni",
+      "months_other": "La fiecare {{count}} de luni"
+    },
+    "fromContract": "din contract"
+  },
+  "pages": {
+    "button": "Pagini",
+    "title": "Editați paginile",
+    "intro": "Trageți paginile sau mutați-le cu săgețile, rotiți-le sau eliminați-le. La salvare se creează o versiune nouă – cea anterioară se păstrează.",
+    "page": "Pagina {{number}}",
+    "wasPage": "anterior: {{number}}",
+    "moveLeft": "Mutați în față",
+    "moveRight": "Mutați în spate",
+    "rotate": "Rotiți cu 90°",
+    "remove": "Eliminați pagina",
+    "keep": "Păstrați pagina",
+    "noneLeft": "Trebuie să rămână cel puțin o pagină.",
+    "saveFirst": "Salvați mai întâi modificările",
+    "saved": "Paginile au fost salvate",
+    "split": {
+      "here": "Document separat de aici",
+      "title": "Împărțiți documentul?",
+      "text": "Pagina {{page}} și toate cele următoare devin un document separat în același spațiu. Acesta este citit și clasificat ca un document nou primit; documentul de față păstrează paginile dinainte.",
+      "confirm": "Împărțiți",
+      "done": "Documentul a fost împărțit",
+      "open": "Deschideți documentul nou"
+    },
+    "merge": {
+      "button": "Anexați documente",
+      "title": "Anexați documente",
+      "intro": "Paginile documentelor alese sunt adăugate în această ordine la sfârșitul documentului „{{title}}”.",
+      "search": "Căutare documente…",
+      "none": "Niciun document potrivit.",
+      "noDeleteRight": "Nu aveți dreptul să îl ștergeți – deci nici să îl anexați.",
+      "hint": "Documentele anexate ajung apoi în coșul de gunoi; pot fi recuperate din istoric timp de 30 de zile.",
+      "confirm_one": "Anexați {{count}} document",
+      "confirm_few": "Anexați {{count}} documente",
+      "confirm_other": "Anexați {{count}} de documente",
+      "done_one": "{{count}} document anexat",
+      "done_few": "{{count}} documente anexate",
+      "done_other": "{{count}} de documente anexate"
+    }
+  },
+  "contracts": {
+    "nav": "Contracte",
+    "title": "Contracte",
+    "pageIntro": "Duratele și termenele de preaviz ale tuturor contractelor pe care le puteți vedea – mai întâi cele la care trebuie făcut ceva în curând.",
+    "scope": {
+      "label": "Afișare",
+      "running": "În derulare",
+      "all": "Toate"
+    },
+    "emptyTitle": "Niciun contract înregistrat încă",
+    "emptyText": "Deschideți un document, de exemplu un contract de energie electrică sau de telefonie mobilă, și înregistrați acolo durata și termenul de preaviz. Un memento va apărea apoi din timp, înainte de expirarea termenului.",
+    "cardTitle": "Contract",
+    "none": "Este un contract? Cu durata și termenul de preaviz, AIDocuments vă amintește din timp să îl reziliați.",
+    "add": "Înregistrați ca contract",
+    "edit": "Editați contractul",
+    "intro": "Din sfârșitul duratei și termenul de preaviz rezultă data până la care trebuie reziliat contractul. Înainte de aceasta apare un memento; dacă durata expiră fără reziliere, contractul se prelungește automat.",
+    "saved": "Contractul a fost salvat",
+    "removed": "Datele contractului au fost eliminate",
+    "remove": {
+      "label": "Eliminați datele contractului",
+      "title": "Eliminați datele contractului?",
+      "text": "Durata, termenul de preaviz și mementoul deschis aferent vor fi eliminate. Documentul în sine rămâne."
+    },
+    "openEnded": "pe durată nedeterminată",
+    "months_one": "{{count}} lună",
+    "months_few": "{{count}} luni",
+    "months_other": "{{count}} de luni",
+    "amountHint": "de ex. „49,90 € pe lună”",
+    "endDateHint": "Sfârșitul duratei actuale; gol = nedeterminată",
+    "noticeHint": "Luni înainte de sfârșitul duratei; gol = până la sfârșitul duratei",
+    "renewalHint": "Fără reziliere, contractul se prelungește cu atâtea luni; 0 = se încheie",
+    "cancelledHint": "Astfel nu se mai prelungește și nu mai apar mementouri.",
+    "fields": {
+      "partner": "Partener contractual",
+      "amount": "Sumă",
+      "startDate": "Începutul contractului",
+      "endDate": "Durată până la",
+      "notice": "Preaviz (luni)",
+      "renewal": "Prelungire (luni)",
+      "deadline": "Reziliere până la",
+      "reminderDays": "Amintire (cu câte zile înainte)",
+      "cancelled": "Reziliat"
+    },
+    "status": {
+      "ACTIVE": "În derulare",
+      "DUE_SOON": "Termen apropiat",
+      "NOTICE_MISSED": "Termen ratat",
+      "CANCELLED": "Reziliat",
+      "ENDED": "Încheiat",
+      "OPEN_ENDED": "Nedeterminat"
+    },
+    "row": {
+      "cancelBy": "reziliere până la {{date}}",
+      "endsOn": "se încheie la {{date}}",
+      "term": "durată până la {{date}}",
+      "renews_one": "se prelungește cu {{count}} lună",
+      "renews_few": "se prelungește cu {{count}} luni",
+      "renews_other": "se prelungește cu {{count}} de luni"
+    }
+  },
+  "passkeys": {
+    "title": "Chei de acces",
+    "intro": "Cu o cheie de acces vă autentificați fără parolă – deblocată cu amprenta, fața sau PIN-ul dispozitivului. Funcționează doar pentru această adresă; un site fals nu o poate folosi.",
+    "none": "Nicio cheie de acces adăugată încă.",
+    "add": "Adăugați o cheie de acces",
+    "create": "Creați cheia de acces",
+    "name": "Nume",
+    "nameHint": "Ca s-o recunoașteți mai târziu, de ex. „Laptop” sau „Manager de parole”.",
+    "password": "Parola dvs.",
+    "passwordHint": "Cine adaugă o cheie de acces se poate autentifica de acum înainte fără parolă – de aceea, vă rugăm să confirmați o dată.",
+    "added": "Cheia de acces a fost adăugată",
+    "removed": "Cheia de acces a fost eliminată",
+    "synced": "sincronizată",
+    "lastUsed": "folosită ultima dată {{time}}",
+    "created": "adăugată {{time}}, nefolosită încă",
+    "unsupported": "Acest browser nu poate folosi chei de acces aici. Cheile de acces funcționează doar prin HTTPS (sau pe localhost).",
+    "unsupportedIp": "Cheile de acces funcționează doar prin HTTPS și cu un nume în adresă, nu cu o adresă IP.",
+    "remove": {
+      "label": "Eliminați cheia de acces",
+      "title": "Eliminați cheia de acces?",
+      "text": "După aceea, nimeni nu se mai poate autentifica cu „{{name}}”. Cheia rămâne salvată în managerul de parole sau pe dispozitiv până când o ștergeți acolo.",
+      "confirm": "Eliminați"
     }
   }
 }

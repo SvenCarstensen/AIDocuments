@@ -19,6 +19,14 @@ public class AppUser {
     private Long totpLastStep;
     /** SHA-256 der noch unbenutzten Wiederherstellungscodes. */
     private List<String> recoveryCodeHashes = new ArrayList<>();
+    /** Für Erinnerungen per E-Mail; {@code null} = keine. */
+    private String email;
+    /** Sprache der E-Mails (BCP 47, die zuletzt in der Oberfläche verwendete); {@code null} = Englisch. */
+    private String locale;
+    /** Täglich eine Übersicht der neuen Dokumente per E-Mail. */
+    private boolean notifyNewDocuments;
+    /** Für Admins: Hinweise auf abgelaufene Fristen und Postfächer, die sich nicht abrufen lassen. */
+    private boolean notifyAdmin = true;
 
     protected AppUser() {
     }
@@ -35,6 +43,38 @@ public class AppUser {
     /** Für {@link AppUserRepository}: Anlagezeitpunkt aus der Tabellenzeile übernehmen. */
     void restoreCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public boolean isNotifyNewDocuments() {
+        return notifyNewDocuments;
+    }
+
+    public void setNotifyNewDocuments(boolean notifyNewDocuments) {
+        this.notifyNewDocuments = notifyNewDocuments;
+    }
+
+    public boolean isNotifyAdmin() {
+        return notifyAdmin;
+    }
+
+    public void setNotifyAdmin(boolean notifyAdmin) {
+        this.notifyAdmin = notifyAdmin;
     }
 
     public String getId() {

@@ -21,12 +21,27 @@ public final class UserDtos {
     public static final String PASSWORD_MESSAGE = "{validation.password}";
 
     public record UserDto(String id, String username, Role role, boolean enabled, Instant createdAt,
-                          Instant lastLoginAt, boolean twoFactorEnabled) {
+                          Instant lastLoginAt, boolean twoFactorEnabled,
+                          /* für Erinnerungen per E-Mail; null = keine */
+                          String email,
+                          /* tägliche Übersicht neuer Dokumente; Hinweise an Admins */
+                          boolean notifyNewDocuments, boolean notifyAdmin) {
 
         static UserDto of(AppUser user) {
             return new UserDto(user.getId(), user.getUsername(), user.getRole(), user.isEnabled(),
-                    user.getCreatedAt(), user.getLastLoginAt(), user.isTwoFactorEnabled());
+                    user.getCreatedAt(), user.getLastLoginAt(), user.isTwoFactorEnabled(), user.getEmail(),
+                    user.isNotifyNewDocuments(), user.isNotifyAdmin());
         }
+    }
+
+    /**
+     * Eigene Angaben: die Adresse für Erinnerungen und Benachrichtigungen (leer = keine E-Mails) und welche
+     * Benachrichtigungen; {@code null} lässt die bisherige Wahl.
+     */
+    public record ProfileRequest(
+            @Size(max = 254, message = SIZE)
+            @jakarta.validation.constraints.Email(message = "{validation.email}") String email,
+            Boolean notifyNewDocuments, Boolean notifyAdmin) {
     }
 
     /** Antwort der Anmeldung, wenn noch der Code aus der Authenticator-App fehlt. */

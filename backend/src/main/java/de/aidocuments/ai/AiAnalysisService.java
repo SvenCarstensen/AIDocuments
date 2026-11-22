@@ -888,7 +888,8 @@ public class AiAnalysisService {
         properties.put("tags", Map.of("type", "array", "items", string, "description",
                 "Drei bis sechs Schlagworte in Kleinbuchstaben, unter denen jemand das Dokument suchen würde"));
         properties.put("keyFacts", Map.of("type", "array", "description",
-                "Bis zu zehn wichtige konkrete Angaben, z. B. Rechnungsnummer, Betrag, Fälligkeit, IBAN",
+                "Bis zu zehn wichtige konkrete Angaben, z. B. Rechnungsnummer, Betrag, Fälligkeit, IBAN – Fristen "
+                        + "und Termine (Zahlungsziel, Kündigungs-, Abgabe- oder Widerspruchsfrist) mit ihrem Datum",
                 "items", Map.of("type", "object",
                         "properties", Map.of("label", string, "value", string),
                         "required", List.of("label", "value"),

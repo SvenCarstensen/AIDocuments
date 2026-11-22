@@ -57,10 +57,16 @@ public class DocumentController {
     private final AiSearchService aiSearch;
 
     private final AiRequestLimiter aiLimiter;
+    private final de.aidocuments.area.AreaAccess areaAccess;
+    private final DocumentExport export;
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DocumentController.class);
 
     public DocumentController(DocumentService service, DocumentFacets facets, FileStorage storage,
                               Messages messages, DocumentChatService chat, AiSearchService aiSearch,
-                              AiRequestLimiter aiLimiter) {
+                              AiRequestLimiter aiLimiter, de.aidocuments.area.AreaAccess areaAccess,
+                              DocumentExport export) {
+        this.export = export;
+        this.areaAccess = areaAccess;
         this.aiLimiter = aiLimiter;
         this.chat = chat;
         this.aiSearch = aiSearch;
@@ -86,9 +92,72 @@ public class DocumentController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
             @RequestParam(defaultValue = "false") boolean duplicates,
+            @RequestParam(required = false) String area,
+            /* "expired" = nur Dokumente, deren Aufbewahrungsfrist abgelaufen ist */
+            @RequestParam(required = false) String retention,
             @RequestParam(defaultValue = "relevance") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "24") int size) {
+        return service.search(criteria(q, category, correspondent, tags, status, from, to, duplicates, area, sort,
+                page, size), "expired".equals(retention));
+    }
+
+    public record ExportTicketDto(String token, int count) {
+    }
+
+    /**
+     * Export, Schritt 1: merkt sich alle Treffer mit denselben Filtern wie die Liste. Wer die Zwei-Faktor-Anmeldung
+     * nutzt, braucht dafür einen frischen Code (siehe {@code AdminTwoFactorFilter}).
+     */
+    @PostMapping("/export")
+    public ExportTicketDto prepareExport(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String correspondent,
+            @RequestParam(required = false, name = "tag") List<String> tags,
+            @RequestParam(required = false) DocumentStatus status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "false") boolean duplicates,
+            @RequestParam(required = false) String area,
+            @RequestParam(required = false) String retention,
+            @RequestParam(defaultValue = "relevance") String sort,
+            jakarta.servlet.http.HttpServletRequest request) {
+        List<String> ids = service.matchingIds(criteria(q, category, correspondent, tags, status, from, to, duplicates,
+                area, sort, 0, 1), "expired".equals(retention));
+        if (ids.isEmpty()) {
+            throw ApiException.badRequest("error.export.empty");
+        }
+        return new ExportTicketDto(export.prepare(request.getSession(), ids), ids.size());
+    }
+
+    /** Export, Schritt 2: der Download selbst – ein gewöhnlicher Seitenaufruf, der Schlüssel gilt einmal. */
+    @GetMapping("/export/{token}")
+    public void downloadExport(@PathVariable String token, jakarta.servlet.http.HttpServletRequest request,
+                               jakarta.servlet.http.HttpServletResponse response) throws IOException {
+        List<String> ids = export.take(request.getSession(false), token);
+        if (ids == null) {
+            throw ApiException.notFound("error.export.notFound");
+        }
+        // erneut prüfen: Bereichsrechte können sich seit Schritt 1 geändert haben
+        List<Document> selected = export.load(ids).stream().filter(d -> areaAccess.canSee(d.getAreaId())).toList();
+        String filename = "AIDocuments-Export-" + LocalDate.now() + ".zip";
+        log.info("Export von {} Dokumenten durch {}", selected.size(), currentUser());
+        response.setContentType("application/zip");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+                ContentDisposition.attachment().filename(filename).build().toString());
+        response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");
+        export.write(selected, response.getOutputStream());
+    }
+
+    private static String currentUser() {
+        var auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        return auth == null ? "?" : auth.getName();
+    }
+
+    private static SearchIndex.Criteria criteria(String q, String category, String correspondent, List<String> tags,
+                                                 DocumentStatus status, LocalDate from, LocalDate to,
+                                                 boolean duplicates, String area, String sort, int page, int size) {
         SearchIndex.SortOrder order = switch (sort) {
             case "newest" -> SearchIndex.SortOrder.NEWEST;
             case "date" -> SearchIndex.SortOrder.DOCUMENT_DATE;
@@ -98,9 +167,10 @@ public class DocumentController {
         if (q != null && q.length() > MAX_QUERY_LENGTH) {
             q = q.substring(0, MAX_QUERY_LENGTH);
         }
-        return service.search(new SearchIndex.Criteria(q, category, correspondent,
+        return new SearchIndex.Criteria(q, category, correspondent,
                 tags == null ? List.of() : tags, status, from, to, order,
-                Math.clamp(page, 0, 10_000), Math.clamp(size, 1, 100), duplicates));
+                Math.clamp(page, 0, 10_000), Math.clamp(size, 1, 100), duplicates,
+                area == null || area.isBlank() ? null : area, null, null);
     }
 
     @GetMapping("/facets")
@@ -271,7 +341,14 @@ public class DocumentController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public List<UploadResultDto> upload(@RequestParam("files") List<MultipartFile> files) {
+    public List<UploadResultDto> upload(@RequestParam("files") List<MultipartFile> files,
+                                        @RequestParam(required = false) String area,
+                                        @RequestParam(defaultValue = "false") boolean combine) {
+        String areaId = area == null || area.isBlank() ? areaAccess.defaultArea() : area;
+        areaAccess.requireTarget(areaId);
+        if (combine && files.size() > 1) {
+            return List.of(uploadCombined(files, areaId));
+        }
         List<UploadResultDto> results = new ArrayList<>();
         boolean storageFull = false;
         for (MultipartFile file : files) {
@@ -282,9 +359,11 @@ public class DocumentController {
                 continue;
             }
             try (InputStream in = file.getInputStream()) {
-                DocumentService.IngestResult result = service.ingest(in, name, DocumentSource.UPLOAD, null);
+                DocumentService.IngestResult result = service.ingest(in, name, DocumentSource.UPLOAD, null, areaId);
+                // ein gleiches Dokument in einem fremden Bereich nicht verraten (nur dass es die Datei schon gibt)
                 results.add(new UploadResultDto(name, result.outcome().name(),
-                        result.document() != null ? result.document().getId() : null,
+                        result.document() != null && areaAccess.canSee(result.document().getAreaId())
+                                ? result.document().getId() : null,
                         result.message() != null ? messages.render(result.message()) : null));
             } catch (IOException | FileStorage.StorageFullException e) {
                 // Platte (fast) voll: diese und alle weiteren Dateien ablehnen, die schon gespeicherten bleiben
@@ -294,6 +373,40 @@ public class DocumentController {
             }
         }
         return results;
+    }
+
+    /** Mehrere Fotos als ein Dokument mit je einer Seite – ein Ergebnis für alle. */
+    private UploadResultDto uploadCombined(List<MultipartFile> files, String areaId) {
+        String name = files.getFirst().getOriginalFilename() != null ? files.getFirst().getOriginalFilename() : "Foto.jpg";
+        if (files.size() > ImageToPdf.MAX_COMBINED) {
+            return new UploadResultDto(name, DocumentService.Outcome.REJECTED.name(), null,
+                    messages.get("upload.tooManyImages"));
+        }
+        List<InputStream> streams = new ArrayList<>();
+        try {
+            List<DocumentService.Upload> uploads = new ArrayList<>();
+            for (MultipartFile file : files) {
+                InputStream in = file.getInputStream();
+                streams.add(in);
+                uploads.add(new DocumentService.Upload(file.getOriginalFilename(), in));
+            }
+            DocumentService.IngestResult result = service.ingestCombined(uploads, DocumentSource.UPLOAD, areaId);
+            return new UploadResultDto(name, result.outcome().name(),
+                    result.document() != null && areaAccess.canSee(result.document().getAreaId())
+                            ? result.document().getId() : null,
+                    result.message() != null ? messages.render(result.message()) : null);
+        } catch (IOException | FileStorage.StorageFullException e) {
+            return new UploadResultDto(name, DocumentService.Outcome.REJECTED.name(), null,
+                    messages.get("upload.storeFailed"));
+        } finally {
+            for (InputStream in : streams) {
+                try {
+                    in.close();
+                } catch (IOException ignored) {
+                    // nur Lesen – nichts zu retten
+                }
+            }
+        }
     }
 
     @PutMapping("/{id}")

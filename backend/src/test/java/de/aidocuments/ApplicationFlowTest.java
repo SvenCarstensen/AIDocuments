@@ -42,6 +42,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -89,7 +90,7 @@ class ApplicationFlowTest {
 
     @RegisterExtension
     static final GreenMailExtension greenMail =
-            new GreenMailExtension(ServerSetupTest.IMAP).withPerMethodLifecycle(false);
+            new GreenMailExtension(ServerSetupTest.SMTP_IMAP).withPerMethodLifecycle(false);
 
     static final Path dataDir = createTempDir("aidocs-data");
     static final Path inbox = createTempDir("aidocs-inbox");
@@ -170,7 +171,15 @@ class ApplicationFlowTest {
     @Autowired
     de.aidocuments.document.DocumentService documentService;
     @Autowired
+    de.aidocuments.contract.ContractService contractService;
+    @Autowired
     de.aidocuments.user.UserService userService;
+    @Autowired
+    de.aidocuments.reminder.ReminderNotifier reminderNotifier;
+    @Autowired
+    de.aidocuments.notify.Notifications notifications;
+    @Autowired
+    de.aidocuments.backup.AutoBackup autoBackup;
 
     @Test
     @Order(1)
@@ -798,10 +807,10 @@ class ApplicationFlowTest {
         // Ergebnis eines Uploads
         MockMultipartFile noPdf = new MockMultipartFile("files", "brief.pdf", "application/pdf", "kein PDF".getBytes());
         mvc.perform(multipart("/api/documents").file(noPdf).with(csrf()).session(adminSession))
-                .andExpect(jsonPath("$[0].message").value("The file is not a PDF."));
+                .andExpect(jsonPath("$[0].message").value("The file is neither a PDF nor a photo (JPG, PNG, HEIC)."));
         mvc.perform(multipart("/api/documents").file(noPdf).with(csrf()).session(adminSession)
                         .header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
-                .andExpect(jsonPath("$[0].message").value("Die Datei ist kein PDF."));
+                .andExpect(jsonPath("$[0].message").value("Die Datei ist weder ein PDF noch ein Foto (JPG, PNG, HEIC)."));
 
         // Übersetzbare Bezeichnung in den Einstellungen
         mvc.perform(get("/api/settings/ai").session(adminSession))
@@ -1474,6 +1483,1170 @@ class ApplicationFlowTest {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    @Order(17)
+    void documentsOfAnAreaAreVisibleOnlyToItsMembersAndAdmins() throws Exception {
+        MockHttpSession anna = userWithSession("anna");
+        MockHttpSession bert = userWithSession("bert");
+        String annaId = jsonValue(mvc.perform(get("/api/auth/status").session(anna)).andReturn(), "$.user.id");
+
+        // Bereiche verwalten nur Admins, und nur mit frischer Bestätigung
+        String request = "{\"name\":\"Buchhaltung\",\"everyone\":false,\"memberIds\":[\"" + annaId + "\"]}";
+        mvc.perform(post("/api/areas").with(csrf()).session(anna)
+                        .contentType(MediaType.APPLICATION_JSON).content(request))
+                .andExpect(status().isForbidden());
+        adminSession.setAttribute("aidocuments.confirmedAt", Instant.now().minus(Duration.ofMinutes(11)));
+        mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(request))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("confirmationRequired"));
+        adminSession.setAttribute("aidocuments.confirmedAt", Instant.now());
+        String areaId = jsonValue(mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(request))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.memberIds", hasSize(1)))
+                .andReturn(), "$.id");
+        mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(request.replace("Buchhaltung", "buchhaltung ")))
+                .andExpect(status().isConflict());
+        mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"X\",\"everyone\":false,\"memberIds\":[\"gibt-es-nicht\"]}"))
+                .andExpect(status().isBadRequest());
+
+        // wer kein Mitglied ist, sieht den Bereich nicht und kann nichts hineinlegen
+        mvc.perform(get("/api/areas").session(bert))
+                .andExpect(jsonPath("$[?(@.id == '" + areaId + "')]", hasSize(0)))
+                .andExpect(jsonPath("$[0].memberIds", hasSize(0)));
+        MockMultipartFile secret = new MockMultipartFile("files", "Gehaltsliste.pdf", "application/pdf",
+                pdf("Gehaltsliste Quartal", "Vertraulich Bereichstest Zebrafink"));
+        mvc.perform(multipart("/api/documents").file(secret).param("area", areaId).with(csrf()).session(bert))
+                .andExpect(status().isBadRequest());
+
+        long before = documents.findAll().size();
+        String docId = jsonValue(mvc.perform(multipart("/api/documents").file(secret).param("area", areaId)
+                        .with(csrf()).session(anna))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed((int) before + 1);
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(anna)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Gehaltsliste\",\"category\":\"Personalakte\",\"correspondent\":\"Lohnbuero Zebrafink\",\"tags\":[\"gehalt\"]}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.areaId").value(areaId));
+
+        long bertTotal = jsonNumber(mvc.perform(get("/api/documents").session(bert)).andReturn(), "$.total");
+        long adminTotal = jsonNumber(mvc.perform(get("/api/documents").session(adminSession)).andReturn(), "$.total");
+        assertThat(adminTotal).isEqualTo(bertTotal + 1);
+        mvc.perform(get("/api/documents").param("q", "Zebrafink").session(bert)).andExpect(jsonPath("$.total").value(0));
+        mvc.perform(get("/api/documents").param("area", areaId).session(bert)).andExpect(jsonPath("$.total").value(0));
+        mvc.perform(get("/api/documents/" + docId).session(bert)).andExpect(status().isNotFound());
+        mvc.perform(get("/api/documents/" + docId + "/file").session(bert)).andExpect(status().isNotFound());
+        mvc.perform(get("/api/documents/" + docId + "/text").session(bert)).andExpect(status().isNotFound());
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(bert)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"title\":\"übernommen\",\"tags\":[]}"))
+                .andExpect(status().isNotFound());
+        mvc.perform(get("/api/documents/facets").session(bert))
+                .andExpect(jsonPath("$.categories[?(@.name == 'Personalakte')]", hasSize(0)))
+                .andExpect(jsonPath("$.correspondents[?(@.name == 'Lohnbuero Zebrafink')]", hasSize(0)));
+        mvc.perform(get("/api/history").param("size", "100").session(bert))
+                .andExpect(jsonPath("$.items[?(@.documentId == '" + docId + "')]", hasSize(0)));
+        assertThat(jsonNumber(mvc.perform(get("/api/system").session(bert)).andReturn(), "$.documents"))
+                .isEqualTo(bertTotal);
+        // dieselbe Datei gibt es nur einmal; wer sie nicht sehen darf, erfährt nicht, wo sie liegt
+        mvc.perform(multipart("/api/documents").file(secret).with(csrf()).session(bert))
+                .andExpect(jsonPath("$[0].outcome").value("DUPLICATE"))
+                .andExpect(jsonPath("$[0].documentId").doesNotExist());
+
+        // Mitglieder und Admins finden es
+        mvc.perform(get("/api/documents").param("q", "Zebrafink").session(anna)).andExpect(jsonPath("$.total").value(1));
+        mvc.perform(get("/api/documents").param("q", "Zebrafink").session(adminSession)).andExpect(jsonPath("$.total").value(1));
+        mvc.perform(get("/api/documents").param("q", "Zebrafink").param("area", areaId).session(adminSession))
+                .andExpect(jsonPath("$.total").value(1));
+        mvc.perform(get("/api/areas").session(adminSession))
+                .andExpect(jsonPath("$[?(@.id == '" + areaId + "')].documentCount").value(org.hamcrest.Matchers.contains(1)));
+
+        // ein Bereich mit Dokumenten lässt sich nicht löschen, der allgemeine nie
+        mvc.perform(delete("/api/areas/" + areaId).with(csrf()).session(adminSession)).andExpect(status().isConflict());
+        mvc.perform(delete("/api/areas/general").with(csrf()).session(adminSession)).andExpect(status().isConflict());
+
+        // verschieben: in einen nicht sichtbaren Bereich geht nicht; in den allgemeinen sieht es jeder
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(anna)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Gehaltsliste\",\"tags\":[],\"areaId\":\"gibt-es-nicht\"}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(anna)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Gehaltsliste\",\"tags\":[],\"areaId\":\"general\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.areaId").value("general"));
+        mvc.perform(get("/api/documents/" + docId).session(bert)).andExpect(status().isOk());
+        mvc.perform(get("/api/documents").param("q", "Zebrafink").session(bert)).andExpect(jsonPath("$.total").value(1));
+        mvc.perform(get("/api/history").param("size", "100").session(bert))
+                .andExpect(jsonPath("$.items[?(@.documentId == '" + docId + "')]", org.hamcrest.Matchers.not(hasSize(0))));
+
+        // ein Postfach kann nur einen vorhandenen Bereich als Ziel haben
+        String mailbox = """
+                {"name":"Ziel","host":"127.0.0.1","port":%d,"security":"NONE","username":"ziel@example.test",
+                 "password":"imap-test-secret","folder":"INBOX","enabled":false,"areaId":"%s"}""";
+        mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content(mailbox.formatted(greenMail.getImap().getPort(), "gibt-es-nicht")))
+                .andExpect(status().isBadRequest());
+        String mailboxId = jsonValue(mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(mailbox.formatted(greenMail.getImap().getPort(), areaId)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.areaId").value(areaId)).andReturn(), "$.id");
+        // Bereiche, die noch Ziel eines Postfachs sind, bleiben
+        mvc.perform(delete("/api/areas/" + areaId).with(csrf()).session(adminSession)).andExpect(status().isConflict());
+        mvc.perform(delete("/api/mail-accounts/" + mailboxId).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+        mvc.perform(delete("/api/areas/" + areaId).with(csrf()).session(adminSession)).andExpect(status().isNoContent());
+        mvc.perform(get("/api/areas").session(anna)).andExpect(jsonPath("$[?(@.id == '" + areaId + "')]", hasSize(0)));
+    }
+
+    @Test
+    @Order(18)
+    void documentsUnderARetentionPeriodCannotBeDeletedByAnyone() throws Exception {
+        MockHttpSession clara = userWithSession("clara");
+        String rule = "{\"category\":\"Steuerbescheid\",\"years\":%d}";
+        mvc.perform(get("/api/settings/retention").session(clara)).andExpect(status().isForbidden());
+        mvc.perform(post("/api/settings/retention").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(rule.formatted(0)))
+                .andExpect(status().isBadRequest());
+        String ruleId = jsonValue(mvc.perform(post("/api/settings/retention").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(rule.formatted(10)))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        mvc.perform(post("/api/settings/retention").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(rule.formatted(10).replace("Steuer", "steuer")))
+                .andExpect(status().isConflict());
+
+        String taxId = uploadAs(clara, "Bescheid_2024.pdf", "Einkommensteuerbescheid 2024 Fristtest");
+        String details = "{\"title\":\"%s\",\"category\":\"%s\",\"documentDate\":\"%s\",\"tags\":[]}";
+        // gezählt ab dem Ende des Jahres des Dokumentdatums; die Kategorie unabhängig von Groß-/Kleinschreibung
+        mvc.perform(put("/api/documents/" + taxId).with(csrf()).session(clara).contentType(MediaType.APPLICATION_JSON)
+                        .content(details.formatted("Steuerbescheid 2024", "steuerbescheid", "2024-05-03")))
+                .andExpect(jsonPath("$.retainUntil").value("2034-12-31"))
+                .andExpect(jsonPath("$.retentionLocked").value(true));
+        mvc.perform(delete("/api/documents/" + taxId).with(csrf()).session(adminSession))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.detail").value(containsString("2034")));
+        // die Frist wird nie kürzer: weder über eine andere Kategorie noch über eine geänderte oder gelöschte Regel
+        mvc.perform(put("/api/documents/" + taxId).with(csrf()).session(clara).contentType(MediaType.APPLICATION_JSON)
+                        .content(details.formatted("Steuerbescheid 2024", "Sonstiges", "2000-01-01")))
+                .andExpect(jsonPath("$.retainUntil").value("2034-12-31"));
+        mvc.perform(put("/api/settings/retention/" + ruleId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(rule.formatted(1)))
+                .andExpect(status().isOk());
+        mvc.perform(delete("/api/settings/retention/" + ruleId).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+        mvc.perform(get("/api/documents/" + taxId).session(clara)).andExpect(jsonPath("$.retentionLocked").value(true));
+        mvc.perform(delete("/api/documents/" + taxId).with(csrf()).session(adminSession)).andExpect(status().isConflict());
+
+        // eine neue Regel gilt auch für vorhandene Dokumente – und für die im Papierkorb, die dann dort bleiben
+        String binnedId = uploadAs(clara, "Vertrag_alt.pdf", "Altvertrag Papierkorbtest");
+        mvc.perform(put("/api/documents/" + binnedId).with(csrf()).session(clara).contentType(MediaType.APPLICATION_JSON)
+                .content(details.formatted("Altvertrag", "Vertrag", "2023-02-01"))).andExpect(status().isOk());
+        mvc.perform(delete("/api/documents/" + binnedId).with(csrf()).session(adminSession)).andExpect(status().isNoContent());
+        jdbc.sql("UPDATE deleted_documents SET deleted_at = ? WHERE id = ?")
+                .param(Instant.now().minus(Duration.ofDays(40)).toEpochMilli()).param(binnedId).update();
+        String oldId = uploadAs(clara, "Akte_2000.pdf", "Uralte Akte Ablauftest");
+        mvc.perform(put("/api/documents/" + oldId).with(csrf()).session(clara).contentType(MediaType.APPLICATION_JSON)
+                .content(details.formatted("Akte 2000", "Vertrag", "2000-01-01"))).andExpect(status().isOk());
+        mvc.perform(post("/api/settings/retention").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"category\":\"vertrag\",\"years\":10}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.documentCount").value(1));
+        documentService.purgeTrash();
+        assertThat(documents.findInTrash(binnedId)).get()
+                .satisfies(doc -> assertThat(doc.getRetainUntil()).isEqualTo(java.time.LocalDate.of(2033, 12, 31)));
+
+        // abgelaufene Fristen lassen sich finden – und diese Dokumente wieder löschen
+        mvc.perform(get("/api/documents/" + oldId).session(clara))
+                .andExpect(jsonPath("$.retainUntil").value("2010-12-31"))
+                .andExpect(jsonPath("$.retentionLocked").value(false));
+        mvc.perform(get("/api/documents").param("retention", "expired").session(clara))
+                .andExpect(jsonPath("$.total").value(1))
+                .andExpect(jsonPath("$.items[0].id").value(oldId));
+        mvc.perform(get("/api/system").session(clara)).andExpect(jsonPath("$.retentionExpired").value(1));
+        mvc.perform(delete("/api/documents/" + oldId).with(csrf()).session(adminSession)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Order(19)
+    void remindersComeFromSuggestionsOrByHandAndAreSentByMailOnce() throws Exception {
+        MockHttpSession dora = userWithSession("dora");
+        mvc.perform(put("/api/auth/profile").with(csrf()).session(dora).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"keine-adresse\"}")).andExpect(status().isBadRequest());
+        mvc.perform(put("/api/auth/profile").with(csrf()).session(dora).header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"email\":\"dora@example.test\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("dora@example.test"));
+
+        // Vorschläge stammen aus den wichtigen Angaben: nur Fristen, nur künftige
+        String docId = uploadAs(dora, "Rechnung_Wartung.pdf", "Wartungsrechnung Fristtest");
+        java.time.LocalDate payBy = java.time.LocalDate.now().plusDays(20);
+        java.time.LocalDate cancelBy = java.time.LocalDate.now().plusDays(60);
+        Document doc = documents.findById(docId).orElseThrow();
+        doc.replaceKeyFacts(List.of(
+                new de.aidocuments.document.KeyFact("Rechnungsdatum", "01.02.2026"),
+                new de.aidocuments.document.KeyFact("Fällig am", "03.01.2020"),
+                new de.aidocuments.document.KeyFact("Zahlbar bis", payBy.format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy"))),
+                new de.aidocuments.document.KeyFact("Kündigungsfrist", "bis zum " + cancelBy)));
+        documents.save(doc);
+        mvc.perform(get("/api/documents/" + docId + "/reminders").session(dora))
+                .andExpect(jsonPath("$.reminders", hasSize(0)))
+                .andExpect(jsonPath("$.suggestions", hasSize(2)))
+                .andExpect(jsonPath("$.suggestions[0].date").value(payBy.toString()))
+                .andExpect(jsonPath("$.suggestions[0].label").value("Zahlbar bis"));
+        mvc.perform(get("/api/reminders").session(dora))
+                .andExpect(jsonPath("$.suggestions[?(@.documentId == '" + docId + "')]", hasSize(2)));
+
+        // übernehmen und verwerfen: beide Vorschläge verschwinden
+        mvc.perform(post("/api/documents/" + docId + "/reminders").with(csrf()).session(dora)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"dueDate\":\"" + payBy + "\",\"note\":\"Zahlbar bis\",\"fromSuggestion\":true}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.assigneeName").value("dora"))
+                .andExpect(jsonPath("$.source").value("SUGGESTION"));
+        mvc.perform(post("/api/documents/" + docId + "/reminders/dismiss").with(csrf()).session(dora)
+                        .contentType(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").content("{\"date\":\"" + cancelBy + "\",\"label\":\"Kündigungsfrist\"}"))
+                .andExpect(status().isNoContent());
+        mvc.perform(get("/api/documents/" + docId + "/reminders").session(dora))
+                .andExpect(jsonPath("$.reminders", hasSize(1)))
+                .andExpect(jsonPath("$.suggestions", hasSize(0)));
+
+        // ein heute fälliger Termin von Hand: zählt im Menü und kommt einmal per E-Mail
+        mvc.perform(get("/api/reminders/count").session(dora)).andExpect(jsonPath("$.due").value(0));
+        String dueId = jsonValue(mvc.perform(post("/api/documents/" + docId + "/reminders").with(csrf()).session(dora)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content("{\"dueDate\":\"" + java.time.LocalDate.now() + "\",\"note\":\"Wartungsvertrag prüfen\"}"))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        mvc.perform(get("/api/reminders/count").session(dora)).andExpect(jsonPath("$.due").value(1));
+        mvc.perform(get("/api/reminders").session(dora))
+                .andExpect(jsonPath("$.due", hasSize(1)))
+                .andExpect(jsonPath("$.due[0].documentTitle").value("Rechnung Wartung"))
+                .andExpect(jsonPath("$.upcoming", hasSize(1)));
+
+        // wer das Dokument nicht sieht, kann den Termin weder sehen noch übernehmen
+        String privateArea = jsonValue(mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"Vorstand\",\"everyone\":false,\"memberIds\":[]}"))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        int before = documents.findAll().size();
+        String privateDoc = jsonValue(mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", "Protokoll.pdf", "application/pdf", pdf("Vorstandsprotokoll Termintest")))
+                        .param("area", privateArea).with(csrf()).session(adminSession)).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 1);
+        String doraId = jsonValue(mvc.perform(get("/api/auth/status").session(dora)).andReturn(), "$.user.id");
+        mvc.perform(post("/api/documents/" + privateDoc + "/reminders").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"dueDate\":\"" + java.time.LocalDate.now() + "\",\"assigneeId\":\"" + doraId + "\"}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(get("/api/documents/" + privateDoc + "/reminders/assignees").session(adminSession))
+                .andExpect(jsonPath("$[?(@.username == 'dora')]", hasSize(0)))
+                .andExpect(jsonPath("$[?(@.username == 'chef')]", hasSize(1)));
+        String adminReminder = jsonValue(mvc.perform(post("/api/documents/" + privateDoc + "/reminders").with(csrf())
+                        .session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"dueDate\":\"" + java.time.LocalDate.now() + "\"}"))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        mvc.perform(get("/api/reminders").param("mine", "false").session(dora))
+                .andExpect(jsonPath("$.due[?(@.documentId == '" + privateDoc + "')]", hasSize(0)));
+        mvc.perform(post("/api/reminders/" + adminReminder + "/done").with(csrf()).session(dora))
+                .andExpect(status().isNotFound());
+
+        // E-Mail-Versand einrichten (Admin, mit Bestätigung) und testen
+        String smtp = """
+                {"enabled":true,"host":"127.0.0.1","port":%d,"security":"NONE","username":"","password":null,
+                 "from":"aidocs@example.test","appUrl":"https://docs.example.test/","digestHour":0}"""
+                .formatted(greenMail.getSmtp().getPort());
+        mvc.perform(put("/api/settings/mail-out").with(csrf()).session(dora)
+                .contentType(MediaType.APPLICATION_JSON).content(smtp)).andExpect(status().isForbidden());
+        mvc.perform(put("/api/settings/mail-out").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(smtp))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.appUrl").value("https://docs.example.test"))
+                .andExpect(jsonPath("$.passwordSet").value(false));
+        mvc.perform(post("/api/settings/mail-out/test").with(csrf()).session(adminSession))
+                .andExpect(status().isBadRequest());
+        mvc.perform(put("/api/auth/profile").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"chef@example.test\"}")).andExpect(status().isOk());
+        mvc.perform(post("/api/settings/mail-out/test").with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$.ok").value(true));
+        assertThat(mailsTo("chef@example.test")).hasSize(1);
+
+        int sent = reminderNotifier.sendDue();
+        assertThat(sent).isEqualTo(2);
+        List<jakarta.mail.internet.MimeMessage> toDora = mailsTo("dora@example.test");
+        assertThat(toDora).hasSize(1);
+        assertThat(toDora.getFirst().getSubject()).isEqualTo("AIDocuments: Wiedervorlagen fällig (1)");
+        String body = (String) toDora.getFirst().getContent();
+        assertThat(body).contains("Hallo dora", "Rechnung Wartung", "Wartungsvertrag prüfen",
+                "https://docs.example.test/documents/" + docId).doesNotContain("Vorstandsprotokoll");
+        // jeder Termin nur einmal
+        assertThat(reminderNotifier.sendDue()).isZero();
+
+        // erledigen und wieder öffnen
+        mvc.perform(post("/api/reminders/" + dueId + "/done").with(csrf()).session(dora))
+                .andExpect(jsonPath("$.status").value("DONE"))
+                .andExpect(jsonPath("$.doneBy").value("dora"));
+        mvc.perform(get("/api/reminders/count").session(dora)).andExpect(jsonPath("$.due").value(0));
+        mvc.perform(post("/api/reminders/" + dueId + "/reopen").with(csrf()).session(dora))
+                .andExpect(jsonPath("$.status").value("OPEN"));
+        mvc.perform(delete("/api/reminders/" + dueId).with(csrf()).session(dora)).andExpect(status().isNoContent());
+        mvc.perform(get("/api/reminders/count").session(dora)).andExpect(jsonPath("$.due").value(0));
+    }
+
+    @Test
+    @Order(20)
+    void photosAndImagesBecomeOnePagePdfs() throws Exception {
+        int before = documents.findAll().size();
+        byte[] png = image("png", 900, 600);
+        String id = jsonValue(mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", "Kassenbon.PNG", "image/png", png))
+                        .with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 1);
+        assertThat(documents.findById(id).orElseThrow().getOriginalFilename()).isEqualTo("Kassenbon.pdf");
+        try (PDDocument pdf = org.apache.pdfbox.Loader.loadPDF(file("/api/documents/" + id + "/file"))) {
+            assertThat(pdf.getNumberOfPages()).isEqualTo(1);
+            org.apache.pdfbox.pdmodel.common.PDRectangle box = pdf.getPage(0).getMediaBox();
+            assertThat(box.getWidth()).isGreaterThan(box.getHeight());
+        }
+        // dasselbe Foto noch einmal: an der Prüfsumme der Bilddatei erkannt
+        mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", "Kassenbon Kopie.png", "image/png", png))
+                        .with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("DUPLICATE"));
+
+        // quer gespeichertes Handyfoto mit EXIF-Drehung: die Seite steht hochkant
+        String rotated = jsonValue(mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", "IMG_0001.jpg", "image/jpeg",
+                                withExifOrientation(image("jpg", 1200, 800), 6)))
+                        .with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 2);
+        try (PDDocument pdf = org.apache.pdfbox.Loader.loadPDF(file("/api/documents/" + rotated + "/file"))) {
+            org.apache.pdfbox.pdmodel.common.PDRectangle box = pdf.getPage(0).getMediaBox();
+            assertThat(box.getHeight()).isGreaterThan(box.getWidth());
+        }
+
+        mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", "notiz.txt", "text/plain", "nur Text".getBytes()))
+                        .with(csrf()).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$[0].outcome").value("REJECTED"))
+                .andExpect(jsonPath("$[0].message").value("Die Datei ist weder ein PDF noch ein Foto (JPG, PNG, HEIC)."));
+
+        // E-Mail: das angehängte Foto wird übernommen, das im HTML eingebettete Logo nicht
+        GreenMailUser mailbox = greenMail.setUser("fotos@example.test", "fotos@example.test", "imap-test-secret");
+        mailbox.deliver(mailWithPhotoAndLogo(image("jpg", 1600, 1200), image("png", 120, 40)));
+        String accountId = jsonValue(mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"name":"Fotos","host":"127.0.0.1","port":%d,"security":"NONE",
+                                 "username":"fotos@example.test","password":"imap-test-secret","folder":"INBOX",
+                                 "enabled":false}""".formatted(greenMail.getImap().getPort())))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        mailSync.sync(accountId);
+        awaitProcessed(before + 3);
+        assertThat(mailFiles(accountId)).containsExactly("Rechnung Handwerker.pdf");
+        mvc.perform(get("/api/mail-accounts").session(adminSession))
+                .andExpect(jsonPath("$[?(@.id == '" + accountId + "')].lastSyncStatus").value("OK"));
+        mvc.perform(delete("/api/mail-accounts/" + accountId).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Order(21)
+    void theVisibleDocumentsCanBeExportedAsZipWithTheirMetadata() throws Exception {
+        MockHttpSession erna = userWithSession("export-erna");
+        uploadAs(erna, "Exportprobe Eins.pdf", "Exportprobe eins: Wasserrechnung");
+        uploadAs(erna, "Exportprobe Zwei.pdf", "Exportprobe zwei: Hausratversicherung; Beitrag \"jährlich\"");
+        String hidden = jsonValue(mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Export geheim\",\"everyone\":false,\"memberIds\":[]}"))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        int before = documents.findAll().size();
+        mvc.perform(multipart("/api/documents").param("area", hidden)
+                        .file(new MockMultipartFile("files", "Exportprobe Geheim.pdf", "application/pdf",
+                                pdf("Exportprobe geheim: Personalakte")))
+                        .with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED"));
+        awaitProcessed(before + 1);
+
+        // Schritt 1: die Auswahl mit denselben Filtern wie die Liste – fremde Bereiche fehlen
+        MvcResult ticket = mvc.perform(post("/api/documents/export").param("q", "Exportprobe").param("sort", "newest")
+                        .with(csrf()).session(erna))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.count").value(2)).andReturn();
+        String token = jsonValue(ticket, "$.token");
+        mvc.perform(post("/api/documents/export").param("q", "Exportprobe").with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$.count").value(3));
+        mvc.perform(post("/api/documents/export").param("q", "gibtesnirgendwo").with(csrf()).session(erna))
+                .andExpect(status().isBadRequest());
+
+        // der Schlüssel gilt nur in der eigenen Sitzung …
+        mvc.perform(get("/api/documents/export/" + token).session(userWithSession("export-fritz"))).andExpect(status().isNotFound());
+        MvcResult download = mvc.perform(get("/api/documents/export/" + token).session(erna))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, "application/zip"))
+                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, containsString("AIDocuments-Export-")))
+                .andReturn();
+        // … und nur einmal
+        mvc.perform(get("/api/documents/export/" + token).session(erna)).andExpect(status().isNotFound());
+
+        java.util.Map<String, byte[]> entries = new java.util.LinkedHashMap<>();
+        try (java.util.zip.ZipInputStream zip = new java.util.zip.ZipInputStream(
+                new java.io.ByteArrayInputStream(download.getResponse().getContentAsByteArray()))) {
+            for (java.util.zip.ZipEntry entry; (entry = zip.getNextEntry()) != null; ) {
+                entries.put(entry.getName(), zip.readAllBytes());
+            }
+        }
+        List<String> pdfs = entries.keySet().stream().filter(n -> n.startsWith("documents/")).toList();
+        assertThat(pdfs).hasSize(2).allMatch(n -> n.endsWith(".pdf") && n.contains("Exportprobe"));
+        assertThat(new String(entries.get(pdfs.getFirst()), 0, 5, java.nio.charset.StandardCharsets.ISO_8859_1))
+                .isEqualTo("%PDF-");
+        String csv = new String(entries.get("documents.csv"), java.nio.charset.StandardCharsets.UTF_8);
+        assertThat(csv).startsWith("\uFEFFfile;title;").contains("Exportprobe Eins").doesNotContain("Geheim");
+        List<?> json = new com.fasterxml.jackson.databind.ObjectMapper().readValue(entries.get("documents.json"), List.class);
+        assertThat(json).hasSize(2);
+
+        // wer die Zwei-Faktor-Anmeldung nutzt, bestätigt den Export mit einem frischen Code
+        adminSession.setAttribute("aidocuments.confirmedAt", Instant.now().minus(Duration.ofHours(1)));
+        mvc.perform(post("/api/documents/export").param("q", "Exportprobe").with(csrf()).session(adminSession))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("confirmationRequired"));
+        adminSession.setAttribute("aidocuments.confirmedAt", Instant.now());
+    }
+
+    @Test
+    @Order(22)
+    void membersOfAnAreaMayReadEditOrAlsoDelete() throws Exception {
+        MockHttpSession lea = userWithSession("recht-lea");   // nur lesen
+        MockHttpSession max = userWithSession("recht-max");   // bearbeiten
+        MockHttpSession ida = userWithSession("recht-ida");   // auch löschen
+        MockHttpSession ole = userWithSession("recht-ole");   // kein Mitglied
+        String members = "[{\"userId\":\"%s\",\"access\":\"READ\"},{\"userId\":\"%s\",\"access\":\"EDIT\"},"
+                + "{\"userId\":\"%s\",\"access\":\"DELETE\"}]";
+        members = members.formatted(userId(lea), userId(max), userId(ida));
+        adminSession.setAttribute("aidocuments.confirmedAt", Instant.now());
+        String areaId = jsonValue(mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Rechteprobe\",\"everyone\":false,\"members\":" + members + "}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.members[?(@.access == 'READ')]", hasSize(1)))
+                .andExpect(jsonPath("$.members[?(@.access == 'DELETE')]", hasSize(1)))
+                .andReturn(), "$.id");
+        int before = documents.findAll().size();
+        String docId = jsonValue(mvc.perform(multipart("/api/documents").param("area", areaId)
+                        .file(new MockMultipartFile("files", "Rechteprobe.pdf", "application/pdf",
+                                pdf("Rechteprobe: Wartungsvertrag Heizung")))
+                        .with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 1);
+        String change = "{\"title\":\"Wartungsvertrag\",\"tags\":[]}";
+
+        // lesen: ansehen ja, ändern, ablegen, teilen und löschen nicht
+        mvc.perform(get("/api/areas").session(lea))
+                .andExpect(jsonPath("$[?(@.id == '" + areaId + "')].myAccess").value(org.hamcrest.Matchers.contains("READ")));
+        mvc.perform(get("/api/documents/" + docId).session(lea))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.access").value("READ"));
+        mvc.perform(get("/api/documents/" + docId + "/file").session(lea)).andExpect(status().isOk());
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(lea).header("Accept-Language", "de")
+                        .contentType(MediaType.APPLICATION_JSON).content(change))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.detail").value("In diesem Bereich darfst du Dokumente nur ansehen."));
+        mvc.perform(multipart("/api/documents").param("area", areaId)
+                        .file(new MockMultipartFile("files", "Leseprobe.pdf", "application/pdf", pdf("Leseprobe Rechte")))
+                        .with(csrf()).session(lea))
+                .andExpect(status().isForbidden());
+        mvc.perform(get("/api/documents/" + docId + "/shares").session(lea)).andExpect(status().isForbidden());
+        mvc.perform(delete("/api/documents/" + docId).with(csrf()).session(lea)).andExpect(status().isForbidden());
+
+        // bearbeiten: ändern und teilen ja, löschen nicht
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(max)
+                        .contentType(MediaType.APPLICATION_JSON).content(change))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.access").value("EDIT"));
+        mvc.perform(get("/api/documents/" + docId + "/shares").session(max)).andExpect(status().isOk());
+        mvc.perform(delete("/api/documents/" + docId).with(csrf()).session(max)).andExpect(status().isForbidden());
+
+        // löschen – und zurückholen nur, wer löschen darf
+        mvc.perform(delete("/api/documents/" + docId).with(csrf()).session(ida)).andExpect(status().isNoContent());
+        String deletion = historyEntryId(docId, "DELETED");
+        mvc.perform(get("/api/history").param("size", "200").session(max))
+                .andExpect(jsonPath("$.items[?(@.id == '" + deletion + "')].undoable")
+                        .value(org.hamcrest.Matchers.contains(false)));
+        mvc.perform(post("/api/history/" + deletion + "/undo").with(csrf()).session(max))
+                .andExpect(status().isForbidden());
+        mvc.perform(post("/api/history/" + deletion + "/undo").with(csrf()).session(ida)).andExpect(status().isOk());
+
+        // für alle freigegeben, aber nur zum Lesen: Mitglieder behalten ihr höheres Recht
+        mvc.perform(put("/api/areas/" + areaId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Rechteprobe\",\"everyone\":true,\"everyoneAccess\":\"READ\",\"members\":"
+                                + members + "}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.everyoneAccess").value("READ"));
+        mvc.perform(get("/api/documents/" + docId).session(ole))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.access").value("READ"));
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(ole)
+                        .contentType(MediaType.APPLICATION_JSON).content(change))
+                .andExpect(status().isForbidden());
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(max)
+                        .contentType(MediaType.APPLICATION_JSON).content(change))
+                .andExpect(status().isOk());
+        // in einen nur lesbaren Bereich verschiebt niemand
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(ole)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"x\",\"tags\":[],\"areaId\":\"general\"}"))
+                .andExpect(status().isForbidden());
+        mvc.perform(get("/api/documents").param("q", "Rechteprobe").session(ole))
+                .andExpect(jsonPath("$.items[0].access").value("READ"));
+    }
+
+    @Test
+    @Order(23)
+    void pagesCanBeRearrangedSplitAndAppended() throws Exception {
+        MockHttpSession sam = userWithSession("seiten-sam"); // im allgemeinen Bereich: bearbeiten, nicht löschen
+        String id = uploadPdf(sam, "Seitenprobe.pdf", pages("Seitenprobe Alpha", "Seitenprobe Beta", "Seitenprobe Gamma"));
+
+        mvc.perform(get("/api/documents/" + id + "/pages/2/image").session(sam))
+                .andExpect(status().isOk()).andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().contentType(MediaType.IMAGE_JPEG));
+        mvc.perform(get("/api/documents/" + id + "/pages/9/image").session(sam)).andExpect(status().isNotFound());
+
+        // umsortieren, drehen, entfernen – als neue Fassung
+        mvc.perform(post("/api/documents/" + id + "/pages").with(csrf()).session(sam)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"pages\":[{\"page\":1,\"rotate\":0},{\"page\":1,\"rotate\":0}]}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/documents/" + id + "/pages").with(csrf()).session(sam)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"pages\":[]}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/documents/" + id + "/pages").with(csrf()).session(sam)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"pages\":[{\"page\":3,\"rotate\":0},{\"page\":1,\"rotate\":90}]}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.pageCount").value(2));
+        String text = jsonValue(mvc.perform(get("/api/documents/" + id + "/text").session(sam)).andReturn(), "$.content");
+        assertThat(text).doesNotContain("Beta");
+        assertThat(text.indexOf("Gamma")).isLessThan(text.indexOf("Alpha"));
+        try (PDDocument pdf = org.apache.pdfbox.Loader.loadPDF(mvc.perform(get("/api/documents/" + id + "/file").session(sam))
+                .andReturn().getResponse().getContentAsByteArray())) {
+            assertThat(pdf.getPage(1).getRotation()).isEqualTo(90);
+        }
+        mvc.perform(get("/api/documents/" + id + "/versions").session(sam))
+                .andExpect(jsonPath("$[?(@.kind == 'PAGES')]", hasSize(1)));
+
+        // trennen: ab Seite 2 ein eigenes Dokument im selben Bereich
+        String letters = uploadPdf(sam, "Trennprobe.pdf", pages("Trennprobe Eins", "Trennprobe Zwei", "Trennprobe Drei"));
+        mvc.perform(post("/api/documents/" + letters + "/split").with(csrf()).session(sam)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"fromPage\":1}"))
+                .andExpect(status().isBadRequest());
+        int before = documents.findAll().size();
+        String created = jsonValue(mvc.perform(post("/api/documents/" + letters + "/split").with(csrf()).session(sam)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"fromPage\":2}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.original.pageCount").value(1)).andReturn(), "$.createdId");
+        awaitProcessed(before + 1);
+        mvc.perform(get("/api/documents/" + created).session(sam))
+                .andExpect(jsonPath("$.pageCount").value(2)).andExpect(jsonPath("$.areaId").value("general"));
+        assertThat(jsonValue(mvc.perform(get("/api/documents/" + created + "/text").session(sam)).andReturn(), "$.content"))
+                .contains("Zwei", "Drei").doesNotContain("Eins");
+
+        // anhängen: der angehängte Teil kommt in den Papierkorb – dafür braucht es das Recht zum Löschen
+        String merge = "{\"documentIds\":[\"" + created + "\"]}";
+        mvc.perform(post("/api/documents/" + letters + "/merge").with(csrf()).session(sam)
+                        .contentType(MediaType.APPLICATION_JSON).content(merge))
+                .andExpect(status().isForbidden());
+        mvc.perform(post("/api/documents/" + letters + "/merge").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"documentIds\":[\"" + letters + "\"]}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/documents/" + letters + "/merge").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(merge))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.pageCount").value(3));
+        mvc.perform(get("/api/documents/" + created).session(sam)).andExpect(status().isNotFound());
+        assertThat(jsonValue(mvc.perform(get("/api/documents/" + letters + "/text").session(sam)).andReturn(), "$.content"))
+                .contains("Eins", "Zwei", "Drei");
+
+        // mehrere Fotos als ein Dokument mit je einer Seite
+        before = documents.findAll().size();
+        MockMultipartFile first = new MockMultipartFile("files", "Brief Seite 1.jpg", "image/jpeg", image("jpg", 1200, 1700));
+        MockMultipartFile second = new MockMultipartFile("files", "Brief Seite 2.png", "image/png", image("png", 1200, 1650));
+        String photos = jsonValue(mvc.perform(multipart("/api/documents").file(first).file(second).param("combine", "true")
+                        .with(csrf()).session(sam))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 1);
+        mvc.perform(get("/api/documents/" + photos).session(sam))
+                .andExpect(jsonPath("$.pageCount").value(2))
+                .andExpect(jsonPath("$.originalFilename").value("Brief Seite 1.pdf"));
+        mvc.perform(multipart("/api/documents").file(first).file(second).param("combine", "true").with(csrf()).session(sam))
+                .andExpect(jsonPath("$[0].outcome").value("DUPLICATE"));
+        mvc.perform(multipart("/api/documents").file(first)
+                        .file(new MockMultipartFile("files", "Anlage.pdf", "application/pdf", pdf("Anlage zum Foto")))
+                        .param("combine", "true").with(csrf()).session(sam))
+                .andExpect(jsonPath("$[0].outcome").value("REJECTED"));
+    }
+
+    @Test
+    @Order(24)
+    void recurringRemindersAndContractsKeepTheirDeadlines() throws Exception {
+        MockHttpSession vera = userWithSession("vertrag-vera");
+        String id = uploadPdf(vera, "Stromvertrag.pdf", pdf("Stromliefervertrag Vertragsprobe", "Laufzeit 12 Monate"));
+        LocalDate today = LocalDate.now();
+
+        // wiederkehrend: erledigt -> der nächste Termin im selben Rhythmus, nur einmal
+        String reminder = jsonValue(mvc.perform(post("/api/documents/" + id + "/reminders").with(csrf()).session(vera)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"dueDate\":\"" + today.minusDays(1) + "\",\"note\":\"Zählerstand melden\",\"repeatMonths\":3}"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.repeatMonths").value(3)).andReturn(), "$.id");
+        mvc.perform(post("/api/reminders/" + reminder + "/done").with(csrf()).session(vera)).andExpect(status().isOk());
+        mvc.perform(post("/api/reminders/" + reminder + "/reopen").with(csrf()).session(vera)).andExpect(status().isOk());
+        mvc.perform(post("/api/reminders/" + reminder + "/done").with(csrf()).session(vera)).andExpect(status().isOk());
+        String next = today.minusDays(1).plusMonths(3).toString();
+        mvc.perform(get("/api/documents/" + id + "/reminders").session(vera))
+                .andExpect(jsonPath("$.reminders[?(@.status == 'OPEN' && @.dueDate == '" + next + "')]", hasSize(1)))
+                .andExpect(jsonPath("$.reminders[?(@.status == 'OPEN')].note").value(org.hamcrest.Matchers.contains("Zählerstand melden")));
+
+        // Vertrag: Erinnerung 14 Tage vor Ende der Kündigungsfrist
+        LocalDate end = today.plusMonths(3);
+        LocalDate deadline = end.minusMonths(1);
+        String contract = "{\"endDate\":\"%s\",\"noticeMonths\":1,\"renewalMonths\":12,\"amount\":\"49 EUR im Monat\",\"cancelled\":%s}";
+        mvc.perform(put("/api/documents/" + id + "/contract").with(csrf()).session(vera).header("Accept-Language", "de")
+                        .contentType(MediaType.APPLICATION_JSON).content(contract.formatted(end, false)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.noticeDeadline").value(deadline.toString()))
+                .andExpect(jsonPath("$.status").value("ACTIVE"))
+                .andExpect(jsonPath("$.reminderDays").value(14));
+        mvc.perform(get("/api/documents/" + id + "/reminders").session(vera).header("Accept-Language", "de"))
+                .andExpect(jsonPath("$.reminders[?(@.source == 'CONTRACT')].dueDate")
+                        .value(org.hamcrest.Matchers.contains(deadline.minusDays(14).toString())))
+                .andExpect(jsonPath("$.reminders[?(@.source == 'CONTRACT')].note")
+                        .value(org.hamcrest.Matchers.contains(org.hamcrest.Matchers.startsWith("Vertrag kündigen bis spätestens "
+                                + deadline.format(java.time.format.DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.LONG)
+                                        .withLocale(java.util.Locale.GERMAN)) + " "))));
+        mvc.perform(get("/api/contracts").session(vera))
+                .andExpect(jsonPath("$[?(@.documentId == '" + id + "')].amount").value(org.hamcrest.Matchers.contains("49 EUR im Monat")));
+        mvc.perform(put("/api/documents/" + id + "/contract").with(csrf()).session(vera)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"startDate\":\"" + end + "\",\"endDate\":\"" + today + "\",\"cancelled\":false}"))
+                .andExpect(status().isBadRequest());
+
+        // nicht gekündigt und abgelaufen: verlängert sich um 12 Monate, die Erinnerung zieht mit
+        jdbc.sql("UPDATE contracts SET end_date = ? WHERE document_id = ?").param(today.minusDays(3).toString()).param(id).update();
+        contractService.renewExpired();
+        LocalDate renewed = today.minusDays(3).plusMonths(12);
+        mvc.perform(get("/api/documents/" + id + "/contract").session(vera))
+                .andExpect(jsonPath("$.endDate").value(renewed.toString()));
+        mvc.perform(get("/api/documents/" + id + "/reminders").session(vera))
+                .andExpect(jsonPath("$.reminders[?(@.source == 'CONTRACT' && @.status == 'OPEN')].dueDate")
+                        .value(org.hamcrest.Matchers.contains(renewed.minusMonths(1).minusDays(14).toString())));
+
+        // gekündigt: keine offene Erinnerung mehr; Angaben entfernen
+        mvc.perform(put("/api/documents/" + id + "/contract").with(csrf()).session(vera)
+                        .contentType(MediaType.APPLICATION_JSON).content(contract.formatted(renewed, true)))
+                .andExpect(jsonPath("$.status").value("CANCELLED"));
+        mvc.perform(get("/api/documents/" + id + "/reminders").session(vera))
+                .andExpect(jsonPath("$.reminders[?(@.source == 'CONTRACT' && @.status == 'OPEN')]", hasSize(0)));
+        mvc.perform(delete("/api/documents/" + id + "/contract").with(csrf()).session(vera)).andExpect(status().isNoContent());
+        mvc.perform(get("/api/documents/" + id + "/contract").session(vera)).andExpect(status().isNoContent());
+    }
+
+    private String uploadPdf(MockHttpSession session, String name, byte[] content) throws Exception {
+        int before = documents.findAll().size();
+        String id = jsonValue(mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", name, "application/pdf", content)).with(csrf()).session(session))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 1);
+        return id;
+    }
+
+    /** Ein PDF mit je einer Zeile Text auf jeder Seite. */
+    private static byte[] pages(String... texts) throws IOException {
+        try (PDDocument document = new PDDocument(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            for (String text : texts) {
+                PDPage page = new PDPage();
+                document.addPage(page);
+                try (PDPageContentStream content = new PDPageContentStream(document, page)) {
+                    content.beginText();
+                    content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+                    content.newLineAtOffset(60, 720);
+                    content.showText(text);
+                    content.endText();
+                }
+            }
+            document.save(out);
+            return out.toByteArray();
+        }
+    }
+
+    private String userId(MockHttpSession session) throws Exception {
+        return jsonValue(mvc.perform(get("/api/auth/status").session(session)).andReturn(), "$.user.id");
+    }
+
+    /** Ein Testbild mit etwas Text (für die Texterkennung) im angegebenen Format. */
+    private static byte[] image(String format, int width, int height) throws IOException {
+        java.awt.image.BufferedImage img = new java.awt.image.BufferedImage(width, height,
+                java.awt.image.BufferedImage.TYPE_INT_RGB);
+        java.awt.Graphics2D g = img.createGraphics();
+        g.setColor(java.awt.Color.WHITE);
+        g.fillRect(0, 0, width, height);
+        g.setColor(java.awt.Color.BLACK);
+        g.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, java.awt.Font.PLAIN, Math.max(10, height / 12)));
+        g.drawString("Fototest " + width + "x" + height, width / 10, height / 2);
+        g.dispose();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        assertThat(javax.imageio.ImageIO.write(img, format, out)).isTrue();
+        return out.toByteArray();
+    }
+
+    /** Fügt hinter dem JPEG-Anfang ein APP1-Segment mit EXIF-Ausrichtung ein (wie es Smartphones schreiben). */
+    private static byte[] withExifOrientation(byte[] jpeg, int orientation) {
+        java.nio.ByteBuffer app1 = java.nio.ByteBuffer.allocate(36);
+        app1.putShort((short) 0xFFE1).putShort((short) 34)
+                .put(new byte[] {'E', 'x', 'i', 'f', 0, 0})
+                .put(new byte[] {'M', 'M'}).putShort((short) 42).putInt(8)
+                .putShort((short) 1)
+                .putShort((short) 0x0112).putShort((short) 3).putInt(1).putShort((short) orientation).putShort((short) 0)
+                .putInt(0);
+        byte[] result = new byte[jpeg.length + app1.capacity()];
+        System.arraycopy(jpeg, 0, result, 0, 2);
+        System.arraycopy(app1.array(), 0, result, 2, app1.capacity());
+        System.arraycopy(jpeg, 2, result, 2 + app1.capacity(), jpeg.length - 2);
+        return result;
+    }
+
+    private static MimeMessage mailWithPhotoAndLogo(byte[] photo, byte[] logo) throws Exception {
+        MimeMessage message = new MimeMessage(Session.getInstance(new Properties()));
+        message.setFrom(new InternetAddress("handwerker@example.test"));
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress("fotos@example.test"));
+        message.setSubject("Rechnung");
+        MimeBodyPart html = new MimeBodyPart();
+        html.setText("<p>Anbei die Rechnung.</p><img src=\"cid:logo\">", "UTF-8", "html");
+        MimeBodyPart inlineLogo = new MimeBodyPart();
+        inlineLogo.setDataHandler(new DataHandler(new ByteArrayDataSource(logo, "image/png")));
+        inlineLogo.setContentID("<logo>");
+        inlineLogo.setDisposition(jakarta.mail.Part.INLINE);
+        inlineLogo.setFileName("logo.png");
+        MimeMultipart related = new MimeMultipart("related", html, inlineLogo);
+        MimeBodyPart body = new MimeBodyPart();
+        body.setContent(related);
+        MimeBodyPart attachment = new MimeBodyPart();
+        attachment.setDataHandler(new DataHandler(new ByteArrayDataSource(photo, "image/jpeg")));
+        attachment.setFileName("Rechnung Handwerker.jpg");
+        attachment.setDisposition(jakarta.mail.Part.ATTACHMENT);
+        message.setContent(new MimeMultipart(body, attachment));
+        message.saveChanges();
+        return message;
+    }
+
+    @Test
+    @Order(25)
+    void adminsAndSubscribersAreNotifiedByEmail() throws Exception {
+        // der E-Mail-Versand ist seit Order 19 eingerichtet, der Admin hat die Adresse chef@example.test
+        jdbc.sql("DELETE FROM retention_notices").update();
+        jdbc.sql("UPDATE users SET digest_until = NULL").update();
+        mvc.perform(put("/api/auth/profile").with(csrf()).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"chef@example.test\",\"notifyNewDocuments\":true}"))
+                .andExpect(jsonPath("$.notifyNewDocuments").value(true))
+                .andExpect(jsonPath("$.notifyAdmin").value(true));
+
+        // abgelaufene Aufbewahrungsfrist: einmal melden, nichts löschen; eine geänderte Frist erneut
+        MockHttpSession dina = userWithSession("digest-dina");
+        String own = uploadPdf(dina, "Dinas Beleg.pdf", pdf("Beleg von Dina", "Betrag 12 Euro"));
+        jdbc.sql("UPDATE documents SET retain_until = '2001-12-31' WHERE id = ?").param(own).update();
+        int before = mailsTo("chef@example.test").size();
+        assertThat(notifications.sendRetentionNotices()).isEqualTo(1);
+        List<jakarta.mail.internet.MimeMessage> toChef = mailsTo("chef@example.test");
+        assertThat(toChef).hasSize(before + 1);
+        assertThat(toChef.getLast().getSubject()).startsWith("AIDocuments: Aufbewahrungsfrist abgelaufen");
+        assertThat((String) toChef.getLast().getContent()).contains("31. Dezember 2001",
+                "https://docs.example.test/?retention=expired");
+        assertThat(notifications.sendRetentionNotices()).isZero();
+        jdbc.sql("UPDATE documents SET retain_until = '2002-12-31' WHERE id = ?").param(own).update();
+        assertThat(notifications.sendRetentionNotices()).isEqualTo(1);
+        assertThat(documents.findById(own)).isPresent();
+        jdbc.sql("UPDATE documents SET retain_until = NULL WHERE id = ?").param(own).update();
+
+        // tägliche Übersicht: nur Dokumente aus den eigenen Bereichen, einmal am Tag
+        String hidden = documents.findAll().stream().filter(d -> "Protokoll.pdf".equals(d.getOriginalFilename()))
+                .findFirst().orElseThrow().getId();
+        jdbc.sql("UPDATE documents SET created_at = created_at - 259200000 WHERE id NOT IN (?, ?)")
+                .param(own).param(hidden).update();
+        try {
+            mvc.perform(put("/api/auth/profile").with(csrf()).session(dina).contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"email\":\"dina@example.test\",\"notifyNewDocuments\":true}"))
+                    .andExpect(jsonPath("$.notifyNewDocuments").value(true));
+            Instant now = Instant.now();
+            assertThat(notifications.sendDigests(now)).isEqualTo(2);
+            String toDina = (String) mailsTo("dina@example.test").getLast().getContent();
+            assertThat(toDina).contains("/documents/" + own).doesNotContain(hidden);
+            String digest = (String) mailsTo("chef@example.test").getLast().getContent();
+            assertThat(digest).contains("/documents/" + own, "/documents/" + hidden);
+            assertThat(notifications.sendDigests(now.plusSeconds(60))).isZero();
+        } finally {
+            jdbc.sql("UPDATE documents SET created_at = created_at + 259200000 WHERE id NOT IN (?, ?)")
+                    .param(own).param(hidden).update();
+            jdbc.sql("UPDATE users SET notify_new_documents = ?").param(false).update();
+        }
+
+        // Postfach: erst nach mehreren Fehlschlägen in Folge, einmal je Fehlerserie
+        String body = """
+                {"name":"Kaputt","host":"127.0.0.1","port":1,"security":"NONE",
+                 "username":"scans@example.test","password":"imap-test-secret","folder":"INBOX","enabled":false}""";
+        String account = jsonValue(mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isCreated()).andReturn(), "$.id");
+        before = mailsTo("chef@example.test").size();
+        for (int i = 0; i < de.aidocuments.mail.MailSyncService.FAILURES_BEFORE_NOTICE + 1; i++) {
+            mailSync.sync(account);
+        }
+        // erst jetzt aktiv – sonst stieße schon das Anlegen einen Abruf an
+        jdbc.sql("UPDATE mail_accounts SET enabled = ? WHERE id = ?").param(true).param(account).update();
+        toChef = mailsTo("chef@example.test");
+        assertThat(toChef).hasSize(before + 1);
+        assertThat(toChef.getLast().getSubject()).isEqualTo("AIDocuments: Postfach „Kaputt“ lässt sich nicht abrufen");
+        assertThat((String) toChef.getLast().getContent()).contains("https://docs.example.test/settings/mailboxes");
+        mvc.perform(get("/api/system").session(adminSession)).andExpect(jsonPath("$.failingMailboxes[0]").value("Kaputt"));
+        mvc.perform(get("/api/system").session(dina)).andExpect(jsonPath("$.failingMailboxes", hasSize(0)));
+        jdbc.sql("UPDATE mail_accounts SET port = ? WHERE id = ?").param(greenMail.getImap().getPort()).param(account)
+                .update();
+        mailSync.sync(account);
+        mvc.perform(get("/api/system").session(adminSession)).andExpect(jsonPath("$.failingMailboxes", hasSize(0)));
+        mvc.perform(delete("/api/mail-accounts/" + account).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Order(26)
+    void backupAndImportKeepEverything() throws Exception {
+        MockHttpSession gustav = userWithSession("backup-gustav");
+        mvc.perform(get("/api/settings/backup").session(gustav)).andExpect(status().isForbidden());
+        mvc.perform(post("/api/settings/backup").with(csrf()).session(gustav)).andExpect(status().isForbidden());
+
+        boolean sqlite = !"mariadb".equals(System.getProperty("aidocs.test.database"));
+        mvc.perform(get("/api/settings/backup").session(adminSession))
+                .andExpect(jsonPath("$.available").value(sqlite));
+        if (sqlite) {
+            String token = jsonValue(mvc.perform(post("/api/settings/backup").with(csrf()).session(adminSession))
+                    .andExpect(status().isOk()).andReturn(), "$.token");
+            mvc.perform(get("/api/settings/backup/" + token).session(gustav)).andExpect(status().isForbidden());
+            MvcResult download = mvc.perform(get("/api/settings/backup/" + token).session(adminSession))
+                    .andExpect(status().isOk())
+                    .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, containsString("AIDocuments-Sicherung-")))
+                    .andReturn();
+            mvc.perform(get("/api/settings/backup/" + token).session(adminSession)).andExpect(status().isNotFound());
+            java.util.Map<String, byte[]> entries = unzip(download.getResponse().getContentAsByteArray());
+            assertThat(entries).containsKeys("README.txt", "aidocuments.db", "secret.key");
+            assertThat(new String(entries.get("aidocuments.db"), 0, 15, java.nio.charset.StandardCharsets.US_ASCII))
+                    .isEqualTo("SQLite format 3");
+            assertThat(entries.keySet().stream().filter(n -> n.startsWith("files/")).count())
+                    .isGreaterThanOrEqualTo(documents.findAll().size());
+            mvc.perform(get("/api/settings/backup").session(adminSession))
+                    .andExpect(jsonPath("$.lastBackupAt").isNotEmpty());
+        } else {
+            mvc.perform(post("/api/settings/backup").with(csrf()).session(adminSession))
+                    .andExpect(status().isConflict());
+        }
+
+        // Import eines Exports: die Angaben bleiben, die KI liest nicht nochmals; Fehlendes wird gemeldet
+        String json = """
+                [{"file":"documents/2024-05-01 Mietvertrag.pdf","title":"Importierter Mietvertrag","category":"Vertrag",
+                  "correspondent":"Hausverwaltung Importprobe","tags":["Miete","import"],"documentDate":"2024-05-01",
+                  "summary":"Mietvertrag aus einer anderen Installation","keyFacts":[{"label":"Miete","value":"800 €"}],
+                  "area":"gibt es hier nicht","originalFilename":"Mietvertrag.pdf","source":"MAIL",
+                  "mailSubject":"Ihr Vertrag","textFile":"texts/2024-05-01 Mietvertrag.txt","ocr":true},
+                 {"file":"documents/fehlt.pdf","title":"Fehlt"}]""";
+        byte[] archive = zip(java.util.Map.of(
+                "documents.json", json.getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                "documents/2024-05-01 Mietvertrag.pdf", pdf("Seite eins des Mietvertrags"),
+                "texts/2024-05-01 Mietvertrag.txt", "Erkannter Volltext mit dem Zauberwort Importfeder"
+                        .getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+        mvc.perform(post("/api/settings/backup/import").with(csrf()).session(gustav)
+                .contentType("application/zip").content(archive)).andExpect(status().isForbidden());
+        mvc.perform(post("/api/settings/backup/import").with(csrf()).session(adminSession)
+                        .contentType("application/zip").content("kein zip".getBytes()))
+                .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/settings/backup/import").with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de").contentType("application/zip").content(archive))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.imported").value(1))
+                .andExpect(jsonPath("$.failed").value(1))
+                .andExpect(jsonPath("$.problems[0]").value("documents/fehlt.pdf: Die Datei fehlt im Archiv."));
+        Document imported = documents.findAll().stream()
+                .filter(d -> "Importierter Mietvertrag".equals(d.getTitle())).findFirst().orElseThrow();
+        assertThat(imported.getStatus()).isEqualTo(DocumentStatus.INDEXED);
+        assertThat(imported.getCategory()).isEqualTo("Vertrag");
+        assertThat(imported.getTags()).containsExactlyInAnyOrder("miete", "import");
+        assertThat(imported.getDocumentDate()).isEqualTo(LocalDate.of(2024, 5, 1));
+        assertThat(imported.getSource()).isEqualTo(DocumentSource.MAIL);
+        assertThat(imported.getMailSubject()).isEqualTo("Ihr Vertrag");
+        assertThat(imported.isOcrUsed()).isTrue();
+        assertThat(imported.getPageCount()).isEqualTo(1);
+        mvc.perform(get("/api/documents").param("q", "Importfeder").session(adminSession))
+                .andExpect(jsonPath("$.items[0].id").value(imported.getId()));
+        // ein zweites Mal: nichts doppelt
+        mvc.perform(post("/api/settings/backup/import").with(csrf()).session(adminSession)
+                        .contentType("application/zip").content(archive))
+                .andExpect(jsonPath("$.imported").value(0))
+                .andExpect(jsonPath("$.duplicates").value(1));
+        // eine hier bearbeitete Fassung (andere Datei, aber dieselbe Prüfsumme des Originals) gilt ebenso als vorhanden
+        byte[] edited = zip(java.util.Map.of(
+                "documents.json", ("[{\"file\":\"documents/bearbeitet.pdf\",\"title\":\"Bearbeitet\",\"sha256\":\""
+                        + imported.getSha256() + "\"}]").getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                "documents/bearbeitet.pdf", pdf("Seite eins des Mietvertrags, mit Anmerkung")));
+        mvc.perform(post("/api/settings/backup/import").with(csrf()).session(adminSession)
+                        .contentType("application/zip").content(edited))
+                .andExpect(jsonPath("$.imported").value(0))
+                .andExpect(jsonPath("$.duplicates").value(1));
+
+        // der Export bringt nun auch den Text mit – ein Kreislauf ohne Verlust
+        String exportToken = jsonValue(mvc.perform(post("/api/documents/export").param("q", "Importfeder")
+                .with(csrf()).session(adminSession)).andExpect(jsonPath("$.count").value(1)).andReturn(), "$.token");
+        java.util.Map<String, byte[]> exported = unzip(mvc.perform(get("/api/documents/export/" + exportToken)
+                .session(adminSession)).andReturn().getResponse().getContentAsByteArray());
+        String exportedJson = new String(exported.get("documents.json"), java.nio.charset.StandardCharsets.UTF_8);
+        assertThat(exportedJson).contains("\"textFile\"", "\"ocr\" : true");
+        assertThat(exported.keySet()).anyMatch(n -> n.startsWith("texts/") && n.endsWith(".txt"));
+    }
+
+    private static final com.fasterxml.jackson.databind.ObjectMapper JSON =
+            new com.fasterxml.jackson.databind.ObjectMapper();
+
+    @Test
+    @Order(27)
+    void passkeysSignInWithoutPassword() throws Exception {
+        String origin = "http://localhost"; // so sieht MockMvc die Adresse
+        MockHttpSession paula = userWithSession("passkey-paula");
+        SoftPasskey passkey = new SoftPasskey();
+
+        // anlegen: nur mit dem Passwort (ohne Zwei-Faktor-Anmeldung)
+        mvc.perform(post("/api/auth/passkeys/options").with(csrf()).session(paula)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"password\":\"falsch\"}"))
+                .andExpect(status().isBadRequest());
+        String creation = mvc.perform(post("/api/auth/passkeys/options").with(csrf()).session(paula)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"password\":\"test-Passwort-7\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rp.id").value("localhost"))
+                .andExpect(jsonPath("$.authenticatorSelection.userVerification").value("required"))
+                .andReturn().getResponse().getContentAsString();
+        String register = JSON.writeValueAsString(java.util.Map.of("name", "Laptop",
+                "credential", passkey.create(creation, origin)));
+        mvc.perform(post("/api/auth/passkeys").with(csrf()).session(paula).contentType(MediaType.APPLICATION_JSON)
+                        .content(register))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Laptop"));
+        // die Challenge gilt nur einmal
+        mvc.perform(post("/api/auth/passkeys").with(csrf()).session(paula).contentType(MediaType.APPLICATION_JSON)
+                .content(register)).andExpect(status().isBadRequest());
+        String passkeyId = jsonValue(mvc.perform(get("/api/auth/passkeys").session(paula))
+                .andExpect(jsonPath("$", hasSize(1))).andReturn(), "$[0].id");
+
+        // anmelden ohne Passwort, in einer neuen Sitzung
+        MockHttpSession fresh = new MockHttpSession();
+        String request = mvc.perform(post("/api/auth/passkey/options").with(csrf()).session(fresh))
+                .andExpect(jsonPath("$.rpId").value("localhost")).andReturn().getResponse().getContentAsString();
+        String assertion = passkey.get(request, origin);
+        mvc.perform(post("/api/auth/passkey/login").with(csrf()).session(fresh)
+                        .contentType(MediaType.APPLICATION_JSON).content(assertion))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("passkey-paula"));
+        mvc.perform(get("/api/auth/status").session(fresh)).andExpect(jsonPath("$.user.username").value("passkey-paula"));
+        mvc.perform(get("/api/auth/passkeys").session(paula)).andExpect(jsonPath("$[0].lastUsedAt").isNotEmpty());
+
+        // dieselbe Antwort ein zweites Mal, eine fremde Adresse, eine fremde Challenge: abgelehnt
+        MockHttpSession other = new MockHttpSession();
+        mvc.perform(post("/api/auth/passkey/login").with(csrf()).session(other)
+                .contentType(MediaType.APPLICATION_JSON).content(assertion)).andExpect(status().isBadRequest());
+        String challenge = mvc.perform(post("/api/auth/passkey/options").with(csrf()).session(other))
+                .andReturn().getResponse().getContentAsString();
+        mvc.perform(post("/api/auth/passkey/login").with(csrf()).session(other)
+                        .contentType(MediaType.APPLICATION_JSON).content(passkey.get(challenge, "https://evil.example")))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/auth/passkey/options").with(csrf()).session(other)).andExpect(status().isOk());
+        mvc.perform(post("/api/auth/passkey/login").with(csrf()).session(other)
+                        .contentType(MediaType.APPLICATION_JSON).content(assertion))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(get("/api/auth/status").session(other)).andExpect(jsonPath("$.user").doesNotExist());
+
+        // entfernt: damit kommt niemand mehr herein
+        mvc.perform(delete("/api/auth/passkeys/" + passkeyId).with(csrf()).session(paula))
+                .andExpect(status().isNoContent());
+        MockHttpSession late = new MockHttpSession();
+        String lateOptions = mvc.perform(post("/api/auth/passkey/options").with(csrf()).session(late))
+                .andReturn().getResponse().getContentAsString();
+        mvc.perform(post("/api/auth/passkey/login").with(csrf()).session(late)
+                        .contentType(MediaType.APPLICATION_JSON).content(passkey.get(lateOptions, origin)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @Order(28)
+    void automaticBackupWritesKeepsTheNewestAndWarns() throws Exception {
+        String auto = "/api/settings/backup/auto";
+        String settings = """
+                {"enabled":%s,"hour":3,"keep":2,"directory":"%s","warnAfterDays":7}""";
+        if (mariaDb != null) {
+            // mit MariaDB sichert man die Datenbank mit deren Werkzeugen – kein Hinweis, keine Einstellung
+            mvc.perform(get(auto).session(adminSession)).andExpect(jsonPath("$.available").value(false));
+            mvc.perform(put(auto).with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                    .content(settings.formatted(true, ""))).andExpect(status().isConflict());
+            mvc.perform(post(auto + "/run").with(csrf()).session(adminSession)).andExpect(status().isConflict());
+            mvc.perform(get("/api/system").session(adminSession)).andExpect(jsonPath("$.backup").doesNotExist());
+            return;
+        }
+        mvc.perform(get(auto).session(adminSession))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.available").value(true))
+                .andExpect(jsonPath("$.enabled").value(false))
+                .andExpect(jsonPath("$.nextRunAt").doesNotExist())
+                .andExpect(jsonPath("$.defaultDirectory").value(dataDir.resolve("backups").toString()));
+
+        // noch nie gesichert: der Admin sieht den Hinweis, ein Benutzer nicht
+        jdbc.sql("DELETE FROM settings WHERE id = 'backup'").update();
+        mvc.perform(get("/api/system").session(adminSession))
+                .andExpect(jsonPath("$.backup.overdue").value(true))
+                .andExpect(jsonPath("$.backup.lastBackupAt").doesNotExist())
+                .andExpect(jsonPath("$.backup.failure").doesNotExist());
+        MockHttpSession user = userWithSession("sicherung-sina");
+        mvc.perform(get("/api/system").session(user)).andExpect(jsonPath("$.backup").doesNotExist());
+        mvc.perform(get(auto).session(user)).andExpect(status().isForbidden());
+
+        // ungültige Ordner
+        for (String bad : List.of("relativ/ordner", dataDir.toString(), dataDir.resolve("files/x").toString())) {
+            mvc.perform(put(auto).with(csrf()).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                            .contentType(MediaType.APPLICATION_JSON).content(settings.formatted(true, bad)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").isNotEmpty());
+        }
+        mvc.perform(put(auto).with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"enabled\":true,\"hour\":24,\"keep\":0,\"directory\":\"\",\"warnAfterDays\":7}"))
+                .andExpect(status().isBadRequest());
+
+        Path target = createTempDir("aidocs-sicherungen").resolve("nachts");
+        mvc.perform(put(auto).with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content(settings.formatted(true, target)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.enabled").value(true))
+                .andExpect(jsonPath("$.directory").value(target.toString()))
+                .andExpect(jsonPath("$.nextRunAt").isNotEmpty());
+        assertThat(target).isDirectory();
+
+        // drei Läufe, zwei Stände bleiben; fremde Dateien im Ordner rührt die Sicherung nicht an
+        Files.writeString(target.resolve("notizen.txt"), "bleibt");
+        for (int i = 0; i < 3; i++) {
+            autoBackup.run();
+            Thread.sleep(1100); // der Name trägt die Sekunde
+        }
+        List<String> names;
+        try (var files = Files.list(target)) {
+            names = files.map(f -> f.getFileName().toString()).sorted().toList();
+        }
+        assertThat(names).hasSize(3).contains("notizen.txt");
+        assertThat(names.stream().filter(n -> n.matches("AIDocuments-Sicherung-\\d{4}-\\d{2}-\\d{2}-\\d{6}\\.zip")))
+                .hasSize(2);
+        byte[] newest = Files.readAllBytes(target.resolve(names.get(1)));
+        assertThat(unzip(newest)).containsKey("README.txt").containsKey("aidocuments.db");
+        mvc.perform(get(auto).session(adminSession))
+                .andExpect(jsonPath("$.lastRunOk").value(true))
+                .andExpect(jsonPath("$.backups", hasSize(2)))
+                .andExpect(jsonPath("$.backups[0].name").value(names.get(1)));
+        // gesichert: kein Hinweis mehr
+        mvc.perform(get("/api/system").session(adminSession)).andExpect(jsonPath("$.backup").doesNotExist());
+
+        // der Ordner verschwindet (etwa: Netzlaufwerk weg) – Hinweis und genau eine E-Mail je Fehlerserie
+        int mailsBefore = mailsTo("chef@example.test").size();
+        try (var files = Files.list(target)) {
+            for (Path file : files.toList()) {
+                Files.delete(file);
+            }
+        }
+        Files.delete(target);
+        Files.writeString(target, "keine Ordner");
+        autoBackup.run();
+        autoBackup.run();
+        List<jakarta.mail.internet.MimeMessage> toChef = mailsTo("chef@example.test");
+        assertThat(toChef).hasSize(mailsBefore + 1);
+        assertThat(toChef.getLast().getSubject()).contains("Sicherung");
+        assertThat((String) toChef.getLast().getContent()).contains(target.toString()).contains("/settings/backup");
+        mvc.perform(get("/api/system").session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "en"))
+                .andExpect(jsonPath("$.backup.overdue").value(false))
+                .andExpect(jsonPath("$.backup.failure").value(org.hamcrest.Matchers.containsString(target.toString())));
+        mvc.perform(get(auto).session(adminSession)).andExpect(jsonPath("$.lastRunOk").value(false));
+
+        // wieder ein Ordner: gelingt, die nächste Fehlerserie meldet sich wieder
+        Files.delete(target);
+        mvc.perform(post(auto + "/run").with(csrf()).session(adminSession)).andExpect(status().isAccepted());
+        for (int i = 0; i < 100 && !Boolean.TRUE.equals(lastRunOk()); i++) {
+            Thread.sleep(100);
+        }
+        assertThat(lastRunOk()).isTrue();
+        assertThat(target).isDirectory();
+
+        mvc.perform(put(auto).with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content(settings.formatted(false, "")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.enabled").value(false))
+                .andExpect(jsonPath("$.directory").value(dataDir.resolve("backups").toString()));
+    }
+
+    private Boolean lastRunOk() throws Exception {
+        String json = mvc.perform(get("/api/settings/backup/auto").session(adminSession)).andReturn().getResponse()
+                .getContentAsString();
+        return JSON.readTree(json).path("running").asBoolean() ? null
+                : JSON.readTree(json).path("lastRunOk").isBoolean() ? JSON.readTree(json).path("lastRunOk").asBoolean() : null;
+    }
+
+    private static java.util.Map<String, byte[]> unzip(byte[] bytes) throws IOException {
+        java.util.Map<String, byte[]> entries = new java.util.LinkedHashMap<>();
+        try (java.util.zip.ZipInputStream zip = new java.util.zip.ZipInputStream(new java.io.ByteArrayInputStream(bytes))) {
+            for (java.util.zip.ZipEntry entry; (entry = zip.getNextEntry()) != null; ) {
+                entries.put(entry.getName(), zip.readAllBytes());
+            }
+        }
+        return entries;
+    }
+
+    private static byte[] zip(java.util.Map<String, byte[]> entries) throws IOException {
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        try (java.util.zip.ZipOutputStream zip = new java.util.zip.ZipOutputStream(out)) {
+            for (var entry : entries.entrySet()) {
+                zip.putNextEntry(new java.util.zip.ZipEntry(entry.getKey()));
+                zip.write(entry.getValue());
+                zip.closeEntry();
+            }
+        }
+        return out.toByteArray();
+    }
+
+    private List<jakarta.mail.internet.MimeMessage> mailsTo(String address) throws Exception {
+        List<jakarta.mail.internet.MimeMessage> result = new java.util.ArrayList<>();
+        for (jakarta.mail.internet.MimeMessage message : greenMail.getReceivedMessages()) {
+            jakarta.mail.Address[] to = message.getRecipients(jakarta.mail.Message.RecipientType.TO);
+            if (to != null && java.util.Arrays.stream(to).anyMatch(a -> a.toString().contains(address))) {
+                result.add(message);
+            }
+        }
+        return result;
+    }
+
+    /** Lädt eine einseitige PDF hoch und wartet, bis sie verarbeitet ist. */
+    private String uploadAs(MockHttpSession session, String filename, String text) throws Exception {
+        int before = documents.findAll().size();
+        String id = jsonValue(mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", filename, "application/pdf", pdf(text)))
+                        .with(csrf()).session(session))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 1);
+        return id;
+    }
+
+    /** Legt einen Benutzer an und meldet ihn in einer eigenen Sitzung an. */
+    private MockHttpSession userWithSession(String name) throws Exception {
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"" + name + "\",\"password\":\"test-Passwort-7\",\"role\":\"USER\"}"))
+                .andExpect(status().isCreated());
+        MockHttpSession session = new MockHttpSession();
+        mvc.perform(post("/api/auth/login").with(csrf()).session(session).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"" + name + "\",\"password\":\"test-Passwort-7\"}"))
+                .andExpect(status().isOk());
+        return session;
+    }
+
     private List<String> mailFiles(String accountId) {
         return documents.findAll().stream().filter(doc -> accountId.equals(doc.getMailAccountId()))
                 .map(Document::getOriginalFilename).toList();
@@ -1509,6 +2682,11 @@ class ApplicationFlowTest {
             }
         }
         return out.toByteArray();
+    }
+
+    private static long jsonNumber(MvcResult result, String path) throws Exception {
+        Number value = com.jayway.jsonpath.JsonPath.read(result.getResponse().getContentAsString(), path);
+        return value.longValue();
     }
 
     private static String jsonValue(MvcResult result, String path) throws Exception {

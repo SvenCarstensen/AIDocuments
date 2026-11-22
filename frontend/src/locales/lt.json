@@ -46,7 +46,9 @@
     "login": {
       "title": "Sveiki sugrįžę",
       "subtitle": "Prisijunkite, kad pasiektumėte savo dokumentus.",
-      "submit": "Prisijungti"
+      "submit": "Prisijungti",
+      "or": "arba",
+      "passkey": "Prisijungti su slaptarakčiu"
     },
     "setup": {
       "title": "AIDocuments sąranka",
@@ -64,16 +66,16 @@
     },
     "twoFactor": {
       "title": "Patvirtinti prisijungimą",
-      "subtitle": "Įvesk 6 skaitmenų kodą iš autentifikavimo programėlės.",
+      "subtitle": "Įveskite 6 skaitmenų kodą iš autentifikavimo programėlės.",
       "code": "Kodas",
-      "codeHint": "Negali pasiekti programėlės? Vietoj to įvesk vieną iš atkūrimo kodų.",
+      "codeHint": "Negalite pasiekti programėlės? Vietoj to įveskite vieną iš savo atkūrimo kodų.",
       "submit": "Patvirtinti",
       "back": "Atgal į prisijungimą"
     },
     "twoFactorRequired": {
       "title": "Nustatyti dviejų veiksnių autentifikavimą",
-      "subtitle": "Administratoriams dviejų veiksnių autentifikavimas yra privalomas. Nustatyk jį dabar, kad galėtum tęsti.",
-      "intro": "Tau reikės autentifikavimo programėlės telefone (pvz., Google Authenticator, Microsoft Authenticator, 1Password arba Aegis)."
+      "subtitle": "Administratoriams dviejų veiksnių autentifikavimas yra privalomas. Nustatykite jį dabar, kad galėtumėte tęsti.",
+      "intro": "Jums reikės autentifikavimo programėlės telefone (pvz., Google Authenticator, Microsoft Authenticator, 1Password arba Aegis)."
     }
   },
   "shell": {
@@ -83,8 +85,8 @@
       "dark": "Tamsi tema"
     },
     "search": {
-      "placeholder": "Paieška pagal raktažodžius: dokumentai, žymės, turinys …",
-      "placeholderAi": "DI paieška: klausk savais žodžiais – pvz., „Kia sąskaitos iš 2024 m.“",
+      "placeholder": "Paieška pagal raktažodžius: dokumentai, žymos, turinys…",
+      "placeholderAi": "DI paieška: klauskite savais žodžiais – pvz., „Kia sąskaitos iš 2024 m.“",
       "labelAi": "DI",
       "label": "Ieškoti dokumentų",
       "clear": "Išvalyti paiešką",
@@ -104,17 +106,34 @@
       "changed": "Slaptažodis pakeistas"
     },
     "dropzone": {
-      "title": "Nutempkite PDF failus čia",
-      "hint": "Vienu metu galima nutempti kelis failus. Jie išsaugomi, analizuojami ir jiems priskiriamos žymos."
+      "title": "Nutempkite PDF failus ar nuotraukas čia",
+      "hint": "Vienu metu galima nutempti kelis failus. Nuotraukos (JPG, PNG, HEIC) paverčiamos PDF failais. Viskas išsaugoma, analizuojama ir pažymima žymomis."
+    },
+    "remindersDue_one": "{{count, number}} aktualus priminimas",
+    "remindersDue_few": "{{count, number}} aktualūs priminimai",
+    "remindersDue_many": "{{count, number}} aktualaus priminimo",
+    "remindersDue_other": "{{count, number}} aktualių priminimų",
+    "profile": {
+      "email": "El. pašto adresas",
+      "saved": "Išsaugota"
+    },
+    "notifications": {
+      "title": "Pranešimai el. paštu",
+      "emailHint": "Čia siunčiami jums priskirti aktualūs priminimai ir toliau įjungti pranešimai – ta kalba, kuria dabar naudojatės programa. Palikite tuščią, jei nenorite gauti el. laiškų.",
+      "digest": "Nauji dokumentai kasdien",
+      "digestHint": "Kartą per dieną – sąrašas dokumentų, kurie atsirado jūsų srityse; tik tomis dienomis, kai yra naujų dokumentų.",
+      "admin": "Pranešimai administratoriams",
+      "adminHint": "Kai baigiasi saugojimo terminai (niekas neištrinama automatiškai) ir kai pašto dėžutės kelis kartus iš eilės nepavyksta patikrinti.",
+      "needsEmail": "Be adreso el. laiškai nesiunčiami."
     }
   },
   "upload": {
-    "onlyPdf": "Galima pridėti tik PDF failus.",
+    "onlyPdf": "Galima pridėti tik PDF failus ir nuotraukas (JPG, PNG, HEIC).",
     "uploadingFile": "Įkeliama „{{name}}“…",
-    "uploadingFiles_one": "Įkeliamas {{count, number}} PDF failas…",
-    "uploadingFiles_few": "Įkeliami {{count, number}} PDF failai…",
-    "uploadingFiles_many": "Įkeliama {{count, number}} PDF failo…",
-    "uploadingFiles_other": "Įkeliama {{count, number}} PDF failų…",
+    "uploadingFiles_one": "Įkeliamas {{count, number}} failas…",
+    "uploadingFiles_few": "Įkeliami {{count, number}} failai…",
+    "uploadingFiles_many": "Įkeliama {{count, number}} failo…",
+    "uploadingFiles_other": "Įkeliama {{count, number}} failų…",
     "created_one": "Pridėtas {{count, number}} dokumentas",
     "created_few": "Pridėti {{count, number}} dokumentai",
     "created_many": "Pridėta {{count, number}} dokumento",
@@ -124,16 +143,24 @@
     "duplicates_few": "{{count, number}} jau yra",
     "duplicates_many": "{{count, number}} jau yra",
     "duplicates_other": "{{count, number}} jau yra",
-    "rejected_one": "{{count, number}} failas nėra tinkamas PDF",
-    "rejected_few": "{{count, number}} failai nėra tinkami PDF",
-    "rejected_many": "{{count, number}} failo nėra tinkami PDF",
-    "rejected_other": "{{count, number}} failų nėra tinkami PDF",
+    "rejected_one": "{{count, number}} failas nepridėtas",
+    "rejected_few": "{{count, number}} failai nepridėti",
+    "rejected_many": "{{count, number}} failo nepridėta",
+    "rejected_other": "{{count, number}} failų nepridėta",
     "onlyDuplicates_one": "Tai, ką įkėlėte, jau yra.",
     "onlyDuplicates_few": "Šie dokumentai jau yra.",
     "onlyDuplicates_many": "Šie dokumentai jau yra.",
     "onlyDuplicates_other": "Šie dokumentai jau yra.",
-    "noneValid": "Nė vienas iš failų nėra tinkamas PDF.",
-    "failed": "Įkelti nepavyko"
+    "noneValid": "Nepavyko pridėti nė vieno failo.",
+    "failed": "Įkelti nepavyko",
+    "intoArea": "Sritis: {{area}}",
+    "combine": {
+      "title": "Sujungti nuotraukas į vieną dokumentą?",
+      "text": "Pasirinkote kelias nuotraukas. Jei tai vieno dokumento puslapiai – pavyzdžiui, kelių puslapių laiško, – iš jų failų pavadinimų tvarka sudaromas vienas PDF; tvarką vėliau galėsite pakeisti skiltyje „Puslapiai“. Kitu atveju kiekviena nuotrauka tampa atskiru dokumentu.",
+      "one": "Kaip vieną dokumentą",
+      "separate": "Kiekvieną nuotrauką atskirai",
+      "tooMuch": "Vienam dokumentui nuotraukų per daug arba jos per didelės (daugiausia 100 nuotraukų ir iš viso 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -189,12 +216,13 @@
       "activeTo": "iki {{date}}",
       "removeOne": "Pašalinti filtrą „{{label}}“",
       "removeAll": "Pašalinti visus filtrus",
-      "clear": "Pašalinti filtrus"
+      "clear": "Pašalinti filtrus",
+      "retentionExpired": "Saugojimo terminas baigėsi"
     },
     "empty": {
       "libraryTitle": "Dokumentų dar nėra",
-      "libraryHint": "Tiesiog nutempkite PDF failus į šį langą arba spustelėkite „Įkelti“.",
-      "libraryHintAdmin": "Tiesiog nutempkite PDF failus į šį langą arba spustelėkite „Įkelti“. Nustatymuose galite sukonfigūruoti pašto dėžutę arba importavimo aplanką, iš kurio nauji PDF failai bus importuojami automatiškai.",
+      "libraryHint": "Tiesiog nutempkite PDF failus ar nuotraukas į šį langą arba spustelėkite „Įkelti“.",
+      "libraryHintAdmin": "Tiesiog nutempkite PDF failus ar nuotraukas į šį langą arba spustelėkite „Įkelti“. Nustatymuose galite sukonfigūruoti pašto dėžutę arba importavimo aplanką, iš kurio nauji dokumentai bus importuojami automatiškai.",
       "noResultsTitle": "Nieko nerasta",
       "noResultsSearch": "Šios paieškos neatitinka joks dokumentas. Paieška randa ir žodžių dalis – pabandykite trumpesnį žodį arba mažiau žodžių.",
       "noResultsFilters": "Pasirinktų filtrų neatitinka joks dokumentas."
@@ -206,6 +234,31 @@
     "loadMore": "Įkelti daugiau ({{remaining, number}})",
     "aiSearch": {
       "notice": "DI paieška: „{{question}}“. Filtrai rodo, kaip klausimas buvo suprastas."
+    },
+    "export": {
+      "label_one": "Eksportuoti {{count, number}} dokumentą kaip ZIP",
+      "label_few": "Eksportuoti visus {{count, number}} šio sąrašo dokumentus kaip ZIP",
+      "label_many": "Eksportuoti {{count, number}} šio sąrašo dokumento kaip ZIP",
+      "label_other": "Eksportuoti visus {{count, number}} šio sąrašo dokumentų kaip ZIP",
+      "started_one": "Pradėtas {{count, number}} dokumento eksportas",
+      "started_few": "Pradėtas {{count, number}} dokumentų eksportas",
+      "started_many": "Pradėtas {{count, number}} dokumento eksportas",
+      "started_other": "Pradėtas {{count, number}} dokumentų eksportas",
+      "contents": "ZIP faile yra PDF failai ir visi duomenys lentelės pavidalu (documents.csv) bei kaip documents.json.",
+      "failed": "Eksportuoti nepavyko"
+    },
+    "mailboxNotice": {
+      "text_one": "Jau kelis kartus iš eilės nepavyksta patikrinti pašto: {{names}}. Iš ten šiuo metu negaunama dokumentų.",
+      "text_few": "Šių pašto dėžučių jau kelis kartus iš eilės nepavyksta patikrinti: {{names}}. Iš jų šiuo metu negaunama dokumentų.",
+      "text_many": "Šių pašto dėžučių jau kelis kartus iš eilės nepavyksta patikrinti: {{names}}. Iš jų šiuo metu negaunama dokumentų.",
+      "text_other": "Šių pašto dėžučių jau kelis kartus iš eilės nepavyksta patikrinti: {{names}}. Iš jų šiuo metu negaunama dokumentų.",
+      "action": "Peržiūrėti pašto dėžutes"
+    },
+    "backupNotice": {
+      "never": "Jūsų dokumentų atsarginės kopijos dar nėra.",
+      "overdue": "Paskutinė atsarginė kopija: {{when}}. Tai buvo seniau, nei nustatyta.",
+      "failed": "Nepavyko sukurti automatinės atsarginės kopijos: {{reason}}",
+      "action": "Atsarginės kopijos nustatymai"
     }
   },
   "document": {
@@ -217,10 +270,10 @@
     "deleted": "Dokumentas ištrintas",
     "pdfTitle": "PDF: {{title}}",
     "pdf": {
-      "unsaved": "Dokumente yra neįrašytų pakeitimų",
+      "unsaved": "Dokumente yra neišsaugotų pakeitimų",
       "discard": "Atmesti",
-      "save": "Įrašyti pakeitimus",
-      "saved": "Pakeitimai įrašyti – originalas išsaugomas.",
+      "save": "Išsaugoti pakeitimus",
+      "saved": "Pakeitimai išsaugoti – originalas išlieka.",
       "modified": "Pakeista {{when}} – originalas išsaugotas.",
       "downloadOriginal": "Atsisiųsti originalą",
       "restoreOriginal": "Atkurti originalą",
@@ -282,7 +335,9 @@
     "noText": "Šis dokumentas neturi teksto – tikriausiai tai skenuota kopija be teksto sluoksnio. Kai DI sukonfigūruotas ir įjungtas teksto atpažinimas, turinys transkribuojamas analizės metu.",
     "edit": {
       "title": "Redaguoti dokumentą",
-      "saved": "Pakeitimai išsaugoti"
+      "saved": "Pakeitimai išsaugoti",
+      "areaHint": "Nustato, kas mato dokumentą.",
+      "areaMoveHint": "Po to jį matys tik srities „{{area}}“ nariai ir administratoriai."
     },
     "delete": {
       "title": "Ištrinti dokumentą?",
@@ -290,11 +345,11 @@
       "confirm": "Ištrinti"
     },
     "chat": {
-      "intro": "Užduok klausimą apie šį dokumentą – DI atsakys pagal jo turinį.",
-      "placeholder": "Paklausk ko nors apie šį dokumentą …",
+      "intro": "Užduokite klausimą apie šį dokumentą – DI atsakys pagal jo turinį.",
+      "placeholder": "Paklauskite ko nors apie šį dokumentą…",
       "send": "Siųsti",
-      "thinking": "DI skaito dokumentą …",
-      "notConfigured": "Norint užduoti klausimų apie dokumentą, turi būti nustatytas DI.",
+      "thinking": "DI skaito dokumentą…",
+      "notConfigured": "Norint užduoti klausimų apie dokumentą, turi būti sukonfigūruotas DI.",
       "restart": "Pradėti iš naujo",
       "suggestions": {
         "summary": "Apie ką šis dokumentas?",
@@ -318,16 +373,25 @@
         "EDITED": "Redaguota",
         "ORIGINAL_RESTORED": "Originalas atkurtas",
         "VERSION_RESTORED": "{{from}} versija atkurta",
-        "UNDONE": "Pakeitimas atšauktas"
+        "UNDONE": "Pakeitimas atšauktas",
+        "PAGES": "Puslapiai pakeisti",
+        "MERGED": "Dokumentai prijungti"
       }
-    }
+    },
+    "retention": {
+      "label": "Saugojimas",
+      "until": "iki {{date}} – iki tol ištrinti negalima",
+      "expired": "terminas baigėsi {{date}}",
+      "locked": "Privaloma saugoti iki {{date}} – ištrinti galima tik po to"
+    },
+    "readOnly": "Šioje srityje šį dokumentą galite tik peržiūrėti."
   },
   "settings": {
     "title": "Nustatymai",
     "mailboxes": {
       "title": "Pašto dėžutės",
-      "navHint": "IMAP serveriai, iš kurių importuojami PDF priedai",
-      "intro": "Iš šių IMAP pašto dėžučių PDF priedai importuojami automatiškai. Pašto dėžutės tik skaitomos – el. laiškai lieka nepakeisti ir neskaityti.",
+      "navHint": "IMAP serveriai, iš kurių importuojami PDF priedai ir nuotraukos",
+      "intro": "Iš šių IMAP pašto dėžučių automatiškai importuojami PDF priedai ir pridėtos nuotraukos (kaip PDF); el. laiškų tekstas ir įterpti logotipai – ne. Pašto dėžutės tik skaitomos – el. laiškai lieka nepakeisti ir neskaityti.",
       "add": "Pridėti pašto dėžutę",
       "emptyTitle": "Dar nesukonfigūruota nė viena pašto dėžutė",
       "emptyText": "Įveskite IMAP pašto dėžutės prisijungimo duomenis – pavyzdžiui, dėžutės, į kurią jūsų skeneris siunčia dokumentus.",
@@ -360,38 +424,39 @@
         "since": "Tik el. laiškai nuo",
         "sinceHint": "Neprivaloma – senesni el. laiškai praleidžiami",
         "enabled": "Tikrinti automatiškai",
-        "enabledHint": "Nustatytu intervalu tikrinama, ar pašto dėžutėje yra naujų PDF failų.",
+        "enabledHint": "Nustatytu intervalu tikrinama, ar pašto dėžutėje yra naujų priedų.",
         "filter": {
           "title": "Filtras",
-          "intro": "Apdorojami tik tie el. laiškai, kurie atitinka visas sąlygas. Po vieną terminą eilutėje; didžiosios ir mažosios raidės nesvarbu, pakanka teksto dalies. Tušti laukai nieko neriboja.",
-          "subjectIncludes": "Tema turi vieną iš šių terminų",
-          "subjectExcludes": "Tema neturi nė vieno iš šių terminų",
-          "senderIncludes": "Siuntėjas turi vieną iš šių terminų",
-          "senderExcludes": "Siuntėjas neturi nė vieno iš šių terminų",
+          "intro": "Apdorojami tik tie el. laiškai, kurie atitinka visas sąlygas. Po vieną žodį ar frazę eilutėje; didžiosios ir mažosios raidės nesvarbu, pakanka teksto dalies. Tušti laukai nieko neriboja.",
+          "subjectIncludes": "Temoje yra bent vienas iš šių žodžių",
+          "subjectExcludes": "Temoje nėra nė vieno iš šių žodžių",
+          "senderIncludes": "Siuntėjo lauke yra bent vienas iš šių žodžių",
+          "senderExcludes": "Siuntėjo lauke nėra nė vieno iš šių žodžių",
           "senderHint": "Vardas arba adresas, pvz., „@example.com“",
           "newOnly": "Filtras taikomas el. laiškams, gautiems po paskutinio tikrinimo; jau patikrinti laiškai iš naujo neapdorojami."
         },
         "interval": "Tikrinimo intervalas minutėmis",
-        "intervalHint": "Palikite tuščią, kad būtų naudojamas bendras intervalas (dabar {{interval}})."
+        "intervalHint": "Palikite tuščią, kad būtų naudojamas bendras intervalas (dabar {{interval}}).",
+        "areaHint": "Importuoti dokumentai patenka į šią sritį."
       },
       "filterActive": "Filtras įjungtas",
       "schedule": "Tikrinama kas {{interval}} · kitas: {{when}}",
       "scheduleSoon": "Tikrinama kas {{interval}} · kitas netrukus"
     },
     "import": {
-      "title": "Tvarkaraštis ir importavimo aplankas",
+      "title": "Tikrinimas ir importavimo aplankas",
       "navHint": "Tikrinimo intervalas ir stebimas aplankas",
-      "intro": "Nustato, kaip dažnai programa ieško naujų PDF failų – pašto dėžutėse ir importavimo aplanke.",
+      "intro": "Nustato, kaip dažnai programa ieško naujų dokumentų – pašto dėžutėse ir importavimo aplanke.",
       "saved": "Nustatymai išsaugoti",
       "interval": {
         "title": "Tikrinimo intervalas",
-        "text": "Kaip dažnai programa tikrina gaunamų failų aplanką ir visas pašto dėžutes be savo intervalo, ar nėra naujų PDF.",
+        "text": "Kaip dažnai programa tikrina importavimo aplanką ir visas pašto dėžutes be savo intervalo, ar nėra naujų dokumentų.",
         "label": "Kas … min.",
         "nextRun": "Kitas automatinis tikrinimas {{when}}."
       },
       "folder": {
         "title": "Importavimo aplankas",
-        "text": "Serverio aplankas, kuriame stebima, ar atsirado naujų PDF failų – pavyzdžiui, tinklo skenerio paskirties aplankas. Ieškoma ir poaplankiuose.",
+        "text": "Serverio aplankas, kuriame stebima, ar atsirado naujų PDF failų ir nuotraukų (JPG, PNG, HEIC) – pavyzdžiui, tinklo skenerio paskirties aplankas. Ieškoma ir poaplankiuose.",
         "enable": "Stebėti importavimo aplanką",
         "path": "Kelias serveryje",
         "pathHint": "Absoliutusis kelias. Docker konteineryje tai prijungtas aplankas, dažniausiai {{path}}.",
@@ -403,7 +468,8 @@
         "scanning": "Tikrinamas aplankas…",
         "neverScanned": "Dar netikrinta.",
         "scanNow": "Tikrinti dabar",
-        "scanStarted": "Importavimo aplankas tikrinamas."
+        "scanStarted": "Importavimo aplankas tikrinamas.",
+        "areaHint": "Dokumentai iš aplanko patenka į šią sritį."
       }
     },
     "ai": {
@@ -481,7 +547,7 @@
         "ocr": "Skenuotų kopijų teksto atpažinimas",
         "ocrHint": "Programa paveda DI transkribuoti skenuotus PDF failus be teksto sluoksnio – tik tada juos galima rasti viso teksto paieška. Kiekviena skenuota kopija užtrunka ilgiau ir kainuoja daugiau.",
         "quickOcrFirst": "Pirmiausia greitas teksto atpažinimas, tada patikslinimas su DI",
-        "quickOcrFirstHint": "Naujus skenuotus dokumentus pirmiausia nuskaito įtaisytasis teksto atpažinimas (Tesseract) – po kelių sekundžių juose galima ieškoti. Tada DI pagal šį tekstą prideda pavadinimą, santrauką ir žymes."
+        "quickOcrFirstHint": "Naujus skenuotus dokumentus pirmiausia nuskaito įtaisytasis teksto atpažinimas (Tesseract) – po kelių sekundžių juose galima ieškoti. Tada DI pagal šį tekstą prideda pavadinimą, santrauką ir žymas."
       },
       "unanalyzed_one": "DI dar neišanalizavo {{count, number}} dokumento.",
       "unanalyzed_few": "DI dar neišanalizavo {{count, number}} dokumentų.",
@@ -524,17 +590,160 @@
         "create": "Sukurti"
       },
       "twoFactor": "2FA",
-      "resetTwoFactor": "Atkurti dviejų veiksnių autentifikavimą",
+      "resetTwoFactor": "Iš naujo nustatyti dviejų veiksnių autentifikavimą",
       "resetTwoFactorHint": "Šiai paskyrai įjungtas dviejų veiksnių autentifikavimas.",
       "resetTwoFactorText": "{{name}} po to jungsis tik slaptažodžiu ir galės iš naujo nustatyti dviejų veiksnių autentifikavimą – pavyzdžiui, pametus telefoną.",
-      "resetTwoFactorConfirm": "Atkurti",
-      "twoFactorReset": "Dviejų veiksnių autentifikavimas atkurtas"
+      "resetTwoFactorConfirm": "Nustatyti iš naujo",
+      "twoFactorReset": "Dviejų veiksnių autentifikavimas nustatytas iš naujo"
+    },
+    "areas": {
+      "title": "Sritys",
+      "navHint": "Kas mato kuriuos dokumentus",
+      "intro": "Kiekvienas dokumentas priklauso lygiai vienai sričiai. Naudotojai mato tik tų sričių, kurių nariai jie yra, dokumentus ir visiems atvirų sričių dokumentus.",
+      "add": "Pridėti sritį",
+      "everyone": "Visiems",
+      "restricted": "Ribota",
+      "visibleForAll": "matoma visiems prisijungusiems",
+      "members": "Nariai: {{names}}",
+      "adminsOnly": "tik administratoriai",
+      "adminHint": "Administratoriai mato visas sritis, net jei nėra jų nariai.",
+      "edit": "Redaguoti: {{name}}",
+      "saved": "Sritis išsaugota",
+      "created": "Sritis sukurta",
+      "deleted": "Sritis ištrinta",
+      "delete": {
+        "label": "Ištrinti: {{name}}",
+        "title": "Ištrinti sritį?",
+        "text": "Sritis „{{name}}“ bus ištrinta. Tai įmanoma tik tol, kol jos nenaudoja jokie dokumentai, pašto dėžutė ar importavimo aplankas."
+      },
+      "dialog": {
+        "name": "Pavadinimas",
+        "namePlaceholder": "pvz., Buhalterija",
+        "generalNameHint": "Palikite tuščią, ir sritis visomis kalbomis vadinsis „Bendra“.",
+        "everyone": "Matoma visiems",
+        "everyoneHint": "Šios srities dokumentus mato visi prisijungę naudotojai.",
+        "members": "Nariai",
+        "membersHint": "Šios srities dokumentus mato tik nariai ir administratoriai. Kiekvienam nariui nustatykite, ar jis gali tik peržiūrėti, dar ir redaguoti, ar ir ištrinti.",
+        "noUsers": "Kol kas nėra naudotojų be administratoriaus vaidmens.",
+        "create": "Sukurti",
+        "everyoneAccess": "Visi gali",
+        "accessOf": "Naudotojo {{name}} teisės",
+        "membersHintEveryone": "Šios srities dokumentus mato visi. Narius čia pridėkite, jei jiems turi būti leidžiama daugiau nei kitiems."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Saugojimas",
+      "navHint": "Terminai ir ištrynimo blokavimas",
+      "intro": "Nustatykite, kiek laiko turi būti saugomi tam tikro tipo dokumentai – pavyzdžiui, sąskaitos dešimt metų. Terminas skaičiuojamas nuo metų, kuriems priklauso dokumentas, pabaigos. Iki tol niekas negali jo ištrinti.",
+      "permanent": "Blokavimo atšaukti negalima – net administratoriams. Jei taisyklė sutrumpinama ar ištrinama arba pasikeičia dokumento tipas, jau nustatytas terminas lieka galioti.",
+      "add": "Pridėti taisyklę",
+      "years_one": "{{count, number}} metai",
+      "years_few": "{{count, number}} metai",
+      "years_many": "{{count, number}} metų",
+      "years_other": "{{count, number}} metų",
+      "edit": "Redaguoti taisyklę: {{category}}",
+      "saved": "Taisyklė išsaugota",
+      "created": "Taisyklė sukurta",
+      "deleted": "Taisyklė ištrinta",
+      "emptyTitle": "Saugojimo taisyklių dar nėra",
+      "emptyText": "Be taisyklės dokumentus galima ištrinti bet kada.",
+      "delete": {
+        "label": "Ištrinti taisyklę: {{category}}",
+        "title": "Ištrinti taisyklę?",
+        "text": "Nauji „{{category}}“ tipo dokumentai nebegaus saugojimo termino. Jau užblokuoti dokumentai liks užblokuoti iki jų termino pabaigos."
+      },
+      "dialog": {
+        "categoryHint": "Taip, kaip nurodyta prie dokumento; didžiosios ir mažosios raidės nesvarbu.",
+        "years": "Saugojimo terminas metais",
+        "yearsHint": "Skaičiuojama nuo dokumento datos metų pabaigos (jei datos nėra – nuo pridėjimo dienos).",
+        "shorterHint": "Trumpesnis terminas taikomas tik dokumentams, kurie dar neturi termino. Jau užblokuoti lieka užblokuoti iki dabartinio termino pabaigos.",
+        "create": "Sukurti"
+      }
+    },
+    "mailOut": {
+      "title": "El. laiškų siuntimas",
+      "navHint": "Priminimai el. paštu",
+      "intro": "Per šį SMTP serverį programa siunčia pranešimus apie aktualius priminimus – po vieną kartą dėl kiekvieno priminimo, sujungtus į vieną el. laišką kiekvienam asmeniui. Gavėjas – tas, kuris atsakingas už priminimą ir naudotojo meniu nurodė savo adresą.",
+      "enabled": "Siųsti priminimus el. paštu",
+      "enabledHint": "Išjungus priminimai rodomi tik programoje.",
+      "host": "SMTP serveris",
+      "port": "Prievadas",
+      "security": "Šifravimas",
+      "unencrypted": "Nėra",
+      "usernameHint": "Palikite tuščią, jei serveriui nereikia prisijungimo.",
+      "passwordKeepHint": "Palikite tuščią, jei norite palikti išsaugotą slaptažodį.",
+      "from": "Siuntėjo adresas",
+      "fromHint": "Serveris turi leisti jį naudoti jūsų paskyrai.",
+      "appUrl": "Programos adresas",
+      "appUrlHint": "Nuorodoms el. laiškuose, pvz., https://docs.example.com. Tuščia – be nuorodų.",
+      "digestHour": "Siuntimas",
+      "fromHour": "nuo {{hour}}",
+      "saved": "El. laiškų siuntimo nustatymai išsaugoti",
+      "test": "Bandomasis laiškas adresu {{address}}",
+      "testNeedsAddress": "Kad gautumėte bandomąjį laišką, naudotojo meniu nurodykite savo el. pašto adresą.",
+      "testSavedHint": "Bandymui naudojami išsaugoti nustatymai – pirmiausia išsaugokite."
+    },
+    "backup": {
+      "title": "Atsarginė kopija ir importas",
+      "navHint": "Visko atsarginė kopija, eksportų importas",
+      "intro": "Atsarginėje kopijoje yra viskas, ko reikia, kad AIDocuments būtų atkurta lygiai tokia, kokia yra. Importuojant perimami dokumentai iš kitos įdiegties eksporto – kartu su jų duomenimis.",
+      "backupTitle": "Atsarginė kopija vienu spustelėjimu",
+      "backupText": "ZIP failas su duomenų baze, visais dokumentais kartu su ankstesnėmis versijomis, peržiūros vaizdais ir išsaugotų slaptažodžių raktu. Programa tuo metu toliau veikia.",
+      "size": "Apimtis",
+      "sizeValue_one": "apie {{size}}, {{count, number}} failas",
+      "sizeValue_few": "apie {{size}}, {{count, number}} failai",
+      "sizeValue_many": "apie {{size}}, {{count, number}} failo",
+      "sizeValue_other": "apie {{size}}, {{count, number}} failų",
+      "last": "Paskutinė atsarginė kopija",
+      "never": "niekada",
+      "keyWarning": "Atsarginė kopija neužšifruota, joje yra išsaugotų slaptažodžių (pašto dėžučių, DI, dviejų veiksnių autentifikavimo) raktas. Saugokite ją taip pat patikimai kaip ir pačius dokumentus.",
+      "restore": "Kaip atkurti: sustabdykite AIDocuments, išpakuokite ZIP failo turinį į tuščią duomenų aplanką ir vėl paleiskite. Instrukcija yra ZIP faile (README.txt).",
+      "download": "Atsisiųsti atsarginę kopiją",
+      "started": "Atsarginė kopija atsisiunčiama.",
+      "externalDatabase": "Atsarginė kopija vienu spustelėjimu galima tik su įtaisytąja duomenų baze. Naudodami MariaDB, duomenų bazės atsarginę kopiją darykite jos įrankiais (pvz., mariadb-dump) ir papildomai išsaugokite duomenų aplanką.",
+      "importTitle": "Importuoti eksportą",
+      "importText": "ZIP failas, sukurtas dokumentų sąraše mygtuku „Eksportuoti“, – taip pat iš kitos įdiegties. Pavadinimas, dokumento tipas, žymos ir kiti duomenys išlieka; DI dokumentų iš naujo neskaito. Jau esami failai praleidžiami.",
+      "file": "ZIP failas",
+      "areaHint": "Dokumentai pateks čia – arba tik tie, kurių srities čia nėra.",
+      "matchAreas": "Dėti į to paties pavadinimo sritis",
+      "matchAreasHint": "Jei čia yra sritis tokiu pačiu pavadinimu kaip eksporte, dokumentai pateks į ją.",
+      "import": "Importuoti",
+      "importing": "Importuojama…",
+      "result": "Importuota: {{imported, number}} · jau buvo: {{duplicates, number}} · neimportuota: {{failed, number}}",
+      "auto": {
+        "title": "Automatinė atsarginė kopija",
+        "text": "Kartą per dieną AIDocuments įrašo visą atsarginę kopiją kaip ZIP failą į aplanką ir saugo naujausias kopijas. Geriausia, kad aplankas būtų kitame diske arba tinklo diske – jei sugestų diskas su duomenimis, kitaip būtų prarastos ir atsarginės kopijos.",
+        "enable": "Kasdien automatiškai daryti atsarginę kopiją",
+        "hour": "Laikas",
+        "keep": "Saugoti",
+        "keepHint": "Atsarginių kopijų skaičius; senesnės ištrinamos.",
+        "directory": "Aplankas",
+        "directoryHint": "Visas kelias serveryje. Palikite tuščią, kad būtų naudojamas numatytasis aplankas. Docker konteineryje aplankas turi būti prijungtas.",
+        "warnAfterDays": "Įspėti po (dienų)",
+        "warnAfterDaysHint": "Pranešimas dokumentų sąraše, jei tiek laiko nebuvo sukurta atsarginė kopija – nei rankiniu būdu, nei automatiškai. 0 = niekada neįspėti.",
+        "lastRun": "Paskutinis vykdymas",
+        "nextRun": "Kitas vykdymas",
+        "running": "Kuriama atsarginė kopija…",
+        "ok": "pavyko, {{when}}",
+        "failed": "nepavyko, {{when}}",
+        "stored_one": "{{count, number}} atsarginė kopija aplanke {{directory}}",
+        "stored_few": "{{count, number}} atsarginės kopijos aplanke {{directory}}",
+        "stored_many": "{{count, number}} atsarginės kopijos aplanke {{directory}}",
+        "stored_other": "{{count, number}} atsarginių kopijų aplanke {{directory}}",
+        "runNow": "Kurti kopiją dabar",
+        "saveFirst": "Pirmiausia išsaugokite pakeitimus.",
+        "runStarted": "Atsarginė kopija kuriama fone.",
+        "done": "Atsarginė kopija įrašyta.",
+        "saved": "Nustatymai išsaugoti.",
+        "externalDatabase": "Automatinė atsarginė kopija galima tik su įtaisytąja duomenų baze. Naudodami MariaDB, duomenų bazės atsarginę kopiją darykite jos įrankiais (pvz., kas naktį paleisdami mariadb-dump) ir kartu išsaugokite duomenų aplanką."
+      }
     }
   },
   "history": {
     "nav": "Istorija",
     "title": "Istorija",
-    "subtitle": "Kas nutiko tavo dokumentams – naujausi įrašai pirmiausia.",
+    "subtitle": "Kas nutiko jūsų dokumentams – naujausi įrašai pirmiausia.",
     "empty": "Įrašų dar nėra.",
     "actions": {
       "IMPORTED": "Importuota",
@@ -556,7 +765,7 @@
   },
   "duplicates": {
     "title": "Galimas dublikatas",
-    "subtitle": "Abiejų dokumentų turinys sutampa. Palik vieną ir ištrink kitą – arba pažymėk, kad tai ne dublikatai.",
+    "subtitle": "Abiejų dokumentų turinys sutampa. Palikite vieną ir ištrinkite kitą – arba pažymėkite, kad tai ne dublikatai.",
     "older": "Gautas anksčiau",
     "newer": "Gautas vėliau",
     "deleteThis": "Ištrinti šį",
@@ -566,35 +775,36 @@
     "title": "Dviejų veiksnių autentifikavimas",
     "on": "Įjungta",
     "off": "Išjungta",
-    "intro": "Apsaugok paskyrą antruoju veiksniu: jungdamasis papildomai įvesi kodą iš telefono autentifikavimo programėlės (pvz., Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Apsaugokite paskyrą antruoju veiksniu: prisijungdami papildomai įvesite kodą iš telefono autentifikavimo programėlės (pvz., Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Nustatyti",
-    "scan": "Nuskaityk QR kodą autentifikavimo programėle arba įvesk raktą rankiniu būdu. Tada įvesk programėlės kodą ir savo slaptažodį.",
+    "scan": "Nuskaitykite QR kodą autentifikavimo programėle arba įveskite raktą rankiniu būdu. Tada įveskite programėlės kodą ir savo slaptažodį.",
     "qrAlt": "QR kodas autentifikavimo programėlei",
     "secret": "Raktas",
     "confirmCode": "Kodas iš programėlės",
     "activate": "Aktyvinti",
     "recoveryTitle": "Atkūrimo kodai",
-    "recoveryText": "Laikyk šiuos atkūrimo kodus saugioje vietoje. Kiekvienas veikia vieną kartą, jei negali naudotis programėle – pavyzdžiui, pametęs telefoną. Jie rodomi tik dabar.",
+    "recoveryText": "Laikykite šiuos atkūrimo kodus saugioje vietoje. Kiekvienas veikia vieną kartą, jei negalite naudotis programėle – pavyzdžiui, pametę telefoną. Jie rodomi tik dabar.",
     "download": "Išsaugoti kaip failą",
     "done": "Baigta",
     "enabled": "Dviejų veiksnių autentifikavimas įjungtas",
     "disabled": "Dviejų veiksnių autentifikavimas išjungtas",
-    "disableHint": "Norėdamas išjungti, įvesk dabartinį programėlės kodą (arba atkūrimo kodą) ir savo slaptažodį.",
+    "disableHint": "Norėdami išjungti, įveskite dabartinį programėlės kodą (arba atkūrimo kodą) ir savo slaptažodį.",
     "disable": "Išjungti",
     "recoveryLeft": "Nepanaudoti atkūrimo kodai: {{count}}",
-    "adminCannotDisable": "Būdamas administratorius negali išjungti dviejų veiksnių autentifikavimo."
+    "adminCannotDisable": "Būdami administratorius, negalite išjungti dviejų veiksnių autentifikavimo."
   },
   "confirmCode": {
     "title": "Patvirtinti pakeitimą",
     "text": "Paskyrų, pašto dėžučių ir nustatymų pakeitimams reikia galiojančio autentifikavimo programėlės kodo. Patvirtinimas galioja 10 minučių.",
-    "submit": "Patvirtinti"
+    "submit": "Patvirtinti",
+    "passkey": "Patvirtinti slaptarakčiu"
   },
   "share": {
     "button": "Bendrinti",
     "title": "Bendrinti dokumentą",
     "intro": "Sukuria nuorodą, kuria asmuo be paskyros gali atidaryti būtent šį dokumentą.",
-    "recipient": "Su kuo bendrini?",
-    "recipientHint": "Asmens vardas – kad vėliau matytum, kam davei nuorodą.",
+    "recipient": "Su kuo bendrinate?",
+    "recipientHint": "Asmens vardas – kad vėliau matytumėte, kam davėte nuorodą.",
     "permission": "Ar šis asmuo gali redaguoti dokumentą?",
     "viewOnly": "Tik peržiūra",
     "canEdit": "Gali redaguoti",
@@ -604,7 +814,7 @@
     "unlimited": "Neribotai",
     "create": "Sukurti nuorodą",
     "link": "Nuoroda",
-    "linkHint": "Kiekvienas, turintis šią nuorodą, gali atidaryti dokumentą – duok ją tik {{name}}. Bet kada gali ją atšaukti dokumento peržiūroje.",
+    "linkHint": "Kiekvienas, turintis šią nuorodą, gali atidaryti dokumentą – perduokite ją tik asmeniui {{name}}. Bet kada galite ją atšaukti dokumento peržiūroje.",
     "copy": "Kopijuoti nuorodą",
     "copied": "Nuoroda nukopijuota",
     "listTitle": "Bendrinama išorėje",
@@ -619,7 +829,206 @@
     "revoked": "Nuoroda atšaukta",
     "page": {
       "for": "Bendrinama su: {{name}}",
-      "invalid": "Ši nuoroda negalioja arba baigėsi jos galiojimas, arba dokumentas ištrintas. Kreipkis į asmenį, kuris tau ją davė."
+      "invalid": "Ši nuoroda negalioja arba baigėsi jos galiojimas, arba dokumentas ištrintas. Kreipkitės į asmenį, kuris jums ją davė."
+    }
+  },
+  "areas": {
+    "general": "Bendra",
+    "unknown": "Kita sritis",
+    "label": "Sritis",
+    "target": "Paskirties sritis",
+    "access": {
+      "READ": "Tik peržiūrėti",
+      "EDIT": "Peržiūrėti ir redaguoti",
+      "DELETE": "Redaguoti ir ištrinti"
+    }
+  },
+  "reminders": {
+    "title": "Priminimai",
+    "cardTitle": "Priminimas",
+    "add": "Pridėti priminimą",
+    "edit": "Redaguoti priminimą",
+    "create": "Sukurti",
+    "created": "Priminimas pridėtas",
+    "saved": "Priminimas išsaugotas",
+    "deleted": "Priminimas ištrintas",
+    "markedDone": "Atlikta",
+    "dueDate": "Terminas",
+    "note": "Pastaba",
+    "notePlaceholder": "pvz., patikrinti mokėjimą",
+    "assignee": "Kas tuo pasirūpins?",
+    "assigneeHint": "Šis asmuo matys priminimą skiltyje „Mano“ ir gaus pranešimą el. paštu. Pasirinkti galima bet kurį, kas mato dokumentą.",
+    "me": "{{name}} (aš)",
+    "assignedTo": "kam: {{name}}",
+    "doneBy": "atliko {{name}}",
+    "markDone": "Pažymėti kaip atliktą",
+    "reopen": "Atidaryti iš naujo",
+    "delete": {
+      "label": "Ištrinti priminimą",
+      "title": "Ištrinti priminimą?",
+      "text": "Priminimas bus pašalintas. Dokumentas liks nepakeistas."
+    },
+    "accept": "Pridėti",
+    "dismiss": "Atmesti pasiūlymą",
+    "suggestionsHint": "DI šiame dokumente rado terminų:",
+    "none": "Atvirų priminimų nėra.",
+    "showDone_one": "Rodyti {{count, number}} atliktą priminimą",
+    "showDone_few": "Rodyti {{count, number}} atliktus priminimus",
+    "showDone_many": "Rodyti {{count, number}} atlikto priminimo",
+    "showDone_other": "Rodyti {{count, number}} atliktų priminimų",
+    "hideDone": "Slėpti atliktus",
+    "scope": {
+      "label": "Kurie priminimai",
+      "mine": "Mano",
+      "all": "Visi"
+    },
+    "dueTitle": "Aktualūs",
+    "nothingDue": "Šiandien aktualių priminimų nėra.",
+    "upcomingTitle": "Artėjantys",
+    "suggestionsTitle": "Siūlomi terminai",
+    "suggestionsPageHint": "Artimiausių šešių mėnesių terminai, kuriuos DI rado dokumentuose. Pridėkite juos kaip priminimą arba atmeskite.",
+    "emptyTitle": "Priminimų nėra",
+    "emptyText": "Pridėkite priminimą prie dokumento – arba priimkite DI pasiūlytą.",
+    "repeat": {
+      "label": "Kartoti",
+      "hint": "Pažymėjus priminimą kaip atliktą, kitas sukuriamas tokiu pačiu intervalu.",
+      "none": "Vieną kartą",
+      "m1": "Kas mėnesį",
+      "m3": "Kas ketvirtį",
+      "m6": "Kas pusmetį",
+      "m12": "Kasmet",
+      "m24": "Kas dvejus metus",
+      "months_one": "Kas {{count}} mėnesį",
+      "months_few": "Kas {{count}} mėnesius",
+      "months_many": "Kas {{count}} mėnesio",
+      "months_other": "Kas {{count}} mėnesių"
+    },
+    "fromContract": "iš sutarties"
+  },
+  "pages": {
+    "button": "Puslapiai",
+    "title": "Redaguoti puslapius",
+    "intro": "Vilkite puslapius arba perkelkite juos rodyklėmis, pasukite ar pašalinkite. Išsaugojus sukuriama nauja versija – ankstesnė išlieka.",
+    "page": "{{number}} puslapis",
+    "wasPage": "buvo {{number}}",
+    "moveLeft": "Perkelti į priekį",
+    "moveRight": "Perkelti atgal",
+    "rotate": "Pasukti 90°",
+    "remove": "Pašalinti puslapį",
+    "keep": "Palikti puslapį",
+    "noneLeft": "Turi likti bent vienas puslapis.",
+    "saveFirst": "Pirmiausia išsaugokite pakeitimus",
+    "saved": "Puslapiai išsaugoti",
+    "split": {
+      "here": "Nuo čia – atskiras dokumentas",
+      "title": "Padalyti dokumentą?",
+      "text": "{{page}} puslapis ir visi tolesni taps atskiru dokumentu toje pačioje srityje. Jis bus nuskaitytas ir priskirtas kaip naujai gautas; šiame dokumente liks ankstesni puslapiai.",
+      "confirm": "Padalyti",
+      "done": "Dokumentas padalytas",
+      "open": "Atidaryti naują dokumentą"
+    },
+    "merge": {
+      "button": "Prijungti dokumentus",
+      "title": "Prijungti dokumentus",
+      "intro": "Pasirinktų dokumentų puslapiai šia tvarka bus pridėti „{{title}}“ pabaigoje.",
+      "search": "Ieškoti dokumentų…",
+      "none": "Tinkamų dokumentų nėra.",
+      "noDeleteRight": "Negalite jo ištrinti – todėl negalite ir prijungti.",
+      "hint": "Prijungti dokumentai po to perkeliami į šiukšlinę; 30 dienų juos galima atkurti istorijoje.",
+      "confirm_one": "Prijungti {{count}} dokumentą",
+      "confirm_few": "Prijungti {{count}} dokumentus",
+      "confirm_many": "Prijungti {{count}} dokumento",
+      "confirm_other": "Prijungti {{count}} dokumentų",
+      "done_one": "Prijungtas {{count}} dokumentas",
+      "done_few": "Prijungti {{count}} dokumentai",
+      "done_many": "Prijungta {{count}} dokumento",
+      "done_other": "Prijungta {{count}} dokumentų"
+    }
+  },
+  "contracts": {
+    "nav": "Sutartys",
+    "title": "Sutartys",
+    "pageIntro": "Visų jums matomų sutarčių galiojimo laikotarpiai ir įspėjimo terminai – pirmiausia tos, dėl kurių netrukus reikės ką nors daryti.",
+    "scope": {
+      "label": "Rodyti",
+      "running": "Galiojančias",
+      "all": "Visas"
+    },
+    "emptyTitle": "Sutarčių dar neįvesta",
+    "emptyText": "Atidarykite dokumentą, pavyzdžiui, elektros ar mobiliojo ryšio sutartį, ir įveskite jos galiojimo laikotarpį bei įspėjimo terminą. Tada likus pakankamai laiko iki termino pabaigos atsiras priminimas.",
+    "cardTitle": "Sutartis",
+    "none": "Ar tai sutartis? Nurodžius galiojimo laikotarpį ir įspėjimo terminą, AIDocuments laiku primins ją nutraukti.",
+    "add": "Įvesti kaip sutartį",
+    "edit": "Redaguoti sutartį",
+    "intro": "Pagal galiojimo pabaigą ir įspėjimo terminą apskaičiuojama, iki kada reikia nutraukti sutartį. Prieš tai atsiras priminimas; jei sutartis nenutraukiama iki galiojimo pabaigos, ji pratęsiama automatiškai.",
+    "saved": "Sutartis išsaugota",
+    "removed": "Sutarties duomenys pašalinti",
+    "remove": {
+      "label": "Pašalinti sutarties duomenis",
+      "title": "Pašalinti sutarties duomenis?",
+      "text": "Galiojimo laikotarpis, įspėjimo terminas ir su jais susijęs atviras priminimas bus pašalinti. Pats dokumentas išliks."
+    },
+    "openEnded": "neterminuota",
+    "months_one": "{{count}} mėnuo",
+    "months_few": "{{count}} mėnesiai",
+    "months_many": "{{count}} mėnesio",
+    "months_other": "{{count}} mėnesių",
+    "amountHint": "pvz., „49,90 € per mėnesį“",
+    "endDateHint": "Dabartinio galiojimo laikotarpio pabaiga; tuščia = neterminuota",
+    "noticeHint": "Mėnesiai iki galiojimo pabaigos; tuščia = iki galiojimo pabaigos",
+    "renewalHint": "Jei sutartis nenutraukiama, ji pratęsiama tiek mėnesių; 0 = ji baigiasi",
+    "cancelledHint": "Tada ji nebepratęsiama ir priminimai nebeatsiranda.",
+    "fields": {
+      "partner": "Sutarties šalis",
+      "amount": "Suma",
+      "startDate": "Sutarties pradžia",
+      "endDate": "Galioja iki",
+      "notice": "Įspėjimo terminas (mėn.)",
+      "renewal": "Pratęsimas (mėn.)",
+      "deadline": "Nutraukti iki",
+      "reminderDays": "Priminti (prieš kiek dienų)",
+      "cancelled": "Nutraukta"
+    },
+    "status": {
+      "ACTIVE": "Galioja",
+      "DUE_SOON": "Artėja terminas",
+      "NOTICE_MISSED": "Terminas praleistas",
+      "CANCELLED": "Nutraukta",
+      "ENDED": "Pasibaigė",
+      "OPEN_ENDED": "Neterminuota"
+    },
+    "row": {
+      "cancelBy": "nutraukti iki {{date}}",
+      "endsOn": "baigiasi {{date}}",
+      "term": "galioja iki {{date}}",
+      "renews_one": "pratęsiama {{count}} mėnesiui",
+      "renews_few": "pratęsiama {{count}} mėnesiams",
+      "renews_many": "pratęsiama {{count}} mėnesio",
+      "renews_other": "pratęsiama {{count}} mėnesių"
+    }
+  },
+  "passkeys": {
+    "title": "Slaptarakčiai",
+    "intro": "Su slaptarakčiu prisijungiate be slaptažodžio – atrakinę jį piršto atspaudu, veidu arba įrenginio PIN kodu. Jis veikia tik šiuo adresu; suklastota svetainė negali juo pasinaudoti.",
+    "none": "Slaptarakčių dar nepridėta.",
+    "add": "Pridėti slaptaraktį",
+    "create": "Sukurti slaptaraktį",
+    "name": "Pavadinimas",
+    "nameHint": "Kad vėliau jį atpažintumėte, pvz., „Nešiojamasis kompiuteris“ arba „Slaptažodžių tvarkyklė“.",
+    "password": "Jūsų slaptažodis",
+    "passwordHint": "Kas prideda slaptaraktį, nuo tada gali prisijungti be slaptažodžio – todėl vieną kartą patvirtinkite.",
+    "added": "Slaptaraktis pridėtas",
+    "removed": "Slaptaraktis pašalintas",
+    "synced": "sinchronizuotas",
+    "lastUsed": "paskutinį kartą naudotas {{time}}",
+    "created": "pridėtas {{time}}, dar nenaudotas",
+    "unsupported": "Ši naršyklė čia negali naudoti slaptarakčių. Slaptarakčiai veikia tik per HTTPS (arba localhost).",
+    "unsupportedIp": "Slaptarakčiai veikia tik per HTTPS ir tik tada, kai adrese yra pavadinimas, o ne IP adresas.",
+    "remove": {
+      "label": "Pašalinti slaptaraktį",
+      "title": "Pašalinti slaptaraktį?",
+      "text": "Po to niekas nebegalės prisijungti su „{{name}}“. Jis liks išsaugotas slaptažodžių tvarkyklėje arba įrenginyje, kol jo ten neištrinsite.",
+      "confirm": "Pašalinti"
     }
   }
 }

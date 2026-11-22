@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { FileUp, KeyRound, Loader2, LogOut, Moon, Scale, Search, Settings, ShieldCheck, Sparkles, Sun, Upload, X } from 'lucide-react'
-import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { AtSign, BellRing, FileUp, Fingerprint, KeyRound, Loader2, LogOut, Moon, Scale, Search, Settings, ShieldCheck, Sparkles, Sun, Upload, X } from 'lucide-react'
+import { type FormEvent, type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -8,16 +8,26 @@ import { api, type AskResult, errorMessage } from '../lib/api'
 import { useAuth } from '../lib/auth'
 import { cx } from '../lib/format'
 import { useTheme } from '../lib/theme'
-import { useUpload } from '../lib/upload'
+import { canCombine, photosAmong, UPLOAD_ACCEPT, useUpload } from '../lib/upload'
+import { PasskeysDialog } from './PasskeysDialog'
 import { TwoFactorDialog } from './TwoFactorDialog'
 import { LanguageSwitcher } from './LanguageSwitcher'
-import { Alert, Badge, Button, Field, IconButton, Input, Logo, Modal } from './ui'
+import { Alert, Badge, Button, Field, IconButton, Input, Logo, Modal, Switch } from './ui'
 
 export function AppShell() {
   const { t } = useTranslation()
   const { isAdmin } = useAuth()
   const upload = useUpload()
   const fileInput = useRef<HTMLInputElement>(null)
+  // mehrere Fotos auf einmal: fragen, ob sie die Seiten eines Dokuments sind
+  const [photoBatch, setPhotoBatch] = useState<File[] | null>(null)
+  const receive = useCallback(
+    (files: File[]) => {
+      if (photosAmong(files).length > 1) setPhotoBatch(files)
+      else void upload(files)
+    },
+    [upload],
+  )
   const { dark, toggle } = useTheme()
 
   return (
@@ -43,15 +53,16 @@ export function AppShell() {
             <input
               ref={fileInput}
               type="file"
-              accept="application/pdf,.pdf"
+              accept={UPLOAD_ACCEPT}
               multiple
               hidden
               onChange={(event) => {
                 const files = Array.from(event.target.files ?? [])
                 event.target.value = ''
-                if (files.length > 0) void upload(files)
+                if (files.length > 0) receive(files)
               }}
             />
+            <RemindersLink />
             {isAdmin && (
               <NavLink to="/settings" aria-label={t('settings.title')} title={t('settings.title')}>
                 {({ isActive }) => (
@@ -78,7 +89,17 @@ export function AppShell() {
         <Outlet />
       </main>
 
-      <DropOverlay onFiles={upload} />
+      <DropOverlay onFiles={receive} />
+      {photoBatch && (
+        <CombinePhotosDialog
+          files={photoBatch}
+          onClose={() => setPhotoBatch(null)}
+          onChoose={(combine) => {
+            setPhotoBatch(null)
+            void upload(photoBatch, combine)
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -291,6 +312,8 @@ function UserMenu() {
   const [open, setOpen] = useState(false)
   const [passwordOpen, setPasswordOpen] = useState(false)
   const [twoFactorOpen, setTwoFactorOpen] = useState(false)
+  const [passkeysOpen, setPasskeysOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const container = useRef<HTMLDivElement>(null)
   const system = useQuery({ queryKey: ['system'], queryFn: api.system })
 
@@ -343,6 +366,15 @@ function UserMenu() {
           <LanguageSwitcher className="px-3 py-1.5" />
           <div className="my-1 h-px bg-line" />
           <MenuItem
+            icon={<AtSign className="size-4" />}
+            onClick={() => {
+              setOpen(false)
+              setProfileOpen(true)
+            }}
+          >
+            {t('shell.notifications.title')}
+          </MenuItem>
+          <MenuItem
             icon={<KeyRound className="size-4" />}
             onClick={() => {
               setOpen(false)
@@ -359,6 +391,15 @@ function UserMenu() {
             }}
           >
             {t('twoFactor.title')}
+          </MenuItem>
+          <MenuItem
+            icon={<Fingerprint className="size-4" />}
+            onClick={() => {
+              setOpen(false)
+              setPasskeysOpen(true)
+            }}
+          >
+            {t('passkeys.title')}
           </MenuItem>
           <MenuItem
             icon={<Scale className="size-4" />}
@@ -380,7 +421,87 @@ function UserMenu() {
       )}
       <ChangePasswordDialog open={passwordOpen} onClose={() => setPasswordOpen(false)} />
       <TwoFactorDialog open={twoFactorOpen} onClose={() => setTwoFactorOpen(false)} />
+      <PasskeysDialog open={passkeysOpen} onClose={() => setPasskeysOpen(false)} />
+      {profileOpen && <ProfileDialog onClose={() => setProfileOpen(false)} />}
     </div>
+  )
+}
+
+/** Menüpunkt „Fällig“: die Zahl der heute fälligen eigenen Termine. */
+function RemindersLink() {
+  const { t } = useTranslation()
+  const count = useQuery({ queryKey: ['reminders', 'count'], queryFn: api.reminderCount, refetchInterval: 60_000 })
+  const due = count.data?.due ?? 0
+  const label = due > 0 ? t('shell.remindersDue', { count: due }) : t('reminders.title')
+  return (
+    <NavLink to="/reminders" aria-label={label} title={label}>
+      {({ isActive }) => (
+        <span
+          className={cx(
+            'relative inline-flex size-9 items-center justify-center rounded-lg transition-colors',
+            isActive ? 'bg-brand-soft text-brand-ink' : 'text-muted hover:bg-raised hover:text-ink',
+          )}
+        >
+          <BellRing className="size-5" />
+          {due > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] leading-none font-semibold text-white">
+              {due > 99 ? '99+' : due}
+            </span>
+          )}
+        </span>
+      )}
+    </NavLink>
+  )
+}
+
+/** Eigene Adresse für E-Mails und welche Benachrichtigungen dorthin gehen. */
+function ProfileDialog({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
+  const { user, isAdmin } = useAuth()
+  const queryClient = useQueryClient()
+  const [email, setEmail] = useState(user.email ?? '')
+  const [notifyNewDocuments, setNotifyNewDocuments] = useState(user.notifyNewDocuments)
+  const [notifyAdmin, setNotifyAdmin] = useState(user.notifyAdmin)
+  const save = useMutation({
+    mutationFn: () => api.updateProfile({ email: email.trim() || null, notifyNewDocuments, notifyAdmin }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['auth'] })
+      toast.success(t('shell.profile.saved'))
+      onClose()
+    },
+  })
+  const noAddress = email.trim() === '' && (notifyNewDocuments || (isAdmin && notifyAdmin))
+  return (
+    <Modal open onClose={onClose} title={t('shell.notifications.title')} size="sm">
+      <form
+        onSubmit={(event) => {
+          event.preventDefault()
+          save.mutate()
+        }}
+        className="flex flex-col gap-4"
+      >
+        {save.isError && <Alert tone="danger">{errorMessage(save.error)}</Alert>}
+        <Field label={t('shell.profile.email')} hint={t('shell.notifications.emailHint')}>
+          {(id) => <Input id={id} type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" maxLength={254} autoFocus />}
+        </Field>
+        <Switch
+          checked={notifyNewDocuments}
+          onChange={setNotifyNewDocuments}
+          label={t('shell.notifications.digest')}
+          description={t('shell.notifications.digestHint')}
+        />
+        {isAdmin && (
+          <Switch checked={notifyAdmin} onChange={setNotifyAdmin} label={t('shell.notifications.admin')} description={t('shell.notifications.adminHint')} />
+        )}
+        {noAddress && <Alert tone="warn">{t('shell.notifications.needsEmail')}</Alert>}
+        <div className="flex justify-end gap-2">
+          <Button onClick={onClose}>{t('common.cancel')}</Button>
+          <Button type="submit" variant="primary" loading={save.isPending}>
+            {t('common.save')}
+          </Button>
+        </div>
+      </form>
+    </Modal>
   )
 }
 
@@ -517,5 +638,34 @@ function DropOverlay({ onFiles }: { onFiles: (files: File[]) => void }) {
         <p className="mt-1.5 text-sm text-muted">{t('shell.dropzone.hint')}</p>
       </div>
     </div>
+  )
+}
+
+/** Mehrere Fotos auf einmal hochgeladen: ein Dokument mit je einer Seite – oder jedes Foto für sich? */
+function CombinePhotosDialog({ files, onClose, onChoose }: { files: File[]; onClose: () => void; onChoose: (combine: boolean) => void }) {
+  const { t } = useTranslation()
+  const possible = canCombine(photosAmong(files))
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title={t('upload.combine.title')}
+      size="sm"
+      footer={
+        <>
+          <Button onClick={() => onChoose(false)}>{t('upload.combine.separate')}</Button>
+          <Button variant="primary" onClick={() => onChoose(true)} disabled={!possible}>
+            {t('upload.combine.one')}
+          </Button>
+        </>
+      }
+    >
+      <p className="text-sm leading-relaxed text-muted">{t('upload.combine.text')}</p>
+      {!possible && (
+        <Alert tone="warn" className="mt-3">
+          {t('upload.combine.tooMuch')}
+        </Alert>
+      )}
+    </Modal>
   )
 }

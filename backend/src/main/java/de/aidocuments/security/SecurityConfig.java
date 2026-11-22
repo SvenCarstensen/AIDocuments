@@ -57,16 +57,16 @@ public class SecurityConfig {
                                             LocaleResolver localeResolver) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/status", "/api/auth/login", "/api/auth/login/two-factor", "/api/auth/setup")
+                        .requestMatchers("/api/auth/status", "/api/auth/login", "/api/auth/login/two-factor", "/api/auth/setup",
+                                "/api/auth/passkey/options", "/api/auth/passkey/login")
                         .permitAll()
                         // geteilte Dokumente: der Link selbst ist die Berechtigung (siehe PublicShareController)
                         .requestMatchers("/api/share/**").permitAll()
                         // Verwaltung: nur Administratoren
-                        .requestMatchers("/api/users/**", "/api/mail-accounts/**", "/api/settings/**")
+                        .requestMatchers(HttpMethod.GET, "/api/areas").authenticated()
+                        .requestMatchers("/api/users/**", "/api/mail-accounts/**", "/api/settings/**", "/api/areas/**")
                         .hasRole("ADMIN")
-                        // einen Link entziehen darf jeder Angemeldete, Dokumente löschen nur Administratoren
-                        .requestMatchers(HttpMethod.DELETE, "/api/documents/*/shares/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/documents/**").hasRole("ADMIN")
+                        // Löschen und Bearbeiten: je nach Recht im Bereich des Dokuments (AreaAccess, DocumentService)
                         .requestMatchers(HttpMethod.POST, "/api/documents/*/reprocess",
                                 "/api/documents/reprocess-unanalyzed").hasRole("ADMIN")
                         .requestMatchers("/api/**").authenticated()

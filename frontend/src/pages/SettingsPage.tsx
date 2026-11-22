@@ -1,15 +1,19 @@
-import { Bot, FolderSync, Mail, Users } from 'lucide-react'
+import { Archive, Bot, DatabaseBackup, FolderSync, Mail, Send, Shapes, Users } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useParams } from 'react-router-dom'
 import { cx } from '../lib/format'
 import { AiSettingsSection } from './settings/AiSettings'
+import { AreaSettings } from './settings/AreaSettings'
+import { BackupSettings } from './settings/BackupSettings'
 import { ImportSettingsSection } from './settings/ImportSettings'
 import { MailboxSettings } from './settings/MailboxSettings'
+import { MailOutSettingsSection } from './settings/MailOutSettings'
+import { RetentionSettings } from './settings/RetentionSettings'
 import { UserSettings } from './settings/UserSettings'
 
 // Bezeichnung und Kurzbeschreibung stehen in den Übersetzungen: settings.<key>.title und settings.<key>.navHint.
-const sections: Array<{ key: 'mailboxes' | 'import' | 'ai' | 'users'; icon: ReactNode; content: ReactNode }> = [
+const sections: Array<{ key: 'mailboxes' | 'import' | 'ai' | 'users' | 'areas' | 'retention' | 'mailOut' | 'backup'; icon: ReactNode; content: ReactNode }> = [
   {
     key: 'mailboxes',
     icon: <Mail className="size-[18px]" aria-hidden />,
@@ -29,6 +33,26 @@ const sections: Array<{ key: 'mailboxes' | 'import' | 'ai' | 'users'; icon: Reac
     key: 'users',
     icon: <Users className="size-[18px]" aria-hidden />,
     content: <UserSettings />,
+  },
+  {
+    key: 'areas',
+    icon: <Shapes className="size-[18px]" aria-hidden />,
+    content: <AreaSettings />,
+  },
+  {
+    key: 'retention',
+    icon: <Archive className="size-[18px]" aria-hidden />,
+    content: <RetentionSettings />,
+  },
+  {
+    key: 'mailOut',
+    icon: <Send className="size-[18px]" aria-hidden />,
+    content: <MailOutSettingsSection />,
+  },
+  {
+    key: 'backup',
+    icon: <DatabaseBackup className="size-[18px]" aria-hidden />,
+    content: <BackupSettings />,
   },
 ]
 

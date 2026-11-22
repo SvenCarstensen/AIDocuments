@@ -95,6 +95,15 @@ class MessagesTest {
     }
 
     @Test
+    void datesSurviveStorageAndAreFormattedPerLanguage() {
+        Msg notice = Msg.of("contract.reminder.notice", java.time.LocalDate.of(2026, 11, 30));
+        String stored = MsgCodec.encode(notice);
+        assertThat(MsgCodec.decode(stored)).containsExactly(notice);
+        assertThat(messages.localize(stored, Locale.GERMAN)).contains("30. November 2026").doesNotContain("{0");
+        assertThat(messages.localize(stored, Locale.ENGLISH)).contains("November 30, 2026");
+    }
+
+    @Test
     void plainTextFromBeforeTranslationPassesThroughUnchanged() {
         for (String legacy : List.of(
                 "2 neue E-Mails geprüft, 1 PDF übernommen.",

@@ -13,8 +13,8 @@ import tools.jackson.databind.json.JsonMapper;
  *
  * <p>Form: {@code i18n:} gefolgt von einer JSON-Liste von Sätzen, z. B.
  * <pre>i18n:[{"k":"mail.sync.checked","a":[2]},{"k":"mail.sync.imported","a":[1]}]</pre>
- * {@code k} ist der Schlüssel, {@code a} sind die Argumente (Text, ganze Zahl, ein geschachtelter Satz als
- * Objekt oder mehrere Sätze als Liste); {@code {"t":"…"}} ist wörtlicher Text. Alles, was nicht so aussieht –
+ * {@code k} ist der Schlüssel, {@code a} sind die Argumente (Text, ganze Zahl, ein Datum als {@code {"d":"JJJJ-MM-TT"}},
+ * ein geschachtelter Satz als Objekt oder mehrere Sätze als Liste); {@code {"t":"…"}} ist wörtlicher Text. Alles, was nicht so aussieht –
  * insbesondere die deutschen Klartexte aus älteren Versionen –, gilt als fertiger Text.
  */
 public final class MsgCodec {
@@ -69,6 +69,10 @@ public final class MsgCodec {
         if (arg instanceof List<?> list) {
             return list.stream().map(part -> toJson((Msg) part)).toList();
         }
+        if (arg instanceof java.time.LocalDate date) {
+            // als eigenes Objekt, damit es wieder ein Datum wird – {0,date,long} formatiert keinen Text
+            return Map.of("d", date.toString());
+        }
         return arg; // String oder Long
     }
 
@@ -100,6 +104,7 @@ public final class MsgCodec {
                     case String text -> text;
                     case Integer number -> number.longValue();
                     case Long number -> number;
+                    case Map<?, ?> date when date.get("d") instanceof String iso -> date(iso);
                     case Map<?, ?> nested -> sentence(nested);
                     case List<?> nested -> sentences(nested);
                     case null -> "";
@@ -108,5 +113,13 @@ public final class MsgCodec {
             }
         }
         return new Msg(key, args);
+    }
+
+    private static Object date(String iso) {
+        try {
+            return java.time.LocalDate.parse(iso);
+        } catch (java.time.format.DateTimeParseException e) {
+            return iso;
+        }
     }
 }

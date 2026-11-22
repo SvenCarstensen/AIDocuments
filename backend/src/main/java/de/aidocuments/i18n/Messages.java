@@ -60,6 +60,8 @@ public class Messages {
             args.add(switch (arg) {
                 case Msg nested -> render(nested, locale);
                 case List<?> nested -> join(nested, locale);
+                // MessageFormat kennt nur java.util.Date – Mitternacht in der Zeitzone, mit der es formatiert
+                case java.time.LocalDate date -> java.util.Date.from(date.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
                 default -> arg;
             });
         }

@@ -44,7 +44,9 @@
     "login": {
       "title": "Velkommen tilbake",
       "subtitle": "Logg inn for å få tilgang til dokumentene dine.",
-      "submit": "Logg inn"
+      "submit": "Logg inn",
+      "or": "eller",
+      "passkey": "Logg inn med passnøkkel"
     },
     "setup": {
       "title": "Sett opp AIDocuments",
@@ -56,17 +58,17 @@
       "submit": "Opprett konto og kom i gang",
       "features": {
         "import": "PDF-er fra postkassen og importmappen",
-        "ai": "KI lager sammendrag og setter stikkord",
+        "ai": "KI-en lager sammendrag og setter stikkord",
         "search": "Fulltekstsøk helt inn i dokumentet"
       }
     },
     "twoFactor": {
-      "title": "Bekreft pålogging",
+      "title": "Bekreft innlogging",
       "subtitle": "Skriv inn den 6-sifrede koden fra autentiseringsappen din.",
       "code": "Kode",
       "codeHint": "Ingen tilgang til appen? Skriv i stedet inn en av gjenopprettingskodene dine.",
       "submit": "Bekreft",
-      "back": "Tilbake til pålogging"
+      "back": "Tilbake til innlogging"
     },
     "twoFactorRequired": {
       "title": "Sett opp tofaktorautentisering",
@@ -81,12 +83,12 @@
       "dark": "Mørkt tema"
     },
     "search": {
-      "placeholder": "Søk med stikkord: dokumenter, emneord, innhold …",
+      "placeholder": "Nøkkelordsøk: dokumenter, stikkord, innhold …",
       "placeholderAi": "KI-søk: spør med egne ord – f.eks. «fakturaer fra Kia fra 2024»",
       "labelAi": "KI",
       "label": "Søk i dokumenter",
       "clear": "Tøm søket",
-      "askFailed": "Det søkes med stikkord."
+      "askFailed": "Det søkes med nøkkelord."
     },
     "userMenu": {
       "label": "Brukermeny ({{name}})",
@@ -102,26 +104,49 @@
       "changed": "Passordet er endret"
     },
     "dropzone": {
-      "title": "Slipp PDF-er her",
-      "hint": "Du kan slippe flere filer samtidig. De blir lagret, analysert og merket med stikkord."
+      "title": "Slipp PDF-er eller bilder her",
+      "hint": "Du kan slippe flere filer samtidig. Bilder (JPG, PNG, HEIC) blir gjort om til PDF-er. Alt blir lagret, analysert og merket med stikkord."
+    },
+    "remindersDue_one": "{{count, number}} forfalt oppfølging",
+    "remindersDue_other": "{{count, number}} forfalte oppfølginger",
+    "profile": {
+      "email": "E-postadresse",
+      "saved": "Lagret"
+    },
+    "notifications": {
+      "title": "E-postvarsler",
+      "emailHint": "Hit sendes forfalte oppfølginger som er tildelt deg, og varslene du slår på nedenfor – på språket du bruker programmet på akkurat nå. La feltet stå tomt hvis du ikke vil ha e-post.",
+      "digest": "Nye dokumenter hver dag",
+      "digestHint": "Én gang om dagen en liste over dokumentene som har kommet til i områdene dine – bare på dager med nye dokumenter.",
+      "admin": "Varsler for administratorer",
+      "adminHint": "Når oppbevaringstider utløper (ingenting slettes automatisk), og når en postkasse gjentatte ganger ikke kan sjekkes.",
+      "needsEmail": "Uten adresse sendes det ingen e-post."
     }
   },
   "upload": {
-    "onlyPdf": "Bare PDF-filer kan legges til.",
+    "onlyPdf": "Bare PDF-er og bilder (JPG, PNG, HEIC) kan legges til.",
     "uploadingFile": "Laster opp «{{name}}» …",
-    "uploadingFiles_one": "Laster opp {{count, number}} PDF …",
-    "uploadingFiles_other": "Laster opp {{count, number}} PDF-er …",
+    "uploadingFiles_one": "Laster opp {{count, number}} fil …",
+    "uploadingFiles_other": "Laster opp {{count, number}} filer …",
     "created_one": "{{count, number}} dokument lagt til",
     "created_other": "{{count, number}} dokumenter lagt til",
     "processingInBackground": "Behandlingen fortsetter i bakgrunnen.",
     "duplicates_one": "{{count, number}} finnes allerede",
     "duplicates_other": "{{count, number}} finnes allerede",
-    "rejected_one": "{{count, number}} fil er ikke en gyldig PDF",
-    "rejected_other": "{{count, number}} filer er ikke gyldige PDF-er",
+    "rejected_one": "{{count, number}} fil ble ikke lagt til",
+    "rejected_other": "{{count, number}} filer ble ikke lagt til",
     "onlyDuplicates_one": "Dette dokumentet finnes allerede.",
     "onlyDuplicates_other": "Disse dokumentene finnes allerede.",
-    "noneValid": "Ingen av filene er en gyldig PDF.",
-    "failed": "Opplastingen mislyktes"
+    "noneValid": "Ingen av filene kunne legges til.",
+    "failed": "Opplastingen mislyktes",
+    "intoArea": "Område: {{area}}",
+    "combine": {
+      "title": "Slå sammen bilder til ett dokument?",
+      "text": "Du har valgt flere bilder. Hvis de er sidene i ett og samme dokument – for eksempel et brev på flere sider – blir de én PDF i rekkefølgen til filnavnene; rekkefølgen kan endres etterpå under «Sider». Ellers blir hvert bilde et eget dokument.",
+      "one": "Som ett dokument",
+      "separate": "Hvert bilde for seg",
+      "tooMuch": "Det er for mange eller for store bilder til ett dokument (maks. 100 bilder og til sammen 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -175,12 +200,13 @@
       "activeTo": "til {{date}}",
       "removeOne": "Fjern filteret «{{label}}»",
       "removeAll": "Fjern alle filtre",
-      "clear": "Fjern filtre"
+      "clear": "Fjern filtre",
+      "retentionExpired": "Oppbevaringstid utløpt"
     },
     "empty": {
       "libraryTitle": "Ingen dokumenter ennå",
-      "libraryHint": "Bare dra PDF-filer inn i dette vinduet, eller bruk «Last opp».",
-      "libraryHintAdmin": "Bare dra PDF-filer inn i dette vinduet, eller bruk «Last opp». I innstillingene kan du sette opp en postkasse eller en importmappe som nye PDF-er importeres automatisk fra.",
+      "libraryHint": "Bare dra PDF-er eller bilder inn i dette vinduet, eller bruk «Last opp».",
+      "libraryHintAdmin": "Bare dra PDF-er eller bilder inn i dette vinduet, eller bruk «Last opp». I innstillingene kan du sette opp en postkasse eller en importmappe som nye dokumenter importeres automatisk fra.",
       "noResultsTitle": "Ingenting funnet",
       "noResultsSearch": "Ingen dokumenter samsvarer med dette søket. Søket finner også deler av ord – prøv et kortere søkeord eller færre ord.",
       "noResultsFilters": "Ingen dokumenter samsvarer med de valgte filtrene."
@@ -190,6 +216,25 @@
     "loadMore": "Last inn flere ({{remaining, number}})",
     "aiSearch": {
       "notice": "KI-søk: «{{question}}». Filtrene viser hvordan spørsmålet ble forstått."
+    },
+    "export": {
+      "label_one": "Eksporter {{count, number}} dokument som ZIP",
+      "label_other": "Eksporter alle {{count, number}} dokumentene i denne listen som ZIP",
+      "started_one": "Eksport av {{count, number}} dokument er startet",
+      "started_other": "Eksport av {{count, number}} dokumenter er startet",
+      "contents": "ZIP-filen inneholder PDF-ene og alle opplysninger som tabell (documents.csv) og som documents.json.",
+      "failed": "Eksporten mislyktes"
+    },
+    "mailboxNotice": {
+      "text_one": "Postkassen «{{names}}» har ikke kunnet sjekkes flere ganger på rad – det kommer ingen dokumenter derfra nå.",
+      "text_other": "Disse postkassene har ikke kunnet sjekkes flere ganger på rad: {{names}}. Det kommer ingen dokumenter derfra nå.",
+      "action": "Vis postkasser"
+    },
+    "backupNotice": {
+      "never": "Det finnes ingen sikkerhetskopi av dokumentene dine ennå.",
+      "overdue": "Siste sikkerhetskopi: {{when}}. Det er lenger siden enn det som er innstilt.",
+      "failed": "Den automatiske sikkerhetskopieringen mislyktes: {{reason}}",
+      "action": "Gå til sikkerhetskopi"
     }
   },
   "document": {
@@ -264,7 +309,9 @@
     "noText": "Det finnes ingen tekst for dette dokumentet – sannsynligvis er det en skanning uten tekstlag. Når KI-en er satt opp og tekstgjenkjenning er slått på, blir innholdet transkribert under analysen.",
     "edit": {
       "title": "Rediger dokument",
-      "saved": "Endringene er lagret"
+      "saved": "Endringene er lagret",
+      "areaHint": "Bestemmer hvem som kan se dokumentet.",
+      "areaMoveHint": "Etterpå kan bare medlemmer av «{{area}}» og administratorer se det."
     },
     "delete": {
       "title": "Slette dokumentet?",
@@ -272,10 +319,10 @@
       "confirm": "Slett"
     },
     "chat": {
-      "intro": "Still et spørsmål om dette dokumentet – KI svarer ut fra innholdet.",
+      "intro": "Still et spørsmål om dette dokumentet – KI-en svarer ut fra innholdet.",
       "placeholder": "Spør om noe i dette dokumentet …",
       "send": "Send",
-      "thinking": "KI leser dokumentet …",
+      "thinking": "KI-en leser dokumentet …",
       "notConfigured": "For å stille spørsmål om dokumentet må en KI være satt opp.",
       "restart": "Start på nytt",
       "suggestions": {
@@ -300,16 +347,25 @@
         "EDITED": "Redigert",
         "ORIGINAL_RESTORED": "Original gjenopprettet",
         "VERSION_RESTORED": "Versjon {{from}} gjenopprettet",
-        "UNDONE": "Endring angret"
+        "UNDONE": "Endring angret",
+        "PAGES": "Sider endret",
+        "MERGED": "Dokumenter lagt til"
       }
-    }
+    },
+    "retention": {
+      "label": "Oppbevaring",
+      "until": "til {{date}} – kan ikke slettes før da",
+      "expired": "utløp {{date}}",
+      "locked": "Skal oppbevares til {{date}} – kan først slettes etter det"
+    },
+    "readOnly": "I dette området kan du bare se dokumentet."
   },
   "settings": {
     "title": "Innstillinger",
     "mailboxes": {
       "title": "Postkasser",
-      "navHint": "IMAP-servere som PDF-vedlegg importeres fra",
-      "intro": "PDF-vedlegg importeres automatisk fra disse IMAP-postkassene. Postkassene blir bare lest – e-postene forblir uendret og uleste.",
+      "navHint": "IMAP-servere som PDF- og bildevedlegg importeres fra",
+      "intro": "PDF-vedlegg og vedlagte bilder (som PDF) importeres automatisk fra disse IMAP-postkassene – men ikke selve teksten i e-postene eller innebygde logoer. Postkassene blir bare lest – e-postene forblir uendret og uleste.",
       "add": "Legg til postkasse",
       "emptyTitle": "Ingen postkasse er satt opp ennå",
       "emptyText": "Skriv inn innloggingsopplysningene for en IMAP-postkasse – for eksempel postkassen skanneren din sender dokumenter til.",
@@ -342,7 +398,7 @@
         "since": "Bare e-post fra og med",
         "sinceHint": "Valgfritt – eldre e-post hoppes over",
         "enabled": "Sjekk automatisk",
-        "enabledHint": "Postkassen sjekkes for nye PDF-er med det innstilte intervallet.",
+        "enabledHint": "Postkassen sjekkes for nye vedlegg med det innstilte intervallet.",
         "filter": {
           "title": "Filter",
           "intro": "Bare e-poster som oppfyller alle betingelsene, blir behandlet. Ett ord per linje; store og små bokstaver spiller ingen rolle, og en del av teksten er nok. Tomme felt begrenser ingenting.",
@@ -351,29 +407,30 @@
           "senderIncludes": "Avsenderen inneholder ett av disse ordene",
           "senderExcludes": "Avsenderen inneholder ingen av disse ordene",
           "senderHint": "Navn eller adresse, f.eks. «@example.com»",
-          "newOnly": "Filteret gjelder for e-post som kommer inn etter siste henting; e-post som allerede er kontrollert, behandles ikke på nytt."
+          "newOnly": "Filteret gjelder for e-post som kommer inn etter siste sjekk; e-post som allerede er sjekket, behandles ikke på nytt."
         },
-        "interval": "Henteintervall i minutter",
-        "intervalHint": "La feltet stå tomt for å bruke det generelle intervallet (nå {{interval}})."
+        "interval": "Sjekkintervall i minutter",
+        "intervalHint": "La feltet stå tomt for å bruke det generelle intervallet (nå {{interval}}).",
+        "areaHint": "Importerte dokumenter havner i dette området."
       },
       "filterActive": "Filter aktivt",
-      "schedule": "Hentes hvert {{interval}} · neste {{when}}",
-      "scheduleSoon": "Hentes hvert {{interval}} · neste om litt"
+      "schedule": "Sjekkintervall: {{interval}} · neste {{when}}",
+      "scheduleSoon": "Sjekkintervall: {{interval}} · neste om litt"
     },
     "import": {
       "title": "Tidsplan & importmappe",
       "navHint": "Sjekkintervall og overvåket mappe",
-      "intro": "Bestemmer hvor ofte programmet ser etter nye PDF-filer – i postkassene og i importmappen.",
+      "intro": "Bestemmer hvor ofte programmet ser etter nye dokumenter – i postkassene og i importmappen.",
       "saved": "Innstillingene er lagret",
       "interval": {
         "title": "Sjekkintervall",
-        "text": "Så ofte sjekker programmet inngangsmappen og alle postkasser uten eget intervall for nye PDF-er.",
+        "text": "Så ofte sjekker programmet importmappen og alle postkasser uten eget intervall for nye dokumenter.",
         "label": "Med … minutters mellomrom",
         "nextRun": "Neste automatiske sjekk {{when}}."
       },
       "folder": {
         "title": "Importmappe",
-        "text": "En mappe på serveren som overvåkes for nye PDF-filer – for eksempel målmappen til en nettverksskanner. Undermapper blir også gjennomsøkt.",
+        "text": "En mappe på serveren som overvåkes for nye PDF-er og bilder (JPG, PNG, HEIC) – for eksempel målmappen til en nettverksskanner. Undermapper blir også gjennomsøkt.",
         "enable": "Overvåk importmappen",
         "path": "Sti på serveren",
         "pathHint": "Absolutt sti. I Docker-containeren er dette den monterte mappen, vanligvis {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Sjekker mappen …",
         "neverScanned": "Ikke sjekket ennå.",
         "scanNow": "Sjekk nå",
-        "scanStarted": "Importmappen blir sjekket."
+        "scanStarted": "Importmappen blir sjekket.",
+        "areaHint": "Dokumenter fra mappen havner i dette området."
       }
     },
     "ai": {
@@ -463,7 +521,7 @@
         "ocr": "Tekstgjenkjenning for skanninger",
         "ocrHint": "Programmet lar KI-en transkribere skannede PDF-er uten tekstlag – først da kan de finnes med fulltekstsøk. Hver skanning tar lengre tid og koster mer.",
         "quickOcrFirst": "Først rask tekstgjenkjenning, deretter forbedring med KI",
-        "quickOcrFirstHint": "Nye skanninger leses først av den innebygde tekstgjenkjenningen (Tesseract) – etter noen sekunder er de søkbare. Deretter legger KI til tittel, sammendrag og stikkord basert på denne teksten."
+        "quickOcrFirstHint": "Nye skanninger leses først av den innebygde tekstgjenkjenningen (Tesseract) – etter noen sekunder er de søkbare. Deretter legger KI-en til tittel, sammendrag og stikkord basert på denne teksten."
       },
       "unanalyzed_one": "{{count, number}} dokument er ikke analysert av KI-en ennå.",
       "unanalyzed_other": "{{count, number}} dokumenter er ikke analysert av KI-en ennå.",
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} logger deretter inn bare med passordet og kan sette opp tofaktorautentisering på nytt – for eksempel etter å ha mistet telefonen.",
       "resetTwoFactorConfirm": "Tilbakestill",
       "twoFactorReset": "Tofaktorautentisering tilbakestilt"
+    },
+    "areas": {
+      "title": "Områder",
+      "navHint": "Hvem som ser hvilke dokumenter",
+      "intro": "Hvert dokument ligger i nøyaktig ett område. Brukere ser bare dokumentene i områdene de er medlem av, i tillegg til dem i områder for alle.",
+      "add": "Opprett område",
+      "everyone": "For alle",
+      "restricted": "Begrenset",
+      "visibleForAll": "synlig for alle innloggede",
+      "members": "Medlemmer: {{names}}",
+      "adminsOnly": "bare administratorer",
+      "adminHint": "Administratorer ser alle områder, også uten å være medlem.",
+      "edit": "Rediger {{name}}",
+      "saved": "Området er lagret",
+      "created": "Området er opprettet",
+      "deleted": "Området er slettet",
+      "delete": {
+        "label": "Slett {{name}}",
+        "title": "Slette område?",
+        "text": "Området «{{name}}» blir slettet. Det er bare mulig så lenge ingen dokumenter, ingen postkasse og ingen importmappe bruker det."
+      },
+      "dialog": {
+        "name": "Navn",
+        "namePlaceholder": "f.eks. Regnskap",
+        "generalNameHint": "La feltet stå tomt, så heter området «Generelt» på alle språk.",
+        "everyone": "Synlig for alle",
+        "everyoneHint": "Alle innloggede brukere ser dokumentene i dette området.",
+        "members": "Medlemmer",
+        "membersHint": "Bare medlemmer og administratorer ser dokumentene i dette området. For hvert medlem velger du om det bare kan lese, også redigere eller i tillegg slette.",
+        "noUsers": "Det finnes ennå ingen brukere uten administratorrolle.",
+        "create": "Opprett",
+        "everyoneAccess": "Alle kan",
+        "accessOf": "Tilgang for {{name}}",
+        "membersHintEveryone": "Alle ser dokumentene i dette området. Legg til medlemmer her hvis de skal kunne gjøre mer enn alle andre."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Oppbevaring",
+      "navHint": "Oppbevaringstider og slettesperre",
+      "intro": "Angi hvor lenge dokumenter av en dokumenttype må oppbevares – fakturaer for eksempel i ti år. Tiden regnes fra slutten av året dokumentet er fra. Fram til da kan ingen slette det.",
+      "permanent": "En sperre kan ikke oppheves – heller ikke av administratorer. Hvis en regel forkortes eller slettes, eller dokumenttypen til et dokument endres, gjelder oppbevaringstiden som allerede er satt.",
+      "add": "Opprett regel",
+      "years_one": "{{count, number}} år",
+      "years_other": "{{count, number}} år",
+      "edit": "Rediger regelen for {{category}}",
+      "saved": "Regelen er lagret",
+      "created": "Regelen er opprettet",
+      "deleted": "Regelen er slettet",
+      "emptyTitle": "Ingen oppbevaringsregler ennå",
+      "emptyText": "Uten en regel kan dokumenter slettes når som helst.",
+      "delete": {
+        "label": "Slett regelen for {{category}}",
+        "title": "Slette regel?",
+        "text": "Nye dokumenter av typen «{{category}}» får da ikke lenger noen oppbevaringstid. Dokumenter som allerede er sperret, forblir sperret til oppbevaringstiden deres er ute."
+      },
+      "dialog": {
+        "categoryHint": "Slik den står på dokumentet; store og små bokstaver spiller ingen rolle.",
+        "years": "Oppbevaringstid i år",
+        "yearsHint": "Regnes fra slutten av året for dokumentdatoen (uten dato: for dagen dokumentet ble lagt til).",
+        "shorterHint": "En kortere tid gjelder bare dokumenter som ennå ikke har noen oppbevaringstid. Dokumenter som allerede er sperret, forblir sperret til slutten av den nåværende oppbevaringstiden.",
+        "create": "Opprett"
+      }
+    },
+    "mailOut": {
+      "title": "Utgående e-post",
+      "navHint": "Påminnelser på e-post",
+      "intro": "Via denne SMTP-serveren sender programmet påminnelser om forfalte oppfølginger – én gang per oppfølging, samlet i én e-post per person. Mottaker er den som tar seg av oppfølgingen og har lagt inn en adresse i brukermenyen.",
+      "enabled": "Send påminnelser på e-post",
+      "enabledHint": "Når dette er slått av, vises oppfølginger bare i programmet.",
+      "host": "SMTP-server",
+      "port": "Port",
+      "security": "Kryptering",
+      "unencrypted": "Ingen",
+      "usernameHint": "La feltet stå tomt hvis serveren ikke krever innlogging.",
+      "passwordKeepHint": "La feltet stå tomt for å beholde det lagrede passordet.",
+      "from": "Avsenderadresse",
+      "fromHint": "Serveren må tillate den for kontoen din.",
+      "appUrl": "Programmets adresse",
+      "appUrlHint": "For lenker i e-postene, f.eks. https://docs.example.com. Tomt = ingen lenker.",
+      "digestHour": "Utsending",
+      "fromHour": "fra kl. {{hour}}",
+      "saved": "E-postinnstillingene er lagret",
+      "test": "Testmelding til {{address}}",
+      "testNeedsAddress": "Legg inn din egen e-postadresse i brukermenyen for å få testmeldingen.",
+      "testSavedHint": "Testen bruker de lagrede innstillingene – lagre derfor først."
+    },
+    "backup": {
+      "title": "Sikkerhetskopi & import",
+      "navHint": "Sikkerhetskopier alt på én gang, importer eksporter",
+      "intro": "En sikkerhetskopi inneholder alt som trengs for å gjenopprette AIDocuments nøyaktig slik det er. En import henter inn dokumenter fra en eksport fra en annen installasjon – med opplysningene deres.",
+      "backupTitle": "Sikkerhetskopi med ett klikk",
+      "backupText": "En ZIP med databasen, alle dokumenter inkludert tidligere versjoner, miniatyrbildene og nøkkelen til lagrede passord. Programmet fortsetter å kjøre i mellomtiden.",
+      "size": "Omfang",
+      "sizeValue_one": "ca. {{size}} i {{count, number}} fil",
+      "sizeValue_other": "ca. {{size}} i {{count, number}} filer",
+      "last": "Siste sikkerhetskopi",
+      "never": "aldri",
+      "keyWarning": "Sikkerhetskopien er ikke kryptert og inneholder nøkkelen til de lagrede passordene (postkasser, KI, tofaktorautentisering). Oppbevar den like sikkert som selve dokumentene.",
+      "restore": "Slik gjenoppretter du: Stopp AIDocuments, pakk ut innholdet i ZIP-filen i en tom datamappe og start på nytt. En veiledning ligger i ZIP-filen (README.txt).",
+      "download": "Last ned sikkerhetskopi",
+      "started": "Sikkerhetskopien lastes ned.",
+      "externalDatabase": "Sikkerhetskopi med ett klikk finnes bare med den innebygde databasen. Med MariaDB sikkerhetskopierer du databasen med dens egne verktøy (for eksempel mariadb-dump) og i tillegg datamappen.",
+      "importTitle": "Importer en eksport",
+      "importText": "En ZIP fra «Eksporter» i dokumentlisten – også fra en annen installasjon. Tittel, dokumenttype, stikkord og øvrige opplysninger beholdes; KI-en leser ikke dokumentene på nytt. Filer som allerede finnes, hoppes over.",
+      "file": "ZIP-fil",
+      "areaHint": "Hit havner dokumentene – eller bare de som har et område som ikke finnes her.",
+      "matchAreas": "Legg i områder med samme navn",
+      "matchAreasHint": "Finnes det et område her med samme navn som i eksporten, havner dokumentene der.",
+      "import": "Importer",
+      "importing": "Importerer …",
+      "result": "Importert: {{imported, number}} · fantes allerede: {{duplicates, number}} · ikke importert: {{failed, number}}",
+      "auto": {
+        "title": "Automatisk sikkerhetskopiering",
+        "text": "Én gang om dagen lagrer AIDocuments en fullstendig sikkerhetskopi som ZIP i en mappe og beholder de nyeste. Mappen bør helst ligge på en annen disk eller en nettverksstasjon – hvis disken med dataene svikter, er ellers også sikkerhetskopiene borte.",
+        "enable": "Sikkerhetskopier automatisk hver dag",
+        "hour": "Klokkeslett",
+        "keep": "Behold",
+        "keepHint": "Antall sikkerhetskopier; eldre slettes.",
+        "directory": "Mappe",
+        "directoryHint": "Fullstendig sti på serveren. La feltet stå tomt for standardmappen. I Docker-containeren må mappen være montert.",
+        "warnAfterDays": "Varsle etter (dager)",
+        "warnAfterDaysHint": "Melding i dokumentlisten når det ikke er tatt sikkerhetskopi på så lenge – manuelt eller automatisk. 0 = varsle aldri.",
+        "lastRun": "Siste kjøring",
+        "nextRun": "Neste kjøring",
+        "running": "Sikkerhetskopiering pågår …",
+        "ok": "vellykket, {{when}}",
+        "failed": "mislyktes, {{when}}",
+        "stored_one": "{{count, number}} sikkerhetskopi i {{directory}}",
+        "stored_other": "{{count, number}} sikkerhetskopier i {{directory}}",
+        "runNow": "Sikkerhetskopier nå",
+        "saveFirst": "Lagre endringene først.",
+        "runStarted": "Sikkerhetskopieringen kjører i bakgrunnen.",
+        "done": "Sikkerhetskopien er lagret.",
+        "saved": "Innstillingene er lagret.",
+        "externalDatabase": "Automatisk sikkerhetskopiering finnes bare med den innebygde databasen. Med MariaDB sikkerhetskopierer du databasen med dens egne verktøy (for eksempel en nattlig mariadb-dump) og i tillegg datamappen."
+      }
     }
   },
   "history": {
@@ -544,7 +739,7 @@
     "title": "Tofaktorautentisering",
     "on": "På",
     "off": "Av",
-    "intro": "Beskytt kontoen din med en ekstra faktor: ved pålogging skriver du da også inn en kode fra en autentiseringsapp på telefonen (f.eks. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Beskytt kontoen din med en ekstra faktor: ved innlogging skriver du da også inn en kode fra en autentiseringsapp på telefonen (f.eks. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Sett opp",
     "scan": "Skann QR-koden med autentiseringsappen eller skriv inn nøkkelen manuelt. Skriv deretter inn koden fra appen og passordet ditt.",
     "qrAlt": "QR-kode for autentiseringsappen",
@@ -564,8 +759,9 @@
   },
   "confirmCode": {
     "title": "Bekreft endring",
-    "text": "Endringer i kontoer, postbokser og innstillinger krever en gjeldende kode fra autentiseringsappen din. Bekreftelsen gjelder i 10 minutter.",
-    "submit": "Bekreft"
+    "text": "Endringer i kontoer, postkasser og innstillinger krever en gjeldende kode fra autentiseringsappen din. Bekreftelsen gjelder i 10 minutter.",
+    "submit": "Bekreft",
+    "passkey": "Bekreft med passnøkkel"
   },
   "share": {
     "button": "Del",
@@ -577,7 +773,7 @@
     "viewOnly": "Bare se",
     "canEdit": "Får redigere",
     "viewHint": "Personen kan se, skrive ut og laste ned PDF-en.",
-    "editHint": "Personen kan også markere, skrive i, signere og lagre PDF-en. Hver lagring blir en ny versjon; tittel, etiketter og andre opplysninger forblir skjult.",
+    "editHint": "Personen kan også markere, skrive i, signere og lagre PDF-en. Hver gang den lagres, blir det en ny versjon; tittel, stikkord og andre opplysninger kan personen ikke se.",
     "validity": "Gyldig i",
     "unlimited": "Ubegrenset",
     "create": "Opprett lenke",
@@ -598,6 +794,193 @@
     "page": {
       "for": "Delt med {{name}}",
       "invalid": "Denne lenken er ugyldig eller utløpt, eller dokumentet er slettet. Ta kontakt med personen som ga deg den."
+    }
+  },
+  "areas": {
+    "general": "Generelt",
+    "unknown": "Annet område",
+    "label": "Område",
+    "target": "Målområde",
+    "access": {
+      "READ": "Bare lese",
+      "EDIT": "Lese og redigere",
+      "DELETE": "Redigere og slette"
+    }
+  },
+  "reminders": {
+    "title": "Oppfølginger",
+    "cardTitle": "Oppfølging",
+    "add": "Opprett oppfølging",
+    "edit": "Rediger oppfølging",
+    "create": "Opprett",
+    "created": "Oppfølgingen er opprettet",
+    "saved": "Oppfølgingen er lagret",
+    "deleted": "Oppfølgingen er slettet",
+    "markedDone": "Utført",
+    "dueDate": "Forfallsdato",
+    "note": "Notat",
+    "notePlaceholder": "f.eks. sjekk betaling",
+    "assignee": "Hvem tar seg av det?",
+    "assigneeHint": "Denne personen ser oppfølgingen under «Mine» og får påminnelsen på e-post. Alle som kan se dokumentet, kan velges.",
+    "me": "{{name}} (meg)",
+    "assignedTo": "for {{name}}",
+    "doneBy": "utført av {{name}}",
+    "markDone": "Merk som utført",
+    "reopen": "Åpne igjen",
+    "delete": {
+      "label": "Slett oppfølging",
+      "title": "Slette oppfølging?",
+      "text": "Oppfølgingen blir fjernet. Dokumentet forblir uendret."
+    },
+    "accept": "Legg til",
+    "dismiss": "Avvis forslag",
+    "suggestionsHint": "KI-en fant datoer i dette dokumentet:",
+    "none": "Ingen åpne oppfølginger.",
+    "showDone_one": "Vis {{count, number}} utført oppfølging",
+    "showDone_other": "Vis {{count, number}} utførte oppfølginger",
+    "hideDone": "Skjul utførte",
+    "scope": {
+      "label": "Hvilke oppfølginger",
+      "mine": "Mine",
+      "all": "Alle"
+    },
+    "dueTitle": "Forfalt",
+    "nothingDue": "Ingenting forfaller i dag.",
+    "upcomingTitle": "Snart",
+    "suggestionsTitle": "Foreslåtte datoer",
+    "suggestionsPageHint": "Frister de neste seks månedene som KI-en har funnet i dokumentene. Legg dem til som oppfølging, eller avvis dem.",
+    "emptyTitle": "Ingen oppfølginger",
+    "emptyText": "Opprett en oppfølging for et dokument – eller legg til en som KI-en foreslår.",
+    "repeat": {
+      "label": "Gjenta",
+      "hint": "Når du huker av oppfølgingen, opprettes den neste med samme intervall.",
+      "none": "Én gang",
+      "m1": "Hver måned",
+      "m3": "Hvert kvartal",
+      "m6": "Hvert halvår",
+      "m12": "Hvert år",
+      "m24": "Annethvert år",
+      "months_one": "Hver måned",
+      "months_other": "Hver {{count}}. måned"
+    },
+    "fromContract": "fra kontrakten"
+  },
+  "pages": {
+    "button": "Sider",
+    "title": "Rediger sider",
+    "intro": "Dra sidene eller flytt dem med pilene, roter eller fjern dem. Når du lagrer, opprettes en ny versjon – den forrige beholdes.",
+    "page": "Side {{number}}",
+    "wasPage": "tidligere {{number}}",
+    "moveLeft": "Flytt fremover",
+    "moveRight": "Flytt bakover",
+    "rotate": "Roter 90°",
+    "remove": "Fjern side",
+    "keep": "Behold side",
+    "noneLeft": "Minst én side må bli igjen.",
+    "saveFirst": "Lagre endringene først",
+    "saved": "Sidene er lagret",
+    "split": {
+      "here": "Eget dokument herfra",
+      "title": "Dele opp dokumentet?",
+      "text": "Side {{page}} og alle de følgende sidene blir et eget dokument i samme område. Det blir lest og sortert som et nylig mottatt dokument; dette dokumentet beholder sidene før.",
+      "confirm": "Del opp",
+      "done": "Dokumentet er delt opp",
+      "open": "Åpne nytt dokument"
+    },
+    "merge": {
+      "button": "Legg til dokumenter",
+      "title": "Legg til dokumenter",
+      "intro": "Sidene fra de valgte dokumentene legges til i denne rekkefølgen på slutten av «{{title}}».",
+      "search": "Søk etter dokumenter …",
+      "none": "Ingen passende dokumenter.",
+      "noDeleteRight": "Du kan ikke slette det – derfor kan du ikke legge det til.",
+      "hint": "De tillagte dokumentene havner deretter i papirkurven; via historikken kan de gjenopprettes i 30 dager.",
+      "confirm_one": "Legg til {{count}} dokument",
+      "confirm_other": "Legg til {{count}} dokumenter",
+      "done_one": "{{count}} dokument lagt til",
+      "done_other": "{{count}} dokumenter lagt til"
+    }
+  },
+  "contracts": {
+    "nav": "Kontrakter",
+    "title": "Kontrakter",
+    "pageIntro": "Løpetider og oppsigelsestider for alle kontrakter du har tilgang til – først de der noe snart må gjøres.",
+    "scope": {
+      "label": "Vis",
+      "running": "Løpende",
+      "all": "Alle"
+    },
+    "emptyTitle": "Ingen kontrakter registrert ennå",
+    "emptyText": "Åpne et dokument, for eksempel en strøm- eller mobilkontrakt, og registrer løpetid og oppsigelsestid der. I god tid før fristen går ut, dukker det da opp en oppfølging.",
+    "cardTitle": "Kontrakt",
+    "none": "Er dette en kontrakt? Med løpetid og oppsigelsestid minner AIDocuments deg i god tid på å si den opp.",
+    "add": "Registrer som kontrakt",
+    "edit": "Rediger kontrakt",
+    "intro": "Ut fra slutten av løpetiden og oppsigelsestiden går det fram når kontrakten senest må sies opp. Før det dukker det opp en oppfølging; løper løpetiden ut uten oppsigelse, forlenges kontrakten automatisk.",
+    "saved": "Kontrakten er lagret",
+    "removed": "Kontraktsopplysningene er fjernet",
+    "remove": {
+      "label": "Fjern kontraktsopplysninger",
+      "title": "Fjerne kontraktsopplysningene?",
+      "text": "Løpetid, oppsigelsestid og den tilhørende åpne oppfølgingen fjernes. Selve dokumentet blir værende."
+    },
+    "openEnded": "tidsubestemt",
+    "months_one": "{{count}} måned",
+    "months_other": "{{count}} måneder",
+    "amountHint": "f.eks. «499 kr i måneden»",
+    "endDateHint": "Slutten av gjeldende løpetid; tomt = tidsubestemt",
+    "noticeHint": "Måneder før slutten av løpetiden; tomt = fram til slutten av løpetiden",
+    "renewalHint": "Uten oppsigelse forlenges kontrakten med så mange måneder; 0 = den avsluttes",
+    "cancelledHint": "Da forlenges den ikke lenger, og det kommer ingen flere påminnelser.",
+    "fields": {
+      "partner": "Kontraktspart",
+      "amount": "Beløp",
+      "startDate": "Kontraktsstart",
+      "endDate": "Løpetid til",
+      "notice": "Oppsigelsestid (måneder)",
+      "renewal": "Forlengelse (måneder)",
+      "deadline": "Si opp innen",
+      "reminderDays": "Påminn (dager før)",
+      "cancelled": "Oppsagt"
+    },
+    "status": {
+      "ACTIVE": "Løper",
+      "DUE_SOON": "Frist nærmer seg",
+      "NOTICE_MISSED": "Frist oversittet",
+      "CANCELLED": "Oppsagt",
+      "ENDED": "Avsluttet",
+      "OPEN_ENDED": "Tidsubestemt"
+    },
+    "row": {
+      "cancelBy": "si opp innen {{date}}",
+      "endsOn": "avsluttes {{date}}",
+      "term": "løpetid til {{date}}",
+      "renews_one": "forlenges med {{count}} måned",
+      "renews_other": "forlenges med {{count}} måneder"
+    }
+  },
+  "passkeys": {
+    "title": "Passnøkler",
+    "intro": "Med en passnøkkel logger du inn uten passord – låst opp med fingeravtrykk, ansikt eller enhetens PIN-kode. Den gjelder bare for denne adressen; et falskt nettsted kan ikke bruke den.",
+    "none": "Ingen passnøkkel er lagt til ennå.",
+    "add": "Legg til passnøkkel",
+    "create": "Opprett passnøkkel",
+    "name": "Navn",
+    "nameHint": "Slik at du kjenner den igjen senere, f.eks. «Bærbar PC» eller «Passordbehandler».",
+    "password": "Passordet ditt",
+    "passwordHint": "Den som legger til en passnøkkel, kan heretter logge inn uten passord – bekreft derfor én gang.",
+    "added": "Passnøkkel lagt til",
+    "removed": "Passnøkkel fjernet",
+    "synced": "synkronisert",
+    "lastUsed": "sist brukt {{time}}",
+    "created": "lagt til {{time}}, ikke brukt ennå",
+    "unsupported": "Denne nettleseren kan ikke bruke passnøkler her. Passnøkler fungerer bare over HTTPS (eller localhost).",
+    "unsupportedIp": "Passnøkler fungerer bare over HTTPS og med et navn i adressen, ikke med en IP-adresse.",
+    "remove": {
+      "label": "Fjern passnøkkel",
+      "title": "Fjerne passnøkkelen?",
+      "text": "Ingen kan logge inn med «{{name}}» etterpå. Den forblir lagret i passordbehandleren eller på enheten til du sletter den der.",
+      "confirm": "Fjern"
     }
   }
 }

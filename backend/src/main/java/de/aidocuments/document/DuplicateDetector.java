@@ -42,7 +42,8 @@ public class DuplicateDetector {
         Document best = null;
         double bestScore = 0;
         for (Document other : documents.findByFingerprintIsNotNull()) {
-            if (other.getId().equals(doc.getId()) || dismissed(doc, other)
+            // nur innerhalb des Bereichs: sonst verwiese der Vermerk auf ein Dokument, das der Leser nicht sehen darf
+            if (other.getId().equals(doc.getId()) || !other.getAreaId().equals(doc.getAreaId()) || dismissed(doc, other)
                     || !fingerprint.sameDocumentAs(other.getFingerprint())) {
                 continue;
             }

@@ -13,7 +13,8 @@ public record AppProperties(
         @DefaultValue("./data") Path dataDir,
         @DefaultValue Ai ai,
         @Name("import") @DefaultValue Import importer,
-        @DefaultValue Ocr ocr) {
+        @DefaultValue Ocr ocr,
+        @DefaultValue Backup backup) {
 
     public Path dataRoot() {
         return dataDir.toAbsolutePath().normalize();
@@ -80,6 +81,13 @@ public record AppProperties(
             @DefaultValue("50") int maxPages,
             @DefaultValue("300") int dpi,
             @DefaultValue("5m") Duration pageTimeout) {
+    }
+
+    /**
+     * Vorgabe für die automatische Sicherung: der Ordner, in den sie schreibt; leer = {@code backups} im
+     * Datenverzeichnis. In der Oberfläche gespeicherte Einstellungen haben Vorrang.
+     */
+    public record Backup(@DefaultValue("") String directory) {
     }
 
     /** Vorgaben für den automatischen Abruf; in der Oberfläche gespeicherte Einstellungen haben Vorrang. */

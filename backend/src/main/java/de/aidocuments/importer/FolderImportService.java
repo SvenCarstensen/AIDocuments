@@ -17,7 +17,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
@@ -118,12 +117,14 @@ public class FolderImportService {
                 }
                 IngestResult result;
                 try (InputStream in = Files.newInputStream(file)) {
-                    result = documentService.ingest(in, file.getFileName().toString(), DocumentSource.FOLDER, null);
+                    result = documentService.ingest(in, file.getFileName().toString(), DocumentSource.FOLDER, null,
+                            config.folderAreaId());
                 }
                 switch (result.outcome()) {
                     case CREATED -> imported++;
                     case DUPLICATE -> duplicates++;
                     case REJECTED -> rejected++;
+                    case IGNORED -> { }
                 }
                 if (config.folderMode() == FolderMode.MOVE && result.outcome() != Outcome.REJECTED) {
                     moveAside(root, file);
@@ -161,7 +162,7 @@ public class FolderImportService {
 
     private static boolean isCandidate(Path root, Path path) {
         String name = path.getFileName().toString();
-        if (name.startsWith(".") || !name.toLowerCase(Locale.ROOT).endsWith(".pdf") || !Files.isRegularFile(path, java.nio.file.LinkOption.NOFOLLOW_LINKS)) {
+        if (name.startsWith(".") || !IMPORTABLE.matcher(name).matches() || !Files.isRegularFile(path, java.nio.file.LinkOption.NOFOLLOW_LINKS)) {
             // keine symbolischen Links: Wer in den Eingangsordner schreiben darf, soll darüber nicht beliebige
             // andere Dateien des Servers einschleusen können
             return false;
@@ -170,18 +171,24 @@ public class FolderImportService {
         return relative.getNameCount() == 1 || !relative.getName(0).toString().equals(IMPORTED_DIR);
     }
 
+    /** PDFs und Fotos (werden bei der Aufnahme zu PDFs) */
+    private static final java.util.regex.Pattern IMPORTABLE =
+            java.util.regex.Pattern.compile("(?i).+\\.(pdf|jpe?g|png|hei[cf])$");
+
     /** Verschiebt eine übernommene Datei nach "importiert/…"; bei Namensgleichheit wird durchnummeriert. */
     private static void moveAside(Path root, Path file) throws IOException {
         Path target = root.resolve(IMPORTED_DIR).resolve(root.relativize(file));
         Files.createDirectories(target.getParent());
         String name = target.getFileName().toString();
-        String base = name.substring(0, name.length() - 4);
+        int dot = name.lastIndexOf('.');
+        String base = dot > 0 ? name.substring(0, dot) : name;
+        String extension = dot > 0 ? name.substring(dot) : "";
         for (int counter = 1; ; counter++) {
             try {
                 Files.move(file, target);
                 return;
             } catch (FileAlreadyExistsException e) {
-                target = target.resolveSibling(base + " (" + counter + ").pdf");
+                target = target.resolveSibling(base + " (" + counter + ")" + extension);
             }
         }
     }

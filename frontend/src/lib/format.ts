@@ -44,6 +44,13 @@ export const formatDate = (value: string | null | undefined) => (value ? dateFor
 export const formatLongDate = (value: string | null | undefined) => (value ? longDateFormat().format(parse(value)) : '')
 export const formatDateTime = (value: string | null | undefined) => (value ? dateTimeFormat().format(parse(value)) : '')
 
+/** Eine volle Stunde als Uhrzeit, etwa "02:00" oder "2:00 AM". */
+export function formatHour(hour: number): string {
+  return cached('hour', (locale) => new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' })).format(
+    new Date(2000, 0, 1, hour),
+  )
+}
+
 export function formatRelative(value: string | null | undefined): string {
   if (!value) return ''
   const seconds = Math.round((parse(value).getTime() - Date.now()) / 1000)
@@ -113,4 +120,23 @@ export function formatBytes(bytes: number): string {
 
 export function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(' ')
+}
+
+/** Heutiges Datum als JJJJ-MM-TT in der Ortszeit (für Datumsfelder und Vergleiche mit reinen Daten). */
+export function todayIso(): string {
+  const now = new Date()
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+}
+
+/** Tage von heute bis zu einem reinen Datum (JJJJ-MM-TT); negativ = vorbei. */
+export function daysFromToday(date: string): number {
+  return Math.round((parse(date).getTime() - parse(todayIso()).getTime()) / 86_400_000)
+}
+
+/** "heute", "morgen", "vor 3 Tagen", "in 2 Wochen" – in der Sprache der Oberfläche, vom Browser formuliert. */
+export function formatDue(date: string): string {
+  const days = daysFromToday(date)
+  if (Math.abs(days) < 14) return relativeFormat().format(days, 'day')
+  if (Math.abs(days) < 60) return relativeFormat().format(Math.round(days / 7), 'week')
+  return formatDate(date)
 }

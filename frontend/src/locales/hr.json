@@ -45,7 +45,9 @@
     "login": {
       "title": "Dobro došli natrag",
       "subtitle": "Prijavite se za pristup svojim dokumentima.",
-      "submit": "Prijava"
+      "submit": "Prijava",
+      "or": "ili",
+      "passkey": "Prijava pristupnim ključem"
     },
     "setup": {
       "title": "Postavljanje aplikacije AIDocuments",
@@ -63,16 +65,16 @@
     },
     "twoFactor": {
       "title": "Potvrdi prijavu",
-      "subtitle": "Unesi 6-znamenkasti kod iz aplikacije za autentifikaciju.",
+      "subtitle": "Unesite 6-znamenkasti kod iz aplikacije za autentifikaciju.",
       "code": "Kod",
-      "codeHint": "Nemaš pristup aplikaciji? Umjesto toga unesi jedan od svojih kodova za oporavak.",
+      "codeHint": "Nemate pristup aplikaciji? Umjesto toga unesite jedan od svojih kodova za oporavak.",
       "submit": "Potvrdi",
       "back": "Natrag na prijavu"
     },
     "twoFactorRequired": {
       "title": "Postavi dvofaktorsku autentifikaciju",
-      "subtitle": "Za administratore je dvofaktorska autentifikacija obavezna. Postavi je sada da bi nastavio.",
-      "intro": "Trebaš aplikaciju za autentifikaciju na mobitelu (npr. Google Authenticator, Microsoft Authenticator, 1Password ili Aegis)."
+      "subtitle": "Za administratore je dvofaktorska autentifikacija obavezna. Postavite je sada da biste nastavili.",
+      "intro": "Za to vam je potrebna aplikacija za autentifikaciju na mobitelu (npr. Google Authenticator, Microsoft Authenticator, 1Password ili Aegis)."
     }
   },
   "shell": {
@@ -83,7 +85,7 @@
     },
     "search": {
       "placeholder": "Pretraživanje po ključnim riječima: dokumenti, oznake, sadržaj …",
-      "placeholderAi": "Pretraživanje s UI: pitaj vlastitim riječima – npr. „računi od Kie iz 2024.”",
+      "placeholderAi": "Pretraživanje pomoću UI-ja: pitajte vlastitim riječima – npr. „računi od Kie iz 2024.”",
       "labelAi": "UI",
       "label": "Pretraži dokumente",
       "clear": "Očisti pretraživanje",
@@ -91,8 +93,8 @@
     },
     "userMenu": {
       "label": "Korisnički izbornik ({{name}})",
-      "aiActive": "UI je aktivan",
-      "aiNotConfigured": "UI nije postavljen",
+      "aiActive": "UI je aktivna",
+      "aiNotConfigured": "UI nije postavljena",
       "changePassword": "Promijeni lozinku",
       "licenses": "Licencije trećih strana",
       "logout": "Odjava"
@@ -103,16 +105,32 @@
       "changed": "Lozinka je promijenjena"
     },
     "dropzone": {
-      "title": "Ispustite PDF-ove ovdje",
-      "hint": "Možete ispustiti više datoteka odjednom. Bit će pohranjene, analizirane i označene oznakama."
+      "title": "Ispustite PDF-ove ili fotografije ovdje",
+      "hint": "Možete ispustiti više datoteka odjednom. Fotografije (JPG, PNG, HEIC) pretvaraju se u PDF. Sve će biti pohranjeno, analizirano i označeno oznakama."
+    },
+    "remindersDue_one": "{{count, number}} dospjeli podsjetnik",
+    "remindersDue_few": "{{count, number}} dospjela podsjetnika",
+    "remindersDue_other": "{{count, number}} dospjelih podsjetnika",
+    "profile": {
+      "email": "Adresa e-pošte",
+      "saved": "Spremljeno"
+    },
+    "notifications": {
+      "title": "Obavijesti e-poštom",
+      "emailHint": "Ovamo stižu dospjeli podsjetnici koji su vam dodijeljeni i obavijesti koje uključite u nastavku – na jeziku na kojem trenutačno koristite aplikaciju. Ostavite prazno ako ne želite primati e-poruke.",
+      "digest": "Novi dokumenti svaki dan",
+      "digestHint": "Jednom dnevno popis dokumenata koji su pristigli u vaše prostore – samo onim danima kad ima novih dokumenata.",
+      "admin": "Obavijesti za administratore",
+      "adminHint": "Kad istekne rok čuvanja (ništa se ne briše automatski) i kad se poštanski sandučić više puta zaredom ne može provjeriti.",
+      "needsEmail": "Bez adrese ne šalju se nikakve e-poruke."
     }
   },
   "upload": {
-    "onlyPdf": "Mogu se dodavati samo PDF datoteke.",
+    "onlyPdf": "Mogu se dodavati samo PDF datoteke i fotografije (JPG, PNG, HEIC).",
     "uploadingFile": "Učitavanje „{{name}}” …",
-    "uploadingFiles_one": "Učitavanje {{count, number}} PDF datoteke …",
-    "uploadingFiles_few": "Učitavanje {{count, number}} PDF datoteke …",
-    "uploadingFiles_other": "Učitavanje {{count, number}} PDF datoteka …",
+    "uploadingFiles_one": "Učitavanje {{count, number}} datoteke …",
+    "uploadingFiles_few": "Učitavanje {{count, number}} datoteke …",
+    "uploadingFiles_other": "Učitavanje {{count, number}} datoteka …",
     "created_one": "Dodan {{count, number}} dokument",
     "created_few": "Dodana {{count, number}} dokumenta",
     "created_other": "Dodano {{count, number}} dokumenata",
@@ -120,25 +138,33 @@
     "duplicates_one": "{{count, number}} dokument već postoji",
     "duplicates_few": "{{count, number}} dokumenta već postoje",
     "duplicates_other": "{{count, number}} dokumenata već postoji",
-    "rejected_one": "{{count, number}} datoteka nije valjan PDF",
-    "rejected_few": "{{count, number}} datoteke nisu valjani PDF-ovi",
-    "rejected_other": "{{count, number}} datoteka nije valjan PDF",
+    "rejected_one": "{{count, number}} datoteka nije dodana",
+    "rejected_few": "{{count, number}} datoteke nisu dodane",
+    "rejected_other": "{{count, number}} datoteka nije dodano",
     "onlyDuplicates_one": "Ovaj dokument već postoji.",
     "onlyDuplicates_few": "Ovi dokumenti već postoje.",
     "onlyDuplicates_other": "Ovi dokumenti već postoje.",
-    "noneValid": "Nijedna datoteka nije valjan PDF.",
-    "failed": "Učitavanje nije uspjelo"
+    "noneValid": "Nijednu datoteku nije bilo moguće dodati.",
+    "failed": "Učitavanje nije uspjelo",
+    "intoArea": "Prostor: {{area}}",
+    "combine": {
+      "title": "Spojiti fotografije u jedan dokument?",
+      "text": "Odabrali ste više fotografija. Ako su to stranice jednog dokumenta – primjerice pisma od više stranica – postat će jedan PDF redoslijedom naziva datoteka; redoslijed poslije možete promijeniti pod „Stranice”. Inače svaka fotografija postaje zaseban dokument.",
+      "one": "Kao jedan dokument",
+      "separate": "Svaka fotografija zasebno",
+      "tooMuch": "Za jedan dokument fotografija je previše ili su prevelike (najviše 100 fotografija i ukupno 240 MB)."
+    }
   },
   "documents": {
     "status": {
       "pending": "Na čekanju",
-      "processing": "Analiza",
+      "processing": "Analizira se",
       "failed": "Pogreška",
       "textOnly": "Bez UI-ja"
     },
     "ocrBadge": "Prepoznavanje teksta",
     "aiNotice": {
-      "text": "UI još nije postavljen. Novi dokumenti mogu se pretraživati po tekstu, ali nisu sažeti niti označeni oznakama.",
+      "text": "UI još nije postavljena.Novi dokumenti mogu se pretraživati po tekstu, ali nisu sažeti niti označeni oznakama.",
       "builtinOcr": "Skenove bez tekstnog sloja čita ugrađeno prepoznavanje teksta, pa se i u njima može pretraživati.",
       "action": "Postavi sada"
     },
@@ -182,29 +208,52 @@
       "activeTo": "do {{date}}",
       "removeOne": "Ukloni filtar „{{label}}”",
       "removeAll": "Ukloni sve filtre",
-      "clear": "Ukloni filtre"
+      "clear": "Ukloni filtre",
+      "retentionExpired": "Rok čuvanja istekao"
     },
     "empty": {
       "libraryTitle": "Još nema dokumenata",
-      "libraryHint": "Jednostavno povucite PDF datoteke u ovaj prozor ili upotrijebite „Učitaj”.",
-      "libraryHintAdmin": "Jednostavno povucite PDF datoteke u ovaj prozor ili upotrijebite „Učitaj”. U postavkama možete postaviti poštanski sandučić ili mapu za uvoz iz koje se novi PDF-ovi uvoze automatski.",
+      "libraryHint": "Jednostavno povucite PDF datoteke ili fotografije u ovaj prozor ili upotrijebite „Učitaj”.",
+      "libraryHintAdmin": "Jednostavno povucite PDF datoteke ili fotografije u ovaj prozor ili upotrijebite „Učitaj”. U postavkama možete postaviti poštanski sandučić ili mapu za uvoz iz koje se novi dokumenti automatski uvoze.",
       "noResultsTitle": "Ništa nije pronađeno",
       "noResultsSearch": "Nijedan dokument ne odgovara ovom pretraživanju. Pretraživanje pronalazi i dijelove riječi – pokušajte s kraćim pojmom ili manje riječi.",
       "noResultsFilters": "Nijedan dokument ne odgovara odabranim filtrima."
     },
     "loadingAll_one": "Učitano {{loaded, number}} od {{count, number}} dokumenta …",
-    "loadingAll_few": "Učitano {{loaded, number}} od {{count, number}} dokumenata …",
+    "loadingAll_few": "Učitano {{loaded, number}} od {{count, number}} dokumenta …",
     "loadingAll_other": "Učitano {{loaded, number}} od {{count, number}} dokumenata …",
     "loadMore": "Učitaj još ({{remaining, number}})",
     "aiSearch": {
-      "notice": "Pretraživanje s UI: „{{question}}”. Filtri pokazuju kako je pitanje shvaćeno."
+      "notice": "Pretraživanje pomoću UI-ja: „{{question}}”. Filtri pokazuju kako je pitanje shvaćeno."
+    },
+    "export": {
+      "label_one": "Izvezi {{count, number}} dokument kao ZIP",
+      "label_few": "Izvezi sva {{count, number}} dokumenta s ovog popisa kao ZIP",
+      "label_other": "Izvezi svih {{count, number}} dokumenata s ovog popisa kao ZIP",
+      "started_one": "Pokrenut je izvoz {{count, number}} dokumenta",
+      "started_few": "Pokrenut je izvoz {{count, number}} dokumenta",
+      "started_other": "Pokrenut je izvoz {{count, number}} dokumenata",
+      "contents": "ZIP datoteka sadrži PDF-ove te sve podatke kao tablicu (documents.csv) i kao documents.json.",
+      "failed": "Izvoz nije uspio"
+    },
+    "mailboxNotice": {
+      "text_one": "Poštanski sandučić „{{names}}” već se nekoliko puta zaredom ne može provjeriti – iz njega trenutačno ne stižu dokumenti.",
+      "text_few": "Ovi se poštanski sandučići već nekoliko puta zaredom ne mogu provjeriti: {{names}}. Iz njih trenutačno ne stižu dokumenti.",
+      "text_other": "Ovi se poštanski sandučići već nekoliko puta zaredom ne mogu provjeriti: {{names}}. Iz njih trenutačno ne stižu dokumenti.",
+      "action": "Prikaži sandučiće"
+    },
+    "backupNotice": {
+      "never": "Još ne postoji sigurnosna kopija vaših dokumenata.",
+      "overdue": "Posljednja sigurnosna kopija: {{when}}. Od tada je prošlo više vremena nego što je postavljeno.",
+      "failed": "Automatska sigurnosna kopija nije uspjela: {{reason}}",
+      "action": "Prikaži sigurnosne kopije"
     }
   },
   "document": {
     "backToList": "Natrag na pregled",
     "download": "Preuzmi",
     "reprocess": "Analiziraj ponovno",
-    "reprocessHint": "Ponovno pročitaj PDF i daj ga na analizu UI-ju",
+    "reprocessHint": "Ponovno pročitati PDF i analizirati ga pomoću UI-ja",
     "reprocessStarted": "Dokument se ponovno analizira.",
     "deleted": "Dokument je izbrisan",
     "pdfTitle": "PDF: {{title}}",
@@ -270,19 +319,21 @@
       "FOLDER": "Mapa za uvoz",
       "UPLOAD": "Učitano"
     },
-    "noText": "Za ovaj dokument nema teksta – vjerojatno je riječ o skeniranom dokumentu bez tekstualnog sloja. Ako je UI postavljen i prepoznavanje teksta uključeno, sadržaj se tijekom analize prepisuje.",
+    "noText": "Za ovaj dokument nema teksta – vjerojatno je riječ o skeniranom dokumentu bez tekstualnog sloja. Ako je UI postavljena i prepoznavanje teksta uključeno, sadržaj se tijekom analize prepisuje.",
     "edit": {
       "title": "Uredi dokument",
-      "saved": "Promjene su spremljene"
+      "saved": "Promjene su spremljene",
+      "areaHint": "Određuje tko vidi dokument.",
+      "areaMoveHint": "Nakon toga vidjet će ga samo članovi prostora „{{area}}” i administratori."
     },
     "delete": {
       "title": "Izbrisati dokument?",
-      "text": "„{{title}}” bit će izbrisan. U povijesti to možeš poništiti 30 dana; nakon toga bit će trajno uklonjen.",
+      "text": "„{{title}}” bit će izbrisan. U povijesti to možete poništiti 30 dana; nakon toga bit će trajno uklonjen.",
       "confirm": "Izbriši"
     },
     "chat": {
-      "intro": "Postavi pitanje o ovom dokumentu – UI odgovara na temelju njegova sadržaja.",
-      "placeholder": "Pitaj nešto o ovom dokumentu …",
+      "intro": "Postavite pitanje o ovom dokumentu – UI odgovara na temelju njegova sadržaja.",
+      "placeholder": "Pitajte nešto o ovom dokumentu …",
       "send": "Pošalji",
       "thinking": "UI čita dokument …",
       "notConfigured": "Za pitanja o dokumentu mora biti postavljena UI.",
@@ -309,16 +360,25 @@
         "EDITED": "Uređeno",
         "ORIGINAL_RESTORED": "Izvornik vraćen",
         "VERSION_RESTORED": "Verzija {{from}} vraćena",
-        "UNDONE": "Promjena poništena"
+        "UNDONE": "Promjena poništena",
+        "PAGES": "Stranice promijenjene",
+        "MERGED": "Dokumenti pripojeni"
       }
-    }
+    },
+    "retention": {
+      "label": "Čuvanje",
+      "until": "do {{date}} – do tada se ne može izbrisati",
+      "expired": "rok je istekao {{date}}",
+      "locked": "Mora se čuvati do {{date}} – tek se nakon toga može izbrisati"
+    },
+    "readOnly": "U ovom prostoru ovaj dokument smijete samo pregledavati."
   },
   "settings": {
     "title": "Postavke",
     "mailboxes": {
       "title": "Poštanski sandučići",
-      "navHint": "IMAP poslužitelji iz kojih se uvoze PDF privitci",
-      "intro": "PDF privitci uvoze se automatski iz ovih IMAP sandučića. Sandučići se samo čitaju – e-poruke ostaju nepromijenjene i nepročitane.",
+      "navHint": "IMAP poslužitelji iz kojih se uvoze PDF privitci i fotografije",
+      "intro": "Iz ovih IMAP sandučića automatski se uvoze PDF privitci i priložene fotografije (kao PDF), ali ne i tekst e-poruka ni ugrađeni logotipi. Sandučići se samo čitaju – e-poruke ostaju nepromijenjene i nepročitane.",
       "add": "Dodaj sandučić",
       "emptyTitle": "Još nije postavljen nijedan sandučić",
       "emptyText": "Unesite pristupne podatke IMAP sandučića – na primjer onoga na koji vaš skener šalje dokumente.",
@@ -351,7 +411,7 @@
         "since": "Samo e-poruke od",
         "sinceHint": "Neobavezno – starije e-poruke se preskaču",
         "enabled": "Provjeravaj automatski",
-        "enabledHint": "Sandučić se u postavljenom intervalu provjerava ima li novih PDF-ova.",
+        "enabledHint": "Sandučić se u postavljenom intervalu provjerava ima li novih privitaka.",
         "filter": {
           "title": "Filtar",
           "intro": "Obrađuju se samo e-poruke koje ispunjavaju sve uvjete. Jedan pojam po retku; velika i mala slova nisu bitna, dovoljan je dio teksta. Prazna polja ništa ne ograničavaju.",
@@ -360,29 +420,30 @@
           "senderIncludes": "Pošiljatelj sadrži jedan od ovih pojmova",
           "senderExcludes": "Pošiljatelj ne sadrži nijedan od ovih pojmova",
           "senderHint": "Ime ili adresa, npr. „@example.com”",
-          "newOnly": "Filtar vrijedi za e-poruke koje stignu nakon posljednjeg preuzimanja; već provjerene e-poruke ne obrađuju se ponovno."
+          "newOnly": "Filtar vrijedi za e-poruke koje stignu nakon posljednje provjere; već provjerene e-poruke ne obrađuju se ponovno."
         },
-        "interval": "Interval preuzimanja u minutama",
-        "intervalHint": "Ostavite prazno za opći interval (trenutačno {{interval}})."
+        "interval": "Interval provjere u minutama",
+        "intervalHint": "Ostavite prazno za opći interval (trenutačno {{interval}}).",
+        "areaHint": "Uvezeni dokumenti spremaju se u ovaj prostor."
       },
       "filterActive": "Filtar aktivan",
-      "schedule": "Preuzimanje svakih {{interval}} · sljedeće {{when}}",
-      "scheduleSoon": "Preuzimanje svakih {{interval}} · sljedeće uskoro"
+      "schedule": "Provjera svakih {{interval}} · sljedeća {{when}}",
+      "scheduleSoon": "Provjera svakih {{interval}} · sljedeća uskoro"
     },
     "import": {
-      "title": "Raspored i mapa za uvoz",
+      "title": "Provjera i mapa za uvoz",
       "navHint": "Interval provjere i nadzirani direktorij",
-      "intro": "Određuje koliko često aplikacija traži nove PDF datoteke – u poštanskim sandučićima i u mapi za uvoz.",
+      "intro": "Određuje koliko često aplikacija traži nove dokumente – u poštanskim sandučićima i u mapi za uvoz.",
       "saved": "Postavke su spremljene",
       "interval": {
         "title": "Interval provjere",
-        "text": "Koliko često aplikacija provjerava ulaznu mapu i sve poštanske sandučiće bez vlastitog intervala ima li novih PDF-ova.",
+        "text": "Koliko često aplikacija provjerava ima li novih dokumenata u mapi za uvoz i u svim poštanskim sandučićima bez vlastitog intervala.",
         "label": "Svakih … minuta",
         "nextRun": "Sljedeća automatska provjera {{when}}."
       },
       "folder": {
         "title": "Mapa za uvoz",
-        "text": "Direktorij na poslužitelju koji se nadzire radi novih PDF datoteka – na primjer odredište mrežnog skenera. Pretražuju se i podmape.",
+        "text": "Direktorij na poslužitelju koji se nadzire radi novih PDF datoteka i fotografija (JPG, PNG, HEIC) – na primjer odredište mrežnog skenera. Pretražuju se i podmape.",
         "enable": "Nadziri mapu za uvoz",
         "path": "Putanja na poslužitelju",
         "pathHint": "Apsolutna putanja. U Docker spremniku to je montirana mapa, obično {{path}}.",
@@ -394,7 +455,8 @@
         "scanning": "Provjera mape …",
         "neverScanned": "Još nije provjereno.",
         "scanNow": "Provjeri sada",
-        "scanStarted": "Mapa za uvoz se provjerava."
+        "scanStarted": "Mapa za uvoz se provjerava.",
+        "areaHint": "Dokumenti iz mape spremaju se u ovaj prostor."
       }
     },
     "ai": {
@@ -417,7 +479,7 @@
       "privacy": {
         "title": "S pružateljem {{provider}} vaši dokumenti napuštaju ovo računalo",
         "text": "Za analizu se sadržaj svakog PDF-a prenosi internetom na poslužitelje pružatelja {{provider}} i ondje obrađuje – uključujući račune, ugovore, liječničke nalaze i službenu korespondenciju.",
-        "recommendation": "<emphasis>Preporuka:</emphasis> koristite lokalni UI. S <lmStudio>LM Studiom</lmStudio> ili <compatible>poslužiteljem kompatibilnim s OpenAI-jem</compatible> u vlastitoj mreži sav sadržaj ostaje kod vas."
+        "recommendation": "<emphasis>Preporuka:</emphasis> koristite lokalnu UI.S <lmStudio>LM Studiom</lmStudio> ili <compatible>poslužiteljem kompatibilnim s OpenAI-jem</compatible> u vlastitoj mreži sav sadržaj ostaje kod vas."
       },
       "providers": {
         "ANTHROPIC": {
@@ -471,12 +533,12 @@
         "outputLanguageHint": "UI na ovom jeziku piše naslov, sažetak i oznake.",
         "ocr": "Prepoznavanje teksta kod skenova",
         "ocrHint": "Aplikacija daje UI-ju da prepiše skenirane PDF-ove bez tekstualnog sloja – samo ih tako možete pronaći pretraživanjem cijelog teksta. Svaki sken traje dulje i košta više.",
-        "quickOcrFirst": "Najprije brzo prepoznavanje teksta, zatim doradu radi UI",
+        "quickOcrFirst": "Najprije brzo prepoznavanje teksta, zatim dorada pomoću UI-ja",
         "quickOcrFirstHint": "Nove skenove najprije čita ugrađeno prepoznavanje teksta (Tesseract) – za nekoliko sekundi mogu se pretraživati. Zatim UI na temelju tog teksta dodaje naslov, sažetak i oznake."
       },
-      "unanalyzed_one": "{{count, number}} dokument UI još nije analizirao.",
-      "unanalyzed_few": "{{count, number}} dokumenta UI još nije analizirao.",
-      "unanalyzed_other": "{{count, number}} dokumenata UI još nije analizirao.",
+      "unanalyzed_one": "{{count, number}} dokument UI još nije analizirala.",
+      "unanalyzed_few": "{{count, number}} dokumenta UI još nije analizirala.",
+      "unanalyzed_other": "{{count, number}} dokumenata UI još nije analizirala.",
       "analyzeNow": "Analiziraj sada",
       "analysisStarted_one": "Analiza {{count, number}} dokumenta je u tijeku.",
       "analysisStarted_few": "Analiza {{count, number}} dokumenata je u tijeku.",
@@ -518,12 +580,152 @@
       "resetTwoFactorText": "{{name}} se tada prijavljuje samo lozinkom i može ponovno postaviti dvofaktorsku autentifikaciju – na primjer nakon gubitka mobitela.",
       "resetTwoFactorConfirm": "Poništi",
       "twoFactorReset": "Dvofaktorska autentifikacija poništena"
+    },
+    "areas": {
+      "title": "Prostori",
+      "navHint": "Tko vidi koje dokumente",
+      "intro": "Svaki je dokument u točno jednom prostoru. Korisnici vide samo dokumente prostora čiji su članovi te dokumente prostora otvorenih za sve.",
+      "add": "Izradi prostor",
+      "everyone": "Za sve",
+      "restricted": "Ograničeno",
+      "visibleForAll": "vidljivo svim prijavljenima",
+      "members": "Članovi: {{names}}",
+      "adminsOnly": "samo administratori",
+      "adminHint": "Administratori vide sve prostore, čak i kad nisu članovi.",
+      "edit": "Uredi {{name}}",
+      "saved": "Prostor je spremljen",
+      "created": "Prostor je izrađen",
+      "deleted": "Prostor je izbrisan",
+      "delete": {
+        "label": "Izbriši {{name}}",
+        "title": "Izbrisati prostor?",
+        "text": "Prostor „{{name}}” bit će izbrisan. To je moguće samo dok ga ne upotrebljava nijedan dokument, poštanski sandučić ni mapa za uvoz."
+      },
+      "dialog": {
+        "name": "Naziv",
+        "namePlaceholder": "npr. Računovodstvo",
+        "generalNameHint": "Ostavite prazno i prostor će se na svim jezicima zvati „Općenito”.",
+        "everyone": "Vidljivo svima",
+        "everyoneHint": "Svi prijavljeni korisnici vide dokumente ovog prostora.",
+        "members": "Članovi",
+        "membersHint": "Dokumente ovog prostora vide samo članovi i administratori. Za svakog člana odredite smije li samo čitati, i uređivati ili uz to i brisati.",
+        "noUsers": "Još nema korisnika bez uloge administratora.",
+        "create": "Izradi",
+        "everyoneAccess": "Svi smiju",
+        "accessOf": "Ovlast korisnika {{name}}",
+        "membersHintEveryone": "Dokumente ovog prostora vide svi. Ovdje dodajte članove ako trebaju smjeti više od svih ostalih."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Čuvanje",
+      "navHint": "Rokovi i zabrana brisanja",
+      "intro": "Odredite koliko se dugo dokumenti određene vrste moraju čuvati – primjerice računi deset godina. Rok se računa od kraja godine iz koje dokument potječe. Do tada ga nitko ne može izbrisati.",
+      "permanent": "Zabranu brisanja nitko ne može ukinuti – ni administratori. Ako se pravilo skrati ili izbriše ili se promijeni vrsta dokumenta, već postavljeni rok ostaje na snazi.",
+      "add": "Izradi pravilo",
+      "years_one": "{{count, number}} godina",
+      "years_few": "{{count, number}} godine",
+      "years_other": "{{count, number}} godina",
+      "edit": "Uredi pravilo za {{category}}",
+      "saved": "Pravilo je spremljeno",
+      "created": "Pravilo je izrađeno",
+      "deleted": "Pravilo je izbrisano",
+      "emptyTitle": "Još nema pravila čuvanja",
+      "emptyText": "Bez pravila dokumenti se mogu izbrisati u bilo kojem trenutku.",
+      "delete": {
+        "label": "Izbriši pravilo za {{category}}",
+        "title": "Izbrisati pravilo?",
+        "text": "Novi dokumenti vrste „{{category}}” više neće dobivati rok. Već zaključani dokumenti ostaju zaključani do isteka svog roka."
+      },
+      "dialog": {
+        "categoryHint": "Onako kako je navedena uz dokument; velika i mala slova nisu važna.",
+        "years": "Rok čuvanja u godinama",
+        "yearsHint": "Računa se od kraja godine datuma dokumenta (bez datuma: dana dodavanja).",
+        "shorterHint": "Kraći rok vrijedi samo za dokumente koji još nemaju rok. Već zaključani dokumenti ostaju zaključani do isteka dosadašnjeg roka.",
+        "create": "Izradi"
+      }
+    },
+    "mailOut": {
+      "title": "Slanje e-pošte",
+      "navHint": "Obavijesti e-poštom",
+      "intro": "Putem ovog SMTP poslužitelja aplikacija šalje obavijesti o dospjelim podsjetnicima – jednom po podsjetniku, skupljene u jednu e-poruku po osobi. Primatelj je osoba koja je zadužena za podsjetnik i koja je u korisničkom izborniku unijela adresu.",
+      "enabled": "Šalji obavijesti e-poštom",
+      "enabledHint": "Kad je isključeno, podsjetnici se prikazuju samo u aplikaciji.",
+      "host": "SMTP poslužitelj",
+      "port": "Priključak",
+      "security": "Šifriranje",
+      "unencrypted": "Nema",
+      "usernameHint": "Ostavite prazno ako poslužitelj ne zahtijeva prijavu.",
+      "passwordKeepHint": "Ostavite prazno da zadržite pohranjenu lozinku.",
+      "from": "Adresa pošiljatelja",
+      "fromHint": "Poslužitelj je mora dopustiti za vaš račun.",
+      "appUrl": "Adresa aplikacije",
+      "appUrlHint": "Za poveznice u e-porukama, npr. https://docs.example.com. Prazno = bez poveznica.",
+      "digestHour": "Slanje",
+      "fromHour": "od {{hour}} h",
+      "saved": "Postavke slanja e-pošte su spremljene",
+      "test": "Probna poruka na {{address}}",
+      "testNeedsAddress": "Za probnu poruku unesite vlastitu adresu e-pošte u korisničkom izborniku.",
+      "testSavedHint": "Test upotrebljava spremljene postavke – najprije spremite."
+    },
+    "backup": {
+      "title": "Sigurnosna kopija i uvoz",
+      "navHint": "Sigurnosna kopija svega odjednom, uvoz izvoza",
+      "intro": "Sigurnosna kopija sadrži sve što je potrebno da se AIDocuments vrati točno u sadašnje stanje. Uvoz preuzima dokumente iz izvoza druge instalacije – zajedno s njihovim podacima.",
+      "backupTitle": "Sigurnosna kopija jednim klikom",
+      "backupText": "ZIP s bazom podataka, svim dokumentima uključujući ranije verzije, slikama pretpregleda i ključem za pohranjene lozinke. Aplikacija za to vrijeme nastavlja raditi.",
+      "size": "Veličina",
+      "sizeValue_one": "oko {{size}}, {{count, number}} datoteka",
+      "sizeValue_few": "oko {{size}}, {{count, number}} datoteke",
+      "sizeValue_other": "oko {{size}}, {{count, number}} datoteka",
+      "last": "Posljednja kopija",
+      "never": "nikad",
+      "keyWarning": "Sigurnosna kopija nije šifrirana i sadrži ključ za pohranjene lozinke (poštanski sandučići, UI, dvofaktorska autentifikacija). Čuvajte je jednako sigurno kao i same dokumente.",
+      "restore": "Vraćanje: zaustavite AIDocuments, raspakirajte sadržaj ZIP datoteke u prazan direktorij podataka i ponovno ga pokrenite. Upute se nalaze u ZIP datoteci (README.txt).",
+      "download": "Preuzmi sigurnosnu kopiju",
+      "started": "Sigurnosna kopija se preuzima.",
+      "externalDatabase": "Sigurnosna kopija jednim klikom dostupna je samo s ugrađenom bazom podataka. Uz MariaDB bazu podataka kopirajte njezinim vlastitim alatima (npr. mariadb-dump), a uz to i direktorij podataka.",
+      "importTitle": "Uvezi izvoz",
+      "importText": "ZIP iz „Izvezi” na popisu dokumenata – i iz druge instalacije. Naslov, vrsta dokumenta, oznake i ostali podaci zadržavaju se; UI ne čita dokumente ponovno. Datoteke koje već postoje preskaču se.",
+      "file": "ZIP datoteka",
+      "areaHint": "Ovamo idu dokumenti – ili samo oni čiji prostor ovdje ne postoji.",
+      "matchAreas": "Stavi u istoimene prostore",
+      "matchAreasHint": "Ako ovdje postoji prostor istog naziva kao u izvozu, dokumenti idu u njega.",
+      "import": "Uvezi",
+      "importing": "Uvoz …",
+      "result": "Uvezeno: {{imported, number}} · već postoji: {{duplicates, number}} · nije uvezeno: {{failed, number}}",
+      "auto": {
+        "title": "Automatska sigurnosna kopija",
+        "text": "Jednom dnevno AIDocuments sprema potpunu sigurnosnu kopiju kao ZIP u mapu i zadržava najnovije. Najbolje je da mapa bude na drugom disku ili mrežnom pogonu – ako disk s podacima otkaže, inače bi nestale i sigurnosne kopije.",
+        "enable": "Svaki dan automatski izradi sigurnosnu kopiju",
+        "hour": "Vrijeme",
+        "keep": "Zadrži",
+        "keepHint": "Broj sigurnosnih kopija; starije se brišu.",
+        "directory": "Mapa",
+        "directoryHint": "Puna putanja na poslužitelju. Ostavite prazno za zadanu mapu. U Docker spremniku mapa mora biti montirana.",
+        "warnAfterDays": "Upozori nakon (dana)",
+        "warnAfterDaysHint": "Napomena na popisu dokumenata ako toliko dugo nije izrađena sigurnosna kopija – ručno ili automatski. 0 = nikad ne upozoravaj.",
+        "lastRun": "Posljednje pokretanje",
+        "nextRun": "Sljedeće pokretanje",
+        "running": "Izrada sigurnosne kopije …",
+        "ok": "uspješno, {{when}}",
+        "failed": "neuspješno, {{when}}",
+        "stored_one": "{{count, number}} sigurnosna kopija u {{directory}}",
+        "stored_few": "{{count, number}} sigurnosne kopije u {{directory}}",
+        "stored_other": "{{count, number}} sigurnosnih kopija u {{directory}}",
+        "runNow": "Izradi kopiju sada",
+        "saveFirst": "Prvo spremite promjene.",
+        "runStarted": "Sigurnosna kopija izrađuje se u pozadini.",
+        "done": "Sigurnosna kopija je izrađena.",
+        "saved": "Postavke su spremljene.",
+        "externalDatabase": "Automatska sigurnosna kopija dostupna je samo s ugrađenom bazom podataka. Uz MariaDB bazu podataka kopirajte njezinim vlastitim alatima (npr. svake noći pomoću mariadb-dump), a uz to i direktorij podataka."
+      }
     }
   },
   "history": {
     "nav": "Povijest",
     "title": "Povijest",
-    "subtitle": "Što se dogodilo s tvojim dokumentima – najnoviji unosi prvi.",
+    "subtitle": "Što se dogodilo s vašim dokumentima – najprije najnoviji unosi.",
     "empty": "Još nema unosa.",
     "actions": {
       "IMPORTED": "Uvezeno",
@@ -545,7 +747,7 @@
   },
   "duplicates": {
     "title": "Mogući duplikat",
-    "subtitle": "Oba dokumenta imaju isti sadržaj. Zadrži jedan i izbriši drugi – ili zabilježi da nisu duplikati.",
+    "subtitle": "Oba dokumenta imaju isti sadržaj. Zadržite jedan i izbrišite drugi – ili zabilježite da nisu duplikati.",
     "older": "Stigao ranije",
     "newer": "Stigao kasnije",
     "deleteThis": "Izbriši ovaj",
@@ -555,35 +757,36 @@
     "title": "Dvofaktorska autentifikacija",
     "on": "Uključeno",
     "off": "Isključeno",
-    "intro": "Zaštiti račun drugim faktorom: pri prijavi tada unosiš i kod iz aplikacije za autentifikaciju na mobitelu (npr. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Zaštitite račun drugim faktorom: pri prijavi tada unosite i kod iz aplikacije za autentifikaciju na mobitelu (npr. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Postavi",
-    "scan": "Skeniraj QR kod aplikacijom za autentifikaciju ili ručno unesi ključ. Zatim unesi kod iz aplikacije i svoju lozinku.",
+    "scan": "Skenirajte QR kod aplikacijom za autentifikaciju ili ručno unesite ključ. Zatim unesite kod iz aplikacije i svoju lozinku.",
     "qrAlt": "QR kod za aplikaciju za autentifikaciju",
     "secret": "Ključ",
     "confirmCode": "Kod iz aplikacije",
     "activate": "Aktiviraj",
     "recoveryTitle": "Kodovi za oporavak",
-    "recoveryText": "Čuvaj ove kodove za oporavak na sigurnom mjestu. Svaki vrijedi jednom ako ne možeš koristiti aplikaciju – na primjer ako izgubiš mobitel. Prikazuju se samo sada.",
+    "recoveryText": "Čuvajte ove kodove za oporavak na sigurnom mjestu. Svaki vrijedi jednom ako ne možete koristiti aplikaciju – na primjer ako izgubite mobitel. Prikazuju se samo sada.",
     "download": "Spremi kao datoteku",
     "done": "Gotovo",
     "enabled": "Dvofaktorska autentifikacija je uključena",
     "disabled": "Dvofaktorska autentifikacija je isključena",
-    "disableHint": "Za isključivanje unesi trenutačni kod iz aplikacije (ili kod za oporavak) i svoju lozinku.",
+    "disableHint": "Za isključivanje unesite trenutačni kod iz aplikacije (ili kod za oporavak) i svoju lozinku.",
     "disable": "Isključi",
     "recoveryLeft": "Neiskorišteni kodovi za oporavak: {{count}}",
-    "adminCannotDisable": "Kao administrator ne možeš isključiti dvofaktorsku autentifikaciju."
+    "adminCannotDisable": "Kao administrator ne možete isključiti dvofaktorsku autentifikaciju."
   },
   "confirmCode": {
     "title": "Potvrdi promjenu",
-    "text": "Promjene računa, poštanskih sandučića i postavki zahtijevaju aktualni kod iz aplikacije za autentifikaciju. Potvrda vrijedi 10 minuta.",
-    "submit": "Potvrdi"
+    "text": "Promjene računa, poštanskih sandučića i postavki zahtijevaju trenutačni kod iz aplikacije za autentifikaciju. Potvrda vrijedi 10 minuta.",
+    "submit": "Potvrdi",
+    "passkey": "Potvrdi pristupnim ključem"
   },
   "share": {
     "button": "Podijeli",
     "title": "Podijeli dokument",
     "intro": "Stvara poveznicu kojom osoba bez računa može otvoriti upravo ovaj dokument.",
-    "recipient": "S kim dijeliš?",
-    "recipientHint": "Ime osobe – da kasnije vidiš kome si dao poveznicu.",
+    "recipient": "S kim dijelite?",
+    "recipientHint": "Ime osobe – da poslije vidite kome ste dali poveznicu.",
     "permission": "Smije li ta osoba uređivati dokument?",
     "viewOnly": "Samo pregled",
     "canEdit": "Smije uređivati",
@@ -593,10 +796,10 @@
     "unlimited": "Neograničeno",
     "create": "Stvori poveznicu",
     "link": "Poveznica",
-    "linkHint": "Svatko tko ima ovu poveznicu može otvoriti dokument – daj je samo osobi {{name}}. U svakom trenutku možeš je opozvati u prikazu dokumenta.",
+    "linkHint": "Svatko tko ima ovu poveznicu može otvoriti dokument – dajte je samo osobi {{name}}. U svakom trenutku možete je opozvati u prikazu dokumenta.",
     "copy": "Kopiraj poveznicu",
     "copied": "Poveznica kopirana",
-    "listTitle": "Podijeljeno izvana",
+    "listTitle": "Podijeljeno s vanjskim osobama",
     "expired": "isteklo",
     "validUntil": "vrijedi do {{date}}",
     "noExpiry": "bez isteka",
@@ -608,7 +811,200 @@
     "revoked": "Poveznica opozvana",
     "page": {
       "for": "Podijeljeno s: {{name}}",
-      "invalid": "Ova poveznica nije valjana ili je istekla, ili je dokument izbrisan. Obrati se osobi koja ti ju je dala."
+      "invalid": "Ova poveznica nije valjana ili je istekla, ili je dokument izbrisan. Obratite se osobi koja vam ju je dala."
+    }
+  },
+  "areas": {
+    "general": "Općenito",
+    "unknown": "Drugi prostor",
+    "label": "Prostor",
+    "target": "Ciljni prostor",
+    "access": {
+      "READ": "Samo čitanje",
+      "EDIT": "Čitanje i uređivanje",
+      "DELETE": "Uređivanje i brisanje"
+    }
+  },
+  "reminders": {
+    "title": "Podsjetnici",
+    "cardTitle": "Podsjetnik",
+    "add": "Dodaj podsjetnik",
+    "edit": "Uredi podsjetnik",
+    "create": "Izradi",
+    "created": "Podsjetnik je dodan",
+    "saved": "Podsjetnik je spremljen",
+    "deleted": "Podsjetnik je izbrisan",
+    "markedDone": "Obavljeno",
+    "dueDate": "Dospijeva",
+    "note": "Bilješka",
+    "notePlaceholder": "npr. provjeriti uplatu",
+    "assignee": "Tko je zadužen?",
+    "assigneeHint": "Ta osoba vidi podsjetnik pod „Moji” i dobiva obavijest e-poštom. Može se odabrati svatko tko vidi dokument.",
+    "me": "{{name}} (ja)",
+    "assignedTo": "za {{name}}",
+    "doneBy": "obavljeno ({{name}})",
+    "markDone": "Označi kao obavljeno",
+    "reopen": "Ponovno otvori",
+    "delete": {
+      "label": "Izbriši podsjetnik",
+      "title": "Izbrisati podsjetnik?",
+      "text": "Podsjetnik će biti uklonjen. Dokument ostaje nepromijenjen."
+    },
+    "accept": "Dodaj",
+    "dismiss": "Odbaci prijedlog",
+    "suggestionsHint": "UI je u ovom dokumentu pronašla datume:",
+    "none": "Nema otvorenih podsjetnika.",
+    "showDone_one": "Prikaži {{count, number}} obavljeni podsjetnik",
+    "showDone_few": "Prikaži {{count, number}} obavljena podsjetnika",
+    "showDone_other": "Prikaži {{count, number}} obavljenih podsjetnika",
+    "hideDone": "Sakrij obavljene",
+    "scope": {
+      "label": "Koji podsjetnici",
+      "mine": "Moji",
+      "all": "Svi"
+    },
+    "dueTitle": "Dospjelo",
+    "nothingDue": "Danas ništa ne dospijeva.",
+    "upcomingTitle": "Uskoro",
+    "suggestionsTitle": "Predloženi datumi",
+    "suggestionsPageHint": "Rokovi u sljedećih šest mjeseci koje je UI pronašla u dokumentima. Dodajte ih kao podsjetnik ili ih odbacite.",
+    "emptyTitle": "Nema podsjetnika",
+    "emptyText": "Dodajte podsjetnik dokumentu – ili prihvatite onaj koji predlaže UI.",
+    "repeat": {
+      "label": "Ponavljanje",
+      "hint": "Kad podsjetnik označite kao obavljen, automatski nastaje sljedeći u istom razmaku.",
+      "none": "Jednokratno",
+      "m1": "Mjesečno",
+      "m3": "Tromjesečno",
+      "m6": "Polugodišnje",
+      "m12": "Godišnje",
+      "m24": "Svake dvije godine",
+      "months_one": "Razmak: {{count}} mjesec",
+      "months_few": "Razmak: {{count}} mjeseca",
+      "months_other": "Razmak: {{count}} mjeseci"
+    },
+    "fromContract": "iz ugovora"
+  },
+  "pages": {
+    "button": "Stranice",
+    "title": "Uredi stranice",
+    "intro": "Povucite stranice ili ih pomaknite strelicama, zakrenite ili uklonite. Spremanjem nastaje nova verzija – dosadašnja ostaje sačuvana.",
+    "page": "Stranica {{number}}",
+    "wasPage": "prije {{number}}",
+    "moveLeft": "Pomakni naprijed",
+    "moveRight": "Pomakni natrag",
+    "rotate": "Zakreni za 90°",
+    "remove": "Ukloni stranicu",
+    "keep": "Zadrži stranicu",
+    "noneLeft": "Mora ostati barem jedna stranica.",
+    "saveFirst": "Prvo spremite promjene",
+    "saved": "Stranice spremljene",
+    "split": {
+      "here": "Odavde zaseban dokument",
+      "title": "Razdvojiti dokument?",
+      "text": "Stranica {{page}} i sve sljedeće postaju zaseban dokument u istom prostoru. On se čita i razvrstava kao novopristigli dokument; ovaj dokument zadržava prethodne stranice.",
+      "confirm": "Razdvoji",
+      "done": "Dokument razdvojen",
+      "open": "Otvori novi dokument"
+    },
+    "merge": {
+      "button": "Pripoji dokumente",
+      "title": "Pripoji dokumente",
+      "intro": "Stranice odabranih dokumenata dodaju se ovim redoslijedom na kraj dokumenta „{{title}}”.",
+      "search": "Pretraži dokumente …",
+      "none": "Nema odgovarajućih dokumenata.",
+      "noDeleteRight": "Ne smijete ga izbrisati – stoga ga ne možete ni pripojiti.",
+      "hint": "Pripojeni dokumenti zatim idu u koš za smeće; iz povijesti ih je moguće vratiti 30 dana.",
+      "confirm_one": "Pripoji {{count}} dokument",
+      "confirm_few": "Pripoji {{count}} dokumenta",
+      "confirm_other": "Pripoji {{count}} dokumenata",
+      "done_one": "{{count}} dokument pripojen",
+      "done_few": "{{count}} dokumenta pripojena",
+      "done_other": "{{count}} dokumenata pripojeno"
+    }
+  },
+  "contracts": {
+    "nav": "Ugovori",
+    "title": "Ugovori",
+    "pageIntro": "Trajanje i otkazni rokovi svih ugovora koje smijete vidjeti – najprije oni kod kojih uskoro treba nešto učiniti.",
+    "scope": {
+      "label": "Prikaži",
+      "running": "Aktivni",
+      "all": "Svi"
+    },
+    "emptyTitle": "Još nema evidentiranih ugovora",
+    "emptyText": "Otvorite dokument, primjerice ugovor za struju ili mobitel, i ondje unesite trajanje i otkazni rok. Pravodobno prije isteka roka tada će se pojaviti podsjetnik.",
+    "cardTitle": "Ugovor",
+    "none": "Je li ovo ugovor? Uz trajanje i otkazni rok AIDocuments će vas pravodobno podsjetiti na otkaz.",
+    "add": "Evidentiraj kao ugovor",
+    "edit": "Uredi ugovor",
+    "intro": "Iz kraja trajanja i otkaznog roka proizlazi do kada ugovor treba otkazati. Prije toga pojavljuje se podsjetnik; ako trajanje istekne bez otkaza, ugovor se automatski produljuje.",
+    "saved": "Ugovor spremljen",
+    "removed": "Podaci o ugovoru uklonjeni",
+    "remove": {
+      "label": "Ukloni podatke o ugovoru",
+      "title": "Ukloniti podatke o ugovoru?",
+      "text": "Uklanjaju se trajanje, otkazni rok i pripadajući otvoreni podsjetnik. Sam dokument ostaje."
+    },
+    "openEnded": "na neodređeno",
+    "months_one": "{{count}} mjesec",
+    "months_few": "{{count}} mjeseca",
+    "months_other": "{{count}} mjeseci",
+    "amountHint": "npr. „49,90 € mjesečno”",
+    "endDateHint": "Kraj trenutačnog trajanja; prazno = na neodređeno",
+    "noticeHint": "Mjeseci prije kraja trajanja; prazno = do kraja trajanja",
+    "renewalHint": "Bez otkaza ugovor se produljuje za toliko mjeseci; 0 = završava",
+    "cancelledHint": "Tada se više ne produljuje i više se ne pojavljuju podsjetnici.",
+    "fields": {
+      "partner": "Ugovorni partner",
+      "amount": "Iznos",
+      "startDate": "Početak ugovora",
+      "endDate": "Trajanje do",
+      "notice": "Otkazni rok (mjeseci)",
+      "renewal": "Produljenje (mjeseci)",
+      "deadline": "Otkazati do",
+      "reminderDays": "Podsjetnik (dana prije)",
+      "cancelled": "Otkazan"
+    },
+    "status": {
+      "ACTIVE": "Aktivan",
+      "DUE_SOON": "Rok se bliži",
+      "NOTICE_MISSED": "Rok propušten",
+      "CANCELLED": "Otkazan",
+      "ENDED": "Završen",
+      "OPEN_ENDED": "Na neodređeno"
+    },
+    "row": {
+      "cancelBy": "otkazati do {{date}}",
+      "endsOn": "završava {{date}}",
+      "term": "traje do {{date}}",
+      "renews_one": "produljuje se za {{count}} mjesec",
+      "renews_few": "produljuje se za {{count}} mjeseca",
+      "renews_other": "produljuje se za {{count}} mjeseci"
+    }
+  },
+  "passkeys": {
+    "title": "Pristupni ključevi",
+    "intro": "S pristupnim ključem prijavljujete se bez lozinke – otključava se otiskom prsta, licem ili PIN-om uređaja. Vrijedi samo za ovu adresu; lažna stranica ne može ga upotrijebiti.",
+    "none": "Još nije dodan nijedan pristupni ključ.",
+    "add": "Dodaj pristupni ključ",
+    "create": "Izradi pristupni ključ",
+    "name": "Naziv",
+    "nameHint": "Da ga poslije prepoznate, npr. „Prijenosno računalo” ili „Upravitelj lozinki”.",
+    "password": "Vaša lozinka",
+    "passwordHint": "Tko doda pristupni ključ, ubuduće se može prijaviti bez lozinke – zato je jednom potvrdite.",
+    "added": "Pristupni ključ dodan",
+    "removed": "Pristupni ključ uklonjen",
+    "synced": "sinkroniziran",
+    "lastUsed": "posljednja upotreba {{time}}",
+    "created": "dodan {{time}}, još nije korišten",
+    "unsupported": "Ovaj preglednik ovdje ne može koristiti pristupne ključeve. Pristupni ključevi rade samo preko HTTPS-a (ili na localhost).",
+    "unsupportedIp": "Pristupni ključevi rade samo preko HTTPS-a i s nazivom u adresi, a ne s IP adresom.",
+    "remove": {
+      "label": "Ukloni pristupni ključ",
+      "title": "Ukloniti pristupni ključ?",
+      "text": "Ključem „{{name}}” nakon toga se nitko više ne može prijaviti. Ostaje pohranjen u upravitelju lozinki ili na uređaju dok ga ondje ne izbrišete.",
+      "confirm": "Ukloni"
     }
   }
 }

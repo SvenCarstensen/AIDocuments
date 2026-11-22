@@ -47,7 +47,9 @@
     "login": {
       "title": "Fáilte ar ais",
       "subtitle": "Logáil isteach chun teacht ar do chuid doiciméad.",
-      "submit": "Logáil isteach"
+      "submit": "Logáil isteach",
+      "or": "nó",
+      "passkey": "Logáil isteach le heochair rochtana"
     },
     "setup": {
       "title": "Socraigh AIDocuments",
@@ -64,17 +66,17 @@
       }
     },
     "twoFactor": {
-      "title": "Deimhnigh an síniú isteach",
-      "subtitle": "Cuir isteach an cód 6 dhigit ó d'aip fíordheimhnithe.",
+      "title": "Deimhnigh an logáil isteach",
+      "subtitle": "Cuir isteach an cód 6 dhigit ó d’aip fíordheimhnithe.",
       "code": "Cód",
       "codeHint": "Gan rochtain ar an aip? Cuir isteach ceann de do chóid athshlánaithe ina ionad.",
       "submit": "Deimhnigh",
-      "back": "Ar ais chuig síniú isteach"
+      "back": "Ar ais chuig an logáil isteach"
     },
     "twoFactorRequired": {
       "title": "Socraigh fíordheimhniú dhá fhachtóir",
       "subtitle": "Tá fíordheimhniú dhá fhachtóir éigeantach do riarthóirí. Socraigh anois é chun leanúint ar aghaidh.",
-      "intro": "Beidh aip fíordheimhnithe ar d'fhón uait (m.sh. Google Authenticator, Microsoft Authenticator, 1Password nó Aegis)."
+      "intro": "Beidh aip fíordheimhnithe ar d’fhón uait (m.sh. Google Authenticator, Microsoft Authenticator, 1Password nó Aegis)."
     }
   },
   "shell": {
@@ -84,8 +86,8 @@
       "dark": "Téama dorcha"
     },
     "search": {
-      "placeholder": "Cuardach eochairfhocal: doiciméid, clibeanna, ábhar …",
-      "placeholderAi": "Cuardach IS: fiafraigh i d’fhocail féin – m.sh. „sonraisc ó Kia ó 2024“",
+      "placeholder": "Cuardach eochairfhocal: doiciméid, clibeanna, ábhar…",
+      "placeholderAi": "Cuardach IS: fiafraigh i d’fhocail féin – m.sh. “sonraisc ó Kia ó 2024”",
       "labelAi": "IS",
       "label": "Cuardaigh doiciméid",
       "clear": "Glan an cuardach",
@@ -105,18 +107,36 @@
       "changed": "Athraíodh an pasfhocal"
     },
     "dropzone": {
-      "title": "Scaoil PDFanna anseo",
-      "hint": "Is féidir roinnt comhad a scaoileadh in éineacht. Stóráiltear iad, déantar anailís orthu agus cuirtear clibeanna leo."
+      "title": "Scaoil PDFanna nó grianghraif anseo",
+      "hint": "Is féidir roinnt comhad a scaoileadh in éineacht. Déantar PDFanna de ghrianghraif (JPG, PNG, HEIC). Stóráiltear gach rud, déantar anailís air agus cuirtear clibeanna leis."
+    },
+    "remindersDue_one": "{{count, number}} mheabhrúchán dlite",
+    "remindersDue_two": "{{count, number}} mheabhrúchán dlite",
+    "remindersDue_few": "{{count, number}} mheabhrúchán dlite",
+    "remindersDue_many": "{{count, number}} meabhrúchán dlite",
+    "remindersDue_other": "{{count, number}} meabhrúchán dlite",
+    "profile": {
+      "email": "Seoladh ríomhphoist",
+      "saved": "Sábháilte"
+    },
+    "notifications": {
+      "title": "Fógraí ríomhphoist",
+      "emailHint": "Seoltar anseo na meabhrúcháin dhlite atá sannta duit agus na fógraí a chasann tú air thíos – sa teanga ina bhfuil tú ag úsáid na haipe faoi láthair. Fág folamh é mura bhfuil ríomhphoist uait.",
+      "digest": "Doiciméid nua gach lá",
+      "digestHint": "Uair sa lá, liosta de na doiciméid a tháinig isteach i do spásanna oibre – ach amháin ar laethanta a mbíonn doiciméid nua ann.",
+      "admin": "Fógraí do riarthóirí",
+      "adminHint": "Nuair a thagann deireadh le tréimhsí coinneála (ní scriostar aon rud go huathoibríoch) agus nuair nach féidir bosca poist a sheiceáil arís agus arís eile.",
+      "needsEmail": "Gan seoladh, ní sheoltar aon ríomhphost."
     }
   },
   "upload": {
-    "onlyPdf": "Ní féidir ach comhaid PDF a chur leis.",
+    "onlyPdf": "Ní féidir ach comhaid PDF agus grianghraif (JPG, PNG, HEIC) a chur leis.",
     "uploadingFile": "“{{name}}” á uaslódáil…",
-    "uploadingFiles_one": "{{count, number}} PDF á uaslódáil…",
-    "uploadingFiles_two": "{{count, number}} PDF á n-uaslódáil…",
-    "uploadingFiles_few": "{{count, number}} PDF á n-uaslódáil…",
-    "uploadingFiles_many": "{{count, number}} PDF á n-uaslódáil…",
-    "uploadingFiles_other": "{{count, number}} PDF á n-uaslódáil…",
+    "uploadingFiles_one": "{{count, number}} chomhad á uaslódáil…",
+    "uploadingFiles_two": "{{count, number}} chomhad á n-uaslódáil…",
+    "uploadingFiles_few": "{{count, number}} chomhad á n-uaslódáil…",
+    "uploadingFiles_many": "{{count, number}} gcomhad á n-uaslódáil…",
+    "uploadingFiles_other": "{{count, number}} comhad á n-uaslódáil…",
     "created_one": "Cuireadh {{count, number}} doiciméad leis",
     "created_two": "Cuireadh {{count, number}} dhoiciméad leis",
     "created_few": "Cuireadh {{count, number}} dhoiciméad leis",
@@ -128,18 +148,26 @@
     "duplicates_few": "{{count, number}} ann cheana",
     "duplicates_many": "{{count, number}} ann cheana",
     "duplicates_other": "{{count, number}} ann cheana",
-    "rejected_one": "{{count, number}} comhad nach PDF bailí é",
-    "rejected_two": "{{count, number}} chomhad nach PDFanna bailí iad",
-    "rejected_few": "{{count, number}} chomhad nach PDFanna bailí iad",
-    "rejected_many": "{{count, number}} gcomhad nach PDFanna bailí iad",
-    "rejected_other": "{{count, number}} comhad nach PDFanna bailí iad",
+    "rejected_one": "{{count, number}} chomhad nár cuireadh leis",
+    "rejected_two": "{{count, number}} chomhad nár cuireadh leis",
+    "rejected_few": "{{count, number}} chomhad nár cuireadh leis",
+    "rejected_many": "{{count, number}} gcomhad nár cuireadh leis",
+    "rejected_other": "{{count, number}} comhad nár cuireadh leis",
     "onlyDuplicates_one": "Tá an doiciméad seo ann cheana.",
     "onlyDuplicates_two": "Tá an dá dhoiciméad seo ann cheana.",
     "onlyDuplicates_few": "Tá na doiciméid seo ann cheana.",
     "onlyDuplicates_many": "Tá na doiciméid seo ann cheana.",
     "onlyDuplicates_other": "Tá na doiciméid seo ann cheana.",
-    "noneValid": "Ní PDF bailí aon cheann de na comhaid.",
-    "failed": "Theip ar an uaslódáil"
+    "noneValid": "Níorbh fhéidir aon cheann de na comhaid a chur leis.",
+    "failed": "Theip ar an uaslódáil",
+    "intoArea": "Spás oibre: {{area}}",
+    "combine": {
+      "title": "Na grianghraif a chur le chéile in aon doiciméad amháin?",
+      "text": "Roghnaigh tú roinnt grianghraf. Más leathanaigh d’aon doiciméad amháin iad – litir ina bhfuil roinnt leathanach, mar shampla – déanfar aon PDF amháin díobh in ord a n-ainmneacha comhaid; is féidir an t-ord a athrú ina dhiaidh sin faoi “Leathanaigh”. Mura bhfuil, beidh gach grianghraf ina dhoiciméad ar leith.",
+      "one": "Mar aon doiciméad amháin",
+      "separate": "Gach grianghraf ar leith",
+      "tooMuch": "Tá an iomarca grianghraf ann, nó tá siad rómhór, d’aon doiciméad amháin (100 grianghraf agus 240 MB san iomlán ar a mhéad)."
+    }
   },
   "documents": {
     "status": {
@@ -151,7 +179,7 @@
     "ocrBadge": "Aithint téacs",
     "aiNotice": {
       "text": "Níl an intleacht shaorga socraithe go fóill. Is féidir doiciméid nua a chuardach de réir a dtéacs, ach ní dhéantar achoimre orthu ná ní chuirtear clibeanna leo.",
-      "builtinOcr": "Léann an aithint téacs ionsuite scananna nach bhfuil sraith téacs iontu, ionas gur féidir cuardach a dhéanamh iontu freisin.",
+      "builtinOcr": "Léann an aithint téacs ionsuite doiciméid scanta nach bhfuil sraith téacs iontu, ionas gur féidir cuardach a dhéanamh iontu freisin.",
       "action": "Socraigh anois"
     },
     "searchResults_one": "<count>{{count, number}} toradh</count> <query>ar “{{query}}”</query>",
@@ -178,7 +206,7 @@
     },
     "pageSize": {
       "label": "Líon na ndoiciméad a thaispeántar",
-      "all": "Uile"
+      "all": "Gach ceann"
     },
     "filters": {
       "title": "Scagairí",
@@ -196,12 +224,13 @@
       "activeTo": "go dtí {{date}}",
       "removeOne": "Bain an scagaire “{{label}}”",
       "removeAll": "Bain gach scagaire",
-      "clear": "Bain na scagairí"
+      "clear": "Bain na scagairí",
+      "retentionExpired": "Coinneáil thart"
     },
     "empty": {
       "libraryTitle": "Níl aon doiciméad ann fós",
-      "libraryHint": "Níl le déanamh ach comhaid PDF a tharraingt isteach san fhuinneog seo nó “Uaslódáil” a úsáid.",
-      "libraryHintAdmin": "Níl le déanamh ach comhaid PDF a tharraingt isteach san fhuinneog seo nó “Uaslódáil” a úsáid. Sna socruithe is féidir leat bosca poist nó fillteán iompórtála a shocrú a n-iompórtálfar PDFanna nua uaidh go huathoibríoch.",
+      "libraryHint": "Níl le déanamh ach PDFanna nó grianghraif a tharraingt isteach san fhuinneog seo nó “Uaslódáil” a úsáid.",
+      "libraryHintAdmin": "Níl le déanamh ach PDFanna nó grianghraif a tharraingt isteach san fhuinneog seo nó “Uaslódáil” a úsáid. Sna socruithe is féidir leat bosca poist nó fillteán iompórtála a shocrú a n-iompórtálfar doiciméid nua uaidh go huathoibríoch.",
       "noResultsTitle": "Níor aimsíodh aon rud",
       "noResultsSearch": "Níl aon doiciméad ag teacht leis an gcuardach seo. Aimsíonn an cuardach codanna d’fhocail freisin – bain triail as téarma níos giorra nó as níos lú focal.",
       "noResultsFilters": "Níl aon doiciméad ag teacht leis na scagairí roghnaithe."
@@ -213,7 +242,35 @@
     "loadingAll_other": "{{loaded, number}} as {{count, number}} doiciméad lódáilte…",
     "loadMore": "Lódáil tuilleadh ({{remaining, number}})",
     "aiSearch": {
-      "notice": "Cuardach IS: „{{question}}“. Taispeánann na scagairí conas a tuigeadh an cheist."
+      "notice": "Cuardach IS: “{{question}}”. Taispeánann na scagairí conas a tuigeadh an cheist."
+    },
+    "export": {
+      "label_one": "Easpórtáil {{count, number}} doiciméad mar ZIP",
+      "label_two": "Easpórtáil gach doiciméad sa liosta seo ({{count, number}}) mar ZIP",
+      "label_few": "Easpórtáil gach doiciméad sa liosta seo ({{count, number}}) mar ZIP",
+      "label_many": "Easpórtáil gach doiciméad sa liosta seo ({{count, number}}) mar ZIP",
+      "label_other": "Easpórtáil gach doiciméad sa liosta seo ({{count, number}}) mar ZIP",
+      "started_one": "Tosaíodh ar {{count, number}} doiciméad a easpórtáil",
+      "started_two": "Tosaíodh ar {{count, number}} dhoiciméad a easpórtáil",
+      "started_few": "Tosaíodh ar {{count, number}} dhoiciméad a easpórtáil",
+      "started_many": "Tosaíodh ar {{count, number}} ndoiciméad a easpórtáil",
+      "started_other": "Tosaíodh ar {{count, number}} doiciméad a easpórtáil",
+      "contents": "Tá na PDFanna sa chomhad ZIP chomh maith leis na sonraí go léir mar thábla (documents.csv) agus mar documents.json.",
+      "failed": "Theip ar an easpórtáil"
+    },
+    "mailboxNotice": {
+      "text_one": "Theip ar sheiceáil an bhosca poist “{{names}}” roinnt uaireanta as a chéile – níl aon doiciméad ag teacht uaidh faoi láthair.",
+      "text_two": "Theip ar sheiceáil na mboscaí poist seo roinnt uaireanta as a chéile: {{names}}. Níl aon doiciméad ag teacht uathu faoi láthair.",
+      "text_few": "Theip ar sheiceáil na mboscaí poist seo roinnt uaireanta as a chéile: {{names}}. Níl aon doiciméad ag teacht uathu faoi láthair.",
+      "text_many": "Theip ar sheiceáil na mboscaí poist seo roinnt uaireanta as a chéile: {{names}}. Níl aon doiciméad ag teacht uathu faoi láthair.",
+      "text_other": "Theip ar sheiceáil na mboscaí poist seo roinnt uaireanta as a chéile: {{names}}. Níl aon doiciméad ag teacht uathu faoi láthair.",
+      "action": "Féach ar na boscaí poist"
+    },
+    "backupNotice": {
+      "never": "Níl aon chúltaca de do dhoiciméid ann fós.",
+      "overdue": "An cúltaca deireanach: {{when}}. Is faide siar é sin ná mar atá socraithe.",
+      "failed": "Theip ar an gcúltaca uathoibríoch: {{reason}}",
+      "action": "Téigh chuig an gcúltaca"
     }
   },
   "document": {
@@ -228,16 +285,16 @@
       "unsaved": "Athruithe gan sábháil sa doiciméad",
       "discard": "Caith uait",
       "save": "Sábháil athruithe",
-      "saved": "Athruithe sábháilte – coinnítear an bunleagan.",
+      "saved": "Sábháladh na hathruithe – coinnítear an bunleagan.",
       "modified": "Athraithe {{when}} – tá an bunleagan coinnithe.",
       "downloadOriginal": "Íoslódáil an bunleagan",
       "restoreOriginal": "Athchóirigh an bunleagan",
       "restoreTitle": "An bunleagan a athchóiriú?",
       "restoreText": "Caithfear an leagan athraithe uait. Beidh an doiciméad ansin díreach mar a bhí sé nuair a tháinig sé.",
-      "restored": "Bunleagan athchóirithe"
+      "restored": "Athchóiríodh an bunleagan"
     },
     "duplicate": {
-      "notice": "Dúbailt b’fhéidir: tá ábhar an doiciméid seo cosúil le „{{title}}“.",
+      "notice": "Dúbailt b’fhéidir: tá ábhar an doiciméid seo cosúil le “{{title}}”.",
       "open": "Téigh go dtí an doiciméad eile",
       "dismiss": "Ní dúbailt é",
       "dismissed": "Nótáilte: ní dúbailt é"
@@ -262,7 +319,7 @@
       "allWith": "Gach doiciméad leis an gclib “{{tag}}”",
       "none": "Níl aon chlib ann. <add>Cuir clibeanna leis</add>",
       "inputHint": "Deimhnigh le Enter nó le camóg. Is clibeanna atá in úsáid cheana iad na moltaí.",
-      "inputPlaceholder": "Iontráil clib…",
+      "inputPlaceholder": "Cuir clib isteach…",
       "remove": "Bain an chlib “{{tag}}”"
     },
     "keyFacts": "Príomhfhíricí",
@@ -284,26 +341,28 @@
       "text": "Téacs"
     },
     "source": {
-      "MAIL": "Bosca ríomhphoist",
+      "MAIL": "Bosca poist",
       "FOLDER": "Fillteán iompórtála",
       "UPLOAD": "Uaslódáilte"
     },
     "noText": "Níl aon téacs ann don doiciméad seo – is dócha gur scanadh gan sraith téacs atá ann. Má tá an intleacht shaorga socraithe agus aithint téacs cumasaithe, tras-scríobhtar an t-ábhar le linn na hanailíse.",
     "edit": {
       "title": "Cuir an doiciméad in eagar",
-      "saved": "Sábháladh na hathruithe"
+      "saved": "Sábháladh na hathruithe",
+      "areaHint": "Socraíonn sé seo cé a fheiceann an doiciméad.",
+      "areaMoveHint": "Ina dhiaidh sin ní fheicfidh ach baill de “{{area}}” agus riarthóirí é."
     },
     "delete": {
       "title": "Scrios an doiciméad?",
-      "text": "Scriosfar „{{title}}“. Is féidir é seo a chealú sa stair ar feadh 30 lá; ina dhiaidh sin bainfear é go buan.",
+      "text": "Scriosfar “{{title}}”. Is féidir é seo a chealú sa stair ar feadh 30 lá; ina dhiaidh sin bainfear é go buan.",
       "confirm": "Scrios"
     },
     "chat": {
-      "intro": "Cuir ceist faoin doiciméad seo – freagraíonn an IS bunaithe ar a ábhar.",
-      "placeholder": "Fiafraigh rud éigin faoin doiciméad seo …",
+      "intro": "Cuir ceist faoin doiciméad seo – freagraíonn an intleacht shaorga bunaithe ar a ábhar.",
+      "placeholder": "Fiafraigh rud éigin faoin doiciméad seo…",
       "send": "Seol",
-      "thinking": "Tá an IS ag léamh an doiciméid …",
-      "notConfigured": "Le ceisteanna a chur faoin doiciméad, ní mór IS a shocrú.",
+      "thinking": "Tá an intleacht shaorga ag léamh an doiciméid…",
+      "notConfigured": "Le ceisteanna a chur faoin doiciméad, ní mór an intleacht shaorga a shocrú.",
       "restart": "Tosaigh as an nua",
       "suggestions": {
         "summary": "Cad faoi a bhfuil an doiciméad seo?",
@@ -321,25 +380,34 @@
       "restoreTitle": "Leagan {{number}} a athchóiriú?",
       "restoreText": "Beidh an leagan seo ina leagan reatha. Coinnítear an leagan atá ann anois, agus is féidir an chéim a chealú sa stair.",
       "restoreConfirm": "Athchóirigh",
-      "restored": "Leagan {{number}} athchóirithe",
+      "restored": "Athchóiríodh leagan {{number}}",
       "kinds": {
         "IMPORTED": "Iompórtáilte",
         "EDITED": "Curtha in eagar",
         "ORIGINAL_RESTORED": "Bunleagan athchóirithe",
         "VERSION_RESTORED": "Leagan {{from}} athchóirithe",
-        "UNDONE": "Athrú cealaithe"
+        "UNDONE": "Athrú cealaithe",
+        "PAGES": "Leathanaigh athraithe",
+        "MERGED": "Doiciméid ceangailte"
       }
-    }
+    },
+    "retention": {
+      "label": "Coinneáil",
+      "until": "go dtí {{date}} – ní féidir é a scriosadh roimhe sin",
+      "expired": "tháinig deireadh leis an tréimhse ar {{date}}",
+      "locked": "Le coinneáil go dtí {{date}} – ní féidir é a scriosadh ach ina dhiaidh sin"
+    },
+    "readOnly": "Sa spás oibre seo, níl cead agat ach féachaint ar an doiciméad seo."
   },
   "settings": {
     "title": "Socruithe",
     "mailboxes": {
       "title": "Boscaí poist",
-      "navHint": "Freastalaithe IMAP a n-iompórtáiltear ceangaltáin PDF uathu",
-      "intro": "Iompórtáiltear ceangaltáin PDF go huathoibríoch ó na boscaí poist IMAP seo. Ní dhéantar ach na boscaí poist a léamh – fanann na ríomhphoist gan athrú agus gan léamh.",
+      "navHint": "Freastalaithe IMAP a n-iompórtáiltear ceangaltáin PDF agus grianghraf uathu",
+      "intro": "Iompórtáiltear ceangaltáin PDF agus grianghraif cheangailte (mar PDFanna) go huathoibríoch ó na boscaí poist IMAP seo; ní iompórtáiltear téacs na ríomhphost ná lógónna leabaithe. Ní dhéantar ach na boscaí poist a léamh – fanann na ríomhphoist gan athrú agus gan léamh.",
       "add": "Cuir bosca poist leis",
       "emptyTitle": "Níl aon bhosca poist socraithe fós",
-      "emptyText": "Iontráil sonraí logála isteach do bhosca poist IMAP – mar shampla an bosca poist a seolann do scanóir doiciméid chuige.",
+      "emptyText": "Cuir isteach sonraí logála isteach bosca poist IMAP – mar shampla an bosca poist a seolann do scanóir doiciméid chuige.",
       "paused": "Ar sos",
       "syncNow": "Seiceáil anois",
       "syncing": "Bosca poist á sheiceáil…",
@@ -369,7 +437,7 @@
         "since": "Ríomhphoist ón dáta seo ar aghaidh",
         "sinceHint": "Roghnach – fágtar ríomhphoist níos sine ar lár",
         "enabled": "Seiceáil go huathoibríoch",
-        "enabledHint": "Seiceáiltear an bosca poist le haghaidh PDFanna nua de réir an eatraimh atá socraithe.",
+        "enabledHint": "Seiceáiltear an bosca poist le haghaidh ceangaltán nua de réir an eatraimh atá socraithe.",
         "filter": {
           "title": "Scagaire",
           "intro": "Ní phróiseáiltear ach ríomhphoist a chomhlíonann na coinníollacha go léir. Téarma amháin in aghaidh na líne; is cuma faoi chás na litreacha, agus is leor cuid den téacs. Ní chuireann réimsí folmha srian ar aon rud.",
@@ -378,29 +446,30 @@
           "senderIncludes": "Tá ceann de na téarmaí seo sa seoltóir",
           "senderExcludes": "Níl aon cheann de na téarmaí seo sa seoltóir",
           "senderHint": "Ainm nó seoladh, m.sh. “@example.com”",
-          "newOnly": "Baineann an scagaire le ríomhphoist a thagann tar éis na fála deiridh; ní phróiseáiltear arís ríomhphoist atá seiceáilte cheana."
+          "newOnly": "Baineann an scagaire le ríomhphoist a thagann tar éis na seiceála deiridh; ní phróiseáiltear arís ríomhphoist atá seiceáilte cheana."
         },
-        "interval": "Eatramh fála i nóiméid",
-        "intervalHint": "Fág folamh chun an t-eatramh ginearálta a úsáid (faoi láthair {{interval}})."
+        "interval": "Eatramh seiceála i nóiméid",
+        "intervalHint": "Fág folamh é chun an t-eatramh ginearálta a úsáid (faoi láthair {{interval}}).",
+        "areaHint": "Téann na doiciméid iompórtáilte isteach sa spás oibre seo."
       },
       "filterActive": "Scagaire gníomhach",
-      "schedule": "Fáil gach {{interval}} · an chéad cheann eile {{when}}",
-      "scheduleSoon": "Fáil gach {{interval}} · an chéad cheann eile go luath"
+      "schedule": "Seiceáil gach {{interval}} · an chéad seiceáil eile {{when}}",
+      "scheduleSoon": "Seiceáil gach {{interval}} · an chéad seiceáil eile go luath"
     },
     "import": {
       "title": "Sceideal agus fillteán iompórtála",
-      "navHint": "Eatramh seiceála agus comhadlann faoi fhaire",
-      "intro": "Socraíonn sé seo cé chomh minic a lorgaíonn an feidhmchlár comhaid PDF nua – sna boscaí poist agus san fhillteán iompórtála.",
+      "navHint": "Eatramh seiceála agus eolaire faoi fhaire",
+      "intro": "Socraíonn sé seo cé chomh minic a lorgaíonn an feidhmchlár doiciméid nua – sna boscaí poist agus san fhillteán iompórtála.",
       "saved": "Sábháladh na socruithe",
       "interval": {
         "title": "Eatramh seiceála",
-        "text": "Cé chomh minic a sheiceálann an feidhmchlár an fillteán isteach agus gach bosca poist gan a eatramh féin le haghaidh PDFanna nua.",
+        "text": "Cé chomh minic a sheiceálann an feidhmchlár an fillteán iompórtála agus gach bosca poist gan a eatramh féin le haghaidh doiciméad nua.",
         "label": "Gach … nóiméad",
         "nextRun": "An chéad seiceáil uathoibríoch eile {{when}}."
       },
       "folder": {
         "title": "Fillteán iompórtála",
-        "text": "Comhadlann ar an bhfreastalaí a choinnítear faoi fhaire le haghaidh comhad PDF nua – mar shampla sprioc scanóra líonra. Cuardaítear na fofhillteáin freisin.",
+        "text": "Eolaire ar an bhfreastalaí a choinnítear faoi fhaire le haghaidh PDFanna agus grianghraf nua (JPG, PNG, HEIC) – mar shampla sprioc scanóra líonra. Cuardaítear na fofhillteáin freisin.",
         "enable": "Déan faire ar an bhfillteán iompórtála",
         "path": "Conair ar an bhfreastalaí",
         "pathHint": "Conair iomlán. Sa choimeádán Docker, is é seo an fillteán feistithe, {{path}} de ghnáth.",
@@ -412,7 +481,8 @@
         "scanning": "Fillteán á sheiceáil…",
         "neverScanned": "Níor seiceáladh fós é.",
         "scanNow": "Seiceáil anois",
-        "scanStarted": "Tá an fillteán iompórtála á sheiceáil."
+        "scanStarted": "Tá an fillteán iompórtála á sheiceáil.",
+        "areaHint": "Téann na doiciméid ón bhfillteán isteach sa spás oibre seo."
       }
     },
     "ai": {
@@ -435,7 +505,7 @@
       "privacy": {
         "title": "Le {{provider}}, fágann do chuid doiciméad an ríomhaire seo",
         "text": "Le haghaidh na hanailíse, seoltar ábhar gach PDF chuig freastalaithe {{provider}} ar an idirlíon agus próiseáiltear ansin é – sonraisc, conarthaí, litreacha leighis agus comhfhreagras oifigiúil san áireamh.",
-        "recommendation": "<emphasis>Moladh:</emphasis> bain úsáid as IS logánta. Le <lmStudio>LM Studio</lmStudio> nó le <compatible>freastalaí atá comhoiriúnach le OpenAI</compatible> ar do líonra féin, fanann an t-ábhar ar fad agat féin."
+        "recommendation": "<emphasis>Moladh:</emphasis> bain úsáid as intleacht shaorga logánta. Le <lmStudio>LM Studio</lmStudio> nó le <compatible>freastalaí atá comhoiriúnach le OpenAI</compatible> ar do líonra féin, fanann an t-ábhar ar fad agat féin."
       },
       "providers": {
         "ANTHROPIC": {
@@ -472,7 +542,7 @@
         "hintEnvironment": "Faoi láthair tagann an eochair ó chumraíocht an fhreastalaí (athróg thimpeallachta nó comhad cumraíochta). Tá tús áite ag eochair a chuirtear isteach anseo.",
         "hintPreset": "Tá eochair don soláthraí seo réamhshocraithe i gcumraíocht an fhreastalaí. Fág folamh é chun í a úsáid.",
         "hintDiscardedOnSwitch": "Baineann an eochair atá stóráilte go dtí seo le {{previous}} agus caithfear i leataobh í nuair a athróidh tú soláthraí.",
-        "hintPresetOtherProvider": "Níl an eochair réamhshocraithe bailí ach do {{previous}}. Iontráil eochair ar leith do {{provider}}.",
+        "hintPresetOtherProvider": "Níl an eochair réamhshocraithe bailí ach do {{previous}}. Cuir isteach eochair ar leith do {{provider}}.",
         "hintRequired": "Stóráiltear faoi chriptiú í agus ní thaispeánfar arís choíche í.",
         "hintLocal": "De ghnáth ní bhíonn eochair de dhíth ar fhreastalaithe logánta."
       },
@@ -489,8 +559,8 @@
         "outputLanguageHint": "Scríobhann an intleacht shaorga an teideal, an achoimre agus na clibeanna sa teanga seo.",
         "ocr": "Aithint téacs do dhoiciméid scanta",
         "ocrHint": "Iarrann an feidhmchlár ar an intleacht shaorga PDFanna scanta gan sraith téacs a thras-scríobh – is ansin amháin is féidir iad a aimsiú leis an gcuardach sa téacs iomlán. Tógann gach doiciméad scanta níos mó ama agus cosnaíonn sé níos mó.",
-        "quickOcrFirst": "Aithint téacs thapa ar dtús, ansin feabhsú leis an IS",
-        "quickOcrFirstHint": "Léann an aithint téacs ionsuite (Tesseract) scananna nua ar dtús – i gceann cúpla soicind is féidir cuardach a dhéanamh iontu. Ansin cuireann an IS teideal, achoimre agus clibeanna leo bunaithe ar an téacs sin."
+        "quickOcrFirst": "Aithint téacs thapa ar dtús, ansin feabhsú leis an intleacht shaorga",
+        "quickOcrFirstHint": "Léann an aithint téacs ionsuite (Tesseract) doiciméid scanta nua ar dtús – i gceann cúpla soicind is féidir cuardach a dhéanamh iontu. Ansin cuireann an intleacht shaorga teideal, achoimre agus clibeanna leo bunaithe ar an téacs sin."
       },
       "unanalyzed_one": "Tá {{count, number}} doiciméad gan anailís IS go fóill.",
       "unanalyzed_two": "Tá {{count, number}} dhoiciméad gan anailís IS go fóill.",
@@ -537,9 +607,155 @@
       "twoFactor": "2FA",
       "resetTwoFactor": "Athshocraigh fíordheimhniú dhá fhachtóir",
       "resetTwoFactorHint": "Tá fíordheimhniú dhá fhachtóir ar siúl don chuntas seo.",
-      "resetTwoFactorText": "Ina dhiaidh sin síneoidh {{name}} isteach leis an bhfocal faire amháin agus is féidir fíordheimhniú dhá fhachtóir a shocrú arís – mar shampla tar éis an fón a chailleadh.",
+      "resetTwoFactorText": "Ina dhiaidh sin logálfaidh {{name}} isteach leis an bpasfhocal amháin agus is féidir fíordheimhniú dhá fhachtóir a shocrú arís – mar shampla tar éis an fón a chailleadh.",
       "resetTwoFactorConfirm": "Athshocraigh",
-      "twoFactorReset": "Fíordheimhniú dhá fhachtóir athshocraithe"
+      "twoFactorReset": "Athshocraíodh an fíordheimhniú dhá fhachtóir"
+    },
+    "areas": {
+      "title": "Spásanna oibre",
+      "navHint": "Cé a fheiceann cé na doiciméid",
+      "intro": "Tá gach doiciméad i spás oibre amháin go díreach. Ní fheiceann úsáideoirí ach doiciméid na spásanna oibre a bhfuil siad ina mbaill díobh, chomh maith le doiciméid na spásanna oibre atá oscailte do chách.",
+      "add": "Cruthaigh spás oibre",
+      "everyone": "Do chách",
+      "restricted": "Srianta",
+      "visibleForAll": "le feiceáil ag gach duine atá logáilte isteach",
+      "members": "Baill: {{names}}",
+      "adminsOnly": "riarthóirí amháin",
+      "adminHint": "Feiceann riarthóirí gach spás oibre, fiú mura baill iad.",
+      "edit": "Cuir {{name}} in eagar",
+      "saved": "Sábháladh an spás oibre",
+      "created": "Cruthaíodh an spás oibre",
+      "deleted": "Scriosadh an spás oibre",
+      "delete": {
+        "label": "Scrios {{name}}",
+        "title": "Scrios an spás oibre?",
+        "text": "Scriosfar an spás oibre “{{name}}”. Ní féidir é seo a dhéanamh ach fad nach bhfuil aon doiciméad, bosca poist ná fillteán iompórtála á úsáid."
+      },
+      "dialog": {
+        "name": "Ainm",
+        "namePlaceholder": "m.sh. Cuntasaíocht",
+        "generalNameHint": "Fág folamh é agus “Ginearálta” a bheidh mar ainm ar an spás oibre i ngach teanga.",
+        "everyone": "Le feiceáil ag cách",
+        "everyoneHint": "Feiceann gach úsáideoir atá logáilte isteach na doiciméid sa spás oibre seo.",
+        "members": "Baill",
+        "membersHint": "Ní fheiceann ach baill agus riarthóirí na doiciméid sa spás oibre seo. Socraigh do gach ball an bhfuil cead aige nó aici léamh amháin, eagarthóireacht freisin, nó scriosadh chomh maith.",
+        "noUsers": "Níl aon úsáideoirí gan ról an riarthóra ann fós.",
+        "create": "Cruthaigh",
+        "everyoneAccess": "Cead do chách",
+        "accessOf": "Cead {{name}}",
+        "membersHintEveryone": "Feiceann cách na doiciméid sa spás oibre seo. Cuir baill leis anseo más ceart níos mó ceada a bheith acu ná ag cách eile."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Coinneáil",
+      "navHint": "Tréimhsí agus glas scriosta",
+      "intro": "Socraigh cá fhad is gá doiciméid de chineál áirithe a choinneáil – sonraisc ar feadh deich mbliana, mar shampla. Áirítear an tréimhse ó dheireadh na bliana as a dtagann an doiciméad. Go dtí sin ní féidir le duine ar bith é a scriosadh.",
+      "permanent": "Ní féidir glas a bhaint – ní féidir le riarthóirí fiú. Má ghiorraítear nó má scriostar riail, nó má athraíonn cineál doiciméid, fanann an tréimhse atá socraithe cheana.",
+      "add": "Cruthaigh riail",
+      "years_one": "{{count, number}} bhliain",
+      "years_two": "{{count, number}} bhliain",
+      "years_few": "{{count, number}} bliana",
+      "years_many": "{{count, number}} mbliana",
+      "years_other": "{{count, number}} bliain",
+      "edit": "Cuir an riail do {{category}} in eagar",
+      "saved": "Sábháladh an riail",
+      "created": "Cruthaíodh an riail",
+      "deleted": "Scriosadh an riail",
+      "emptyTitle": "Níl aon rialacha coinneála ann fós",
+      "emptyText": "Gan riail is féidir doiciméid a scriosadh am ar bith.",
+      "delete": {
+        "label": "Scrios an riail do {{category}}",
+        "title": "Scrios an riail?",
+        "text": "Ní bhfaighidh doiciméid nua den chineál “{{category}}” tréimhse a thuilleadh. Fanann doiciméid atá faoi ghlas cheana faoi ghlas go dtí deireadh a dtréimhse."
+      },
+      "dialog": {
+        "categoryHint": "Mar a thaispeántar ar an doiciméad é; is cuma faoi chás na litreacha.",
+        "years": "Tréimhse choinneála i mblianta",
+        "yearsHint": "Áirítear í ó dheireadh na bliana ina bhfuil dáta an doiciméid (gan dáta: na bliana inar cuireadh an doiciméad leis).",
+        "shorterHint": "Ní bhaineann tréimhse níos giorra ach le doiciméid nach bhfuil tréimhse acu fós. Fanann doiciméid atá faoi ghlas cheana faoi ghlas go dtí deireadh a dtréimhse reatha.",
+        "create": "Cruthaigh"
+      }
+    },
+    "mailOut": {
+      "title": "Ríomhphost amach",
+      "navHint": "Fógraí trí ríomhphost",
+      "intro": "Seolann an feidhmchlár fógraí faoi mheabhrúcháin dhlite tríd an bhfreastalaí SMTP seo – uair amháin in aghaidh an mheabhrúcháin, bailithe le chéile i ríomhphost amháin in aghaidh an duine. Is é an faighteoir an duine atá freagrach as an meabhrúchán agus a bhfuil seoladh curtha isteach aige sa roghchlár úsáideora.",
+      "enabled": "Seol fógraí trí ríomhphost",
+      "enabledHint": "Nuair atá sé múchta, ní bhíonn na meabhrúcháin le feiceáil ach san fheidhmchlár.",
+      "host": "Freastalaí SMTP",
+      "port": "Port",
+      "security": "Criptiú",
+      "unencrypted": "Gan chriptiú",
+      "usernameHint": "Fág folamh é mura n-éilíonn an freastalaí logáil isteach.",
+      "passwordKeepHint": "Fág folamh é chun an pasfhocal stóráilte a choinneáil.",
+      "from": "Seoladh an tseoltóra",
+      "fromHint": "Caithfidh an freastalaí é a cheadú do do chuntas.",
+      "appUrl": "Seoladh an fheidhmchláir",
+      "appUrlHint": "Le haghaidh nasc sna ríomhphoist, m.sh. https://docs.example.com. Folamh = gan naisc.",
+      "digestHour": "Am seolta",
+      "fromHour": "ó {{hour}} ar aghaidh",
+      "saved": "Sábháladh na socruithe ríomhphoist",
+      "test": "Teachtaireacht tástála chuig {{address}}",
+      "testNeedsAddress": "Le haghaidh na teachtaireachta tástála, cuir do sheoladh ríomhphoist féin isteach sa roghchlár úsáideora.",
+      "testSavedHint": "Úsáideann an tástáil na socruithe sábháilte – sábháil ar dtús."
+    },
+    "backup": {
+      "title": "Cúltaca agus iompórtáil",
+      "navHint": "Cúltaca de gach rud in aon iarraidh, easpórtálacha a thabhairt isteach",
+      "intro": "Tá gach rud i gcúltaca atá ag teastáil chun AIDocuments a athchóiriú díreach mar atá. Tugann iompórtáil doiciméid isteach ó easpórtáil ó shuiteáil eile – mar aon lena sonraí.",
+      "backupTitle": "Cúltaca le cliceáil amháin",
+      "backupText": "ZIP leis an mbunachar sonraí, na doiciméid go léir lena leaganacha níos luaithe, na híomhánna réamhamhairc agus an eochair do phasfhocail stóráilte. Leanann an aip ag rith idir an dá linn.",
+      "size": "Méid",
+      "sizeValue_one": "thart ar {{size}} in {{count, number}} chomhad",
+      "sizeValue_two": "thart ar {{size}} in {{count, number}} chomhad",
+      "sizeValue_few": "thart ar {{size}} in {{count, number}} chomhad",
+      "sizeValue_many": "thart ar {{size}} in {{count, number}} gcomhad",
+      "sizeValue_other": "thart ar {{size}} in {{count, number}} comhad",
+      "last": "Cúltaca deireanach",
+      "never": "ní dhearnadh fós",
+      "keyWarning": "Níl an cúltaca criptithe agus tá an eochair do na pasfhocail stóráilte ann (boscaí poist, IS, fíordheimhniú dhá fhachtóir). Coinnigh é chomh slán leis na doiciméid féin.",
+      "restore": "Le hathchóiriú: stop AIDocuments, bain ábhar an ZIP amach chuig eolaire sonraí folamh agus tosaigh arís é. Tá treoracha sa ZIP (README.txt).",
+      "download": "Íoslódáil an cúltaca",
+      "started": "Tá an cúltaca á íoslódáil.",
+      "externalDatabase": "Níl cúltaca le cliceáil amháin ar fáil ach leis an mbunachar sonraí ionsuite. Le MariaDB, déan cúltaca den bhunachar sonraí lena uirlisí féin (mar shampla mariadb-dump) agus den eolaire sonraí chomh maith.",
+      "importTitle": "Iompórtáil easpórtáil",
+      "importText": "ZIP ó “Easpórtáil” sa liosta doiciméad – ó shuiteáil eile freisin. Coinnítear an teideal, an cineál doiciméid, na clibeanna agus na sonraí eile; ní léann an intleacht shaorga na doiciméid arís. Fágtar ar lár comhaid atá ann cheana.",
+      "file": "Comhad ZIP",
+      "areaHint": "Téann na doiciméid anseo – nó na cinn sin amháin nach bhfuil a spás oibre ann anseo.",
+      "matchAreas": "Cuir i spásanna oibre leis an ainm céanna",
+      "matchAreasHint": "Má tá spás oibre anseo leis an ainm céanna agus atá san easpórtáil, téann na doiciméid ansin.",
+      "import": "Iompórtáil",
+      "importing": "Á iompórtáil…",
+      "result": "Iompórtáilte: {{imported, number}} · ann cheana: {{duplicates, number}} · nár iompórtáladh: {{failed, number}}",
+      "auto": {
+        "title": "Cúltaca uathoibríoch",
+        "text": "Uair sa lá, scríobhann AIDocuments cúltaca iomlán mar ZIP chuig fillteán agus coinníonn sé na cinn is déanaí. Is fearr an fillteán a bheith ar dhiosca eile nó ar thiomántán líonra – má theipeann ar an diosca ina bhfuil na sonraí, chaillfí na cúltacaí freisin murach sin.",
+        "enable": "Déan cúltaca uathoibríoch gach lá",
+        "hour": "Am",
+        "keep": "Coinnigh",
+        "keepHint": "Líon na gcúltacaí; scriostar na cinn níos sine.",
+        "directory": "Fillteán",
+        "directoryHint": "Conair iomlán ar an bhfreastalaí. Fág folamh é chun an fillteán réamhshocraithe a úsáid. Sa choimeádán Docker, caithfidh an fillteán a bheith feistithe.",
+        "warnAfterDays": "Rabhadh tar éis (laethanta)",
+        "warnAfterDaysHint": "Fógra sa liosta doiciméad mura ndearnadh aon chúltaca le linn na tréimhse sin – de láimh ná go huathoibríoch. 0 = ná tabhair rabhadh riamh.",
+        "lastRun": "Rith deireanach",
+        "nextRun": "An chéad rith eile",
+        "running": "Cúltaca á dhéanamh…",
+        "ok": "d’éirigh leis, {{when}}",
+        "failed": "theip air, {{when}}",
+        "stored_one": "{{count, number}} chúltaca san fhillteán {{directory}}",
+        "stored_two": "{{count, number}} chúltaca san fhillteán {{directory}}",
+        "stored_few": "{{count, number}} chúltaca san fhillteán {{directory}}",
+        "stored_many": "{{count, number}} gcúltaca san fhillteán {{directory}}",
+        "stored_other": "{{count, number}} cúltaca san fhillteán {{directory}}",
+        "runNow": "Déan cúltaca anois",
+        "saveFirst": "Sábháil na hathruithe ar dtús.",
+        "runStarted": "Tá an cúltaca á dhéanamh sa chúlra.",
+        "done": "Scríobhadh an cúltaca.",
+        "saved": "Sábháladh na socruithe.",
+        "externalDatabase": "Níl an cúltaca uathoibríoch ar fáil ach leis an mbunachar sonraí ionsuite. Le MariaDB, déan cúltaca den bhunachar sonraí lena uirlisí féin (mar shampla mariadb-dump gach oíche) agus den eolaire sonraí chomh maith."
+      }
     }
   },
   "history": {
@@ -577,28 +793,29 @@
     "title": "Fíordheimhniú dhá fhachtóir",
     "on": "Ar siúl",
     "off": "As",
-    "intro": "Cosain do chuntas le dara fachtóir: nuair a shíníonn tú isteach, cuirfidh tú isteach cód ó aip fíordheimhnithe ar d'fhón freisin (m.sh. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Cosain do chuntas le dara fachtóir: nuair a logálann tú isteach, cuirfidh tú isteach cód ó aip fíordheimhnithe ar d’fhón freisin (m.sh. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Socraigh",
-    "scan": "Scan an cód QR le d'aip fíordheimhnithe nó cuir isteach an eochair de láimh. Ansin cuir isteach an cód ón aip agus d'fhocal faire.",
+    "scan": "Scan an cód QR le d’aip fíordheimhnithe nó cuir isteach an eochair de láimh. Ansin cuir isteach an cód ón aip agus do phasfhocal.",
     "qrAlt": "Cód QR don aip fíordheimhnithe",
     "secret": "Eochair",
     "confirmCode": "Cód ón aip",
     "activate": "Gníomhachtaigh",
     "recoveryTitle": "Cóid athshlánaithe",
-    "recoveryText": "Coinnigh na cóid athshlánaithe seo in áit shábháilte. Oibríonn gach ceann acu uair amháin mura féidir leat an aip a úsáid – mar shampla má chailleann tú d'fhón. Ní thaispeántar iad ach anois.",
+    "recoveryText": "Coinnigh na cóid athshlánaithe seo in áit shábháilte. Oibríonn gach ceann acu uair amháin mura féidir leat an aip a úsáid – mar shampla má chailleann tú d’fhón. Ní thaispeántar iad ach anois.",
     "download": "Sábháil mar chomhad",
     "done": "Déanta",
     "enabled": "Tá fíordheimhniú dhá fhachtóir ar siúl",
     "disabled": "Tá fíordheimhniú dhá fhachtóir múchta",
-    "disableHint": "Chun é a mhúchadh, cuir isteach cód reatha ón aip (nó cód athshlánaithe) agus d'fhocal faire.",
+    "disableHint": "Chun é a mhúchadh, cuir isteach cód reatha ón aip (nó cód athshlánaithe) agus do phasfhocal.",
     "disable": "Múch",
     "recoveryLeft": "Cóid athshlánaithe gan úsáid: {{count}}",
     "adminCannotDisable": "Mar riarthóir, ní féidir leat fíordheimhniú dhá fhachtóir a mhúchadh."
   },
   "confirmCode": {
     "title": "Deimhnigh an t-athrú",
-    "text": "Teastaíonn cód reatha ó d'aip fíordheimhnithe le haghaidh athruithe ar chuntais, ar bhoscaí poist agus ar shocruithe. Tá an deimhniú bailí ar feadh 10 nóiméad.",
-    "submit": "Deimhnigh"
+    "text": "Teastaíonn cód reatha ó d’aip fíordheimhnithe le haghaidh athruithe ar chuntais, ar bhoscaí poist agus ar shocruithe. Tá an deimhniú bailí ar feadh 10 nóiméad.",
+    "submit": "Deimhnigh",
+    "passkey": "Deimhnigh le heochair rochtana"
   },
   "share": {
     "button": "Comhroinn",
@@ -608,7 +825,7 @@
     "recipientHint": "Ainm an duine – ionas go bhfeicfidh tú níos déanaí cé dó ar thug tú an nasc.",
     "permission": "An bhfuil cead ag an duine seo an doiciméad a chur in eagar?",
     "viewOnly": "Féachaint amháin",
-    "canEdit": "Is féidir eagarthóireacht",
+    "canEdit": "Eagarthóireacht ceadaithe",
     "viewHint": "Is féidir leis an duine an PDF a fheiceáil, a phriontáil agus a íoslódáil.",
     "editHint": "Is féidir leis an duine an PDF a mharcáil, scríobh air, é a shíniú agus a shábháil freisin. Is leagan nua gach sábháil; fanann an teideal, na clibeanna agus sonraí eile i bhfolach.",
     "validity": "Bailí ar feadh",
@@ -631,6 +848,211 @@
     "page": {
       "for": "Comhroinnte le {{name}}",
       "invalid": "Tá an nasc seo neamhbhailí nó imithe in éag, nó scriosadh an doiciméad. Téigh i dteagmháil leis an duine a thug duit é."
+    }
+  },
+  "areas": {
+    "general": "Ginearálta",
+    "unknown": "Spás oibre eile",
+    "label": "Spás oibre",
+    "target": "Spás oibre sprice",
+    "access": {
+      "READ": "Léamh amháin",
+      "EDIT": "Léamh agus eagarthóireacht",
+      "DELETE": "Eagarthóireacht agus scriosadh"
+    }
+  },
+  "reminders": {
+    "title": "Meabhrúcháin",
+    "cardTitle": "Meabhrúchán",
+    "add": "Cuir meabhrúchán leis",
+    "edit": "Cuir an meabhrúchán in eagar",
+    "create": "Cruthaigh",
+    "created": "Cuireadh an meabhrúchán leis",
+    "saved": "Sábháladh an meabhrúchán",
+    "deleted": "Scriosadh an meabhrúchán",
+    "markedDone": "Déanta",
+    "dueDate": "Dlite ar",
+    "note": "Nóta",
+    "notePlaceholder": "m.sh. seiceáil an íocaíocht",
+    "assignee": "Cé a dhéanfaidh é?",
+    "assigneeHint": "Feiceann an duine seo an meabhrúchán faoi “Mo chuid” agus faigheann sé nó sí an fógra trí ríomhphost. Is féidir duine ar bith a fheiceann an doiciméad a roghnú.",
+    "me": "{{name}} (mise)",
+    "assignedTo": "do {{name}}",
+    "doneBy": "déanta ag {{name}}",
+    "markDone": "Marcáil mar dhéanta",
+    "reopen": "Athoscail",
+    "delete": {
+      "label": "Scrios an meabhrúchán",
+      "title": "Scrios an meabhrúchán?",
+      "text": "Bainfear an meabhrúchán. Fanann an doiciméad gan athrú."
+    },
+    "accept": "Cuir leis",
+    "dismiss": "Diúltaigh don mholadh",
+    "suggestionsHint": "D’aimsigh an intleacht shaorga dátaí sa doiciméad seo:",
+    "none": "Níl aon mheabhrúcháin oscailte.",
+    "showDone_one": "Taispeáin na cinn chríochnaithe ({{count, number}})",
+    "showDone_two": "Taispeáin na cinn chríochnaithe ({{count, number}})",
+    "showDone_few": "Taispeáin na cinn chríochnaithe ({{count, number}})",
+    "showDone_many": "Taispeáin na cinn chríochnaithe ({{count, number}})",
+    "showDone_other": "Taispeáin na cinn chríochnaithe ({{count, number}})",
+    "hideDone": "Folaigh na cinn chríochnaithe",
+    "scope": {
+      "label": "Cé na meabhrúcháin",
+      "mine": "Mo chuid",
+      "all": "Gach ceann"
+    },
+    "dueTitle": "Dlite",
+    "nothingDue": "Níl aon rud dlite inniu.",
+    "upcomingTitle": "Le teacht",
+    "suggestionsTitle": "Dátaí molta",
+    "suggestionsPageHint": "Spriocdhátaí sna sé mhí atá romhainn a d’aimsigh an intleacht shaorga sna doiciméid. Cuir leis iad mar mheabhrúcháin nó diúltaigh dóibh.",
+    "emptyTitle": "Níl aon mheabhrúcháin ann",
+    "emptyText": "Cuir meabhrúchán le doiciméad – nó glac le ceann a mholann an intleacht shaorga.",
+    "repeat": {
+      "label": "Athdhéan",
+      "hint": "Nuair a mharcálann tú an meabhrúchán mar dhéanta, cruthaítear an chéad cheann eile tar éis an eatraimh chéanna.",
+      "none": "Uair amháin",
+      "m1": "Gach mí",
+      "m3": "Gach ráithe",
+      "m6": "Gach leathbhliain",
+      "m12": "Gach bliain",
+      "m24": "Gach dara bliain",
+      "months_one": "Gach mí",
+      "months_two": "Gach {{count}} mhí",
+      "months_few": "Gach {{count}} mhí",
+      "months_many": "Gach {{count}} mí",
+      "months_other": "Gach {{count}} mí"
+    },
+    "fromContract": "ón gconradh"
+  },
+  "pages": {
+    "button": "Leathanaigh",
+    "title": "Cuir leathanaigh in eagar",
+    "intro": "Tarraing leathanaigh nó bog iad leis na saighde, rothlaigh iad nó bain iad. Nuair a shábhálann tú, cruthaítear leagan nua – coinnítear an ceann roimhe.",
+    "page": "Leathanach {{number}}",
+    "wasPage": "roimhe: {{number}}",
+    "moveLeft": "Bog chun tosaigh",
+    "moveRight": "Bog siar",
+    "rotate": "Rothlaigh 90°",
+    "remove": "Bain an leathanach",
+    "keep": "Coinnigh an leathanach",
+    "noneLeft": "Caithfidh leathanach amháin ar a laghad fanacht.",
+    "saveFirst": "Sábháil na hathruithe ar dtús",
+    "saved": "Sábháladh na leathanaigh",
+    "split": {
+      "here": "Doiciméad ar leith as seo amach",
+      "title": "An doiciméad a scoilteadh?",
+      "text": "Beidh leathanach {{page}} agus na leathanaigh go léir ina dhiaidh ina ndoiciméad ar leith sa spás oibre céanna. Léifear agus comhdófar é mar a dhéantar le doiciméad nua; coinníonn an doiciméad seo na leathanaigh roimhe sin.",
+      "confirm": "Scoilt",
+      "done": "Scoilteadh an doiciméad",
+      "open": "Oscail an doiciméad nua"
+    },
+    "merge": {
+      "button": "Ceangail doiciméid",
+      "title": "Ceangail doiciméid",
+      "intro": "Cuirfear leathanaigh na ndoiciméad roghnaithe ag deireadh “{{title}}” san ord seo.",
+      "search": "Cuardaigh doiciméid…",
+      "none": "Níl aon doiciméad oiriúnach.",
+      "noDeleteRight": "Níl cead agat é a scriosadh – mar sin ní féidir leat é a cheangal.",
+      "hint": "Téann na doiciméid cheangailte chuig an mbosca bruscair ansin; is féidir iad a athchóiriú ón stair ar feadh 30 lá.",
+      "confirm_one": "Ceangail {{count}} doiciméad",
+      "confirm_two": "Ceangail {{count}} dhoiciméad",
+      "confirm_few": "Ceangail {{count}} dhoiciméad",
+      "confirm_many": "Ceangail {{count}} ndoiciméad",
+      "confirm_other": "Ceangail {{count}} doiciméad",
+      "done_one": "Ceanglaíodh {{count}} doiciméad",
+      "done_two": "Ceanglaíodh {{count}} dhoiciméad",
+      "done_few": "Ceanglaíodh {{count}} dhoiciméad",
+      "done_many": "Ceanglaíodh {{count}} ndoiciméad",
+      "done_other": "Ceanglaíodh {{count}} doiciméad"
+    }
+  },
+  "contracts": {
+    "nav": "Conarthaí",
+    "title": "Conarthaí",
+    "pageIntro": "Téarmaí agus tréimhsí fógra na gconarthaí go léir a bhfuil cead agat iad a fheiceáil – na cinn a bhfuil gníomh ag teastáil go luath ar dtús.",
+    "scope": {
+      "label": "Taispeáin",
+      "running": "Reatha",
+      "all": "Gach ceann"
+    },
+    "emptyTitle": "Níl aon chonradh taifeadta fós",
+    "emptyText": "Oscail doiciméad, mar shampla conradh leictreachais nó fóin, agus taifead a théarma agus a thréimhse fógra ansin. Feicfidh tú meabhrúchán ansin in am roimh an spriocdháta.",
+    "cardTitle": "Conradh",
+    "none": "An conradh é seo? Le téarma agus tréimhse fógra, cuirfidh AIDocuments i gcuimhne duit in am é a chealú.",
+    "add": "Taifead mar chonradh",
+    "edit": "Cuir an conradh in eagar",
+    "intro": "Ó dheireadh an téarma agus ón tréimhse fógra a thagann an dáta faoina gcaithfear an conradh a chealú. Feictear meabhrúchán roimhe sin; má thagann deireadh leis an téarma gan cealú, athnuaitear an conradh go huathoibríoch.",
+    "saved": "Sábháladh an conradh",
+    "removed": "Baineadh sonraí an chonartha",
+    "remove": {
+      "label": "Bain sonraí an chonartha",
+      "title": "Sonraí an chonartha a bhaint?",
+      "text": "Bainfear an téarma, an tréimhse fógra agus an meabhrúchán oscailte a bhaineann leo. Fanann an doiciméad féin."
+    },
+    "openEnded": "gan dáta deiridh",
+    "months_one": "{{count}} mhí",
+    "months_two": "{{count}} mhí",
+    "months_few": "{{count}} mhí",
+    "months_many": "{{count}} mí",
+    "months_other": "{{count}} mí",
+    "amountHint": "m.sh. “€49.90 sa mhí”",
+    "endDateHint": "Deireadh an téarma reatha; folamh = gan dáta deiridh",
+    "noticeHint": "Míonna roimh dheireadh an téarma; folamh = go dtí deireadh an téarma",
+    "renewalHint": "Gan cealú, athnuaitear an conradh ar feadh an líon seo míonna; 0 = críochnaíonn sé",
+    "cancelledHint": "Ní athnuaitear é a thuilleadh ansin, agus ní thagann meabhrúcháin eile.",
+    "fields": {
+      "partner": "Páirtí conartha",
+      "amount": "Suim",
+      "startDate": "Tús an chonartha",
+      "endDate": "Téarma go dtí",
+      "notice": "Tréimhse fógra (míonna)",
+      "renewal": "Athnuachan (míonna)",
+      "deadline": "Cealaigh faoi",
+      "reminderDays": "Meabhraigh (laethanta roimh ré)",
+      "cancelled": "Cealaithe"
+    },
+    "status": {
+      "ACTIVE": "Reatha",
+      "DUE_SOON": "Spriocdháta gar",
+      "NOTICE_MISSED": "Spriocdháta caillte",
+      "CANCELLED": "Cealaithe",
+      "ENDED": "Críochnaithe",
+      "OPEN_ENDED": "Gan dáta deiridh"
+    },
+    "row": {
+      "cancelBy": "cealaigh faoi {{date}}",
+      "endsOn": "críochnaíonn ar {{date}}",
+      "term": "téarma go dtí {{date}}",
+      "renews_one": "athnuaitear ar feadh {{count}} mhí",
+      "renews_two": "athnuaitear ar feadh {{count}} mhí",
+      "renews_few": "athnuaitear ar feadh {{count}} mhí",
+      "renews_many": "athnuaitear ar feadh {{count}} mí",
+      "renews_other": "athnuaitear ar feadh {{count}} mí"
+    }
+  },
+  "passkeys": {
+    "title": "Eochracha rochtana",
+    "intro": "Le heochair rochtana logálann tú isteach gan pasfhocal – díghlasáilte le do mhéarlorg, d’aghaidh nó PIN an ghléis. Ní oibríonn sí ach don seoladh seo; ní féidir le suíomh bréige í a úsáid.",
+    "none": "Níl aon eochair rochtana curtha leis fós.",
+    "add": "Cuir eochair rochtana leis",
+    "create": "Cruthaigh eochair rochtana",
+    "name": "Ainm",
+    "nameHint": "Ionas go n-aithneoidh tú í níos déanaí, m.sh. “Ríomhaire glúine” nó “Bainisteoir pasfhocal”.",
+    "password": "Do phasfhocal",
+    "passwordHint": "Is féidir le duine ar bith a chuireann eochair rochtana leis logáil isteach gan pasfhocal as sin amach – mar sin deimhnigh uair amháin é.",
+    "added": "Cuireadh an eochair rochtana leis",
+    "removed": "Baineadh an eochair rochtana",
+    "synced": "sioncronaithe",
+    "lastUsed": "úsáidte go deireanach {{time}}",
+    "created": "curtha leis {{time}}, gan úsáid fós",
+    "unsupported": "Ní féidir leis an mbrabhsálaí seo eochracha rochtana a úsáid anseo. Ní oibríonn eochracha rochtana ach thar HTTPS (nó localhost).",
+    "unsupportedIp": "Ní oibríonn eochracha rochtana ach thar HTTPS agus le hainm sa seoladh, ní le seoladh IP.",
+    "remove": {
+      "label": "Bain an eochair rochtana",
+      "title": "An eochair rochtana a bhaint?",
+      "text": "Ní bheidh aon duine in ann logáil isteach le “{{name}}” ina dhiaidh sin. Fanann sí stóráilte sa bhainisteoir pasfhocal nó ar an ngléas go dtí go scriosann tú ansin í.",
+      "confirm": "Bain"
     }
   }
 }

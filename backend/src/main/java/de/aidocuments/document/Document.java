@@ -31,6 +31,10 @@ public class Document {
     private String language;
     private boolean ocrUsed;
     private boolean hasThumbnail;
+    /** Der Bereich, in dem das Dokument liegt (siehe {@link de.aidocuments.area.AreaAccess}). */
+    private String areaId = de.aidocuments.area.Area.GENERAL;
+    /** Bis zu diesem Tag (einschließlich) lässt sich das Dokument nicht löschen; null = keine Frist. */
+    private LocalDate retainUntil;
     private String mailAccountId;
     private String mailSubject;
     private String mailFrom;
@@ -248,6 +252,20 @@ public class Document {
         this.modifiedAt = modifiedAt;
     }
 
+    public LocalDate getRetainUntil() {
+        return retainUntil;
+    }
+
+    /** Nur über {@link DocumentRepository}: Die Frist wird nie früher (siehe RetentionRules). */
+    void setRetainUntil(LocalDate retainUntil) {
+        this.retainUntil = retainUntil;
+    }
+
+    /** Ob die Aufbewahrungsfrist das Löschen heute (noch) verbietet. */
+    public boolean isRetentionLocked() {
+        return retainUntil != null && !LocalDate.now().isAfter(retainUntil);
+    }
+
     public Instant getDeletedAt() {
         return deletedAt;
     }
@@ -306,5 +324,13 @@ public class Document {
 
     public void replaceKeyFacts(List<KeyFact> newFacts) {
         keyFacts = new ArrayList<>(newFacts);
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId == null ? de.aidocuments.area.Area.GENERAL : areaId;
     }
 }

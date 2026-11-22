@@ -5,11 +5,15 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { isBusy, OcrHint, sourceInfo, StatusBadge } from '../components/documents'
-import { Alert, Badge, Button, Card, ConfirmDialog, Field, Input, Modal, Spinner, Textarea } from '../components/ui'
+import { Alert, Badge, Button, Card, ConfirmDialog, Field, Input, Modal, Select, Spinner, Textarea } from '../components/ui'
+import { ContractCard } from '../components/Contracts'
+import { PagesButton } from '../components/PagesDialog'
 import { PdfViewer } from '../components/PdfViewer'
+import { RemindersCard } from '../components/Reminders'
 import { ShareButton, SharesCard } from '../components/ShareDialog'
 import { VersionsButton } from '../components/VersionsDialog'
-import { api, ApiError, type ChatMessage, type Doc, errorMessage, fileUrl } from '../lib/api'
+import { api, ApiError, canDelete, canEdit, type ChatMessage, type Doc, errorMessage, fileUrl } from '../lib/api'
+import { areaName, areaNameById, useAreas } from '../lib/areas'
 import { useAuth } from '../lib/auth'
 import { cx, formatBytes, formatDateTime, formatLongDate } from '../lib/format'
 
@@ -68,6 +72,7 @@ export function DocumentPage() {
   }
 
   const busy = isBusy(doc)
+  const editable = canEdit(doc)
   const SourceIcon = sourceInfo[doc.source].icon
 
   return (
@@ -95,31 +100,36 @@ export function DocumentPage() {
           <a href={fileUrl(doc.id, true)} download>
             <Button icon={<Download className="size-4" aria-hidden />}>{t('document.download')}</Button>
           </a>
-          <Button icon={<Pencil className="size-4" aria-hidden />} onClick={() => setEditing(true)} disabled={busy}>
-            {t('common.edit')}
-          </Button>
+          {editable && (
+            <Button icon={<Pencil className="size-4" aria-hidden />} onClick={() => setEditing(true)} disabled={busy}>
+              {t('common.edit')}
+            </Button>
+          )}
+          {editable && <PagesButton doc={doc} disabled={busy} />}
           <VersionsButton doc={doc} disabled={busy} />
-          <ShareButton doc={doc} />
+          {editable && <ShareButton doc={doc} />}
           {isAdmin && (
-            <>
-              <Button
-                icon={<RefreshCw className="size-4" aria-hidden />}
-                onClick={() => reprocess.mutate()}
-                loading={reprocess.isPending}
-                disabled={busy}
-                title={t('document.reprocessHint')}
-              >
-                {t('document.reprocess')}
-              </Button>
-              <Button
-                variant="ghost"
-                className="!text-danger hover:!bg-danger-soft"
-                icon={<Trash2 className="size-4" aria-hidden />}
-                onClick={() => setConfirmDelete(true)}
-              >
-                {t('common.delete')}
-              </Button>
-            </>
+            <Button
+              icon={<RefreshCw className="size-4" aria-hidden />}
+              onClick={() => reprocess.mutate()}
+              loading={reprocess.isPending}
+              disabled={busy}
+              title={t('document.reprocessHint')}
+            >
+              {t('document.reprocess')}
+            </Button>
+          )}
+          {canDelete(doc) && (
+            <Button
+              variant="ghost"
+              className="!text-danger hover:!bg-danger-soft"
+              icon={<Trash2 className="size-4" aria-hidden />}
+              onClick={() => setConfirmDelete(true)}
+              disabled={doc.retentionLocked}
+              title={doc.retentionLocked && doc.retainUntil ? t('document.retention.locked', { date: formatLongDate(doc.retainUntil) }) : undefined}
+            >
+              {t('common.delete')}
+            </Button>
           )}
         </div>
       </div>
@@ -136,8 +146,11 @@ export function DocumentPage() {
           {doc.status === 'INDEXED' && doc.errorMessage && <Alert tone="warn">{doc.errorMessage}</Alert>}
           {doc.status === 'TEXT_ONLY' && <Alert tone="warn">{t('document.textOnlyNotice')}</Alert>}
           {doc.status === 'TEXT_ONLY' && doc.errorMessage && <Alert tone="warn">{doc.errorMessage}</Alert>}
+          {doc.access === 'READ' && <Alert tone="brand">{t('document.readOnly')}</Alert>}
           {doc.duplicateOf && <DuplicateNotice doc={doc} />}
-          <SharesCard doc={doc} />
+          {editable && <SharesCard doc={doc} />}
+          <RemindersCard doc={doc} />
+          <ContractCard doc={doc} />
 
           <div className="flex gap-1 rounded-lg bg-raised p-1">
             {(['overview', 'text', 'chat'] as const).map((key) => (
@@ -166,7 +179,7 @@ export function DocumentPage() {
 
               <Card className="p-4">
                 <SectionTitle>{t('document.fields.tags')}</SectionTitle>
-                <TagEditor doc={doc} disabled={busy} />
+                <TagEditor doc={doc} disabled={busy || !editable} />
               </Card>
 
               {doc.keyFacts.length > 0 && (
@@ -186,6 +199,14 @@ export function DocumentPage() {
               <Card className="p-4">
                 <SectionTitle>{t('document.details.title')}</SectionTitle>
                 <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 text-sm">
+                  <AreaDetail areaId={doc.areaId} />
+                  {doc.retainUntil && (
+                    <Detail label={t('document.retention.label')}>
+                      {doc.retentionLocked
+                        ? t('document.retention.until', { date: formatLongDate(doc.retainUntil) })
+                        : t('document.retention.expired', { date: formatLongDate(doc.retainUntil) })}
+                    </Detail>
+                  )}
                   <Detail label={t('document.details.file')}>{doc.originalFilename}</Detail>
                   <Detail label={t('document.details.size')}>
                     {doc.pageCount != null ? `${t('document.details.pageCount', { count: doc.pageCount })} · ` : ''}
@@ -396,9 +417,11 @@ function DuplicateNotice({ doc }: { doc: Doc }) {
           <Link to={`/duplicates/${doc.id}`} className="font-semibold underline underline-offset-2">
             {t('duplicates.compare')}
           </Link>
-          <button type="button" onClick={() => dismiss.mutate()} disabled={dismiss.isPending} className="font-medium underline underline-offset-2">
-            {t('document.duplicate.dismiss')}
-          </button>
+          {canEdit(doc) && (
+            <button type="button" onClick={() => dismiss.mutate()} disabled={dismiss.isPending} className="font-medium underline underline-offset-2">
+              {t('document.duplicate.dismiss')}
+            </button>
+          )}
         </div>
       }
     >
@@ -414,6 +437,14 @@ function SectionTitle({ icon, children }: { icon?: ReactNode; children: ReactNod
       {children}
     </h2>
   )
+}
+
+/** Der Bereich – nur, wenn es mehr als einen gibt; sonst sagt er nichts. */
+function AreaDetail({ areaId }: { areaId: string }) {
+  const { t } = useTranslation()
+  const areas = useAreas()
+  if ((areas.data?.length ?? 0) < 2) return null
+  return <Detail label={t('areas.label')}>{areaNameById(areas.data, areaId)}</Detail>
 }
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
@@ -651,6 +682,9 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
   const [correspondent, setCorrespondent] = useState(doc.correspondent ?? '')
   const [documentDate, setDocumentDate] = useState(doc.documentDate ?? '')
   const [tags, setTags] = useState<string[]>(doc.tags)
+  const areas = useAreas()
+  const [areaId, setAreaId] = useState(doc.areaId)
+  const target = areas.data?.find((a) => a.id === areaId)
 
   const save = useMutation({
     mutationFn: () =>
@@ -661,10 +695,15 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
         correspondent: correspondent.trim() || null,
         documentDate: documentDate || null,
         tags,
+        areaId: areaId === doc.areaId ? null : areaId,
       }),
     onSuccess: async (updated) => {
       queryClient.setQueryData(['document', doc.id], updated)
-      await queryClient.invalidateQueries({ queryKey: ['documents'] })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['documents'] }),
+        queryClient.invalidateQueries({ queryKey: ['areas'] }),
+        queryClient.invalidateQueries({ queryKey: ['history'] }),
+      ])
       toast.success(t('document.edit.saved'))
       onClose()
     },
@@ -715,6 +754,26 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
         <Field label={t('document.fields.summary')}>
           {(id) => <Textarea id={id} value={summary} onChange={(e) => setSummary(e.target.value)} rows={4} maxLength={4000} />}
         </Field>
+        {areas.data && areas.data.length > 1 && (
+          <Field
+            label={t('areas.label')}
+            hint={
+              areaId !== doc.areaId && target && !target.everyone
+                ? t('document.edit.areaMoveHint', { area: areaName(target) })
+                : t('document.edit.areaHint')
+            }
+          >
+            {(id) => (
+              <Select id={id} value={areaId} onChange={(e) => setAreaId(e.target.value)}>
+                {areas.data.filter((area) => area.id === doc.areaId || area.myAccess !== 'READ').map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {areaName(area)}
+                  </option>
+                ))}
+              </Select>
+            )}
+          </Field>
+        )}
         <div className="mt-1 flex justify-end gap-2">
           <Button onClick={onClose}>{t('common.cancel')}</Button>
           <Button type="submit" variant="primary" loading={save.isPending}>

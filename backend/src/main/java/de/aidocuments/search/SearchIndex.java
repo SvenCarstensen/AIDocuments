@@ -75,7 +75,13 @@ public class SearchIndex {
                            DocumentStatus status, LocalDate from, LocalDate to,
                            SortOrder sort, int page, int size,
                            /* nur Dokumente, die als mögliches Duplikat eines anderen vermerkt sind */
-                           boolean duplicates) {
+                           boolean duplicates,
+                           /* Filter auf einen Bereich; null = alle sichtbaren */
+                           String area,
+                           /* die Bereiche, die der Anfragende sehen darf; null = alle (siehe AreaAccess) */
+                           java.util.Set<String> visibleAreas,
+                           /* nur diese Dokumente (z. B. „Aufbewahrungsfrist abgelaufen“); null = keine Einschränkung */
+                           java.util.Set<String> onlyIds) {
     }
 
     public record Hit(String id, String snippet) {
@@ -101,6 +107,13 @@ public class SearchIndex {
     private static final String K_TAG = "tag_k";
     private static final String K_STATUS = "status_k";
     private static final String K_DUPLICATE = "duplicate_k";
+    private static final String K_AREA = "area_k";
+    /**
+     * Aufbau der Index-Einträge. Wird er geändert (neues Feld), erhöhen – beim Start wird der Index dann neu aufgebaut.
+     * 2: Bereich (area_k)
+     */
+    static final int FORMAT = 2;
+    private static final String FORMAT_FILE = "aidocuments-format";
     private static final String P_DOC_DATE = "docdate_p";
     private static final String S_DOC_DATE = "docdate_s";
     private static final String S_CREATED = "created_s";
@@ -126,6 +139,7 @@ public class SearchIndex {
 
     private final Analyzer analyzer = new PerFieldAnalyzerWrapper(
             new GermanAnalyzer(), Map.of(F_ALL_PLAIN, plainAnalyzer()));
+    private final Path indexPath;
     private final Directory directory;
     private final IndexWriter writer;
     private final SearcherManager searcherManager;
@@ -134,6 +148,7 @@ public class SearchIndex {
         try {
             Path path = properties.dataRoot().resolve("index");
             Files.createDirectories(path);
+            this.indexPath = path;
             this.directory = FSDirectory.open(path);
             this.writer = openWriter();
             this.writer.commit();
@@ -202,6 +217,7 @@ public class SearchIndex {
                 writer.addDocument(toLuceneDocument(doc, fullTexts.getOrDefault(doc.getId(), "")));
             }
             commitAndRefresh();
+            markUpToDate();
         } catch (IOException e) {
             throw new UncheckedIOException("Suchindex konnte nicht neu aufgebaut werden", e);
         }
@@ -220,6 +236,20 @@ public class SearchIndex {
         }
     }
 
+    /** Ob der Index im aktuellen Aufbau vorliegt (siehe {@link #FORMAT}). */
+    public boolean upToDate() {
+        try {
+            Path file = indexPath.resolve(FORMAT_FILE);
+            return Files.exists(file) && Files.readString(file).strip().equals(String.valueOf(FORMAT));
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private void markUpToDate() throws IOException {
+        Files.writeString(indexPath.resolve(FORMAT_FILE), String.valueOf(FORMAT));
+    }
+
     public Result search(Criteria criteria) {
         boolean hasText = criteria.text() != null && !criteria.text().isBlank();
         Query textQuery = hasText ? buildTextQuery(criteria.text().strip()) : null;
@@ -233,6 +263,17 @@ public class SearchIndex {
         }
         if (criteria.duplicates()) {
             addFilter(builder, K_DUPLICATE, "1");
+        }
+        addFilter(builder, K_AREA, criteria.area());
+        if (criteria.visibleAreas() != null) {
+            BooleanQuery.Builder areas = new BooleanQuery.Builder();
+            criteria.visibleAreas().forEach(area -> areas.add(new TermQuery(new Term(K_AREA, area)), Occur.SHOULD));
+            // keiner sichtbar: eine leere SHOULD-Liste trifft nichts – genau richtig
+            builder.add(areas.build(), Occur.FILTER);
+        }
+        if (criteria.onlyIds() != null) {
+            builder.add(new org.apache.lucene.search.TermInSetQuery(F_ID,
+                    criteria.onlyIds().stream().map(org.apache.lucene.util.BytesRef::new).toList()), Occur.FILTER);
         }
         if (criteria.status() != null) {
             addFilter(builder, K_STATUS, criteria.status().name());
@@ -411,6 +452,7 @@ public class SearchIndex {
         addKeyword(lucene, K_CATEGORY, doc.getCategory());
         addKeyword(lucene, K_CORRESPONDENT, doc.getCorrespondent());
         addKeyword(lucene, K_STATUS, doc.getStatus().name());
+        addKeyword(lucene, K_AREA, doc.getAreaId());
         addKeyword(lucene, K_DUPLICATE, doc.getDuplicateOf() != null ? "1" : null);
         doc.getTags().forEach(tag -> addKeyword(lucene, K_TAG, tag));
 

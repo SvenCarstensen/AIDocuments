@@ -106,6 +106,23 @@ public class PdfExtractor {
         return images;
     }
 
+    /** Eine Seite (ab 0) als JPEG in etwa der gewünschten Breite – für die Seitenübersicht beim Bearbeiten. */
+    public byte[] renderPageAsJpeg(Path file, int page, float widthPx) throws IOException {
+        try (PDDocument pdf = load(file)) {
+            if (page < 0 || page >= pdf.getNumberOfPages()) {
+                return null;
+            }
+            PDPage target = pdf.getPage(page);
+            boolean turned = target.getRotation() % 180 != 0;
+            float pageWidth = turned ? target.getCropBox().getHeight() : target.getCropBox().getWidth();
+            float scale = pageWidth > 0 ? Math.min(widthPx / pageWidth, 4f) : 1f;
+            BufferedImage image = new PDFRenderer(pdf).renderImage(page, safeScale(target, scale), ImageType.RGB);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ImageIO.write(image, "jpg", out);
+            return out.toByteArray();
+        }
+    }
+
     /** Rendert Seiten einzeln für die Texterkennung – so liegt nie mehr als eine Seite im Speicher. */
     public interface PageImages extends AutoCloseable {
 
@@ -198,7 +215,7 @@ public class PdfExtractor {
     private static final long STREAM_CACHE_MEMORY = 64L * 1024 * 1024;
 
     /** Lädt ein PDF so, dass stark komprimierte Inhalte („Zip-Bomben“) nicht den ganzen Arbeitsspeicher belegen. */
-    private static PDDocument load(Path file) throws IOException {
+    static PDDocument load(Path file) throws IOException {
         PDDocument pdf = Loader.loadPDF(file.toFile(), MemoryUsageSetting.setupMixed(STREAM_CACHE_MEMORY).streamCache);
         try {
             checkStreams(pdf);

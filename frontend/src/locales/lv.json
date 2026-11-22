@@ -45,7 +45,9 @@
     "login": {
       "title": "Laipni lūdzam atpakaļ",
       "subtitle": "Pierakstieties, lai piekļūtu saviem dokumentiem.",
-      "submit": "Pierakstīties"
+      "submit": "Pierakstīties",
+      "or": "vai",
+      "passkey": "Pierakstīties ar piekļuves atslēgu"
     },
     "setup": {
       "title": "AIDocuments iestatīšana",
@@ -62,17 +64,17 @@
       }
     },
     "twoFactor": {
-      "title": "Apstiprināt pieteikšanos",
-      "subtitle": "Ievadi 6 ciparu kodu no autentifikācijas lietotnes.",
+      "title": "Apstiprināt pierakstīšanos",
+      "subtitle": "Ievadiet 6 ciparu kodu no savas autentifikācijas lietotnes.",
       "code": "Kods",
-      "codeHint": "Nav piekļuves lietotnei? Tā vietā ievadi vienu no saviem atkopšanas kodiem.",
+      "codeHint": "Nav piekļuves lietotnei? Tā vietā ievadiet vienu no saviem atkopšanas kodiem.",
       "submit": "Apstiprināt",
-      "back": "Atpakaļ uz pieteikšanos"
+      "back": "Atpakaļ uz pierakstīšanos"
     },
     "twoFactorRequired": {
       "title": "Iestatīt divu faktoru autentifikāciju",
-      "subtitle": "Administratoriem divu faktoru autentifikācija ir obligāta. Iestati to tagad, lai turpinātu.",
-      "intro": "Tev būs vajadzīga autentifikācijas lietotne tālrunī (piem., Google Authenticator, Microsoft Authenticator, 1Password vai Aegis)."
+      "subtitle": "Administratoriem divu faktoru autentifikācija ir obligāta. Iestatiet to tagad, lai turpinātu.",
+      "intro": "Jums būs vajadzīga autentifikācijas lietotne tālrunī (piem., Google Authenticator, Microsoft Authenticator, 1Password vai Aegis)."
     }
   },
   "shell": {
@@ -82,12 +84,12 @@
       "dark": "Tumšais motīvs"
     },
     "search": {
-      "placeholder": "Atslēgvārdu meklēšana: dokumenti, birkas, saturs …",
-      "placeholderAi": "MI meklēšana: jautā saviem vārdiem – piem., “Kia rēķini no 2024. gada”",
+      "placeholder": "Meklēšana pēc vārdiem: dokumenti, atslēgvārdi, saturs…",
+      "placeholderAi": "MI meklēšana: jautājiet saviem vārdiem – piem., „Kia rēķini no 2024. gada”",
       "labelAi": "MI",
       "label": "Meklēt dokumentus",
       "clear": "Notīrīt meklēšanu",
-      "askFailed": "Tiek meklēts pēc atslēgvārdiem."
+      "askFailed": "Tiek meklēts pēc vārdiem."
     },
     "userMenu": {
       "label": "Lietotāja izvēlne ({{name}})",
@@ -103,16 +105,32 @@
       "changed": "Parole nomainīta"
     },
     "dropzone": {
-      "title": "Ievelciet PDF failus šeit",
-      "hint": "Var ievilkt vairākus failus vienlaikus. Tie tiek saglabāti, analizēti un papildināti ar atslēgvārdiem."
+      "title": "Ievelciet PDF failus vai fotoattēlus šeit",
+      "hint": "Var ievilkt vairākus failus vienlaikus. Fotoattēli (JPG, PNG, HEIC) tiek pārvērsti PDF failos. Viss tiek saglabāts, analizēts un papildināts ar atslēgvārdiem."
+    },
+    "remindersDue_zero": "{{count, number}} aktuālu atgādinājumu",
+    "remindersDue_one": "{{count, number}} aktuāls atgādinājums",
+    "remindersDue_other": "{{count, number}} aktuāli atgādinājumi",
+    "profile": {
+      "email": "E-pasta adrese",
+      "saved": "Saglabāts"
+    },
+    "notifications": {
+      "title": "E-pasta paziņojumi",
+      "emailHint": "Uz šo adresi tiek sūtīti jums piešķirtie aktuālie atgādinājumi un tālāk ieslēgtie paziņojumi – valodā, kurā pašlaik izmantojat lietotni. Atstājiet tukšu, ja nevēlaties saņemt e-pasta ziņojumus.",
+      "digest": "Jauni dokumenti katru dienu",
+      "digestHint": "Reizi dienā – saraksts ar dokumentiem, kas pievienoti jūsu jomās; tikai dienās, kad ir jauni dokumenti.",
+      "admin": "Paziņojumi administratoriem",
+      "adminHint": "Kad beidzas glabāšanas termiņi (nekas netiek dzēsts automātiski) un kad pastkasti atkārtoti neizdodas pārbaudīt.",
+      "needsEmail": "Bez adreses e-pasta ziņojumi netiek sūtīti."
     }
   },
   "upload": {
-    "onlyPdf": "Var pievienot tikai PDF failus.",
+    "onlyPdf": "Var pievienot tikai PDF failus un fotoattēlus (JPG, PNG, HEIC).",
     "uploadingFile": "Notiek „{{name}}” augšupielāde…",
-    "uploadingFiles_zero": "Notiek {{count, number}} PDF failu augšupielāde…",
-    "uploadingFiles_one": "Notiek {{count, number}} PDF faila augšupielāde…",
-    "uploadingFiles_other": "Notiek {{count, number}} PDF failu augšupielāde…",
+    "uploadingFiles_zero": "Notiek {{count, number}} failu augšupielāde…",
+    "uploadingFiles_one": "Notiek {{count, number}} faila augšupielāde…",
+    "uploadingFiles_other": "Notiek {{count, number}} failu augšupielāde…",
     "created_zero": "Pievienots {{count, number}} dokumentu",
     "created_one": "Pievienots {{count, number}} dokuments",
     "created_other": "Pievienoti {{count, number}} dokumenti",
@@ -120,14 +138,22 @@
     "duplicates_zero": "{{count, number}} jau pastāv",
     "duplicates_one": "{{count, number}} jau pastāv",
     "duplicates_other": "{{count, number}} jau pastāv",
-    "rejected_zero": "{{count, number}} failu nav derīgi PDF",
-    "rejected_one": "{{count, number}} fails nav derīgs PDF",
-    "rejected_other": "{{count, number}} faili nav derīgi PDF",
+    "rejected_zero": "Nav pievienots {{count, number}} failu",
+    "rejected_one": "Nav pievienots {{count, number}} fails",
+    "rejected_other": "Nav pievienoti {{count, number}} faili",
     "onlyDuplicates_zero": "Šie dokumenti jau pastāv.",
     "onlyDuplicates_one": "Augšupielādētais jau pastāv.",
     "onlyDuplicates_other": "Šie dokumenti jau pastāv.",
-    "noneValid": "Neviens no failiem nav derīgs PDF.",
-    "failed": "Augšupielāde neizdevās"
+    "noneValid": "Nevienu no failiem neizdevās pievienot.",
+    "failed": "Augšupielāde neizdevās",
+    "intoArea": "Joma: {{area}}",
+    "combine": {
+      "title": "Apvienot fotoattēlus vienā dokumentā?",
+      "text": "Jūs atlasījāt vairākus fotoattēlus. Ja tās ir viena dokumenta lappuses – piemēram, vairāku lappušu vēstule –, tās tiek apvienotas vienā PDF failu nosaukumu secībā; secību vēlāk var mainīt sadaļā „Lappuses”. Pretējā gadījumā katrs fotoattēls kļūst par atsevišķu dokumentu.",
+      "one": "Kā vienu dokumentu",
+      "separate": "Katru fotoattēlu atsevišķi",
+      "tooMuch": "Vienam dokumentam fotoattēlu ir par daudz vai tie ir par lieliem (ne vairāk kā 100 fotoattēlu un kopā 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -182,12 +208,13 @@
       "activeTo": "līdz {{date}}",
       "removeOne": "Noņemt filtru „{{label}}”",
       "removeAll": "Noņemt visus filtrus",
-      "clear": "Noņemt filtrus"
+      "clear": "Noņemt filtrus",
+      "retentionExpired": "Glabāšanas termiņš beidzies"
     },
     "empty": {
       "libraryTitle": "Dokumentu vēl nav",
-      "libraryHint": "Vienkārši ievelciet PDF failus šajā logā vai izmantojiet pogu „Augšupielādēt”.",
-      "libraryHintAdmin": "Vienkārši ievelciet PDF failus šajā logā vai izmantojiet pogu „Augšupielādēt”. Iestatījumos varat iestatīt pastkasti vai importa mapi, no kuras jauni PDF faili tiks importēti automātiski.",
+      "libraryHint": "Vienkārši ievelciet PDF failus vai fotoattēlus šajā logā vai izmantojiet pogu „Augšupielādēt”.",
+      "libraryHintAdmin": "Vienkārši ievelciet PDF failus vai fotoattēlus šajā logā vai izmantojiet pogu „Augšupielādēt”. Iestatījumos varat iestatīt pastkasti vai importa mapi, no kuras jauni dokumenti tiks importēti automātiski.",
       "noResultsTitle": "Nekas nav atrasts",
       "noResultsSearch": "Šim meklējumam neatbilst neviens dokuments. Meklēšana atrod arī vārdu daļas – izmēģiniet īsāku vārdu vai mazāk vārdu.",
       "noResultsFilters": "Izvēlētajiem filtriem neatbilst neviens dokuments."
@@ -197,7 +224,29 @@
     "loadingAll_other": "Ielādēts: {{loaded, number}} no {{count, number}} dokumentiem…",
     "loadMore": "Ielādēt vēl ({{remaining, number}})",
     "aiSearch": {
-      "notice": "MI meklēšana: “{{question}}”. Filtri rāda, kā jautājums tika saprasts."
+      "notice": "MI meklēšana: „{{question}}”. Filtri rāda, kā jautājums tika saprasts."
+    },
+    "export": {
+      "label_zero": "Eksportēt visus {{count, number}} šī saraksta dokumentus kā ZIP",
+      "label_one": "Eksportēt {{count, number}} dokumentu kā ZIP",
+      "label_other": "Eksportēt visus {{count, number}} šī saraksta dokumentus kā ZIP",
+      "started_zero": "Sākta {{count, number}} dokumentu eksportēšana",
+      "started_one": "Sākta {{count, number}} dokumenta eksportēšana",
+      "started_other": "Sākta {{count, number}} dokumentu eksportēšana",
+      "contents": "ZIP failā ir PDF faili un visi dati tabulas veidā (documents.csv) un kā documents.json.",
+      "failed": "Eksportēšana neizdevās"
+    },
+    "mailboxNotice": {
+      "text_zero": "Šīs pastkastes vairākas reizes pēc kārtas neizdodas pārbaudīt: {{names}}. No tām pašlaik nepienāk dokumenti.",
+      "text_one": "Vairākas reizes pēc kārtas neizdodas pārbaudīt pastu: {{names}}. No turienes pašlaik nepienāk dokumenti.",
+      "text_other": "Šīs pastkastes vairākas reizes pēc kārtas neizdodas pārbaudīt: {{names}}. No tām pašlaik nepienāk dokumenti.",
+      "action": "Skatīt pastkastes"
+    },
+    "backupNotice": {
+      "never": "Jūsu dokumentiem vēl nav rezerves kopijas.",
+      "overdue": "Pēdējā rezerves kopija: {{when}}. Tas ir senāk, nekā iestatīts.",
+      "failed": "Automātiskā rezerves kopēšana neizdevās: {{reason}}",
+      "action": "Uz rezerves kopijas iestatījumiem"
     }
   },
   "document": {
@@ -212,7 +261,7 @@
       "unsaved": "Dokumentā ir nesaglabātas izmaiņas",
       "discard": "Atmest",
       "save": "Saglabāt izmaiņas",
-      "saved": "Izmaiņas saglabātas – oriģināls tiek saglabāts.",
+      "saved": "Izmaiņas saglabātas – oriģināls tiek paturēts.",
       "modified": "Mainīts {{when}} – oriģināls ir saglabāts.",
       "downloadOriginal": "Lejupielādēt oriģinālu",
       "restoreOriginal": "Atjaunot oriģinālu",
@@ -221,7 +270,7 @@
       "restored": "Oriģināls atjaunots"
     },
     "duplicate": {
-      "notice": "Iespējams dublikāts: šī dokumenta saturs atbilst “{{title}}”.",
+      "notice": "Iespējams dublikāts: šī dokumenta saturs atbilst „{{title}}”.",
       "open": "Uz otru dokumentu",
       "dismiss": "Nav dublikāts",
       "dismissed": "Atzīmēts: nav dublikāts"
@@ -273,18 +322,20 @@
     "noText": "Šim dokumentam nav teksta – visticamāk, tas ir skenējums bez teksta slāņa. Ja MI ir iestatīts un teksta atpazīšana ir ieslēgta, saturs analīzes laikā tiek transkribēts.",
     "edit": {
       "title": "Rediģēt dokumentu",
-      "saved": "Izmaiņas saglabātas"
+      "saved": "Izmaiņas saglabātas",
+      "areaHint": "Nosaka, kas redz dokumentu.",
+      "areaMoveHint": "Pēc tam to redzēs tikai jomas „{{area}}” dalībnieki un administratori."
     },
     "delete": {
       "title": "Vai dzēst dokumentu?",
-      "text": "“{{title}}” tiks dzēsts. Vēsturē to var atsaukt 30 dienu laikā; pēc tam tas tiek neatgriezeniski noņemts.",
+      "text": "„{{title}}” tiks dzēsts. Vēsturē to var atsaukt 30 dienu laikā; pēc tam tas tiek neatgriezeniski noņemts.",
       "confirm": "Dzēst"
     },
     "chat": {
-      "intro": "Uzdod jautājumu par šo dokumentu – MI atbild, balstoties uz tā saturu.",
-      "placeholder": "Pajautā kaut ko par šo dokumentu …",
+      "intro": "Uzdodiet jautājumu par šo dokumentu – MI atbildēs, balstoties uz tā saturu.",
+      "placeholder": "Pajautājiet kaut ko par šo dokumentu…",
       "send": "Sūtīt",
-      "thinking": "MI lasa dokumentu …",
+      "thinking": "MI lasa dokumentu…",
       "notConfigured": "Lai uzdotu jautājumus par dokumentu, jābūt iestatītam MI.",
       "restart": "Sākt no jauna",
       "suggestions": {
@@ -309,16 +360,25 @@
         "EDITED": "Rediģēts",
         "ORIGINAL_RESTORED": "Oriģināls atjaunots",
         "VERSION_RESTORED": "Versija {{from}} atjaunota",
-        "UNDONE": "Izmaiņa atsaukta"
+        "UNDONE": "Izmaiņa atsaukta",
+        "PAGES": "Lappuses mainītas",
+        "MERGED": "Dokumenti pievienoti"
       }
-    }
+    },
+    "retention": {
+      "label": "Glabāšana",
+      "until": "līdz {{date}} – līdz tam nevar dzēst",
+      "expired": "termiņš beidzās {{date}}",
+      "locked": "Jāglabā līdz {{date}} – dzēst var tikai pēc tam"
+    },
+    "readOnly": "Šajā jomā šo dokumentu drīkstat tikai skatīt."
   },
   "settings": {
     "title": "Iestatījumi",
     "mailboxes": {
       "title": "Pastkastes",
-      "navHint": "IMAP serveri, no kuriem tiek importēti PDF pielikumi",
-      "intro": "No šīm IMAP pastkastēm PDF pielikumi tiek importēti automātiski. Pastkastes tiek tikai lasītas – e-pasta ziņojumi paliek nemainīti un nelasīti.",
+      "navHint": "IMAP serveri, no kuriem tiek importēti PDF pielikumi un fotoattēli",
+      "intro": "No šīm IMAP pastkastēm automātiski tiek importēti PDF pielikumi un pievienotie fotoattēli (kā PDF); e-pasta ziņojumu teksts un iegultie logotipi – ne. Pastkastes tiek tikai lasītas – e-pasta ziņojumi paliek nemainīti un nelasīti.",
       "add": "Pievienot pastkasti",
       "emptyTitle": "Vēl nav iestatīta neviena pastkaste",
       "emptyText": "Ievadiet IMAP pastkastes piekļuves datus – piemēram, tās pastkastes, uz kuru jūsu skeneris sūta dokumentus.",
@@ -351,38 +411,39 @@
         "since": "Tikai e-pasta ziņojumi no",
         "sinceHint": "Neobligāti – vecāki e-pasta ziņojumi tiek izlaisti",
         "enabled": "Pārbaudīt automātiski",
-        "enabledHint": "Pastkastē ar iestatīto intervālu tiek meklēti jauni PDF faili.",
+        "enabledHint": "Pastkastē ar iestatīto intervālu tiek meklēti jauni pielikumi.",
         "filter": {
           "title": "Filtrs",
-          "intro": "Tiek apstrādāti tikai e-pasta ziņojumi, kas atbilst visiem nosacījumiem. Viens termins katrā rindā; lielajiem un mazajiem burtiem nav nozīmes, pietiek ar daļu teksta. Tukši lauki neko neierobežo.",
-          "subjectIncludes": "Tēma satur kādu no šiem terminiem",
-          "subjectExcludes": "Tēma nesatur nevienu no šiem terminiem",
-          "senderIncludes": "Sūtītājs satur kādu no šiem terminiem",
-          "senderExcludes": "Sūtītājs nesatur nevienu no šiem terminiem",
-          "senderHint": "Vārds vai adrese, piem., “@example.com”",
+          "intro": "Tiek apstrādāti tikai e-pasta ziņojumi, kas atbilst visiem nosacījumiem. Viens vārds vai frāze katrā rindā; lielajiem un mazajiem burtiem nav nozīmes, pietiek ar daļu teksta. Tukši lauki neko neierobežo.",
+          "subjectIncludes": "Tēma satur kādu no šiem vārdiem",
+          "subjectExcludes": "Tēma nesatur nevienu no šiem vārdiem",
+          "senderIncludes": "Sūtītājs satur kādu no šiem vārdiem",
+          "senderExcludes": "Sūtītājs nesatur nevienu no šiem vārdiem",
+          "senderHint": "Vārds vai adrese, piem., „@example.com”",
           "newOnly": "Filtrs attiecas uz e-pasta ziņojumiem, kas saņemti pēc pēdējās pārbaudes; jau pārbaudītie ziņojumi netiek apstrādāti atkārtoti."
         },
         "interval": "Pārbaudes intervāls minūtēs",
-        "intervalHint": "Atstājiet tukšu, lai izmantotu vispārējo intervālu (pašlaik {{interval}})."
+        "intervalHint": "Atstājiet tukšu, lai izmantotu vispārējo intervālu (pašlaik {{interval}}).",
+        "areaHint": "Importētie dokumenti nonāk šajā jomā."
       },
       "filterActive": "Filtrs aktīvs",
       "schedule": "Pārbaude ik pēc {{interval}} · nākamā: {{when}}",
       "scheduleSoon": "Pārbaude ik pēc {{interval}} · nākamā drīz"
     },
     "import": {
-      "title": "Grafiks un importa mape",
+      "title": "Pārbaude un importa mape",
       "navHint": "Pārbaudes intervāls un uzraugāmā mape",
-      "intro": "Nosaka, cik bieži lietotne meklē jaunus PDF failus – pastkastēs un importa mapē.",
+      "intro": "Nosaka, cik bieži lietotne meklē jaunus dokumentus – pastkastēs un importa mapē.",
       "saved": "Iestatījumi saglabāti",
       "interval": {
         "title": "Pārbaudes intervāls",
-        "text": "Cik bieži lietotne pārbauda ievades mapi un visas pastkastes bez sava intervāla, meklējot jaunus PDF.",
+        "text": "Cik bieži lietotne pārbauda importa mapi un visas pastkastes bez sava intervāla, meklējot jaunus dokumentus.",
         "label": "Ik pēc … minūtēm",
         "nextRun": "Nākamā automātiskā pārbaude {{when}}."
       },
       "folder": {
         "title": "Importa mape",
-        "text": "Mape serverī, kas tiek uzraudzīta, lai pamanītu jaunus PDF failus, – piemēram, tīkla skenera mērķa mape. Tiek pārmeklētas arī apakšmapes.",
+        "text": "Mape serverī, kas tiek uzraudzīta, lai pamanītu jaunus PDF failus un fotoattēlus (JPG, PNG, HEIC), – piemēram, tīkla skenera mērķa mape. Tiek pārmeklētas arī apakšmapes.",
         "enable": "Uzraudzīt importa mapi",
         "path": "Ceļš serverī",
         "pathHint": "Absolūtais ceļš. Docker konteinerā tā ir pievienotā mape, parasti {{path}}.",
@@ -394,7 +455,8 @@
         "scanning": "Notiek mapes pārbaude…",
         "neverScanned": "Vēl nav pārbaudīta.",
         "scanNow": "Pārbaudīt tūlīt",
-        "scanStarted": "Importa mape tiek pārbaudīta."
+        "scanStarted": "Importa mape tiek pārbaudīta.",
+        "areaHint": "Dokumenti no mapes nonāk šajā jomā."
       }
     },
     "ai": {
@@ -515,15 +577,155 @@
       "twoFactor": "2FA",
       "resetTwoFactor": "Atiestatīt divu faktoru autentifikāciju",
       "resetTwoFactorHint": "Šim kontam ir ieslēgta divu faktoru autentifikācija.",
-      "resetTwoFactorText": "{{name}} pēc tam piesakās tikai ar paroli un var no jauna iestatīt divu faktoru autentifikāciju – piemēram, pēc tālruņa pazaudēšanas.",
+      "resetTwoFactorText": "{{name}} pēc tam pierakstās tikai ar paroli un var no jauna iestatīt divu faktoru autentifikāciju – piemēram, pēc tālruņa pazaudēšanas.",
       "resetTwoFactorConfirm": "Atiestatīt",
       "twoFactorReset": "Divu faktoru autentifikācija atiestatīta"
+    },
+    "areas": {
+      "title": "Jomas",
+      "navHint": "Kas redz kurus dokumentus",
+      "intro": "Katrs dokuments atrodas tieši vienā jomā. Lietotāji redz tikai to jomu dokumentus, kurās viņi ir dalībnieki, kā arī visiem pieejamo jomu dokumentus.",
+      "add": "Pievienot jomu",
+      "everyone": "Visiem",
+      "restricted": "Ierobežota",
+      "visibleForAll": "redzama visiem pierakstījušamies",
+      "members": "Dalībnieki: {{names}}",
+      "adminsOnly": "tikai administratori",
+      "adminHint": "Administratori redz visas jomas, arī nebūdami to dalībnieki.",
+      "edit": "Rediģēt: {{name}}",
+      "saved": "Joma saglabāta",
+      "created": "Joma izveidota",
+      "deleted": "Joma izdzēsta",
+      "delete": {
+        "label": "Dzēst: {{name}}",
+        "title": "Vai dzēst jomu?",
+        "text": "Joma „{{name}}” tiks dzēsta. Tas iespējams tikai tad, ja to neizmanto neviens dokuments, pastkaste vai importa mape."
+      },
+      "dialog": {
+        "name": "Nosaukums",
+        "namePlaceholder": "piem., Grāmatvedība",
+        "generalNameHint": "Atstājiet tukšu, un joma visās valodās sauksies „Vispārīgā”.",
+        "everyone": "Redzama visiem",
+        "everyoneHint": "Šīs jomas dokumentus redz visi pierakstījušies lietotāji.",
+        "members": "Dalībnieki",
+        "membersHint": "Šīs jomas dokumentus redz tikai dalībnieki un administratori. Katram dalībniekam nosakiet, vai viņš drīkst tikai skatīt, arī rediģēt vai arī dzēst.",
+        "noUsers": "Vēl nav neviena lietotāja bez administratora lomas.",
+        "create": "Izveidot",
+        "everyoneAccess": "Visi drīkst",
+        "accessOf": "Lietotāja {{name}} tiesības",
+        "membersHintEveryone": "Šīs jomas dokumentus redz visi. Pievienojiet šeit dalībniekus, ja viņiem jāļauj vairāk nekā visiem pārējiem."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Glabāšana",
+      "navHint": "Termiņi un dzēšanas bloķēšana",
+      "intro": "Nosakiet, cik ilgi jāglabā noteikta veida dokumenti – piemēram, rēķini desmit gadus. Termiņu skaita no tā gada beigām, no kura ir dokuments. Līdz tam neviens to nevar dzēst.",
+      "permanent": "Bloķēšanu nevar atcelt – pat administratori. Ja noteikums tiek saīsināts vai dzēsts vai mainās dokumenta veids, jau noteiktais termiņš paliek spēkā.",
+      "add": "Pievienot noteikumu",
+      "years_zero": "{{count, number}} gadu",
+      "years_one": "{{count, number}} gads",
+      "years_other": "{{count, number}} gadi",
+      "edit": "Rediģēt noteikumu: {{category}}",
+      "saved": "Noteikums saglabāts",
+      "created": "Noteikums izveidots",
+      "deleted": "Noteikums izdzēsts",
+      "emptyTitle": "Glabāšanas noteikumu vēl nav",
+      "emptyText": "Bez noteikuma dokumentus var dzēst jebkurā laikā.",
+      "delete": {
+        "label": "Dzēst noteikumu: {{category}}",
+        "title": "Vai dzēst noteikumu?",
+        "text": "Jauniem dokumentiem ar veidu „{{category}}” vairs netiks noteikts termiņš. Jau bloķētie dokumenti paliek bloķēti līdz sava termiņa beigām."
+      },
+      "dialog": {
+        "categoryHint": "Tā, kā norādīts pie dokumenta; lielajiem un mazajiem burtiem nav nozīmes.",
+        "years": "Glabāšanas termiņš gados",
+        "yearsHint": "Skaita no dokumenta datuma gada beigām (ja datuma nav – no pievienošanas dienas).",
+        "shorterHint": "Īsāks termiņš attiecas tikai uz dokumentiem, kuriem termiņa vēl nav. Jau bloķētie paliek bloķēti līdz pašreizējā termiņa beigām.",
+        "create": "Izveidot"
+      }
+    },
+    "mailOut": {
+      "title": "E-pasta sūtīšana",
+      "navHint": "Atgādinājumi e-pastā",
+      "intro": "Ar šī SMTP servera starpniecību lietotne sūta paziņojumus par aktuālajiem atgādinājumiem – vienreiz par katru atgādinājumu, apkopotus vienā e-pasta ziņojumā katrai personai. Saņēmējs ir tas, kurš atbild par atgādinājumu un lietotāja izvēlnē ir norādījis adresi.",
+      "enabled": "Sūtīt atgādinājumus e-pastā",
+      "enabledHint": "Ja izslēgts, atgādinājumi redzami tikai lietotnē.",
+      "host": "SMTP serveris",
+      "port": "Ports",
+      "security": "Šifrēšana",
+      "unencrypted": "Nav",
+      "usernameHint": "Atstājiet tukšu, ja serveris nepieprasa pierakstīšanos.",
+      "passwordKeepHint": "Atstājiet tukšu, lai paturētu saglabāto paroli.",
+      "from": "Sūtītāja adrese",
+      "fromHint": "Serverim tā jāatļauj jūsu kontam.",
+      "appUrl": "Lietotnes adrese",
+      "appUrlHint": "Saitēm e-pasta ziņojumos, piem., https://docs.example.com. Tukšs = bez saitēm.",
+      "digestHour": "Sūtīšana",
+      "fromHour": "no {{hour}}",
+      "saved": "E-pasta sūtīšanas iestatījumi saglabāti",
+      "test": "Testa ziņojums uz {{address}}",
+      "testNeedsAddress": "Lai saņemtu testa ziņojumu, lietotāja izvēlnē norādiet savu e-pasta adresi.",
+      "testSavedHint": "Testā tiek izmantoti saglabātie iestatījumi – lūdzu, vispirms saglabājiet."
+    },
+    "backup": {
+      "title": "Rezerves kopija un imports",
+      "navHint": "Visa rezerves kopija uzreiz, eksportu importēšana",
+      "intro": "Rezerves kopijā ir viss nepieciešamais, lai atjaunotu AIDocuments tieši tādu, kāds tas ir. Imports pārņem dokumentus no citas instalācijas eksporta – kopā ar to datiem.",
+      "backupTitle": "Rezerves kopija ar vienu klikšķi",
+      "backupText": "ZIP fails ar datubāzi, visiem dokumentiem kopā ar iepriekšējām versijām, priekšskatījuma attēliem un saglabāto paroļu atslēgu. Lietotne pa to laiku turpina darboties.",
+      "size": "Apjoms",
+      "sizeValue_zero": "aptuveni {{size}}, {{count, number}} failu",
+      "sizeValue_one": "aptuveni {{size}}, {{count, number}} fails",
+      "sizeValue_other": "aptuveni {{size}}, {{count, number}} faili",
+      "last": "Pēdējā rezerves kopija",
+      "never": "nekad",
+      "keyWarning": "Rezerves kopija nav šifrēta, un tajā ir saglabāto paroļu (pastkastu, MI, divu faktoru autentifikācijas) atslēga. Glabājiet to tikpat droši kā pašus dokumentus.",
+      "restore": "Atjaunošana: apturiet AIDocuments, izpakojiet ZIP saturu tukšā datu mapē un palaidiet no jauna. Norādījumi ir ZIP failā (README.txt).",
+      "download": "Lejupielādēt rezerves kopiju",
+      "started": "Notiek rezerves kopijas lejupielāde.",
+      "externalDatabase": "Rezerves kopija ar vienu klikšķi ir pieejama tikai ar iebūvēto datubāzi. Ja izmantojat MariaDB, izveidojiet datubāzes rezerves kopiju ar tās rīkiem (piemēram, mariadb-dump) un papildus arī datu mapes rezerves kopiju.",
+      "importTitle": "Importēt eksportu",
+      "importText": "ZIP fails, kas izveidots ar „Eksportēt” dokumentu sarakstā, – arī no citas instalācijas. Nosaukums, dokumenta veids, atslēgvārdi un citi dati tiek saglabāti; MI dokumentus vēlreiz nelasa. Jau esošie faili tiek izlaisti.",
+      "file": "ZIP fails",
+      "areaHint": "Dokumenti nonāk šeit – vai tikai tie, kuru jomas šeit nav.",
+      "matchAreas": "Ievietot vienāda nosaukuma jomās",
+      "matchAreasHint": "Ja šeit ir joma ar tādu pašu nosaukumu kā eksportā, dokumenti nonāk tajā.",
+      "import": "Importēt",
+      "importing": "Notiek importēšana…",
+      "result": "Importēti: {{imported, number}} · jau bija: {{duplicates, number}} · nav importēti: {{failed, number}}",
+      "auto": {
+        "title": "Automātiskā rezerves kopēšana",
+        "text": "Reizi dienā AIDocuments ieraksta pilnu rezerves kopiju ZIP failā mapē un patur jaunākās kopijas. Vislabāk, ja mape atrodas citā diskā vai tīkla diskā – ja sabojājas disks ar datiem, citādi zudīs arī rezerves kopijas.",
+        "enable": "Katru dienu automātiski veidot rezerves kopiju",
+        "hour": "Laiks",
+        "keep": "Paturēt",
+        "keepHint": "Rezerves kopiju skaits; vecākās tiek dzēstas.",
+        "directory": "Mape",
+        "directoryHint": "Pilns ceļš serverī. Atstājiet tukšu, lai izmantotu noklusējuma mapi. Docker konteinerā mapei jābūt pievienotai.",
+        "warnAfterDays": "Brīdināt pēc (dienām)",
+        "warnAfterDaysHint": "Paziņojums dokumentu sarakstā, ja tik ilgi nav izveidota rezerves kopija – ne manuāli, ne automātiski. 0 = nekad nebrīdināt.",
+        "lastRun": "Pēdējā palaišana",
+        "nextRun": "Nākamā palaišana",
+        "running": "Notiek rezerves kopēšana…",
+        "ok": "izdevās, {{when}}",
+        "failed": "neizdevās, {{when}}",
+        "stored_zero": "{{count, number}} rezerves kopiju mapē {{directory}}",
+        "stored_one": "{{count, number}} rezerves kopija mapē {{directory}}",
+        "stored_other": "{{count, number}} rezerves kopijas mapē {{directory}}",
+        "runNow": "Izveidot tūlīt",
+        "saveFirst": "Vispirms saglabājiet izmaiņas.",
+        "runStarted": "Rezerves kopija tiek veidota fonā.",
+        "done": "Rezerves kopija ierakstīta.",
+        "saved": "Iestatījumi saglabāti.",
+        "externalDatabase": "Automātiskā rezerves kopēšana ir pieejama tikai ar iebūvēto datubāzi. Ja izmantojat MariaDB, veidojiet datubāzes rezerves kopiju ar tās rīkiem (piemēram, katru nakti ar mariadb-dump) un papildus arī datu mapes rezerves kopiju."
+      }
     }
   },
   "history": {
     "nav": "Vēsture",
     "title": "Vēsture",
-    "subtitle": "Kas noticis ar taviem dokumentiem – jaunākie ieraksti vispirms.",
+    "subtitle": "Kas noticis ar jūsu dokumentiem – jaunākie ieraksti vispirms.",
     "empty": "Ierakstu vēl nav.",
     "actions": {
       "IMPORTED": "Importēts",
@@ -545,7 +747,7 @@
   },
   "duplicates": {
     "title": "Iespējams dublikāts",
-    "subtitle": "Abu dokumentu saturs sakrīt. Paturi vienu un izdzēs otru – vai atzīmē, ka tie nav dublikāti.",
+    "subtitle": "Abu dokumentu saturs sakrīt. Paturiet vienu un izdzēsiet otru – vai atzīmējiet, ka tie nav dublikāti.",
     "older": "Saņemts agrāk",
     "newer": "Saņemts vēlāk",
     "deleteThis": "Dzēst šo",
@@ -555,45 +757,46 @@
     "title": "Divu faktoru autentifikācija",
     "on": "Ieslēgta",
     "off": "Izslēgta",
-    "intro": "Aizsargā savu kontu ar otru faktoru: piesakoties tu ievadīsi arī kodu no autentifikācijas lietotnes tālrunī (piem., Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Aizsargājiet savu kontu ar otru faktoru: pierakstoties jūs ievadīsiet arī kodu no autentifikācijas lietotnes tālrunī (piem., Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Iestatīt",
-    "scan": "Noskenē QR kodu ar autentifikācijas lietotni vai ievadi atslēgu manuāli. Pēc tam ievadi lietotnes kodu un savu paroli.",
+    "scan": "Noskenējiet QR kodu ar autentifikācijas lietotni vai ievadiet atslēgu manuāli. Pēc tam ievadiet lietotnes kodu un savu paroli.",
     "qrAlt": "QR kods autentifikācijas lietotnei",
     "secret": "Atslēga",
     "confirmCode": "Kods no lietotnes",
     "activate": "Aktivizēt",
     "recoveryTitle": "Atkopšanas kodi",
-    "recoveryText": "Glabā šos atkopšanas kodus drošā vietā. Katrs darbojas vienreiz, ja nevari izmantot lietotni – piemēram, ja pazaudē tālruni. Tie tiek parādīti tikai tagad.",
+    "recoveryText": "Glabājiet šos atkopšanas kodus drošā vietā. Katrs darbojas vienreiz, ja nevarat izmantot lietotni – piemēram, ja pazaudējat tālruni. Tie tiek parādīti tikai tagad.",
     "download": "Saglabāt kā failu",
     "done": "Gatavs",
     "enabled": "Divu faktoru autentifikācija ir ieslēgta",
     "disabled": "Divu faktoru autentifikācija ir izslēgta",
-    "disableHint": "Lai to izslēgtu, ievadi pašreizējo lietotnes kodu (vai atkopšanas kodu) un savu paroli.",
+    "disableHint": "Lai to izslēgtu, ievadiet pašreizējo lietotnes kodu (vai atkopšanas kodu) un savu paroli.",
     "disable": "Izslēgt",
     "recoveryLeft": "Neizmantotie atkopšanas kodi: {{count}}",
-    "adminCannotDisable": "Kā administrators tu nevari izslēgt divu faktoru autentifikāciju."
+    "adminCannotDisable": "Kā administrators jūs nevarat izslēgt divu faktoru autentifikāciju."
   },
   "confirmCode": {
     "title": "Apstiprināt izmaiņas",
     "text": "Kontu, pastkastu un iestatījumu izmaiņām vajadzīgs aktuāls kods no autentifikācijas lietotnes. Apstiprinājums ir derīgs 10 minūtes.",
-    "submit": "Apstiprināt"
+    "submit": "Apstiprināt",
+    "passkey": "Apstiprināt ar piekļuves atslēgu"
   },
   "share": {
     "button": "Kopīgot",
     "title": "Kopīgot dokumentu",
     "intro": "Izveido saiti, ar kuru persona bez konta var atvērt tieši šo dokumentu.",
-    "recipient": "Ar ko tu kopīgo?",
-    "recipientHint": "Personas vārds – lai vēlāk redzētu, kam iedevi saiti.",
+    "recipient": "Ar ko jūs kopīgojat?",
+    "recipientHint": "Personas vārds – lai vēlāk redzētu, kam iedevāt saiti.",
     "permission": "Vai šī persona drīkst rediģēt dokumentu?",
     "viewOnly": "Tikai skatīt",
     "canEdit": "Drīkst rediģēt",
     "viewHint": "Persona var skatīt, drukāt un lejupielādēt PDF.",
-    "editHint": "Persona var arī iezīmēt, rakstīt, parakstīt un saglabāt PDF. Katra saglabāšana kļūst par jaunu versiju; nosaukums, birkas un citi dati paliek paslēpti.",
+    "editHint": "Persona var arī iezīmēt, rakstīt, parakstīt un saglabāt PDF. Katra saglabāšana kļūst par jaunu versiju; nosaukums, atslēgvārdi un citi dati paliek paslēpti.",
     "validity": "Derīga",
     "unlimited": "Bez ierobežojuma",
     "create": "Izveidot saiti",
     "link": "Saite",
-    "linkHint": "Ikviens, kam ir šī saite, var atvērt dokumentu – dod to tikai {{name}}. Jebkurā brīdī vari to atsaukt dokumenta skatā.",
+    "linkHint": "Ikviens, kam ir šī saite, var atvērt dokumentu – nododiet to tikai personai {{name}}. Jebkurā brīdī varat to atsaukt dokumenta skatā.",
     "copy": "Kopēt saiti",
     "copied": "Saite nokopēta",
     "listTitle": "Kopīgots ārēji",
@@ -608,7 +811,200 @@
     "revoked": "Saite atsaukta",
     "page": {
       "for": "Kopīgots ar: {{name}}",
-      "invalid": "Šī saite nav derīga vai ir beigusies, vai arī dokuments ir izdzēsts. Sazinies ar personu, kas tev to iedeva."
+      "invalid": "Šī saite nav derīga vai ir beigusies, vai arī dokuments ir izdzēsts. Lūdzu, sazinieties ar personu, kas jums to iedeva."
+    }
+  },
+  "areas": {
+    "general": "Vispārīgā",
+    "unknown": "Cita joma",
+    "label": "Joma",
+    "target": "Mērķa joma",
+    "access": {
+      "READ": "Tikai skatīt",
+      "EDIT": "Skatīt un rediģēt",
+      "DELETE": "Rediģēt un dzēst"
+    }
+  },
+  "reminders": {
+    "title": "Atgādinājumi",
+    "cardTitle": "Atgādinājums",
+    "add": "Pievienot atgādinājumu",
+    "edit": "Rediģēt atgādinājumu",
+    "create": "Izveidot",
+    "created": "Atgādinājums pievienots",
+    "saved": "Atgādinājums saglabāts",
+    "deleted": "Atgādinājums izdzēsts",
+    "markedDone": "Izpildīts",
+    "dueDate": "Termiņš",
+    "note": "Piezīme",
+    "notePlaceholder": "piem., pārbaudīt maksājumu",
+    "assignee": "Kurš par to parūpēsies?",
+    "assigneeHint": "Šī persona redz atgādinājumu sadaļā „Mani” un saņem paziņojumu e-pastā. Var izvēlēties ikvienu, kas redz dokumentu.",
+    "me": "{{name}} (es)",
+    "assignedTo": "kam: {{name}}",
+    "doneBy": "izpildīja {{name}}",
+    "markDone": "Atzīmēt kā izpildītu",
+    "reopen": "Atvērt no jauna",
+    "delete": {
+      "label": "Dzēst atgādinājumu",
+      "title": "Vai dzēst atgādinājumu?",
+      "text": "Atgādinājums tiks noņemts. Dokuments paliks nemainīts."
+    },
+    "accept": "Pievienot",
+    "dismiss": "Noraidīt ieteikumu",
+    "suggestionsHint": "MI šajā dokumentā atrada termiņus:",
+    "none": "Nav atvērtu atgādinājumu.",
+    "showDone_zero": "Rādīt {{count, number}} izpildītu atgādinājumu",
+    "showDone_one": "Rādīt {{count, number}} izpildītu atgādinājumu",
+    "showDone_other": "Rādīt {{count, number}} izpildītus atgādinājumus",
+    "hideDone": "Paslēpt izpildītos",
+    "scope": {
+      "label": "Kuri atgādinājumi",
+      "mine": "Mani",
+      "all": "Visi"
+    },
+    "dueTitle": "Aktuālie",
+    "nothingDue": "Šodien nav aktuālu atgādinājumu.",
+    "upcomingTitle": "Drīzumā",
+    "suggestionsTitle": "Ieteiktie termiņi",
+    "suggestionsPageHint": "Termiņi nākamajos sešos mēnešos, ko MI atrada dokumentos. Pievienojiet tos kā atgādinājumu vai noraidiet.",
+    "emptyTitle": "Nav atgādinājumu",
+    "emptyText": "Pievienojiet dokumentam atgādinājumu – vai pieņemiet kādu no MI ieteiktajiem.",
+    "repeat": {
+      "label": "Atkārtot",
+      "hint": "Kad atzīmējat atgādinājumu kā izpildītu, nākamais tiek izveidots ar tādu pašu intervālu.",
+      "none": "Vienreiz",
+      "m1": "Katru mēnesi",
+      "m3": "Reizi ceturksnī",
+      "m6": "Reizi pusgadā",
+      "m12": "Katru gadu",
+      "m24": "Reizi divos gados",
+      "months_zero": "Ik pēc {{count}} mēnešiem",
+      "months_one": "Ik pēc {{count}} mēneša",
+      "months_other": "Ik pēc {{count}} mēnešiem"
+    },
+    "fromContract": "no līguma"
+  },
+  "pages": {
+    "button": "Lappuses",
+    "title": "Rediģēt lappuses",
+    "intro": "Velciet lappuses vai pārvietojiet tās ar bultiņām, pagrieziet vai noņemiet. Saglabājot tiek izveidota jauna versija – iepriekšējā tiek saglabāta.",
+    "page": "{{number}}. lappuse",
+    "wasPage": "iepriekš {{number}}.",
+    "moveLeft": "Pārvietot uz priekšu",
+    "moveRight": "Pārvietot atpakaļ",
+    "rotate": "Pagriezt par 90°",
+    "remove": "Noņemt lappusi",
+    "keep": "Paturēt lappusi",
+    "noneLeft": "Jāpaliek vismaz vienai lappusei.",
+    "saveFirst": "Vispirms saglabājiet izmaiņas",
+    "saved": "Lappuses saglabātas",
+    "split": {
+      "here": "No šejienes – atsevišķs dokuments",
+      "title": "Sadalīt dokumentu?",
+      "text": "{{page}}. lappuse un visas nākamās kļūst par atsevišķu dokumentu tajā pašā jomā. Tas tiek nolasīts un sakārtots kā tikko saņemts; šajā dokumentā paliek iepriekšējās lappuses.",
+      "confirm": "Sadalīt",
+      "done": "Dokuments sadalīts",
+      "open": "Atvērt jauno dokumentu"
+    },
+    "merge": {
+      "button": "Pievienot dokumentus",
+      "title": "Pievienot dokumentus",
+      "intro": "Izvēlēto dokumentu lappuses šādā secībā tiek pievienotas „{{title}}” beigās.",
+      "search": "Meklēt dokumentus…",
+      "none": "Nav atbilstošu dokumentu.",
+      "noDeleteRight": "Jūs nedrīkstat to dzēst – tāpēc to nevar pievienot.",
+      "hint": "Pievienotie dokumenti pēc tam tiek pārvietoti uz atkritni; 30 dienu laikā tos var atjaunot vēsturē.",
+      "confirm_zero": "Pievienot {{count}} dokumentu",
+      "confirm_one": "Pievienot {{count}} dokumentu",
+      "confirm_other": "Pievienot {{count}} dokumentus",
+      "done_zero": "Pievienots {{count}} dokumentu",
+      "done_one": "Pievienots {{count}} dokuments",
+      "done_other": "Pievienoti {{count}} dokumenti"
+    }
+  },
+  "contracts": {
+    "nav": "Līgumi",
+    "title": "Līgumi",
+    "pageIntro": "Visu jums redzamo līgumu darbības termiņi un uzteikuma termiņi – vispirms tie, kuros drīz kas jādara.",
+    "scope": {
+      "label": "Rādīt",
+      "running": "Spēkā esošos",
+      "all": "Visus"
+    },
+    "emptyTitle": "Vēl nav reģistrētu līgumu",
+    "emptyText": "Atveriet dokumentu, piemēram, elektroenerģijas vai mobilo sakaru līgumu, un norādiet tajā darbības termiņu un uzteikuma termiņu. Tad laikus pirms termiņa beigām parādīsies atgādinājums.",
+    "cardTitle": "Līgums",
+    "none": "Vai tas ir līgums? Ja norādīsiet darbības termiņu un uzteikuma termiņu, AIDocuments laikus atgādinās par uzteikšanu.",
+    "add": "Reģistrēt kā līgumu",
+    "edit": "Rediģēt līgumu",
+    "intro": "No darbības termiņa beigām un uzteikuma termiņa izriet datums, līdz kuram līgums jāuzteic. Pirms tā parādās atgādinājums; ja darbības termiņš beidzas bez uzteikuma, līgums tiek pagarināts automātiski.",
+    "saved": "Līgums saglabāts",
+    "removed": "Līguma dati noņemti",
+    "remove": {
+      "label": "Noņemt līguma datus",
+      "title": "Noņemt līguma datus?",
+      "text": "Darbības termiņš, uzteikuma termiņš un ar tiem saistītais atvērtais atgādinājums tiks noņemti. Pats dokuments paliek."
+    },
+    "openEnded": "beztermiņa",
+    "months_zero": "{{count}} mēnešu",
+    "months_one": "{{count}} mēnesis",
+    "months_other": "{{count}} mēneši",
+    "amountHint": "piem., „49,90 € mēnesī”",
+    "endDateHint": "Pašreizējā darbības termiņa beigas; tukšs = beztermiņa",
+    "noticeHint": "Mēneši pirms darbības termiņa beigām; tukšs = līdz darbības termiņa beigām",
+    "renewalHint": "Ja līgums netiek uzteikts, tas tiek pagarināts par tik mēnešiem; 0 = tas beidzas",
+    "cancelledHint": "Tad tas vairs netiek pagarināts, un atgādinājumi vairs neparādās.",
+    "fields": {
+      "partner": "Līguma partneris",
+      "amount": "Summa",
+      "startDate": "Līguma sākums",
+      "endDate": "Spēkā līdz",
+      "notice": "Uzteikuma termiņš (mēneši)",
+      "renewal": "Pagarinājums (mēneši)",
+      "deadline": "Uzteikt līdz",
+      "reminderDays": "Atgādināt (dienas iepriekš)",
+      "cancelled": "Uzteikts"
+    },
+    "status": {
+      "ACTIVE": "Spēkā",
+      "DUE_SOON": "Termiņš tuvojas",
+      "NOTICE_MISSED": "Termiņš nokavēts",
+      "CANCELLED": "Uzteikts",
+      "ENDED": "Beidzies",
+      "OPEN_ENDED": "Beztermiņa"
+    },
+    "row": {
+      "cancelBy": "uzteikt līdz {{date}}",
+      "endsOn": "beidzas {{date}}",
+      "term": "spēkā līdz {{date}}",
+      "renews_zero": "pagarinās par {{count}} mēnešiem",
+      "renews_one": "pagarinās par {{count}} mēnesi",
+      "renews_other": "pagarinās par {{count}} mēnešiem"
+    }
+  },
+  "passkeys": {
+    "title": "Piekļuves atslēgas",
+    "intro": "Ar piekļuves atslēgu jūs pierakstāties bez paroles – to atbloķējot ar pirksta nospiedumu, seju vai ierīces PIN kodu. Tā darbojas tikai šai adresei; viltota vietne to nevar izmantot.",
+    "none": "Vēl nav pievienota neviena piekļuves atslēga.",
+    "add": "Pievienot piekļuves atslēgu",
+    "create": "Izveidot piekļuves atslēgu",
+    "name": "Nosaukums",
+    "nameHint": "Lai vēlāk to atpazītu, piem., „Klēpjdators” vai „Paroļu pārvaldnieks”.",
+    "password": "Jūsu parole",
+    "passwordHint": "Kas pievieno piekļuves atslēgu, turpmāk var pierakstīties bez paroles – tāpēc vienreiz apstipriniet.",
+    "added": "Piekļuves atslēga pievienota",
+    "removed": "Piekļuves atslēga noņemta",
+    "synced": "sinhronizēta",
+    "lastUsed": "pēdējoreiz izmantota {{time}}",
+    "created": "pievienota {{time}}, vēl nav izmantota",
+    "unsupported": "Šī pārlūkprogramma šeit nevar izmantot piekļuves atslēgas. Piekļuves atslēgas darbojas tikai ar HTTPS (vai localhost).",
+    "unsupportedIp": "Piekļuves atslēgas darbojas tikai ar HTTPS un tad, ja adresē ir nosaukums, nevis IP adrese.",
+    "remove": {
+      "label": "Noņemt piekļuves atslēgu",
+      "title": "Noņemt piekļuves atslēgu?",
+      "text": "Pēc tam neviens vairs nevarēs pierakstīties ar „{{name}}”. Tā paliek saglabāta paroļu pārvaldniekā vai ierīcē, līdz jūs to tur izdzēsīsiet.",
+      "confirm": "Noņemt"
     }
   }
 }

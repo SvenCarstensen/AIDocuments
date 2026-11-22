@@ -4,6 +4,7 @@ import { type FormEvent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Alert, Button, Card, Field, Input, Segmented, Spinner, Switch } from '../../components/ui'
+import { AreaSelect } from '../../components/AreaSelect'
 import { api, errorMessage, type FolderMode } from '../../lib/api'
 import { cx, formatDuration, formatRelative } from '../../lib/format'
 import { SectionHeader } from './SectionHeader'
@@ -26,6 +27,7 @@ export function ImportSettingsSection() {
   const [folderEnabled, setFolderEnabled] = useState(false)
   const [folderPath, setFolderPath] = useState('')
   const [folderMode, setFolderMode] = useState<FolderMode>('KEEP')
+  const [folderAreaId, setFolderAreaId] = useState('general')
   const [loaded, setLoaded] = useState(false)
 
   // Formular einmalig mit den gespeicherten Werten füllen; spätere Statusabfragen überschreiben keine Eingaben.
@@ -35,13 +37,20 @@ export function ImportSettingsSection() {
       setFolderEnabled(settings.data.folderEnabled)
       setFolderPath(settings.data.folderPath)
       setFolderMode(settings.data.folderMode)
+      setFolderAreaId(settings.data.folderAreaId)
       setLoaded(true)
     }
   }, [settings.data, loaded])
 
   const save = useMutation({
     mutationFn: () =>
-      api.updateImportSettings({ intervalMinutes: Number(interval), folderEnabled, folderPath: folderPath.trim(), folderMode }),
+      api.updateImportSettings({
+        intervalMinutes: Number(interval),
+        folderEnabled,
+        folderPath: folderPath.trim(),
+        folderMode,
+        folderAreaId,
+      }),
     onSuccess: (data) => {
       queryClient.setQueryData(['settings', 'import'], data)
       toast.success(t('settings.import.saved'))
@@ -71,7 +80,8 @@ export function ImportSettingsSection() {
     Number(interval) !== data.intervalMinutes ||
     folderEnabled !== data.folderEnabled ||
     folderPath.trim() !== data.folderPath ||
-    folderMode !== data.folderMode
+    folderMode !== data.folderMode ||
+    folderAreaId !== data.folderAreaId
   const status = data.folderStatus
 
   function submit(event: FormEvent) {
@@ -162,6 +172,7 @@ export function ImportSettingsSection() {
                 : t('settings.import.folder.moveHint', { folder: IMPORTED_FOLDER })}
             </p>
           </div>
+          <AreaSelect value={folderAreaId} onChange={setFolderAreaId} hint={t('settings.import.folder.areaHint')} disabled={!folderEnabled} />
 
           {data.folderEnabled && (
             <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">

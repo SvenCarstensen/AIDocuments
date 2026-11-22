@@ -1,5 +1,6 @@
 package de.aidocuments.history;
 
+import de.aidocuments.area.Permission;
 import de.aidocuments.document.DocumentDtos.DocumentDto;
 import de.aidocuments.document.DocumentDtos.PageDto;
 import de.aidocuments.document.DocumentService;
@@ -7,11 +8,9 @@ import de.aidocuments.document.DocumentSource;
 import de.aidocuments.history.HistoryEntry.Action;
 import de.aidocuments.history.HistoryEntry.Change;
 import de.aidocuments.web.ApiException;
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.Instant;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,8 +31,11 @@ public class HistoryController {
 
     private final HistoryService history;
     private final DocumentService documents;
+    private final de.aidocuments.area.AreaAccess access;
 
-    public HistoryController(HistoryService history, DocumentService documents) {
+    public HistoryController(HistoryService history, DocumentService documents,
+                             de.aidocuments.area.AreaAccess access) {
+        this.access = access;
         this.history = history;
         this.documents = documents;
     }
@@ -41,18 +43,21 @@ public class HistoryController {
     @GetMapping
     public PageDto<HistoryDto> list(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "50") int size) {
-        Page<HistoryEntry> result = history.page(Math.clamp(page, 0, 100_000), Math.clamp(size, 1, 200));
+        Page<HistoryEntry> result = history.page(Math.clamp(page, 0, 100_000), Math.clamp(size, 1, 200),
+                access.visible());
         return new PageDto<>(result.getContent().stream().map(this::dto).toList(), result.getTotalElements(),
                 result.getNumber(), result.getSize());
     }
 
-    /** Nimmt den Schritt zurück; ein gelöschtes Dokument zurückholen dürfen – wie das Löschen – nur Administratoren. */
+    /**
+     * Nimmt den Schritt zurück. Ein gelöschtes Dokument zurückholen darf – wie das Löschen – nur, wer im Bereich löschen
+     * darf; alles andere, wer dort bearbeiten darf.
+     */
     @PostMapping("/{id}/undo")
-    public DocumentDto undo(@PathVariable String id, HttpServletRequest request) throws IOException {
-        HistoryEntry entry = history.find(id).orElseThrow(() -> ApiException.notFound("error.history.notUndoable"));
-        if (entry.action() == Action.DELETED && !request.isUserInRole("ADMIN")) {
-            throw ApiException.of(HttpStatus.FORBIDDEN, "error.history.adminOnly");
-        }
+    public DocumentDto undo(@PathVariable String id) throws IOException {
+        HistoryEntry entry = history.find(id).filter(e -> access.canSee(e.areaId()))
+                .orElseThrow(() -> ApiException.notFound("error.history.notUndoable"));
+        access.require(entry.areaId(), needed(entry));
         if (!history.isUndoable(entry) || !documents.canUndo(entry)) {
             throw ApiException.conflict("error.history.notUndoable");
         }
@@ -61,8 +66,12 @@ public class HistoryController {
         return result;
     }
 
+    private static Permission needed(HistoryEntry entry) {
+        return entry.action() == Action.DELETED ? Permission.DELETE : Permission.EDIT;
+    }
+
     private HistoryDto dto(HistoryEntry e) {
-        boolean undoable = history.isUndoable(e) && documents.canUndo(e);
+        boolean undoable = history.isUndoable(e) && access.allows(e.areaId(), needed(e)) && documents.canUndo(e);
         return new HistoryDto(e.id(), e.at(), e.action(), e.documentId(), e.documentTitle(), e.source(), e.origin(),
                 e.change(), e.user(), e.undoneAt(), e.undoneBy(), undoable);
     }

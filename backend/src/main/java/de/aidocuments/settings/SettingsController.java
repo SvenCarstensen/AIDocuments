@@ -32,7 +32,7 @@ public class SettingsController {
 
     public record ImportSettingsDto(int intervalMinutes, boolean folderEnabled, String folderPath,
                                     FolderMode folderMode, FolderImportService.Status folderStatus,
-                                    Instant nextRunAt) {
+                                    Instant nextRunAt, String folderAreaId) {
     }
 
     private final AiSettingsService aiSettings;
@@ -106,6 +106,7 @@ public class SettingsController {
         FolderImportService.Status status = folderImport.status();
         return new ImportSettingsDto(effective.intervalMinutes(), effective.folderEnabled(),
                 effective.folderPath(), effective.folderMode(),
-                status.withMessage(messages.localize(status.message())), scheduler.nextRunAt());
+                status.withMessage(messages.localize(status.message())), scheduler.nextRunAt(),
+                effective.folderAreaId());
     }
 }

@@ -1,13 +1,15 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { ChevronDown, FileSearch, FolderOpen, History, LayoutGrid, List, Loader2, SlidersHorizontal, Sparkles, X } from 'lucide-react'
+import { ChevronDown, FileArchive, FileSearch, FileSignature, FolderOpen, History, LayoutGrid, List, Loader2, SlidersHorizontal, Sparkles, X } from 'lucide-react'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import { isBusy, metaLine, Snippet, StatusBadge, TagChip, Thumbnail } from '../components/documents'
 import { Alert, Badge, Button, EmptyState, IconButton, Input, Modal, Select, Spinner } from '../components/ui'
-import { api, type Doc, type DocumentQuery, errorMessage, type Facets, MAX_PAGE_SIZE, type SortOrder } from '../lib/api'
+import { api, type Area, type Doc, type DocumentQuery, errorMessage, type Facets, MAX_PAGE_SIZE, type SortOrder } from '../lib/api'
+import { areaName, areaNameById, useAreas } from '../lib/areas'
 import { useAuth } from '../lib/auth'
-import { cx, formatFinishTime, formatRemaining } from '../lib/format'
+import { cx, formatFinishTime, formatRelative, formatRemaining } from '../lib/format'
 
 type View = 'grid' | 'list'
 
@@ -41,6 +43,8 @@ function useDocumentFilters() {
       from: params.get('from') ?? '',
       to: params.get('to') ?? '',
       sort: sort ?? (q ? 'relevance' : 'newest'),
+      area: params.get('area') ?? '',
+      retentionExpired: params.get('retention') === 'expired',
     }
   }, [params])
 
@@ -64,7 +68,7 @@ function useDocumentFilters() {
     setParams(next)
   }
   const activeCount =
-    [filters.category, filters.correspondent, filters.status, filters.duplicates, filters.from, filters.to].filter(Boolean)
+    [filters.area, filters.category, filters.correspondent, filters.status, filters.duplicates, filters.retentionExpired, filters.from, filters.to].filter(Boolean)
       .length +
     filters.tags.length
   return { filters, set, toggleTag, clearFilters, activeCount }
@@ -98,6 +102,7 @@ export function DocumentsPage() {
   const duplicates = system.data?.duplicates ?? 0
   const failedFilterObsolete = filters.status === 'FAILED' && system.data !== undefined && failed === 0
   const duplicatesFilterObsolete = filters.duplicates && system.data !== undefined && duplicates === 0
+  const retentionExpired = system.data?.retentionExpired ?? 0
   useEffect(() => {
     if (failedFilterObsolete) set('status', '', true)
     // hängt bewusst nur an der Bedingung: "set" entsteht bei jedem Rendern neu
@@ -131,6 +136,7 @@ export function DocumentsPage() {
     if (showAll && hasNextPage && !isFetching) void fetchNextPage()
   }, [showAll, hasNextPage, isFetching, fetchNextPage])
   const facets = useQuery({ queryKey: ['documents', 'facets'], queryFn: api.facets, refetchInterval: 30_000 })
+  const areas = useAreas()
 
   // Kommen während des Ladens neue Dokumente hinzu, verschieben sich die Seiten gegeneinander und ein
   // Dokument kann in zwei Seiten stehen. Jedes darf aber nur einmal erscheinen.
@@ -160,9 +166,11 @@ export function DocumentsPage() {
   const filterPanel = (
     <FilterPanel
       facets={facets.data}
+      areas={areas.data}
       filters={filters}
       failed={failed}
       duplicates={duplicates}
+      retentionExpired={retentionExpired}
       onSet={set}
       onToggleTag={toggleTag}
     />
@@ -174,7 +182,7 @@ export function DocumentsPage() {
         {/* Filter oben (eigener Bildlauf), der Menüpunkt Historie immer unten in der Leiste */}
         <div className="sticky top-22 -ml-2 flex h-[calc(100dvh-7rem)] flex-col">
           <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pr-1 pb-4 pl-2">{filterPanel}</div>
-          <HistoryLink />
+          <SideLinks />
         </div>
       </aside>
 
@@ -193,6 +201,41 @@ export function DocumentsPage() {
           >
             {t('documents.aiNotice.text')}
             {system.data.builtinOcr && <> {t('documents.aiNotice.builtinOcr')}</>}
+          </Alert>
+        )}
+
+        {isAdmin && (system.data?.failingMailboxes.length ?? 0) > 0 && (
+          <Alert
+            tone="warn"
+            className="mb-5"
+            action={
+              <Link to="/settings/mailboxes" className="shrink-0 font-semibold underline underline-offset-2">
+                {t('documents.mailboxNotice.action')}
+              </Link>
+            }
+          >
+            {t('documents.mailboxNotice.text', {
+              count: system.data?.failingMailboxes.length ?? 0,
+              names: system.data?.failingMailboxes.join(', ') ?? '',
+            })}
+          </Alert>
+        )}
+
+        {isAdmin && system.data?.backup && (
+          <Alert
+            tone={system.data.backup.failure ? 'danger' : 'warn'}
+            className="mb-5"
+            action={
+              <Link to="/settings/backup" className="shrink-0 font-semibold underline underline-offset-2">
+                {t('documents.backupNotice.action')}
+              </Link>
+            }
+          >
+            {system.data.backup.failure
+              ? t('documents.backupNotice.failed', { reason: system.data.backup.failure })
+              : system.data.backup.lastBackupAt
+                ? t('documents.backupNotice.overdue', { when: formatRelative(system.data.backup.lastBackupAt) })
+                : t('documents.backupNotice.never')}
           </Alert>
         )}
 
@@ -280,10 +323,12 @@ export function DocumentsPage() {
               </option>
             ))}
           </Select>
+          <ExportButton query={filters} total={total} />
         </div>
 
         {activeCount > 0 && (
           <div className="mb-4 flex flex-wrap items-center gap-2">
+            {filters.area && <ActiveFilter label={areaNameById(areas.data, filters.area)} onRemove={() => set('area', '')} />}
             {filters.category && <ActiveFilter label={filters.category} onRemove={() => set('category', '')} />}
             {filters.correspondent && (
               <ActiveFilter label={filters.correspondent} onRemove={() => set('correspondent', '')} />
@@ -293,6 +338,7 @@ export function DocumentsPage() {
             ))}
             {filters.status === 'FAILED' && <ActiveFilter label={t('documents.filters.failed')} onRemove={() => set('status', '')} />}
             {filters.duplicates && <ActiveFilter label={t('documents.filters.duplicates')} onRemove={() => set('duplicates', '')} />}
+            {filters.retentionExpired && <ActiveFilter label={t('documents.filters.retentionExpired')} onRemove={() => set('retention', '')} />}
             {filters.from && <ActiveFilter label={t('documents.filters.activeFrom', { date: filters.from })} onRemove={() => set('from', '')} />}
             {filters.to && <ActiveFilter label={t('documents.filters.activeTo', { date: filters.to })} onRemove={() => set('to', '')} />}
             <button type="button" onClick={clearFilters} className="text-[13px] font-medium text-muted hover:text-ink">
@@ -351,7 +397,7 @@ export function DocumentsPage() {
       <Modal open={filtersOpen} onClose={() => setFiltersOpen(false)} title={t('documents.filters.title')} footer={<Button variant="primary" onClick={() => setFiltersOpen(false)}>{t('documents.filters.apply')}</Button>}>
         {filterPanel}
         <div className="mt-6">
-          <HistoryLink />
+          <SideLinks />
         </div>
       </Modal>
     </div>
@@ -382,14 +428,18 @@ const MIN_TAG_COUNT = 3
 
 interface FilterPanelProps {
   facets: Facets | undefined
+  /** Erst ab zwei sichtbaren Bereichen gibt es etwas zu wählen. */
+  areas: Area[] | undefined
   filters: DocumentQuery
   failed: number
   duplicates: number
+  /** Dokumente mit abgelaufener Aufbewahrungsfrist */
+  retentionExpired: number
   onSet: (key: string, value: string) => void
   onToggleTag: (tag: string) => void
 }
 
-function FilterPanel({ facets, filters, failed, duplicates, onSet, onToggleTag }: FilterPanelProps) {
+function FilterPanel({ facets, areas, filters, failed, duplicates, retentionExpired, onSet, onToggleTag }: FilterPanelProps) {
   const { t } = useTranslation()
   const [allTags, setAllTags] = useState(false)
   const [allCorrespondents, setAllCorrespondents] = useState(false)
@@ -416,6 +466,20 @@ function FilterPanel({ facets, filters, failed, duplicates, onSet, onToggleTag }
           <Sparkles className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />
           {t('documents.filters.hint')}
         </p>
+      )}
+
+      {areas && areas.length > 1 && (
+        <FilterSection title={t('areas.label')} collapsible="area" selected={filters.area ? 1 : 0}>
+          {areas.map((area) => (
+            <FacetRow
+              key={area.id}
+              label={areaName(area)}
+              count={area.documentCount}
+              active={filters.area === area.id}
+              onClick={() => onSet('area', filters.area === area.id ? '' : area.id)}
+            />
+          ))}
+        </FilterSection>
       )}
 
       {facets.categories.length > 0 && (
@@ -483,7 +547,7 @@ function FilterPanel({ facets, filters, failed, duplicates, onSet, onToggleTag }
         </div>
       </FilterSection>
 
-      {(failed > 0 || duplicates > 0) && (
+      {(failed > 0 || duplicates > 0 || retentionExpired > 0 || filters.retentionExpired) && (
         <FilterSection title={t('documents.filters.status')}>
           {failed > 0 && (
             <FacetRow
@@ -499,6 +563,14 @@ function FilterPanel({ facets, filters, failed, duplicates, onSet, onToggleTag }
               count={duplicates}
               active={filters.duplicates}
               onClick={() => onSet('duplicates', filters.duplicates ? '' : '1')}
+            />
+          )}
+          {(retentionExpired > 0 || filters.retentionExpired) && (
+            <FacetRow
+              label={t('documents.filters.retentionExpired')}
+              count={retentionExpired}
+              active={filters.retentionExpired}
+              onClick={() => onSet('retention', filters.retentionExpired ? '' : 'expired')}
             />
           )}
         </FilterSection>
@@ -538,17 +610,21 @@ function useSectionOpen(name: string | undefined): [boolean, (open: boolean) => 
   return [open, change]
 }
 
-/** Menüpunkt Historie, unten in der linken Leiste. */
-function HistoryLink() {
+/** Menüpunkte Verträge und Historie, unten in der linken Leiste. */
+function SideLinks() {
   const { t } = useTranslation()
+  const link = 'flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-muted hover:bg-raised hover:text-ink'
   return (
-    <Link
-      to="/history"
-      className="ml-0 flex shrink-0 items-center gap-2 rounded-lg border-t border-line px-2 py-3 text-sm font-medium text-muted hover:bg-raised hover:text-ink"
-    >
-      <History className="size-4" aria-hidden />
-      {t('history.nav')}
-    </Link>
+    <div className="flex shrink-0 flex-col border-t border-line py-1.5">
+      <Link to="/contracts" className={link}>
+        <FileSignature className="size-4" aria-hidden />
+        {t('contracts.nav')}
+      </Link>
+      <Link to="/history" className={link}>
+        <History className="size-4" aria-hidden />
+        {t('history.nav')}
+      </Link>
+    </div>
   )
 }
 
@@ -723,5 +799,40 @@ function SkeletonGrid({ view }: { view: View }) {
         </div>
       ))}
     </div>
+  )
+}
+
+/** Exportiert alle Treffer der aktuellen Liste (nicht nur die geladene Seite) als ZIP. */
+function ExportButton({ query, total }: { query: DocumentQuery; total: number }) {
+  const { t } = useTranslation()
+  const [busy, setBusy] = useState(false)
+
+  async function run() {
+    setBusy(true)
+    try {
+      const { token, count } = await api.prepareExport(query)
+      const link = document.createElement('a')
+      link.href = api.exportUrl(token)
+      link.rel = 'noopener'
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      toast.success(t('documents.export.started', { count }), { description: t('documents.export.contents') })
+    } catch (e) {
+      toast.error(t('documents.export.failed'), { description: errorMessage(e) })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <IconButton
+      label={t('documents.export.label', { count: total })}
+      onClick={() => void run()}
+      disabled={busy || total === 0}
+      className="!size-8"
+    >
+      {busy ? <Loader2 className="size-4 animate-spin" /> : <FileArchive className="size-4" />}
+    </IconButton>
   )
 }

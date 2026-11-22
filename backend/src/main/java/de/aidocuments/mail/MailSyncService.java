@@ -53,6 +53,8 @@ public class MailSyncService {
     private static final Logger log = LoggerFactory.getLogger(MailSyncService.class);
     private static final int FETCH_BATCH = 200;
     private static final int MAX_NESTING = 10;
+    /** Ab so vielen fehlgeschlagenen Abrufen in Folge werden die Admins benachrichtigt. */
+    public static final int FAILURES_BEFORE_NOTICE = 3;
     /** Höchstens so viele PDF-Anhänge je Mail. */
     static final int MAX_ATTACHMENTS = 25;
     /**
@@ -70,11 +72,14 @@ public class MailSyncService {
     private final MailAccountService accountService;
     private final DocumentService documentService;
     private final MailSchedule schedule;
+    private final de.aidocuments.notify.Notifications notifications;
     private final Set<String> running = ConcurrentHashMap.newKeySet();
 
     public MailSyncService(MailAccountRepository accounts, MailAccountService accountService,
-                           DocumentService documentService, MailSchedule schedule) {
+                           DocumentService documentService, MailSchedule schedule,
+                           de.aidocuments.notify.Notifications notifications) {
         this.accounts = accounts;
+        this.notifications = notifications;
         this.accountService = accountService;
         this.documentService = documentService;
         this.schedule = schedule;
@@ -111,6 +116,7 @@ public class MailSyncService {
                 // erst nach vollständigem Erfolg weiterrücken – sonst gingen E-Mails eines abgebrochenen Abrufs verloren
                 accountService.saveCheckedUntil(accountId, startedAt);
                 accountService.markFinished(accountId, MailAccount.SyncStatus.OK, counters.summary());
+                accounts.resetFailures(accountId);
                 if (counters.imported > 0) {
                     log.info("Postfach {}: {} neue E-Mails geprüft, {} PDFs übernommen, {} bereits vorhanden, "
                                     + "{} kein gültiges PDF, {} nicht lesbar", account.getName(), counters.checked,
@@ -118,10 +124,28 @@ public class MailSyncService {
                 }
             } catch (Exception e) {
                 log.warn("Abruf von Postfach {} fehlgeschlagen: {}", account.getName(), e.toString());
-                accountService.markFinished(accountId, MailAccount.SyncStatus.ERROR, List.of(describe(e)));
+                Msg reason = describe(e);
+                accountService.markFinished(accountId, MailAccount.SyncStatus.ERROR, List.of(reason));
+                failed(account, reason);
             }
         } finally {
             running.remove(accountId);
+        }
+    }
+
+    /**
+     * Ein einzelner Fehlschlag (Netz kurz weg, Server neu gestartet) ist kein Grund zur Sorge; erst wenn ein Postfach
+     * sich wiederholt nicht abrufen lässt, erfahren es die Admins – einmal je Fehlerserie.
+     */
+    private void failed(MailAccount account, Msg reason) {
+        try {
+            int failures = accounts.recordFailure(account.getId());
+            if (failures >= FAILURES_BEFORE_NOTICE && !accounts.failureNotified(account.getId())
+                    && notifications.mailboxFailing(account.getName(), reason, failures)) {
+                accounts.markFailureNotified(account.getId(), Instant.now());
+            }
+        } catch (RuntimeException e) {
+            log.warn("Fehlschlag von Postfach {} nicht gemeldet: {}", account.getName(), e.toString());
         }
     }
 
@@ -228,7 +252,7 @@ public class MailSyncService {
             return;
         }
         List<Part> pdfParts = new ArrayList<>();
-        collectPdfParts(message, pdfParts, 0);
+        collectDocumentParts(message, pdfParts, 0, false);
         if (pdfParts.isEmpty()) {
             return;
         }
@@ -236,39 +260,61 @@ public class MailSyncService {
                 clip(sender(message), 500), receivedAt);
         if (pdfParts.size() > MAX_ATTACHMENTS) {
             // Schutz vor Mails mit Hunderten Anhängen (jeder kostet Speicherplatz und eine KI-Analyse)
-            log.warn("Mail mit {} PDF-Anhängen – nur die ersten {} werden übernommen", pdfParts.size(), MAX_ATTACHMENTS);
+            log.warn("Mail mit {} Anhängen – nur die ersten {} werden übernommen", pdfParts.size(), MAX_ATTACHMENTS);
             counters.rejected += pdfParts.size() - MAX_ATTACHMENTS;
             pdfParts = pdfParts.subList(0, MAX_ATTACHMENTS);
         }
         for (Part part : pdfParts) {
             try (InputStream in = part.getInputStream()) {
-                Outcome outcome = documentService.ingest(in, filename(part), DocumentSource.MAIL, origin).outcome();
+                Outcome outcome = documentService.ingest(in, filename(part), DocumentSource.MAIL, origin,
+                        account.getAreaId()).outcome();
                 switch (outcome) {
                     case CREATED -> counters.imported++;
                     case DUPLICATE -> counters.duplicates++;
                     case REJECTED -> counters.rejected++;
+                    case IGNORED -> { }
                 }
             }
         }
     }
 
-    private static void collectPdfParts(Part part, List<Part> result, int depth)
+    /**
+     * Sammelt PDF-Anhänge und Fotos. Bilder, die nur im HTML-Text eingebettet sind ({@code multipart/related}: Logos,
+     * Signaturen, Banner), bleiben außen vor, sofern sie nicht ausdrücklich als Anhang verschickt wurden; was danach
+     * noch zu klein ist, übergeht die Aufnahme ({@link DocumentService#ingest}).
+     */
+    private static void collectDocumentParts(Part part, List<Part> result, int depth, boolean inRelated)
             throws MessagingException, IOException {
         if (depth > MAX_NESTING) {
             return;
         }
         if (part.isMimeType("multipart/*")) {
+            boolean related = inRelated || part.isMimeType("multipart/related");
             Multipart multipart = (Multipart) part.getContent();
             for (int i = 0; i < multipart.getCount(); i++) {
-                collectPdfParts(multipart.getBodyPart(i), result, depth + 1);
+                collectDocumentParts(multipart.getBodyPart(i), result, depth + 1, related);
             }
         } else if (part.isMimeType("message/rfc822")) {
             if (part.getContent() instanceof Part nested) {
-                collectPdfParts(nested, result, depth + 1);
+                collectDocumentParts(nested, result, depth + 1, false);
             }
         } else if (isPdf(part)) {
             result.add(part);
+        } else if (isImage(part) && (!inRelated || Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()))) {
+            result.add(part);
         }
+    }
+
+    private static final java.util.regex.Pattern IMAGE_NAME =
+            java.util.regex.Pattern.compile("(?i).*\\.(jpe?g|png|hei[cf])$");
+
+    private static boolean isImage(Part part) throws MessagingException {
+        if (part.isMimeType("image/jpeg") || part.isMimeType("image/pjpeg") || part.isMimeType("image/png")
+                || part.isMimeType("image/heic") || part.isMimeType("image/heif")) {
+            return true;
+        }
+        String name = part.getFileName();
+        return name != null && IMAGE_NAME.matcher(decode(name)).matches();
     }
 
     private static boolean isPdf(Part part) throws MessagingException {
@@ -283,10 +329,12 @@ public class MailSyncService {
     private static String filename(Part part) throws MessagingException {
         String name = part.getFileName();
         if (name == null || name.isBlank()) {
-            return "Dokument.pdf";
+            return isPdf(part) ? "Dokument.pdf" : "Foto.jpg";
         }
         String decoded = decode(name);
-        return decoded.toLowerCase(Locale.ROOT).endsWith(".pdf") ? decoded : decoded + ".pdf";
+        // Bilder behalten ihre Endung – die Aufnahme macht daraus "<Name>.pdf"
+        return decoded.toLowerCase(Locale.ROOT).endsWith(".pdf") || IMAGE_NAME.matcher(decoded).matches()
+                ? decoded : decoded + ".pdf";
     }
 
     private static String decode(String headerValue) {

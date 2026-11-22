@@ -44,12 +44,14 @@
     "login": {
       "title": "Tervetuloa takaisin",
       "subtitle": "Kirjaudu sisään, niin pääset asiakirjoihisi.",
-      "submit": "Kirjaudu sisään"
+      "submit": "Kirjaudu sisään",
+      "or": "tai",
+      "passkey": "Kirjaudu pääsyavaimella"
     },
     "setup": {
       "title": "AIDocumentsin käyttöönotto",
       "subtitle": "Luo ensin ylläpitäjän tili. Voit lisätä muita käyttäjiä myöhemmin asetuksissa.",
-      "code": "Asennuskoodi",
+      "code": "Käyttöönottokoodi",
       "codeHint": "Näkyy palvelimen lokissa käynnistyksen yhteydessä (Docker: docker compose logs).",
       "adminAccount": "Ylläpitäjän tili",
       "repeatPassword": "Toista salasana",
@@ -81,7 +83,7 @@
       "dark": "Tumma teema"
     },
     "search": {
-      "placeholder": "Hakusanahaku: asiakirjat, tunnisteet, sisältö …",
+      "placeholder": "Sanahaku: asiakirjat, tunnisteet, sisältö…",
       "placeholderAi": "Tekoälyhaku: kysy omin sanoin – esim. ”Kian laskut vuodelta 2024”",
       "labelAi": "Tekoäly",
       "label": "Hae asiakirjoja",
@@ -102,26 +104,49 @@
       "changed": "Salasana vaihdettu"
     },
     "dropzone": {
-      "title": "Pudota PDF-tiedostot tähän",
-      "hint": "Voit pudottaa useita tiedostoja kerralla. Ne tallennetaan ja analysoidaan, ja niille lisätään tunnisteet."
+      "title": "Pudota PDF-tiedostot tai valokuvat tähän",
+      "hint": "Voit pudottaa useita tiedostoja kerralla. Valokuvat (JPG, PNG, HEIC) muunnetaan PDF-tiedostoiksi. Kaikki tallennetaan ja analysoidaan, ja niille lisätään tunnisteet."
+    },
+    "remindersDue_one": "{{count, number}} erääntynyt muistutus",
+    "remindersDue_other": "{{count, number}} erääntynyttä muistutusta",
+    "profile": {
+      "email": "Sähköpostiosoite",
+      "saved": "Tallennettu"
+    },
+    "notifications": {
+      "title": "Sähköposti-ilmoitukset",
+      "emailHint": "Tähän osoitteeseen lähetetään sinulle osoitetut erääntyneet muistutukset sekä alla käyttöön ottamasi ilmoitukset – sillä kielellä, jolla käytät sovellusta parhaillaan. Jätä tyhjäksi, jos et halua sähköposteja.",
+      "digest": "Uudet asiakirjat päivittäin",
+      "digestHint": "Kerran päivässä luettelo asiakirjoista, jotka ovat tulleet työtiloihisi – vain päivinä, joina uusia asiakirjoja on tullut.",
+      "admin": "Ilmoitukset ylläpitäjille",
+      "adminHint": "Kun säilytysajat päättyvät (mitään ei poisteta automaattisesti) ja kun postilaatikkoa ei toistuvasti voida tarkistaa.",
+      "needsEmail": "Ilman osoitetta sähköposteja ei lähetetä."
     }
   },
   "upload": {
-    "onlyPdf": "Vain PDF-tiedostoja voi lisätä.",
+    "onlyPdf": "Vain PDF-tiedostoja ja valokuvia (JPG, PNG, HEIC) voi lisätä.",
     "uploadingFile": "Lähetetään ”{{name}}”…",
-    "uploadingFiles_one": "Lähetetään {{count, number}} PDF-tiedosto…",
-    "uploadingFiles_other": "Lähetetään {{count, number}} PDF-tiedostoa…",
+    "uploadingFiles_one": "Lähetetään {{count, number}} tiedosto…",
+    "uploadingFiles_other": "Lähetetään {{count, number}} tiedostoa…",
     "created_one": "{{count, number}} asiakirja lisätty",
     "created_other": "{{count, number}} asiakirjaa lisätty",
     "processingInBackground": "Käsittely jatkuu taustalla.",
     "duplicates_one": "{{count, number}} on jo olemassa",
     "duplicates_other": "{{count, number}} on jo olemassa",
-    "rejected_one": "{{count, number}} tiedosto ei ole kelvollinen PDF",
-    "rejected_other": "{{count, number}} tiedostoa ei ole kelvollisia PDF-tiedostoja",
+    "rejected_one": "{{count, number}} tiedosto jäi lisäämättä",
+    "rejected_other": "{{count, number}} tiedostoa jäi lisäämättä",
     "onlyDuplicates_one": "Tämä asiakirja on jo olemassa.",
     "onlyDuplicates_other": "Nämä asiakirjat ovat jo olemassa.",
-    "noneValid": "Yksikään tiedostoista ei ole kelvollinen PDF.",
-    "failed": "Lähetys epäonnistui"
+    "noneValid": "Yhtäkään tiedostoa ei voitu lisätä.",
+    "failed": "Lähetys epäonnistui",
+    "intoArea": "Työtila: {{area}}",
+    "combine": {
+      "title": "Yhdistetäänkö valokuvat yhdeksi asiakirjaksi?",
+      "text": "Valitsit useita valokuvia. Jos ne ovat saman asiakirjan sivuja – esimerkiksi monisivuisen kirjeen –, niistä tehdään yksi PDF tiedostonimien mukaisessa järjestyksessä; järjestystä voi muuttaa jälkikäteen kohdassa ”Sivut”. Muuten jokaisesta valokuvasta tulee oma asiakirjansa.",
+      "one": "Yhtenä asiakirjana",
+      "separate": "Jokainen valokuva erikseen",
+      "tooMuch": "Valokuvia on liian monta tai ne ovat liian suuria yhdeksi asiakirjaksi (enintään 100 valokuvaa ja yhteensä 240 Mt)."
+    }
   },
   "documents": {
     "status": {
@@ -175,21 +200,41 @@
       "activeTo": "{{date}} asti",
       "removeOne": "Poista suodatin ”{{label}}”",
       "removeAll": "Poista kaikki suodattimet",
-      "clear": "Poista suodattimet"
+      "clear": "Poista suodattimet",
+      "retentionExpired": "Säilytysaika päättynyt"
     },
     "empty": {
       "libraryTitle": "Ei vielä asiakirjoja",
-      "libraryHint": "Vedä PDF-tiedostot tähän ikkunaan tai valitse ”Lähetä”.",
-      "libraryHintAdmin": "Vedä PDF-tiedostot tähän ikkunaan tai valitse ”Lähetä”. Asetuksissa voit määrittää postilaatikon tai tuontikansion, josta uudet PDF-tiedostot tuodaan automaattisesti.",
+      "libraryHint": "Vedä PDF-tiedostot tai valokuvat tähän ikkunaan tai valitse ”Lähetä”.",
+      "libraryHintAdmin": "Vedä PDF-tiedostot tai valokuvat tähän ikkunaan tai valitse ”Lähetä”. Asetuksissa voit määrittää postilaatikon tai tuontikansion, josta uudet asiakirjat tuodaan automaattisesti.",
       "noResultsTitle": "Mitään ei löytynyt",
       "noResultsSearch": "Yksikään asiakirja ei vastaa tätä hakua. Haku löytää myös sanojen osia – kokeile lyhyempää hakusanaa tai harvempia sanoja.",
       "noResultsFilters": "Yksikään asiakirja ei vastaa valittuja suodattimia."
     },
-    "loadingAll_one": "Ladattu {{loaded, number}}/{{count, number}} asiakirjasta…",
-    "loadingAll_other": "Ladattu {{loaded, number}}/{{count, number}} asiakirjasta…",
+    "loadingAll_one": "Ladataan asiakirjoja: {{loaded, number}}/{{count, number}}…",
+    "loadingAll_other": "Ladataan asiakirjoja: {{loaded, number}}/{{count, number}}…",
     "loadMore": "Lataa lisää ({{remaining, number}})",
     "aiSearch": {
       "notice": "Tekoälyhaku: ”{{question}}”. Suodattimet näyttävät, miten kysymys ymmärrettiin."
+    },
+    "export": {
+      "label_one": "Vie {{count, number}} asiakirja ZIP-tiedostona",
+      "label_other": "Vie kaikki tämän luettelon {{count, number}} asiakirjaa ZIP-tiedostona",
+      "started_one": "{{count, number}} asiakirjan vienti aloitettu",
+      "started_other": "{{count, number}} asiakirjan vienti aloitettu",
+      "contents": "ZIP-tiedosto sisältää PDF-tiedostot sekä kaikki tiedot taulukkona (documents.csv) ja documents.json-tiedostona.",
+      "failed": "Vienti epäonnistui"
+    },
+    "mailboxNotice": {
+      "text_one": "Postilaatikon ”{{names}}” tarkistus on epäonnistunut useita kertoja peräkkäin – siitä ei tällä hetkellä saavu asiakirjoja.",
+      "text_other": "Näiden postilaatikoiden tarkistus on epäonnistunut useita kertoja peräkkäin: {{names}}. Niistä ei tällä hetkellä saavu asiakirjoja.",
+      "action": "Näytä postilaatikot"
+    },
+    "backupNotice": {
+      "never": "Asiakirjoistasi ei ole vielä varmuuskopiota.",
+      "overdue": "Viimeisin varmuuskopio: {{when}}. Se on vanhempi kuin asetuksissa on määritetty.",
+      "failed": "Automaattinen varmuuskopiointi epäonnistui: {{reason}}",
+      "action": "Siirry varmuuskopiointiin"
     }
   },
   "document": {
@@ -264,7 +309,9 @@
     "noText": "Tälle asiakirjalle ei ole tekstiä – se on todennäköisesti skannaus, jossa ei ole tekstitasoa. Kun tekoäly on määritetty ja tekstintunnistus on käytössä, sisältö litteroidaan analyysin yhteydessä.",
     "edit": {
       "title": "Muokkaa asiakirjaa",
-      "saved": "Muutokset tallennettu"
+      "saved": "Muutokset tallennettu",
+      "areaHint": "Määrittää, kuka näkee asiakirjan.",
+      "areaMoveHint": "Sen jälkeen sen näkevät vain työtilan ”{{area}}” jäsenet ja ylläpitäjät."
     },
     "delete": {
       "title": "Poistetaanko asiakirja?",
@@ -273,10 +320,10 @@
     },
     "chat": {
       "intro": "Kysy jotain tästä asiakirjasta – tekoäly vastaa sen sisällön perusteella.",
-      "placeholder": "Kysy jotain tästä asiakirjasta …",
+      "placeholder": "Kysy jotain tästä asiakirjasta…",
       "send": "Lähetä",
-      "thinking": "Tekoäly lukee asiakirjaa …",
-      "notConfigured": "Asiakirjaa koskeviin kysymyksiin tarvitaan käyttöön otettu tekoäly.",
+      "thinking": "Tekoäly lukee asiakirjaa…",
+      "notConfigured": "Jotta voit kysyä asiakirjasta, tekoäly on määritettävä.",
       "restart": "Aloita alusta",
       "suggestions": {
         "summary": "Mistä tässä asiakirjassa on kyse?",
@@ -292,7 +339,7 @@
       "download": "Lataa versio {{number}}",
       "restore": "Palauta versio {{number}}",
       "restoreTitle": "Palautetaanko versio {{number}}?",
-      "restoreText": "Versiosta tulee nykyinen. Nykyinen versio säilyy, ja vaiheen voi perua historiassa.",
+      "restoreText": "Versiosta tulee nykyinen. Nykyinen versio säilyy, ja vaiheen voi kumota historiassa.",
       "restoreConfirm": "Palauta",
       "restored": "Versio {{number}} palautettu",
       "kinds": {
@@ -300,16 +347,25 @@
         "EDITED": "Muokattu",
         "ORIGINAL_RESTORED": "Alkuperäinen palautettu",
         "VERSION_RESTORED": "Versio {{from}} palautettu",
-        "UNDONE": "Muutos peruttu"
+        "UNDONE": "Muutos kumottu",
+        "PAGES": "Sivuja muutettu",
+        "MERGED": "Asiakirjoja liitetty"
       }
-    }
+    },
+    "retention": {
+      "label": "Säilytys",
+      "until": "{{date}} asti – ei voi poistaa sitä ennen",
+      "expired": "säilytysaika päättyi {{date}}",
+      "locked": "Säilytettävä {{date}} asti – voidaan poistaa vasta sen jälkeen"
+    },
+    "readOnly": "Tässä työtilassa saat vain katsella tätä asiakirjaa."
   },
   "settings": {
     "title": "Asetukset",
     "mailboxes": {
       "title": "Postilaatikot",
-      "navHint": "IMAP-palvelimet, joilta PDF-liitteet tuodaan",
-      "intro": "Näistä IMAP-postilaatikoista tuodaan PDF-liitteet automaattisesti. Postilaatikoita vain luetaan – viestit säilyvät muuttumattomina ja lukemattomina.",
+      "navHint": "IMAP-palvelimet, joilta PDF- ja valokuvaliitteet tuodaan",
+      "intro": "Näistä IMAP-postilaatikoista tuodaan automaattisesti PDF-liitteet ja liitetyt valokuvat (PDF-tiedostoina); viestien tekstiä ja upotettuja logoja ei tuoda. Postilaatikoita vain luetaan – viestit säilyvät muuttumattomina ja lukemattomina.",
       "add": "Lisää postilaatikko",
       "emptyTitle": "Postilaatikoita ei ole vielä määritetty",
       "emptyText": "Anna IMAP-postilaatikon kirjautumistiedot – esimerkiksi sen postilaatikon, johon skannerisi lähettää asiakirjat.",
@@ -342,7 +398,7 @@
         "since": "Vain viestit alkaen",
         "sinceHint": "Valinnainen – vanhemmat viestit ohitetaan",
         "enabled": "Tarkista automaattisesti",
-        "enabledHint": "Postilaatikosta tarkistetaan uudet PDF-tiedostot määritetyin välein.",
+        "enabledHint": "Postilaatikosta tarkistetaan uudet liitteet määritetyin välein.",
         "filter": {
           "title": "Suodatin",
           "intro": "Käsitellään vain sähköpostit, jotka täyttävät kaikki ehdot. Yksi termi riviä kohden; isoilla ja pienillä kirjaimilla ei ole väliä, ja osa tekstistä riittää. Tyhjät kentät eivät rajaa mitään.",
@@ -351,29 +407,30 @@
           "senderIncludes": "Lähettäjä sisältää jonkin näistä termeistä",
           "senderExcludes": "Lähettäjä ei sisällä mitään näistä termeistä",
           "senderHint": "Nimi tai osoite, esim. ”@example.com”",
-          "newOnly": "Suodatin koskee sähköposteja, jotka saapuvat viimeisimmän noudon jälkeen; jo tarkistettuja sähköposteja ei käsitellä uudelleen."
+          "newOnly": "Suodatin koskee sähköposteja, jotka saapuvat viimeisimmän tarkistuksen jälkeen; jo tarkistettuja sähköposteja ei käsitellä uudelleen."
         },
-        "interval": "Noutoväli minuutteina",
-        "intervalHint": "Jätä tyhjäksi, niin käytetään yleistä noutoväliä (nyt {{interval}})."
+        "interval": "Tarkistusväli minuutteina",
+        "intervalHint": "Jätä tyhjäksi, niin käytetään yleistä tarkistusväliä (nyt {{interval}}).",
+        "areaHint": "Tuodut asiakirjat sijoitetaan tähän työtilaan."
       },
       "filterActive": "Suodatin käytössä",
-      "schedule": "Nouto {{interval}} välein · seuraava {{when}}",
-      "scheduleSoon": "Nouto {{interval}} välein · seuraava pian"
+      "schedule": "Tarkistus {{interval}} välein · seuraava {{when}}",
+      "scheduleSoon": "Tarkistus {{interval}} välein · seuraava pian"
     },
     "import": {
-      "title": "Aikataulu ja tuontikansio",
+      "title": "Tarkistus ja tuontikansio",
       "navHint": "Tarkistusväli ja valvottu kansio",
-      "intro": "Määrittää, kuinka usein sovellus etsii uusia PDF-tiedostoja – postilaatikoista ja tuontikansiosta.",
+      "intro": "Määrittää, kuinka usein sovellus etsii uusia asiakirjoja – postilaatikoista ja tuontikansiosta.",
       "saved": "Asetukset tallennettu",
       "interval": {
         "title": "Tarkistusväli",
-        "text": "Kuinka usein sovellus tarkistaa saapuvien kansion ja kaikki postilaatikot, joilla ei ole omaa noutoväliä, uusien PDF-tiedostojen varalta.",
+        "text": "Kuinka usein sovellus tarkistaa tuontikansion ja kaikki postilaatikot, joilla ei ole omaa tarkistusväliä, uusien asiakirjojen varalta.",
         "label": "… minuutin välein",
         "nextRun": "Seuraava automaattinen tarkistus {{when}}."
       },
       "folder": {
         "title": "Tuontikansio",
-        "text": "Palvelimella oleva kansio, jota valvotaan uusien PDF-tiedostojen varalta – esimerkiksi verkkoskannerin kohdekansio. Myös alikansiot käydään läpi.",
+        "text": "Palvelimella oleva kansio, jota valvotaan uusien PDF-tiedostojen ja valokuvien (JPG, PNG, HEIC) varalta – esimerkiksi verkkoskannerin kohdekansio. Myös alikansiot käydään läpi.",
         "enable": "Valvo tuontikansiota",
         "path": "Polku palvelimella",
         "pathHint": "Absoluuttinen polku. Docker-kontissa tämä on liitetty kansio, yleensä {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Tarkistetaan kansiota…",
         "neverScanned": "Ei vielä tarkistettu.",
         "scanNow": "Tarkista nyt",
-        "scanStarted": "Tuontikansiota tarkistetaan."
+        "scanStarted": "Tuontikansiota tarkistetaan.",
+        "areaHint": "Kansiosta tuodut asiakirjat sijoitetaan tähän työtilaan."
       }
     },
     "ai": {
@@ -463,7 +521,7 @@
         "ocr": "Skannausten tekstintunnistus",
         "ocrHint": "Sovellus antaa tekoälyn litteroida skannatut PDF-tiedostot, joissa ei ole tekstitasoa – vasta sitten ne löytyvät kokotekstihaulla. Jokainen skannaus vie enemmän aikaa ja maksaa enemmän.",
         "quickOcrFirst": "Ensin nopea tekstintunnistus, sitten tarkennus tekoälyllä",
-        "quickOcrFirstHint": "Sisäänrakennettu tekstintunnistus (Tesseract) lukee uudet skannaukset ensin – muutamassa sekunnissa niistä voi hakea. Sen jälkeen tekoäly lisää otsikon, tiivistelmän ja avainsanat tämän tekstin perusteella."
+        "quickOcrFirstHint": "Sisäänrakennettu tekstintunnistus (Tesseract) lukee uudet skannaukset ensin – muutamassa sekunnissa niistä voi hakea. Sen jälkeen tekoäly lisää otsikon, tiivistelmän ja tunnisteet tämän tekstin perusteella."
       },
       "unanalyzed_one": "{{count, number}} asiakirja on vielä analysoimatta tekoälyllä.",
       "unanalyzed_other": "{{count, number}} asiakirjaa on vielä analysoimatta tekoälyllä.",
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} kirjautuu sen jälkeen pelkällä salasanalla ja voi ottaa kaksivaiheisen tunnistautumisen uudelleen käyttöön – esimerkiksi kadonneen puhelimen jälkeen.",
       "resetTwoFactorConfirm": "Nollaa",
       "twoFactorReset": "Kaksivaiheinen tunnistautuminen nollattu"
+    },
+    "areas": {
+      "title": "Työtilat",
+      "navHint": "Kuka näkee mitkäkin asiakirjat",
+      "intro": "Jokainen asiakirja kuuluu täsmälleen yhteen työtilaan. Käyttäjät näkevät vain niiden työtilojen asiakirjat, joiden jäseniä he ovat, sekä kaikille avointen työtilojen asiakirjat.",
+      "add": "Luo työtila",
+      "everyone": "Kaikille",
+      "restricted": "Rajattu",
+      "visibleForAll": "näkyy kaikille kirjautuneille",
+      "members": "Jäsenet: {{names}}",
+      "adminsOnly": "vain ylläpitäjät",
+      "adminHint": "Ylläpitäjät näkevät kaikki työtilat, vaikka eivät olisi niiden jäseniä.",
+      "edit": "Muokkaa työtilaa {{name}}",
+      "saved": "Työtila tallennettu",
+      "created": "Työtila luotu",
+      "deleted": "Työtila poistettu",
+      "delete": {
+        "label": "Poista työtila {{name}}",
+        "title": "Poistetaanko työtila?",
+        "text": "Työtila ”{{name}}” poistetaan. Se onnistuu vain, jos mikään asiakirja, postilaatikko tai tuontikansio ei käytä sitä."
+      },
+      "dialog": {
+        "name": "Nimi",
+        "namePlaceholder": "esim. Kirjanpito",
+        "generalNameHint": "Jätä tyhjäksi, niin työtilan nimi on kaikilla kielillä ”Yleinen”.",
+        "everyone": "Näkyy kaikille",
+        "everyoneHint": "Kaikki kirjautuneet käyttäjät näkevät tämän työtilan asiakirjat.",
+        "members": "Jäsenet",
+        "membersHint": "Vain jäsenet ja ylläpitäjät näkevät tämän työtilan asiakirjat. Valitse kullekin jäsenelle, saako hän vain lukea, myös muokata vai lisäksi poistaa.",
+        "noUsers": "Ei vielä käyttäjiä, joilla ei ole ylläpitäjän roolia.",
+        "create": "Luo",
+        "everyoneAccess": "Kaikkien käyttöoikeus",
+        "accessOf": "Käyttöoikeus: {{name}}",
+        "membersHintEveryone": "Kaikki näkevät tämän työtilan asiakirjat. Lisää tähän jäseniä, jos heillä on oltava enemmän oikeuksia kuin muilla."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Säilytys",
+      "navHint": "Säilytysajat ja poistoesto",
+      "intro": "Määritä, kuinka kauan kunkin asiakirjatyypin asiakirjoja on säilytettävä – esimerkiksi laskuja kymmenen vuotta. Aika lasketaan sen vuoden lopusta, jolta asiakirja on. Siihen asti kukaan ei voi poistaa sitä.",
+      "permanent": "Poistoestoa ei voi purkaa – eivät edes ylläpitäjät. Jos sääntöä lyhennetään tai se poistetaan tai asiakirjan tyyppi muuttuu, jo asetettu säilytysaika pysyy voimassa.",
+      "add": "Luo sääntö",
+      "years_one": "{{count, number}} vuosi",
+      "years_other": "{{count, number}} vuotta",
+      "edit": "Muokkaa asiakirjatyypin {{category}} sääntöä",
+      "saved": "Sääntö tallennettu",
+      "created": "Sääntö luotu",
+      "deleted": "Sääntö poistettu",
+      "emptyTitle": "Ei vielä säilytyssääntöjä",
+      "emptyText": "Ilman sääntöä asiakirjat voi poistaa milloin tahansa.",
+      "delete": {
+        "label": "Poista asiakirjatyypin {{category}} sääntö",
+        "title": "Poistetaanko sääntö?",
+        "text": "Asiakirjatyypin ”{{category}}” uudet asiakirjat eivät enää saa säilytysaikaa. Jo lukitut asiakirjat pysyvät lukittuina säilytysaikansa loppuun."
+      },
+      "dialog": {
+        "categoryHint": "Kuten asiakirjassa näkyy; isoilla ja pienillä kirjaimilla ei ole väliä.",
+        "years": "Säilytysaika vuosina",
+        "yearsHint": "Lasketaan asiakirjan päiväyksen vuoden lopusta (ilman päiväystä: lisäyspäivän vuoden lopusta).",
+        "shorterHint": "Lyhyempi aika koskee vain asiakirjoja, joilla ei vielä ole säilytysaikaa. Jo lukitut asiakirjat pysyvät lukittuina nykyisen säilytysaikansa loppuun.",
+        "create": "Luo"
+      }
+    },
+    "mailOut": {
+      "title": "Sähköpostin lähetys",
+      "navHint": "Muistutukset sähköpostitse",
+      "intro": "Sovellus lähettää ilmoitukset erääntyneistä muistutuksista tämän SMTP-palvelimen kautta – kerran kustakin muistutuksesta, koottuna yhteen sähköpostiin henkilöä kohden. Vastaanottaja on se, joka hoitaa muistutuksen ja on antanut osoitteensa käyttäjävalikossa.",
+      "enabled": "Lähetä muistutukset sähköpostitse",
+      "enabledHint": "Kun asetus on pois päältä, muistutukset näkyvät vain sovelluksessa.",
+      "host": "SMTP-palvelin",
+      "port": "Portti",
+      "security": "Salaus",
+      "unencrypted": "Ei salausta",
+      "usernameHint": "Jätä tyhjäksi, jos palvelin ei vaadi kirjautumista.",
+      "passwordKeepHint": "Jätä tyhjäksi, jos haluat säilyttää tallennetun salasanan.",
+      "from": "Lähettäjän osoite",
+      "fromHint": "Palvelimen on sallittava se tilillesi.",
+      "appUrl": "Sovelluksen osoite",
+      "appUrlHint": "Sähköpostien linkkejä varten, esim. https://docs.example.com. Tyhjä = ei linkkejä.",
+      "digestHour": "Lähetys",
+      "fromHour": "klo {{hour}} alkaen",
+      "saved": "Sähköpostiasetukset tallennettu",
+      "test": "Testiviesti osoitteeseen {{address}}",
+      "testNeedsAddress": "Testiviestiä varten anna oma sähköpostiosoitteesi käyttäjävalikossa.",
+      "testSavedHint": "Testi käyttää tallennettuja asetuksia – tallenna ensin."
+    },
+    "backup": {
+      "title": "Varmuuskopio ja tuonti",
+      "navHint": "Varmuuskopioi kaikki kerralla, tuo vientejä",
+      "intro": "Varmuuskopio sisältää kaiken, mitä tarvitaan AIDocumentsin palauttamiseen täsmälleen nykyiseen tilaansa. Tuonti siirtää asiakirjat toisen asennuksen viennistä – tietoineen.",
+      "backupTitle": "Varmuuskopio yhdellä napsautuksella",
+      "backupText": "ZIP-tiedosto, jossa on tietokanta, kaikki asiakirjat aiempine versioineen, esikatselukuvat ja tallennettujen salasanojen avain. Sovellus toimii sillä aikaa normaalisti.",
+      "size": "Koko",
+      "sizeValue_one": "noin {{size}} {{count, number}} tiedostossa",
+      "sizeValue_other": "noin {{size}} {{count, number}} tiedostossa",
+      "last": "Viimeisin varmuuskopio",
+      "never": "ei koskaan",
+      "keyWarning": "Varmuuskopiota ei ole salattu, ja se sisältää tallennettujen salasanojen avaimen (postilaatikot, tekoäly, kaksivaiheinen tunnistautuminen). Säilytä sitä yhtä huolellisesti kuin itse asiakirjoja.",
+      "restore": "Palauttaminen: pysäytä AIDocuments, pura ZIP-tiedoston sisältö tyhjään datahakemistoon ja käynnistä sovellus uudelleen. Ohjeet ovat ZIP-tiedostossa (README.txt).",
+      "download": "Lataa varmuuskopio",
+      "started": "Varmuuskopiota ladataan.",
+      "externalDatabase": "Varmuuskopio yhdellä napsautuksella on käytettävissä vain sisäänrakennetun tietokannan kanssa. Jos käytät MariaDB:tä, varmuuskopioi tietokanta sen omilla työkaluilla (esim. mariadb-dump) ja lisäksi datahakemisto.",
+      "importTitle": "Tuo vienti",
+      "importText": "Asiakirjaluettelon ”Vie”-toiminnolla luotu ZIP-tiedosto – myös toisesta asennuksesta. Otsikko, asiakirjatyyppi, tunnisteet ja muut tiedot säilyvät; tekoäly ei lue asiakirjoja uudelleen. Jo olemassa olevat tiedostot ohitetaan.",
+      "file": "ZIP-tiedosto",
+      "areaHint": "Asiakirjat sijoitetaan tähän – tai vain ne, joiden työtilaa ei ole täällä.",
+      "matchAreas": "Sijoita samannimisiin työtiloihin",
+      "matchAreasHint": "Jos täällä on työtila, jolla on sama nimi kuin viennissä, asiakirjat sijoitetaan sinne.",
+      "import": "Tuo",
+      "importing": "Tuodaan…",
+      "result": "Tuotu: {{imported, number}} · jo olemassa: {{duplicates, number}} · ei tuotu: {{failed, number}}",
+      "auto": {
+        "title": "Automaattinen varmuuskopiointi",
+        "text": "AIDocuments tallentaa kerran päivässä täydellisen varmuuskopion ZIP-tiedostona kansioon ja säilyttää niistä uusimmat. Kansio on mieluiten toisella levyllä tai verkkoasemalla – muuten myös varmuuskopiot menetetään, jos tiedot sisältävä levy hajoaa.",
+        "enable": "Varmuuskopioi automaattisesti joka päivä",
+        "hour": "Kellonaika",
+        "keep": "Säilytä",
+        "keepHint": "Varmuuskopioiden määrä; vanhemmat poistetaan.",
+        "directory": "Kansio",
+        "directoryHint": "Koko polku palvelimella. Jätä tyhjäksi, niin käytetään oletusta. Docker-kontissa kansion on oltava liitetty.",
+        "warnAfterDays": "Varoitusraja (päivää)",
+        "warnAfterDaysHint": "Ilmoitus asiakirjaluettelossa, jos näin pitkään aikaan ei ole tehty yhtään varmuuskopiota – ei käsin eikä automaattisesti. 0 = älä varoita koskaan.",
+        "lastRun": "Edellinen ajo",
+        "nextRun": "Seuraava ajo",
+        "running": "Varmuuskopioidaan…",
+        "ok": "onnistui, {{when}}",
+        "failed": "epäonnistui, {{when}}",
+        "stored_one": "{{count, number}} varmuuskopio kansiossa {{directory}}",
+        "stored_other": "{{count, number}} varmuuskopiota kansiossa {{directory}}",
+        "runNow": "Varmuuskopioi nyt",
+        "saveFirst": "Tallenna ensin muutokset.",
+        "runStarted": "Varmuuskopiointi on käynnissä taustalla.",
+        "done": "Varmuuskopio tallennettu.",
+        "saved": "Asetukset tallennettu.",
+        "externalDatabase": "Automaattinen varmuuskopiointi on käytettävissä vain sisäänrakennetun tietokannan kanssa. Jos käytät MariaDB:tä, varmuuskopioi tietokanta sen omilla työkaluilla (esim. joka yö ajettavalla mariadb-dump-komennolla) ja lisäksi datahakemisto."
+      }
     }
   },
   "history": {
@@ -565,7 +760,8 @@
   "confirmCode": {
     "title": "Vahvista muutos",
     "text": "Tilien, postilaatikoiden ja asetusten muutokset vaativat todennussovelluksen voimassa olevan koodin. Vahvistus on voimassa 10 minuuttia.",
-    "submit": "Vahvista"
+    "submit": "Vahvista",
+    "passkey": "Vahvista pääsyavaimella"
   },
   "share": {
     "button": "Jaa",
@@ -598,6 +794,193 @@
     "page": {
       "for": "Jaettu: {{name}}",
       "invalid": "Linkki on virheellinen tai vanhentunut, tai asiakirja on poistettu. Ota yhteyttä henkilöön, joka antoi sen sinulle."
+    }
+  },
+  "areas": {
+    "general": "Yleinen",
+    "unknown": "Muu työtila",
+    "label": "Työtila",
+    "target": "Kohdetyötila",
+    "access": {
+      "READ": "Vain luku",
+      "EDIT": "Luku ja muokkaus",
+      "DELETE": "Muokkaus ja poisto"
+    }
+  },
+  "reminders": {
+    "title": "Muistutukset",
+    "cardTitle": "Muistutus",
+    "add": "Lisää muistutus",
+    "edit": "Muokkaa muistutusta",
+    "create": "Luo",
+    "created": "Muistutus lisätty",
+    "saved": "Muistutus tallennettu",
+    "deleted": "Muistutus poistettu",
+    "markedDone": "Hoidettu",
+    "dueDate": "Eräpäivä",
+    "note": "Muistiinpano",
+    "notePlaceholder": "esim. tarkista maksu",
+    "assignee": "Kuka hoitaa?",
+    "assigneeHint": "Tämä henkilö näkee muistutuksen kohdassa ”Omat” ja saa siitä ilmoituksen sähköpostiin. Valittavissa ovat kaikki, jotka näkevät asiakirjan.",
+    "me": "{{name}} (minä)",
+    "assignedTo": "vastuussa: {{name}}",
+    "doneBy": "hoitanut: {{name}}",
+    "markDone": "Merkitse hoidetuksi",
+    "reopen": "Avaa uudelleen",
+    "delete": {
+      "label": "Poista muistutus",
+      "title": "Poistetaanko muistutus?",
+      "text": "Muistutus poistetaan. Asiakirja säilyy ennallaan."
+    },
+    "accept": "Lisää",
+    "dismiss": "Hylkää ehdotus",
+    "suggestionsHint": "Tekoäly löysi tästä asiakirjasta päivämääriä:",
+    "none": "Ei avoimia muistutuksia.",
+    "showDone_one": "Näytä {{count, number}} hoidettu muistutus",
+    "showDone_other": "Näytä {{count, number}} hoidettua muistutusta",
+    "hideDone": "Piilota hoidetut",
+    "scope": {
+      "label": "Näytettävät muistutukset",
+      "mine": "Omat",
+      "all": "Kaikki"
+    },
+    "dueTitle": "Erääntyneet",
+    "nothingDue": "Tänään ei ole mitään erääntyvää.",
+    "upcomingTitle": "Tulossa",
+    "suggestionsTitle": "Ehdotetut päivämäärät",
+    "suggestionsPageHint": "Seuraavan kuuden kuukauden määräajat, jotka tekoäly löysi asiakirjoista. Lisää ne muistutuksiksi tai hylkää ne.",
+    "emptyTitle": "Ei muistutuksia",
+    "emptyText": "Lisää asiakirjaan muistutus – tai ota käyttöön tekoälyn ehdottama.",
+    "repeat": {
+      "label": "Toista",
+      "hint": "Kun merkitset muistutuksen hoidetuksi, seuraava luodaan samalla välillä.",
+      "none": "Kerran",
+      "m1": "Kuukausittain",
+      "m3": "Neljännesvuosittain",
+      "m6": "Puolivuosittain",
+      "m12": "Vuosittain",
+      "m24": "Kahden vuoden välein",
+      "months_one": "Joka kuukausi",
+      "months_other": "{{count}} kuukauden välein"
+    },
+    "fromContract": "sopimuksesta"
+  },
+  "pages": {
+    "button": "Sivut",
+    "title": "Muokkaa sivuja",
+    "intro": "Vedä sivuja tai siirrä niitä nuolilla, kierrä tai poista niitä. Tallennus luo uuden version – edellinen säilyy.",
+    "page": "Sivu {{number}}",
+    "wasPage": "aiemmin {{number}}",
+    "moveLeft": "Siirrä eteenpäin",
+    "moveRight": "Siirrä taaksepäin",
+    "rotate": "Kierrä 90°",
+    "remove": "Poista sivu",
+    "keep": "Säilytä sivu",
+    "noneLeft": "Vähintään yhden sivun on jäätävä.",
+    "saveFirst": "Tallenna muutokset ensin",
+    "saved": "Sivut tallennettu",
+    "split": {
+      "here": "Erillinen asiakirja tästä alkaen",
+      "title": "Jaetaanko asiakirja?",
+      "text": "Sivu {{page}} ja kaikki sitä seuraavat sivut siirretään erilliseksi asiakirjaksi samaan työtilaan. Se luetaan ja luokitellaan kuin juuri saapunut asiakirja; tähän asiakirjaan jäävät sitä edeltävät sivut.",
+      "confirm": "Jaa",
+      "done": "Asiakirja jaettu",
+      "open": "Avaa uusi asiakirja"
+    },
+    "merge": {
+      "button": "Liitä asiakirjoja",
+      "title": "Liitä asiakirjoja",
+      "intro": "Valittujen asiakirjojen sivut lisätään tässä järjestyksessä asiakirjan ”{{title}}” loppuun.",
+      "search": "Hae asiakirjoja…",
+      "none": "Ei sopivia asiakirjoja.",
+      "noDeleteRight": "Et saa poistaa sitä – siksi et voi liittää sitä.",
+      "hint": "Liitetyt asiakirjat siirretään sen jälkeen roskakoriin; ne voi palauttaa historiasta 30 päivän ajan.",
+      "confirm_one": "Liitä {{count}} asiakirja",
+      "confirm_other": "Liitä {{count}} asiakirjaa",
+      "done_one": "{{count}} asiakirja liitetty",
+      "done_other": "{{count}} asiakirjaa liitetty"
+    }
+  },
+  "contracts": {
+    "nav": "Sopimukset",
+    "title": "Sopimukset",
+    "pageIntro": "Kaikkien sinulle näkyvien sopimusten sopimuskaudet ja irtisanomisajat – ensin ne, jotka vaativat pian toimia.",
+    "scope": {
+      "label": "Näytä",
+      "running": "Voimassa olevat",
+      "all": "Kaikki"
+    },
+    "emptyTitle": "Sopimuksia ei ole vielä kirjattu",
+    "emptyText": "Avaa asiakirja, esimerkiksi sähkö- tai puhelinsopimus, ja kirjaa siihen sopimuskausi ja irtisanomisaika. Muistutus ilmestyy sitten hyvissä ajoin ennen määräaikaa.",
+    "cardTitle": "Sopimus",
+    "none": "Onko tämä sopimus? Kun kirjaat sopimuskauden ja irtisanomisajan, AIDocuments muistuttaa sinua irtisanomisesta ajoissa.",
+    "add": "Kirjaa sopimukseksi",
+    "edit": "Muokkaa sopimusta",
+    "intro": "Sopimuskauden päättymisestä ja irtisanomisajasta saadaan päivä, johon mennessä sopimus on irtisanottava. Muistutus ilmestyy ennen sitä; jos sopimusta ei irtisanota kauden aikana, se jatkuu automaattisesti.",
+    "saved": "Sopimus tallennettu",
+    "removed": "Sopimustiedot poistettu",
+    "remove": {
+      "label": "Poista sopimustiedot",
+      "title": "Poistetaanko sopimustiedot?",
+      "text": "Sopimuskausi, irtisanomisaika ja niihin liittyvä avoin muistutus poistetaan. Itse asiakirja säilyy."
+    },
+    "openEnded": "toistaiseksi voimassa",
+    "months_one": "{{count}} kuukausi",
+    "months_other": "{{count}} kuukautta",
+    "amountHint": "esim. ”49,90 € kuukaudessa”",
+    "endDateHint": "Nykyisen sopimuskauden loppu; tyhjä = toistaiseksi voimassa",
+    "noticeHint": "Kuukautta ennen sopimuskauden loppua; tyhjä = sopimuskauden loppuun asti",
+    "renewalHint": "Jos sopimusta ei irtisanota, se jatkuu näin monella kuukaudella; 0 = se päättyy",
+    "cancelledHint": "Silloin sopimus ei enää jatku, eikä muistutuksia enää tule.",
+    "fields": {
+      "partner": "Sopimuskumppani",
+      "amount": "Summa",
+      "startDate": "Sopimuksen alku",
+      "endDate": "Sopimuskausi päättyy",
+      "notice": "Irtisanomisaika (kuukautta)",
+      "renewal": "Jatkokausi (kuukautta)",
+      "deadline": "Irtisano viimeistään",
+      "reminderDays": "Muistuta (päivää ennen)",
+      "cancelled": "Irtisanottu"
+    },
+    "status": {
+      "ACTIVE": "Voimassa",
+      "DUE_SOON": "Määräaika lähestyy",
+      "NOTICE_MISSED": "Määräaika ohitettu",
+      "CANCELLED": "Irtisanottu",
+      "ENDED": "Päättynyt",
+      "OPEN_ENDED": "Toistaiseksi voimassa"
+    },
+    "row": {
+      "cancelBy": "irtisano viimeistään {{date}}",
+      "endsOn": "päättyy {{date}}",
+      "term": "sopimuskausi päättyy {{date}}",
+      "renews_one": "jatkuu {{count}} kuukaudella",
+      "renews_other": "jatkuu {{count}} kuukaudella"
+    }
+  },
+  "passkeys": {
+    "title": "Pääsyavaimet",
+    "intro": "Pääsyavaimella kirjaudut sisään ilman salasanaa – avaat sen sormenjäljellä, kasvoilla tai laitteen PIN-koodilla. Se toimii vain tässä osoitteessa; väärennetty sivusto ei voi käyttää sitä.",
+    "none": "Pääsyavaimia ei ole vielä lisätty.",
+    "add": "Lisää pääsyavain",
+    "create": "Luo pääsyavain",
+    "name": "Nimi",
+    "nameHint": "Jotta tunnistat sen myöhemmin, esim. ”Kannettava” tai ”Salasanojen hallinta”.",
+    "password": "Salasanasi",
+    "passwordHint": "Pääsyavaimen lisännyt pääsee jatkossa sisään ilman salasanaa – vahvista siksi kerran salasanallasi.",
+    "added": "Pääsyavain lisätty",
+    "removed": "Pääsyavain poistettu",
+    "synced": "synkronoitu",
+    "lastUsed": "viimeksi käytetty {{time}}",
+    "created": "lisätty {{time}}, ei vielä käytetty",
+    "unsupported": "Tämä selain ei voi käyttää pääsyavaimia tässä. Pääsyavaimet toimivat vain HTTPS-yhteydellä (tai localhostissa).",
+    "unsupportedIp": "Pääsyavaimet toimivat vain HTTPS-yhteydellä ja kun osoitteessa on nimi – eivät IP-osoitteella.",
+    "remove": {
+      "label": "Poista pääsyavain",
+      "title": "Poistetaanko pääsyavain?",
+      "text": "Pääsyavaimella ”{{name}}” ei voi sen jälkeen enää kirjautua sisään. Se säilyy salasanojen hallinnassa tai laitteella, kunnes poistat sen sieltä.",
+      "confirm": "Poista"
     }
   }
 }

@@ -23,11 +23,15 @@ services:
       # Eingebaute Texterkennung (Tesseract) für Scans – an, solange keine externe KI eingerichtet ist:
       # AIDOCS_OCR: "off"                     # abschalten
       # AIDOCS_OCR_LANGUAGES: deu+eng+fra     # Sprachen der Dokumente (im Image: deu eng fra ita spa nld)
+      # Vorgabe-Ordner der automatischen Sicherung (Einstellungen → Sicherung) – zusammen mit dem Volume unten:
+      # AIDOCS_BACKUP_DIR: /backups
     volumes:
       # PDFs, Suchindex, Schlüsseldatei und die Datenbank (aidocuments.db)
       - aidocuments-data:/aidocuments
       # Überwachter Eingangsordner, z. B. das Ziel des Netzwerkscanners:
       # - /pfad/zum/scan-ordner:/import
+      # Ziel der automatischen Sicherung – am besten eine andere Platte oder ein Netzlaufwerk:
+      # - /pfad/zu/den/sicherungen:/backups
 
 volumes:
   aidocuments-data:

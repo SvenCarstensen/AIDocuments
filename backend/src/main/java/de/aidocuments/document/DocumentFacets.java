@@ -17,9 +17,24 @@ public class DocumentFacets {
     private static final TypeReference<List<String>> STRINGS = new TypeReference<>() { };
 
     private final JdbcClient jdbc;
+    private final de.aidocuments.area.AreaAccess access;
 
-    public DocumentFacets(Db db) {
+    public DocumentFacets(Db db, de.aidocuments.area.AreaAccess access) {
         this.jdbc = db.jdbc();
+        this.access = access;
+    }
+
+    /** Nur Dokumente aus den sichtbaren Bereichen zählen – auch Absender und Schlagworte verraten sonst etwas. */
+    private String areaClause(java.util.Set<String> areas) {
+        if (areas == null) {
+            return "";
+        }
+        return areas.isEmpty() ? " AND 1 = 0" : " AND area_id IN (:areas)";
+    }
+
+    private org.springframework.jdbc.core.simple.JdbcClient.StatementSpec withAreas(
+            org.springframework.jdbc.core.simple.JdbcClient.StatementSpec spec, java.util.Set<String> areas) {
+        return areas == null || areas.isEmpty() ? spec : spec.param("areas", areas);
     }
 
     public FacetsDto all() {
@@ -37,7 +52,9 @@ public class DocumentFacets {
     /** Schlagworte liegen als JSON-Liste je Dokument – gezählt wird hier, das bleibt in SQLite und MariaDB gleich. */
     public List<FacetCount> tags(int max) {
         Map<String, Long> counts = new HashMap<>();
-        jdbc.sql("SELECT tags FROM documents WHERE tags IS NOT NULL").query(String.class).list().forEach(json -> {
+        java.util.Set<String> areas = access.visible();
+        withAreas(jdbc.sql("SELECT tags FROM documents WHERE tags IS NOT NULL" + areaClause(areas)), areas)
+                .query(String.class).list().forEach(json -> {
             List<String> tags = Db.fromJson(json, STRINGS);
             if (tags != null) {
                 tags.stream().distinct().forEach(tag -> counts.merge(tag, 1L, Long::sum));
@@ -51,9 +68,10 @@ public class DocumentFacets {
     }
 
     private List<FacetCount> count(String column, int max) {
-        return jdbc.sql("SELECT " + column + " AS facet_value, COUNT(*) AS facet_count FROM documents"
-                        + " WHERE " + column + " IS NOT NULL GROUP BY " + column
-                        + " ORDER BY facet_count DESC, facet_value ASC LIMIT " + max)
+        java.util.Set<String> areas = access.visible();
+        return withAreas(jdbc.sql("SELECT " + column + " AS facet_value, COUNT(*) AS facet_count FROM documents"
+                        + " WHERE " + column + " IS NOT NULL" + areaClause(areas) + " GROUP BY " + column
+                        + " ORDER BY facet_count DESC, facet_value ASC LIMIT " + max), areas)
                 .query((rs, row) -> new FacetCount(rs.getString("facet_value"), rs.getLong("facet_count")))
                 .list();
     }

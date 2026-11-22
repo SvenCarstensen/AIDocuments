@@ -259,6 +259,69 @@ public class DocumentProcessor {
         documents.save(doc);
     }
 
+    /**
+     * Ein importiertes Dokument fertigstellen, ohne KI: Seitenzahl, Vorschaubild, Text und Suchindex. Die mitgebrachten
+     * Angaben bleiben. Fehlt der Text und ist das PDF ein Scan, liest ihn die eingebaute Texterkennung im Hintergrund.
+     */
+    void processImported(String documentId, String knownText, boolean ocrUsed) {
+        Document doc = documents.findById(documentId).orElse(null);
+        if (doc == null) {
+            return;
+        }
+        PdfContent pdf;
+        try {
+            pdf = pdfExtractor.extract(storage.resolve(doc.getStoragePath()), storage.thumbnailPath(documentId));
+        } catch (PdfReadException e) {
+            finish(documentId, null, null, e.msg(), null);
+            return;
+        }
+        boolean hasText = knownText != null && !knownText.isBlank();
+        String text = hasText ? knownText.strip() : pdf.text();
+        boolean transcribe = !hasText && pdf.textIsSparse() && builtinOcr.isAvailable();
+        doc.setPageCount(pdf.pageCount());
+        doc.setHasThumbnail(pdf.thumbnailCreated());
+        doc.setThumbnailAt(pdf.thumbnailCreated() ? storage.thumbnailWrittenAt(documentId) : null);
+        doc.setOcrUsed(hasText ? ocrUsed : transcribe);
+        boolean analyzed = doc.getSummary() != null || doc.getCategory() != null || !doc.getTags().isEmpty();
+        doc.setStatus(analyzed ? DocumentStatus.INDEXED : DocumentStatus.TEXT_ONLY);
+        doc.setErrorMessage(null);
+        doc.setProcessedAt(Instant.now());
+        texts.save(new DocumentText(documentId, text));
+        duplicates.check(doc, text);
+        reindex(doc);
+        documents.save(doc);
+        if (transcribe) {
+            retranscribe(documentId);
+        }
+    }
+
+    /**
+     * Liest den Text eines Scans mit der eingebauten Texterkennung neu – nach dem Umsortieren oder Entfernen von Seiten.
+     * Titel, Zusammenfassung und übrige Angaben bleiben, wie sie sind. Ohne eingebaute Texterkennung bleibt der Text.
+     */
+    public void retranscribe(String documentId) {
+        if (!builtinOcr.isAvailable()) {
+            return;
+        }
+        executor.execute(() -> {
+            Document doc = documents.findById(documentId).orElse(null);
+            if (doc == null || doc.getPageCount() == null) {
+                return;
+            }
+            try {
+                BuiltinOcrService.Result ocr = builtinOcr.transcribe(storage.resolve(doc.getStoragePath()),
+                        doc.getPageCount());
+                if (!ocr.text().isBlank()) {
+                    texts.save(new DocumentText(documentId, ocr.text()));
+                    reindex(doc);
+                }
+            } catch (AiException | RuntimeException e) {
+                log.warn("Texterkennung von Dokument {} nach Seitenänderung fehlgeschlagen: {}", documentId,
+                        e.toString());
+            }
+        });
+    }
+
     public void reindex(Document doc) {
         String text = texts.findById(doc.getId()).map(DocumentText::content).orElse("");
         searchIndex.index(doc, text);

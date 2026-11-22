@@ -37,9 +37,9 @@ public class DocumentStartup implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         long inDatabase = documents.count();
-        if (searchIndex.size() != inDatabase) {
-            log.info("Suchindex ({} Einträge) weicht von der Datenbank ({} Dokumente) ab – wird neu aufgebaut",
-                    searchIndex.size(), inDatabase);
+        if (searchIndex.size() != inDatabase || !searchIndex.upToDate()) {
+            log.info("Suchindex ({} Einträge) weicht von der Datenbank ({} Dokumente) ab oder hat einen älteren Aufbau"
+                    + " – wird neu aufgebaut", searchIndex.size(), inDatabase);
             Map<String, String> fullTexts = texts.findAll().stream()
                     .collect(Collectors.toMap(DocumentText::documentId, DocumentText::content));
             searchIndex.rebuild(documents.findAll(), fullTexts);

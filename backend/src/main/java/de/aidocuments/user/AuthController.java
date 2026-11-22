@@ -48,9 +48,12 @@ public class AuthController {
     private final SecurityContextRepository contextRepository = new HttpSessionSecurityContextRepository();
     private final CsrfTokenRepository csrfTokens;
     private final TwoFactorService twoFactor;
+    private final PasskeyService passkeys;
 
     public AuthController(UserService userService, AuthenticationManager authenticationManager,
-                          LoginThrottle throttle, CsrfTokenRepository csrfTokens, TwoFactorService twoFactor) {
+                          LoginThrottle throttle, CsrfTokenRepository csrfTokens, TwoFactorService twoFactor,
+                          PasskeyService passkeys) {
+        this.passkeys = passkeys;
         this.twoFactor = twoFactor;
         this.csrfTokens = csrfTokens;
         this.userService = userService;
@@ -206,6 +209,107 @@ public class AuthController {
     }
 
     // ---------------------------------------------------------------------------------------------------------
+    // Passkeys: anmelden, bestätigen, verwalten
+    // ---------------------------------------------------------------------------------------------------------
+
+    /** Schritt 1 der Anmeldung per Passkey: die Challenge (öffentlich, wie die Anmeldung selbst). */
+    @PostMapping("/passkey/options")
+    public java.util.Map<String, Object> passkeyLoginOptions(HttpServletRequest request) {
+        return passkeys.loginOptions(request);
+    }
+
+    /**
+     * Schritt 2: die Antwort des Browsers. Ein Passkey ersetzt Passwort und Code aus der App – er ist an Gerät und
+     * Adresse gebunden und wird per Fingerabdruck, Gesicht oder PIN freigegeben. Fehlversuche zählen wie bei der
+     * Anmeldung mit Passwort.
+     */
+    @PostMapping("/passkey/login")
+    public UserDto passkeyLogin(@RequestBody String credential, HttpServletRequest request,
+                                HttpServletResponse response) {
+        String owner = passkeys.ownerOf(credential);
+        String username = owner == null ? null : userService.account(owner).getUsername();
+        LoginThrottle.Attempt attempt = begin(username, request);
+        String userId = passkeys.verify(credential, request);
+        UserPrincipal principal = (UserPrincipal) userService.loadUserByUsername(userService.account(userId).getUsername());
+        if (!principal.isEnabled()) {
+            throw ApiException.of(HttpStatus.UNAUTHORIZED, "error.auth.badCredentials");
+        }
+        attempt.succeeded();
+        UserDto user = establish(UsernamePasswordAuthenticationToken.authenticated(principal, null,
+                principal.getAuthorities()), request, response);
+        RecentConfirmation.confirmed(request); // eben freigegeben – gilt auch als Bestätigung
+        log.info("Anmeldung per Passkey: „{}“", principal.getUsername());
+        return user;
+    }
+
+    /** Statt des Codes aus der App: eine Änderung mit einem eigenen Passkey bestätigen (Challenge wie bei der Anmeldung). */
+    @PostMapping("/passkey/confirm")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void passkeyConfirm(@AuthenticationPrincipal UserPrincipal principal, @RequestBody String credential,
+                               HttpServletRequest request) {
+        LoginThrottle.Attempt attempt = throttle.beginSecondFactor(principal.getUsername(), request.getRemoteAddr());
+        if (attempt == null) {
+            throw ApiException.of(HttpStatus.TOO_MANY_REQUESTS, "error.auth.tooManyAttempts");
+        }
+        if (!principal.id().equals(passkeys.verify(credential, request))) {
+            throw ApiException.badRequest("error.passkey.otherAccount");
+        }
+        attempt.succeeded();
+        RecentConfirmation.confirmed(request);
+    }
+
+    @GetMapping("/passkeys")
+    public java.util.List<PasskeyService.PasskeyDto> passkeyList(@AuthenticationPrincipal UserPrincipal principal) {
+        return passkeys.list(principal.id());
+    }
+
+    public record PasskeyOptionsRequest(@jakarta.validation.constraints.Size(max = 200,
+            message = de.aidocuments.i18n.ValidationMessages.SIZE) String password) {
+    }
+
+    /**
+     * Einen Passkey anlegen, Schritt 1. Wer damit künftig ohne Passwort hereinkommt, muss sich jetzt ausweisen: mit
+     * dem Passwort – oder, wenn die Zwei-Faktor-Anmeldung eingerichtet ist, mit einem frischen Code (siehe
+     * {@link de.aidocuments.security.AdminTwoFactorFilter}). Eine offen gelassene Sitzung allein genügt nicht.
+     */
+    @PostMapping("/passkeys/options")
+    public java.util.Map<String, Object> passkeyRegistrationOptions(@AuthenticationPrincipal UserPrincipal principal,
+                                                                    @Valid @RequestBody PasskeyOptionsRequest body,
+                                                                    HttpServletRequest request) {
+        AppUser user;
+        if (principal.twoFactorEnabled()) {
+            user = userService.account(principal.id());
+        } else {
+            LoginThrottle.Attempt attempt = begin(principal.getUsername(), request);
+            user = userService.requireOwnPassword(principal.id(), body.password());
+            attempt.succeeded();
+        }
+        return passkeys.registrationOptions(user, request);
+    }
+
+    public record PasskeyRegisterRequest(
+            @jakarta.validation.constraints.Size(max = 100, message = de.aidocuments.i18n.ValidationMessages.SIZE)
+            String name,
+            @jakarta.validation.constraints.NotNull(message = de.aidocuments.i18n.ValidationMessages.NOT_NULL)
+            java.util.Map<String, Object> credential) {
+    }
+
+    @PostMapping("/passkeys")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PasskeyService.PasskeyDto passkeyRegister(@AuthenticationPrincipal UserPrincipal principal,
+                                                     @Valid @RequestBody PasskeyRegisterRequest body,
+                                                     HttpServletRequest request) {
+        return passkeys.register(userService.account(principal.id()), body.name(), body.credential(), request);
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/passkeys/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void passkeyDelete(@AuthenticationPrincipal UserPrincipal principal,
+                              @org.springframework.web.bind.annotation.PathVariable String id) {
+        passkeys.delete(principal.id(), id);
+    }
+
+    // ---------------------------------------------------------------------------------------------------------
     // Zwei-Faktor-Anmeldung einrichten und abschalten (für das eigene Konto)
     // ---------------------------------------------------------------------------------------------------------
 
@@ -262,6 +366,14 @@ public class AuthController {
         request.changeSessionId();
         contextRepository.saveContext(context, request, response);
         renewCsrfToken(request, response);
+    }
+
+    /** Eigene Angaben: die Adresse für E-Mails und welche Benachrichtigungen. */
+    @org.springframework.web.bind.annotation.PutMapping("/profile")
+    public UserDto updateProfile(@AuthenticationPrincipal UserPrincipal principal,
+                                 @Valid @RequestBody UserDtos.ProfileRequest body) {
+        return userService.updateProfile(principal.id(), body,
+                org.springframework.context.i18n.LocaleContextHolder.getLocale());
     }
 
     /** Ändert das eigene Passwort; andere Sitzungen des Kontos enden, diese bleibt angemeldet. */

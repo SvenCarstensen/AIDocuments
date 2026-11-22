@@ -44,7 +44,9 @@
     "login": {
       "title": "Wëllkomm zréck",
       "subtitle": "Mellt Iech un, fir op Är Dokumenter zouzegräifen.",
-      "submit": "Umellen"
+      "submit": "Umellen",
+      "or": "oder",
+      "passkey": "Mat engem Passkey umellen"
     },
     "setup": {
       "title": "AIDocuments ariichten",
@@ -62,16 +64,16 @@
     },
     "twoFactor": {
       "title": "Umeldung bestätegen",
-      "subtitle": "Gëff de 6-stellege Code aus denger Authenticator-App an.",
+      "subtitle": "Gitt de 6-stellege Code aus Ärer Authenticator-App an.",
       "code": "Code",
-      "codeHint": "Keen Zougrëff op d'App? Gëff amplaz ee vun denge Restauratiounscoden an.",
+      "codeHint": "Keen Zougrëff op d’App? Gitt amplaz ee vun Äre Restauratiounscoden an.",
       "submit": "Bestätegen",
-      "back": "Zréck bei d'Umeldung"
+      "back": "Zréck bei d’Umeldung"
     },
     "twoFactorRequired": {
       "title": "Zwee-Faktor-Umeldung ariichten",
-      "subtitle": "Fir Administrateuren ass d'Zwee-Faktor-Umeldung Flicht. Riicht se elo an, fir weiderzemaachen.",
-      "intro": "Du brauchs dofir eng Authenticator-App op dengem Handy (z. B. Google Authenticator, Microsoft Authenticator, 1Password oder Aegis)."
+      "subtitle": "Fir Administrateuren ass d’Zwee-Faktor-Umeldung Flicht. Riicht se elo an, fir weiderzemaachen.",
+      "intro": "Dir braucht dofir eng Authenticator-App op Ärem Handy (z. B. Google Authenticator, Microsoft Authenticator, 1Password oder Aegis)."
     }
   },
   "shell": {
@@ -81,8 +83,8 @@
       "dark": "Däischteren Design"
     },
     "search": {
-      "placeholder": "Stéchwuertsich: Dokumenter, Schlagwierder, Inhalter …",
-      "placeholderAi": "KI-Sich: fro mat denge Wierder – z. B. „Rechnunge vu Kia aus 2024“",
+      "placeholder": "Stéchwuertsich: Dokumenter, Stéchwierder, Inhalter …",
+      "placeholderAi": "KI-Sich: Frot mat Ären eegene Wierder – z. B. „Rechnunge vu Kia aus 2024“",
       "labelAi": "KI",
       "label": "Dokumenter duerchsichen",
       "clear": "Sich läschen",
@@ -102,26 +104,49 @@
       "changed": "Passwuert geännert"
     },
     "dropzone": {
-      "title": "PDFen hei ofleeën",
-      "hint": "Dir kënnt e puer Fichieren op eemol ofleeën. Si gi gespäichert, analyséiert a mat Stéchwierder versinn."
+      "title": "PDFen oder Fotoen hei ofleeën",
+      "hint": "Dir kënnt e puer Fichieren op eemol ofleeën. Fotoen (JPG, PNG, HEIC) ginn zu PDFen. Alles gëtt gespäichert, analyséiert a mat Stéchwierder versinn."
+    },
+    "remindersDue_one": "{{count, number}} Erënnerung fälleg",
+    "remindersDue_other": "{{count, number}} Erënnerunge fälleg",
+    "profile": {
+      "email": "E-Mail-Adress",
+      "saved": "Gespäichert"
+    },
+    "notifications": {
+      "title": "E-Mail-Benoriichtegungen",
+      "emailHint": "Heihinner ginn déi fälleg Erënnerungen, déi Iech zougedeelt sinn, an d’Benoriichtegungen, déi Dir hei ënnendrënner aschalt – an der Sprooch, an där Dir d’Applikatioun grad benotzt. Loosst et eidel, wann Dir keng E-Maile wëllt.",
+      "digest": "All Dag nei Dokumenter",
+      "digestHint": "Eemol am Dag eng Lëscht vun den Dokumenter, déi an Äre Beräicher derbäikomm sinn – nëmmen un Deeg mat neien Dokumenter.",
+      "admin": "Hiweiser fir Administrateuren",
+      "adminHint": "Wann Opbewarungsfristen oflafen (et gëtt näischt automatesch geläscht) a wann eng Mailbox ëmmer erëm net ofgeruff ka ginn.",
+      "needsEmail": "Ouni Adress ginn keng E-Maile fort."
     }
   },
   "upload": {
-    "onlyPdf": "Et kënnen nëmme PDF-Fichieren derbäigesat ginn.",
+    "onlyPdf": "Et kënnen nëmme PDFen a Fotoen (JPG, PNG, HEIC) derbäigesat ginn.",
     "uploadingFile": "„{{name}}“ gëtt eropgelueden …",
-    "uploadingFiles_one": "{{count, number}} PDF gëtt eropgelueden …",
-    "uploadingFiles_other": "{{count, number}} PDFe ginn eropgelueden …",
+    "uploadingFiles_one": "{{count, number}} Fichier gëtt eropgelueden …",
+    "uploadingFiles_other": "{{count, number}} Fichiere ginn eropgelueden …",
     "created_one": "{{count, number}} Dokument derbäigesat",
     "created_other": "{{count, number}} Dokumenter derbäigesat",
     "processingInBackground": "D’Veraarbechtung leeft am Hannergrond weider.",
     "duplicates_one": "{{count, number}} existéiert schonn",
     "duplicates_other": "{{count, number}} existéiere schonn",
-    "rejected_one": "{{count, number}} Fichier ass kee gültege PDF",
-    "rejected_other": "{{count, number}} Fichiere si keng gülteg PDFen",
+    "rejected_one": "{{count, number}} Fichier net derbäigesat",
+    "rejected_other": "{{count, number}} Fichieren net derbäigesat",
     "onlyDuplicates_one": "Dëst Dokument existéiert schonn.",
     "onlyDuplicates_other": "Dës Dokumenter existéiere schonn.",
-    "noneValid": "Kee vun de Fichieren ass e gültege PDF.",
-    "failed": "Feeler beim Eroplueden"
+    "noneValid": "Kee vun de Fichiere konnt derbäigesat ginn.",
+    "failed": "Feeler beim Eroplueden",
+    "intoArea": "Beräich: {{area}}",
+    "combine": {
+      "title": "Fotoen zu engem Dokument zesummefaassen?",
+      "text": "Dir hutt e puer Fotoen ausgewielt. Sinn et d’Säite vun engem Dokument – zum Beispill vun engem Bréif mat e puer Säiten –, da ginn se an der Reiefolleg vun hire Fichiersnimm zu engem PDF; d’Reiefolleg kënnt Dir duerno ënner „Säiten“ änneren. Soss gëtt all Foto en eegent Dokument.",
+      "one": "Als een Dokument",
+      "separate": "All Foto eenzeln",
+      "tooMuch": "Dat sinn ze vill oder ze grouss Fotoe fir een Dokument (héchstens 100 Fotoen an zesummen 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -133,7 +158,7 @@
     "ocrBadge": "Texterkennung",
     "aiNotice": {
       "text": "D’KI ass nach net ageriicht. Nei Dokumenter kënnen iwwer hiren Text duerchsicht ginn, mee si ginn net zesummegefaasst an net mat Stéchwierder versinn.",
-      "builtinOcr": "Scanen ouni Textschicht liest déi agebaute Texterkennung, sou datt een och an hinne siche kann.",
+      "builtinOcr": "Scannen ouni Textschicht liest déi agebaute Texterkennung, sou datt een och an hinne siche kann.",
       "action": "Elo ariichten"
     },
     "searchResults_one": "<count>{{count, number}} Resultat</count> <query>fir „{{query}}“</query>",
@@ -175,12 +200,13 @@
       "activeTo": "bis {{date}}",
       "removeOne": "Filter „{{label}}“ ewechhuelen",
       "removeAll": "All Filteren ewechhuelen",
-      "clear": "Filteren ewechhuelen"
+      "clear": "Filteren ewechhuelen",
+      "retentionExpired": "Frist ofgelaf"
     },
     "empty": {
       "libraryTitle": "Nach keng Dokumenter",
-      "libraryHint": "Zitt PDF-Fichieren einfach an dës Fënster oder benotzt „Eroplueden“.",
-      "libraryHintAdmin": "Zitt PDF-Fichieren einfach an dës Fënster oder benotzt „Eroplueden“. An den Astellunge kënnt Dir eng Mailbox oder en Importdossier ariichten, aus deem nei PDFen automatesch importéiert ginn.",
+      "libraryHint": "Zitt PDFen oder Fotoen einfach an dës Fënster oder benotzt „Eroplueden“.",
+      "libraryHintAdmin": "Zitt PDFen oder Fotoen einfach an dës Fënster oder benotzt „Eroplueden“. An den Astellunge kënnt Dir eng Mailbox oder en Importdossier ariichten, aus deem nei Dokumenter automatesch importéiert ginn.",
       "noResultsTitle": "Näischt fonnt",
       "noResultsSearch": "Keen Dokument passt bei dës Sich. D’Sich fënnt och Deeler vu Wierder – probéiert et mat engem méi kuerze Begrëff oder manner Wierder.",
       "noResultsFilters": "Keen Dokument passt bei déi gewielte Filteren."
@@ -189,7 +215,26 @@
     "loadingAll_other": "{{loaded, number}} vun {{count, number}} Dokumenter gelueden …",
     "loadMore": "Méi lueden ({{remaining, number}})",
     "aiSearch": {
-      "notice": "KI-Sich: „{{question}}“. D’Filteren weisen, wéi d’Fro verstane gouf."
+      "notice": "KI-Sich: „{{question}}“. D’Filtere weisen, wéi d’Fro verstane gouf."
+    },
+    "export": {
+      "label_one": "{{count, number}} Dokument als ZIP exportéieren",
+      "label_other": "All {{count, number}} Dokumenter vun dëser Lëscht als ZIP exportéieren",
+      "started_one": "Export vun {{count, number}} Dokument gestart",
+      "started_other": "Export vun {{count, number}} Dokumenter gestart",
+      "contents": "Den ZIP-Fichier enthält d’PDFen an all Donnéeën als Tabell (documents.csv) an als documents.json.",
+      "failed": "Export feelgeschloen"
+    },
+    "mailboxNotice": {
+      "text_one": "D’Mailbox „{{names}}“ konnt e puer Mol hannereneen net ofgeruff ginn – vun do kommen de Moment keng Dokumenter eran.",
+      "text_other": "Dës Mailboxe konnten e puer Mol hannereneen net ofgeruff ginn: {{names}}. Vun do kommen de Moment keng Dokumenter eran.",
+      "action": "Mailboxen ukucken"
+    },
+    "backupNotice": {
+      "never": "Et gëtt nach keng Sécherung vun Ären Dokumenter.",
+      "overdue": "Lescht Sécherung: {{when}}. Dat ass méi laang hier wéi agestallt.",
+      "failed": "Déi automatesch Sécherung ass feelgeschloen: {{reason}}",
+      "action": "Bei d’Sécherung"
     }
   },
   "document": {
@@ -250,7 +295,7 @@
       "pageCount_other": "{{count, number}} Säiten",
       "language": "Sprooch",
       "source": "Hierkonft",
-      "mailSubject": "Betreff",
+      "mailSubject": "Sujet",
       "mailFrom": "Vun",
       "mailReceived": "Empfaangen",
       "added": "Derbäigesat",
@@ -264,19 +309,21 @@
     "noText": "Fir dëst Dokument gëtt et keen Text – wahrscheinlech ass et e Scan ouni Textschicht. Wann d’KI ageriicht an d’Texterkennung aktivéiert ass, gëtt den Inhalt bei der Analys transkribéiert.",
     "edit": {
       "title": "Dokument beaarbechten",
-      "saved": "Ännerunge gespäichert"
+      "saved": "Ännerunge gespäichert",
+      "areaHint": "Bestëmmt, wien d’Dokument gesäit.",
+      "areaMoveHint": "Duerno gesinn et nach just Memberen aus dem Beräich „{{area}}“ an Administrateuren."
     },
     "delete": {
       "title": "Dokument läschen?",
-      "text": "„{{title}}“ gëtt geläscht. An der Historique kanns de dat 30 Deeg laang réckgängeg maachen; duerno gëtt et definitiv ewechgeholl.",
+      "text": "„{{title}}“ gëtt geläscht. Am Historique kënnt Dir dat 30 Deeg laang réckgängeg maachen; duerno gëtt et definitiv ewechgeholl.",
       "confirm": "Läschen"
     },
     "chat": {
-      "intro": "Stell eng Fro zu dësem Dokument – d’KI äntwert op Basis vu sengem Inhalt.",
-      "placeholder": "Fro eppes zu dësem Dokument …",
+      "intro": "Stellt eng Fro zu dësem Dokument – d’KI äntwert op Basis vu sengem Inhalt.",
+      "placeholder": "Frot eppes zu dësem Dokument …",
       "send": "Schécken",
       "thinking": "D’KI liest d’Dokument …",
-      "notConfigured": "Fir Froen zum Dokument muss eng KI agericht sinn.",
+      "notConfigured": "Fir Froen zum Dokument muss eng KI ageriicht sinn.",
       "restart": "Nei ufänken",
       "suggestions": {
         "summary": "Ëm wat geet et an dësem Dokument?",
@@ -286,13 +333,13 @@
     },
     "versions": {
       "title": "Versiounen",
-      "intro": "All Ännerung um PDF mécht eng nei Versioun. Méi al Versioune bleiwen erhalen a kënne gewisen, erofgeluede oder restauréiert ginn.",
+      "intro": "All Ännerung um PDF mécht eng nei Versioun. Méi al Versioune bleiwen erhalen a kënnen ugekuckt, erofgeluede oder restauréiert ginn.",
       "current": "aktuell",
-      "view": "Versioun {{number}} weisen",
+      "view": "Versioun {{number}} ukucken",
       "download": "Versioun {{number}} eroflueden",
       "restore": "Versioun {{number}} restauréieren",
       "restoreTitle": "Versioun {{number}} restauréieren?",
-      "restoreText": "D'Versioun gëtt déi aktuell. Déi aktuell Versioun bleift erhalen, an de Schrëtt kann an der Historique réckgängeg gemaach ginn.",
+      "restoreText": "D’Versioun gëtt déi aktuell. Déi bis elo aktuell Versioun bleift erhalen, an de Schrëtt kann am Historique réckgängeg gemaach ginn.",
       "restoreConfirm": "Restauréieren",
       "restored": "Versioun {{number}} restauréiert",
       "kinds": {
@@ -300,16 +347,25 @@
         "EDITED": "Beaarbecht",
         "ORIGINAL_RESTORED": "Original restauréiert",
         "VERSION_RESTORED": "Versioun {{from}} restauréiert",
-        "UNDONE": "Ännerung réckgängeg gemaach"
+        "UNDONE": "Ännerung réckgängeg gemaach",
+        "PAGES": "Säite geännert",
+        "MERGED": "Dokumenter ugehaang"
       }
-    }
+    },
+    "retention": {
+      "label": "Opbewarung",
+      "until": "bis {{date}} – bis dohin net läschbar",
+      "expired": "Frist den {{date}} ofgelaf",
+      "locked": "Opzebewaren bis {{date}} – eréischt duerno läschbar"
+    },
+    "readOnly": "An dësem Beräich däerft Dir dëst Dokument nëmmen ukucken."
   },
   "settings": {
     "title": "Astellungen",
     "mailboxes": {
       "title": "Mailboxen",
-      "navHint": "IMAP-Serveren, aus deene PDF-Unhäng importéiert ginn",
-      "intro": "Aus dësen IMAP-Mailboxe gi PDF-Unhäng automatesch importéiert. D’Mailboxe ginn nëmme gelies – E-Maile bleiwen onverännert an ongelies.",
+      "navHint": "IMAP-Serveren, aus deene PDF- a Foto-Unhäng importéiert ginn",
+      "intro": "Aus dësen IMAP-Mailboxe gi PDF-Unhäng an ugehaange Fotoen (als PDF) automatesch importéiert; den Text vun den E-Mailen an agebett Logoen net. D’Mailboxe ginn nëmme gelies – E-Maile bleiwen onverännert an ongelies.",
       "add": "Mailbox derbäisetzen",
       "emptyTitle": "Nach keng Mailbox ageriicht",
       "emptyText": "Gitt d’Zougangsdate vun enger IMAP-Mailbox an – zum Beispill déi Mailbox, un déi Äre Scanner Dokumenter schéckt.",
@@ -339,10 +395,10 @@
         "passwordKeepHint": "Eidel loossen, fir dat gespäichert Passwuert ze behalen",
         "folder": "Dossier",
         "folderHint": "Meeschtens {{folder}} (Posteingang)",
-        "since": "Nëmmen E-Mailen ab",
+        "since": "Nëmmen E-Mailen zënter",
         "sinceHint": "Optional – méi al E-Maile ginn iwwersprongen",
         "enabled": "Automatesch ofruffen",
-        "enabledHint": "D’Mailbox gëtt am agestallten Intervall op nei PDFe gepréift.",
+        "enabledHint": "D’Mailbox gëtt am agestallten Intervall op nei Unhäng gepréift.",
         "filter": {
           "title": "Filter",
           "intro": "Et ginn nëmmen E-Mailen ausgewäert, déi all Konditioune erfëllen. Ee Begrëff pro Linn; Grouss- a Klengschreiwung spillen keng Roll, en Deel vum Text geet duer. Eidel Felder schränken näischt an.",
@@ -354,7 +410,8 @@
           "newOnly": "De Filter gëllt fir E-Mailen, déi nom leschten Ofruff erakommen; schonn iwwerpréift E-Mailen ginn net nach eng Kéier ausgewäert."
         },
         "interval": "Ofruffintervall a Minutten",
-        "intervalHint": "Eidel loossen fir den allgemengen Intervall (de Moment {{interval}})."
+        "intervalHint": "Eidel loossen fir den allgemengen Intervall (de Moment {{interval}}).",
+        "areaHint": "An dëse Beräich kommen déi importéiert Dokumenter."
       },
       "filterActive": "Filter aktiv",
       "schedule": "Ofruff all {{interval}} · nächsten {{when}}",
@@ -362,30 +419,31 @@
     },
     "import": {
       "title": "Ofruff & Importdossier",
-      "navHint": "Ofrufintervall an iwwerwaachten Dossier",
-      "intro": "Leet fest, wéi dacks no neie PDF-Fichiere gesicht gëtt – an de Mailboxen an am Importdossier.",
+      "navHint": "Ofruffintervall an iwwerwaachten Dossier",
+      "intro": "Leet fest, wéi dacks no neien Dokumenter gesicht gëtt – an de Mailboxen an am Importdossier.",
       "saved": "Astellunge gespäichert",
       "interval": {
-        "title": "Ofrufintervall",
-        "text": "Sou dacks kontrolléiert d’Applikatioun den Agangsdossier an all Postfächer ouni eegenen Intervall op nei PDFen.",
+        "title": "Ofruffintervall",
+        "text": "Sou dacks préift d’Applikatioun den Importdossier an all Mailboxen ouni eegenen Intervall op nei Dokumenter.",
         "label": "All … Minutten",
         "nextRun": "Nächsten automateschen Ofruff {{when}}."
       },
       "folder": {
         "title": "Importdossier",
-        "text": "En Dossier um Server, deen op nei PDF-Fichieren iwwerwaacht gëtt – zum Beispill d’Zil vun engem Netzwierkscanner. Ënnerdossiere ginn och duerchsicht.",
+        "text": "En Dossier um Server, deen op nei PDFen a Fotoen (JPG, PNG, HEIC) iwwerwaacht gëtt – zum Beispill d’Zil vun engem Netzwierkscanner. Ënnerdossiere ginn och duerchsicht.",
         "enable": "Importdossier iwwerwaachen",
         "path": "Pad um Server",
         "pathHint": "Absolutte Pad. Am Docker-Container ass dat den agebonnenen Dossier, normalerweis {{path}}.",
         "afterImport": "Nom Import",
         "keep": "Fichier leie loossen",
         "move": "An „{{folder}}“ verréckelen",
-        "keepHint": "D’Fichiere bleiwen onverännert. D’Applikatioun verhält sech, wat se schonn importéiert huet.",
+        "keepHint": "D’Fichiere bleiwen onverännert. D’Applikatioun mierkt sech, wat se schonn importéiert huet.",
         "moveHint": "Importéiert Fichiere ginn an den Ënnerdossier „{{folder}}“ verréckelt – sou bleift den Importdossier opgeraumt.",
         "scanning": "Dossier gëtt gepréift …",
         "neverScanned": "Nach net gepréift.",
         "scanNow": "Elo préiwen",
-        "scanStarted": "Den Importdossier gëtt gepréift."
+        "scanStarted": "Den Importdossier gëtt gepréift.",
+        "areaHint": "An dëse Beräich kommen d’Dokumenter aus dem Dossier."
       }
     },
     "ai": {
@@ -403,7 +461,7 @@
         "modelPlaceholder": "Modell-ID",
         "compatibilityMode": "Kompatibilitéitsmodus fir lokal Modeller",
         "compatibilityModeHint": "Fir Serveren, déi zwar d’Anthropic-Schnëttstell schwätzen, awer keng PDF-Agab a keng strukturéiert Ausgabe kennen: D’Dokument geet als Text oder, bei Scannen, als Säitebiller un de Modell. Bei der Claude API ausgeschalt loossen.",
-        "testIncomplete": "D’Angabe sinn nach net komplett"
+        "testIncomplete": "D’Donnéeë sinn nach net komplett"
       },
       "privacy": {
         "title": "Mat {{provider}} verloossen Är Dokumenter dëse Computer",
@@ -463,7 +521,7 @@
         "ocr": "Texterkennung fir Scannen",
         "ocrHint": "Gescannte PDFen ouni Textschicht léisst d’Applikatioun vun der KI transkribéieren – eréischt doduerch kënne se am Volltext duerchsicht ginn. Brauch pro Scan méi Zäit a kascht méi.",
         "quickOcrFirst": "Fir d’éischt séier Texterkennung, duerno mat der KI verfeineren",
-        "quickOcrFirstHint": "Nei Scane liest fir d’éischt déi agebaute Texterkennung (Tesseract) – no e puer Sekonnen ass een dra siche kënnen. Duerno ergänzt d’KI Titel, Resumé a Schlagwierder op Basis vun dësem Text."
+        "quickOcrFirstHint": "Nei Scanne liest fir d’éischt déi agebaute Texterkennung (Tesseract) – no e puer Sekonne sinn se duerchsichbar. Duerno ergänzt d’KI Titel, Zesummefaassung a Stéchwierder op Basis vun dësem Text."
       },
       "unanalyzed_one": "{{count, number}} Dokument gouf nach net vun der KI analyséiert.",
       "unanalyzed_other": "{{count, number}} Dokumenter goufen nach net vun der KI analyséiert.",
@@ -495,7 +553,7 @@
         "role": "Roll",
         "roleHints": {
           "ADMIN": "Däerf alles – och Astellungen änneren, Benotzer verwalten an Dokumenter läschen.",
-          "USER": "Däerf Dokumenter ukucken, duerchsichen, eroplueden an hir Angabe beaarbechten."
+          "USER": "Däerf Dokumenter ukucken, duerchsichen, eroplueden an hir Donnéeë beaarbechten."
         },
         "active": "Kont aktiv",
         "activeHint": "Desaktivéiert Konte kënne sech net umellen; lafend Sessiounen halen direkt op.",
@@ -503,16 +561,153 @@
       },
       "twoFactor": "2FA",
       "resetTwoFactor": "Zwee-Faktor-Umeldung zrécksetzen",
-      "resetTwoFactorHint": "Fir dëse Kont ass d'Zwee-Faktor-Umeldung aktiv.",
-      "resetTwoFactorText": "{{name}} mellt sech duerno nëmme mam Passwuert un a kann d'Zwee-Faktor-Umeldung nei ariichten – zum Beispill nodeems den Handy verluer gaangen ass.",
+      "resetTwoFactorHint": "Fir dëse Kont ass d’Zwee-Faktor-Umeldung aktiv.",
+      "resetTwoFactorText": "{{name}} mellt sech duerno nëmme mam Passwuert un a kann d’Zwee-Faktor-Umeldung nei ariichten – zum Beispill nodeems den Handy verluer gaangen ass.",
       "resetTwoFactorConfirm": "Zrécksetzen",
       "twoFactorReset": "Zwee-Faktor-Umeldung zréckgesat"
+    },
+    "areas": {
+      "title": "Beräicher",
+      "navHint": "Wien wéi eng Dokumenter gesäit",
+      "intro": "All Dokument läit an exakt engem Beräich. Benotzer gesinn nëmmen d’Dokumenter vun de Beräicher, an deenen si Member sinn, an déi vun de Beräicher fir jiddereen.",
+      "add": "Beräich uleeën",
+      "everyone": "Fir jiddereen",
+      "restricted": "Ageschränkt",
+      "visibleForAll": "siichtbar fir jiddereen, deen ugemellt ass",
+      "members": "Memberen: {{names}}",
+      "adminsOnly": "nëmmen Administrateuren",
+      "adminHint": "Administrateure gesinn all Beräicher, och ouni Memberschaft.",
+      "edit": "{{name}} beaarbechten",
+      "saved": "Beräich gespäichert",
+      "created": "Beräich ugeluecht",
+      "deleted": "Beräich geläscht",
+      "delete": {
+        "label": "{{name}} läschen",
+        "title": "Beräich läschen?",
+        "text": "De Beräich „{{name}}“ gëtt geläscht. Dat geet nëmme, soulaang keng Dokumenter, keng Mailbox a keen Importdossier e benotzen."
+      },
+      "dialog": {
+        "name": "Numm",
+        "namePlaceholder": "z. B. Comptabilitéit",
+        "generalNameHint": "Eidel loossen, da heescht de Beräich an all Sprooch „Allgemeng“.",
+        "everyone": "Fir jidderee siichtbar",
+        "everyoneHint": "All ugemellt Benotzer gesinn d’Dokumenter vun dësem Beräich.",
+        "members": "Memberen",
+        "membersHint": "Nëmme Memberen an Administrateure gesinn d’Dokumenter vun dësem Beräich. Fir all Member leet Dir fest, ob en nëmme liesen, och beaarbechten oder zousätzlech läschen däerf.",
+        "noUsers": "Et gëtt nach keng Benotzer ouni Administrateursroll.",
+        "create": "Uleeën",
+        "everyoneAccess": "All däerfen",
+        "accessOf": "Recht vun {{name}}",
+        "membersHintEveryone": "Jidderee gesäit d’Dokumenter vun dësem Beräich. Membere kënnt Dir hei antragen, wa se méi däerfe solle wéi all déi aner."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Opbewarung",
+      "navHint": "Fristen a Läschspär",
+      "intro": "Leet fest, wéi laang Dokumenter vun engem Dokumenttyp opbewaart musse ginn – Rechnungen zum Beispill zéng Joer. D’Frist gëtt vum Enn vum Joer u gezielt, aus deem d’Dokument stamt. Bis dohin kann et keen läschen.",
+      "permanent": "Eng Spär léisst sech net ophiewen – och net vun Administrateuren. Gëtt eng Regel verkierzt oder geläscht oder ännert sech den Dokumenttyp vun engem Dokument, da bleift déi scho gesate Frist bestoen.",
+      "add": "Regel uleeën",
+      "years_one": "{{count, number}} Joer",
+      "years_other": "{{count, number}} Joer",
+      "edit": "Regel fir {{category}} beaarbechten",
+      "saved": "Regel gespäichert",
+      "created": "Regel ugeluecht",
+      "deleted": "Regel geläscht",
+      "emptyTitle": "Nach keng Opbewarungsregelen",
+      "emptyText": "Ouni Regel kënnen Dokumenter zu all Moment geläscht ginn.",
+      "delete": {
+        "label": "Regel fir {{category}} läschen",
+        "title": "Regel läschen?",
+        "text": "Nei Dokumenter vum Typ „{{category}}“ kréien duerno keng Frist méi. Dokumenter, déi scho gespaart sinn, bleiwe bis zum Enn vun hirer Frist gespaart."
+      },
+      "dialog": {
+        "categoryHint": "Sou wéi en um Dokument steet; Grouss- a Klengschreiwung spillen keng Roll.",
+        "years": "Opbewarungsfrist a Joer",
+        "yearsHint": "Gezielt vum Enn vum Joer vum Dokumentdatum un (ouni Datum: vum Dag, un deem d’Dokument derbäigesat gouf).",
+        "shorterHint": "Eng méi kuerz Frist gëllt nëmme fir Dokumenter, déi nach keng Frist hunn. Dokumenter, déi scho gespaart sinn, bleiwen et bis zum Enn vun hirer fréierer Frist.",
+        "create": "Uleeën"
+      }
+    },
+    "mailOut": {
+      "title": "E-Mail-Versand",
+      "navHint": "Erënnerunge per E-Mail",
+      "intro": "Iwwer dësen SMTP-Server verschéckt d’Applikatioun E-Mailen zu fällegen Erënnerungen – eemol pro Erënnerung, gesammelt an enger E-Mail pro Persoun. Empfänger ass deen, deen sech ëm d’Erënnerung këmmert an am Benotzermenü eng Adress hannerluecht huet.",
+      "enabled": "Erënnerunge per E-Mail verschécken",
+      "enabledHint": "Wann dat ausgeschalt ass, erschéngen d’Erënnerungen nëmmen an der Applikatioun.",
+      "host": "SMTP-Server",
+      "port": "Port",
+      "security": "Verschlësselung",
+      "unencrypted": "Keng",
+      "usernameHint": "Eidel loossen, wann de Server keng Umeldung verlaangt.",
+      "passwordKeepHint": "Eidel loossen, fir dat gespäichert Passwuert ze behalen.",
+      "from": "Absenderadress",
+      "fromHint": "De Server muss se fir Äre Kont erlaben.",
+      "appUrl": "Adress vun der Applikatioun",
+      "appUrlHint": "Fir Linken an den E-Mailen, z. B. https://docs.example.com. Eidel = ouni Linken.",
+      "digestHour": "Versand",
+      "fromHour": "vun {{hour}} Auer un",
+      "saved": "E-Mail-Versand gespäichert",
+      "test": "Testnoriicht un {{address}}",
+      "testNeedsAddress": "Fir d’Testnoriicht hannerleet w.e.g. Är eege E-Mail-Adress am Benotzermenü.",
+      "testSavedHint": "Den Test benotzt déi gespäichert Astellungen – w.e.g. virdrun späicheren."
+    },
+    "backup": {
+      "title": "Sécherung & Import",
+      "navHint": "Alles op eemol sécheren, Exporter importéieren",
+      "intro": "Eng Sécherung enthält alles, fir AIDocuments genee esou ze restauréieren. En Import iwwerhëlt Dokumenter aus dem Export vun enger anerer Installatioun – mat hiren Donnéeën.",
+      "backupTitle": "Sécherung mat engem Klick",
+      "backupText": "En ZIP mat der Datebank, allen Dokumenter mat fréiere Versiounen, de Virschaubiller an dem Schlëssel fir gespäichert Passwierder. D’Applikatioun leeft während der Zäit weider.",
+      "size": "Ëmfang",
+      "sizeValue_one": "ongeféier {{size}} an {{count, number}} Fichier",
+      "sizeValue_other": "ongeféier {{size}} an {{count, number}} Fichieren",
+      "last": "Lescht Sécherung",
+      "never": "nach ni",
+      "keyWarning": "D’Sécherung ass net verschlësselt an enthält de Schlëssel fir déi gespäichert Passwierder (Mailboxen, KI, Zwee-Faktor-Umeldung). Bewaart se esou sécher op wéi d’Dokumenter selwer.",
+      "restore": "Restauréieren: AIDocuments stoppen, den Inhalt vum ZIP an en eidelt Dateverzeechnes auspaken an nei starten. Eng Uleedung läit am ZIP (README.txt).",
+      "download": "Sécherung eroflueden",
+      "started": "D’Sécherung gëtt erofgelueden.",
+      "externalDatabase": "D’Sécherung mat engem Klick gëtt et nëmme mat der agebauter Datebank. Mat MariaDB séchert Dir d’Datebank mat hiren eegenen Tools (z. B. mariadb-dump) an dozou d’Dateverzeechnes.",
+      "importTitle": "Export importéieren",
+      "importText": "En ZIP aus „Exportéieren“ an der Dokumentelëscht – och vun enger anerer Installatioun. Titel, Dokumenttyp, Stéchwierder an déi aner Donnéeë bleiwen erhalen; d’KI liest d’Dokumenter net nach eng Kéier. Fichieren, déi schonn do sinn, ginn iwwersprongen.",
+      "file": "ZIP-Fichier",
+      "areaHint": "Heihinner kommen d’Dokumenter – oder nëmmen déi, deenen hire Beräich et hei net gëtt.",
+      "matchAreas": "A Beräicher mam selwechten Numm leeën",
+      "matchAreasHint": "Gëtt et hei e Beräich mam selwechten Numm wéi am Export, da kommen d’Dokumenter dohinner.",
+      "import": "Importéieren",
+      "importing": "Gëtt importéiert …",
+      "result": "Importéiert: {{imported, number}} · schonn do: {{duplicates, number}} · net importéiert: {{failed, number}}",
+      "auto": {
+        "title": "Automatesch Sécherung",
+        "text": "Eemol am Dag leet AIDocuments eng komplett Sécherung als ZIP an en Dossier a behält déi neiste dovun. Am beschten läit den Dossier op enger anerer Festplack oder engem Netzwierklafwierk – wann d’Festplack mat den Donnéeën ausfält, sinn d’Sécherunge soss och fort.",
+        "enable": "All Dag automatesch sécheren",
+        "hour": "Auerzäit",
+        "keep": "Opbewaren",
+        "keepHint": "Zuel vun de Sécherungen; méi al gi geläscht.",
+        "directory": "Dossier",
+        "directoryHint": "Komplette Pad um Server. Eidel loosse fir de Standarddossier. Am Docker-Container muss den Dossier agebonne sinn.",
+        "warnAfterDays": "Warnen no (Deeg)",
+        "warnAfterDaysHint": "Hiweis an der Dokumentelëscht, wann esou laang net geséchert gouf – manuell oder automatesch. 0 = ni warnen.",
+        "lastRun": "Leschte Laf",
+        "nextRun": "Nächste Laf",
+        "running": "Sécherung leeft …",
+        "ok": "gelongen, {{when}}",
+        "failed": "feelgeschloen, {{when}}",
+        "stored_one": "{{count, number}} Sécherung an {{directory}}",
+        "stored_other": "{{count, number}} Sécherungen an {{directory}}",
+        "runNow": "Elo sécheren",
+        "saveFirst": "Späichert fir d’éischt d’Ännerungen.",
+        "runStarted": "D’Sécherung leeft am Hannergrond.",
+        "done": "Sécherung geschriwwen.",
+        "saved": "Astellunge gespäichert.",
+        "externalDatabase": "Déi automatesch Sécherung gëtt et nëmme mat der agebauter Datebank. Mat MariaDB séchert Dir d’Datebank mat hiren eegenen Tools (z. B. en nuetleche mariadb-dump) an dozou d’Dateverzeechnes."
+      }
     }
   },
   "history": {
     "nav": "Historique",
     "title": "Historique",
-    "subtitle": "Wat mat denge Dokumenter geschitt ass – déi neist Entréeën als éischt.",
+    "subtitle": "Wat mat Ären Dokumenter geschitt ass – déi neiste Entréeë fir d’éischt.",
     "empty": "Nach keng Entréeën.",
     "actions": {
       "IMPORTED": "Importéiert",
@@ -526,7 +721,7 @@
       "DUPLICATE": "als Duplikat",
       "VERSION_RESTORED": "Versioun restauréiert"
     },
-    "by": "vum {{user}}",
+    "by": "vun {{user}}",
     "automatic": "automatesch",
     "more": "Méi lueden",
     "undo": "Réckgängeg maachen",
@@ -534,7 +729,7 @@
   },
   "duplicates": {
     "title": "Méiglechen Duplikat",
-    "subtitle": "Déi zwee Dokumenter hunn dee selwechten Inhalt. Behal eent a läsch dat anert – oder vermierk, datt et keng Duplikater sinn.",
+    "subtitle": "Déi zwee Dokumenter hunn dee selwechten Inhalt. Behaalt eent a läscht dat anert – oder vermierkt, datt et keng Duplikater sinn.",
     "older": "Méi fréi akomm",
     "newer": "Méi spéit akomm",
     "deleteThis": "Dëst läschen",
@@ -544,60 +739,248 @@
     "title": "Zwee-Faktor-Umeldung",
     "on": "Aktiv",
     "off": "Aus",
-    "intro": "Schütz däi Kont mat engem zweete Faktor: Bei der Umeldung gëss du dann zousätzlech e Code aus enger Authenticator-App op dengem Handy an (z. B. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Schützt Äre Kont mat engem zweete Faktor: Bei der Umeldung gitt Dir dann zousätzlech e Code aus enger Authenticator-App op Ärem Handy an (z. B. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Ariichten",
-    "scan": "Scann de QR-Code mat denger Authenticator-App oder gëff de Schlëssel mat der Hand an. Gëff dann de Code aus der App an däi Passwuert an.",
-    "qrAlt": "QR-Code fir d'Authenticator-App",
+    "scan": "Scannt de QR-Code mat Ärer Authenticator-App oder gitt de Schlëssel mat der Hand an. Gitt dann de Code aus der App an Äert Passwuert an.",
+    "qrAlt": "QR-Code fir d’Authenticator-App",
     "secret": "Schlëssel",
     "confirmCode": "Code aus der App",
     "activate": "Aktivéieren",
     "recoveryTitle": "Restauratiounscoden",
-    "recoveryText": "Hal dës Restauratiounscoden op enger sécherer Plaz. All Code fonctionnéiert eemol, wann s du d'App net benotze kanns – zum Beispill wann däin Handy verluer geet. Si ginn nëmmen elo gewisen.",
+    "recoveryText": "Bewaart dës Restauratiounscoden op enger sécherer Plaz op. All Code funktionéiert eemol, wann Dir d’App net benotze kënnt – zum Beispill wann Ären Handy verluer geet. Si ginn nëmmen elo ugewisen.",
     "download": "Als Fichier späicheren",
     "done": "Fäerdeg",
     "enabled": "Zwee-Faktor-Umeldung ass aktiv",
     "disabled": "Zwee-Faktor-Umeldung ass ausgeschalt",
-    "disableHint": "Fir se auszeschalten, gëff en aktuelle Code aus der App (oder e Restauratiounscode) an däi Passwuert an.",
+    "disableHint": "Fir se auszeschalten, gitt en aktuelle Code aus der App (oder e Restauratiounscode) an Äert Passwuert an.",
     "disable": "Ausschalten",
     "recoveryLeft": "Onbenotzt Restauratiounscoden: {{count}}",
-    "adminCannotDisable": "Als Administrateur kanns du d'Zwee-Faktor-Umeldung net ausschalten."
+    "adminCannotDisable": "Als Administrateur kënnt Dir d’Zwee-Faktor-Umeldung net ausschalten."
   },
   "confirmCode": {
     "title": "Ännerung bestätegen",
-    "text": "Ännerunge vu Konten, Postfächer an Astellunge brauchen en aktuelle Code aus denger Authenticator-App. D'Bestätegung gëllt 10 Minutten.",
-    "submit": "Bestätegen"
+    "text": "Ännerunge vu Konten, Mailboxen an Astellunge brauchen en aktuelle Code aus Ärer Authenticator-App. D’Bestätegung gëllt 10 Minutten.",
+    "submit": "Bestätegen",
+    "passkey": "Mat engem Passkey bestätegen"
   },
   "share": {
     "button": "Deelen",
     "title": "Dokument deelen",
     "intro": "Erstellt e Link, mat deem eng Persoun ouni Kont genee dëst Dokument opmaache kann.",
-    "recipient": "Mat wiem deels du?",
-    "recipientHint": "Numm vun der Persoun – fir datt s du méi spéit gesäis, wiem s du de Link ginn hues.",
-    "permission": "Däerf d'Persoun d'Dokument beaarbechten?",
+    "recipient": "Mat wiem deelt Dir?",
+    "recipientHint": "Numm vun der Persoun – fir datt Dir méi spéit gesitt, wiem Dir de Link ginn hutt.",
+    "permission": "Däerf d’Persoun d’Dokument beaarbechten?",
     "viewOnly": "Nëmmen ukucken",
     "canEdit": "Däerf beaarbechten",
-    "viewHint": "D'Persoun kann de PDF ukucken, drécken an eroflueden.",
-    "editHint": "D'Persoun kann de PDF och markéieren, beschrëften, ënnerschreiwen a späicheren. All Späicheren gëtt eng nei Versioun; Titel, Schlagwierder an aner Informatioune gesäit si net.",
+    "viewHint": "D’Persoun kann de PDF ukucken, drécken an eroflueden.",
+    "editHint": "D’Persoun kann de PDF och markéieren, beschrëften, ënnerschreiwen a späicheren. All Späicheren gëtt eng nei Versioun; Titel, Stéchwierder an aner Donnéeë gesäit si net.",
     "validity": "Gëlteg fir",
     "unlimited": "Onbegrenzt",
     "create": "Link erstellen",
     "link": "Link",
-    "linkHint": "Wien dëse Link huet, kann d'Dokument opmaachen – gëff en nëmmen u(n) {{name}} weider. Du kanns en all Moment an der Dokumentusiicht zréckzéien.",
+    "linkHint": "Wien dëse Link huet, kann d’Dokument opmaachen – gitt en nëmmen un {{name}} weider. Dir kënnt en all Moment an der Dokumentusiicht zréckzéien.",
     "copy": "Link kopéieren",
     "copied": "Link kopéiert",
     "listTitle": "Extern gedeelt",
     "expired": "ofgelaf",
     "validUntil": "gëlteg bis {{date}}",
     "noExpiry": "onbegrenzt gëlteg",
-    "lastOpened": "fir d'lescht opgemaach {{when}} (Oprufen: {{views}})",
+    "lastOpened": "fir d’lescht opgemaach {{when}} (Oprufen: {{views}})",
     "neverOpened": "nach net opgemaach",
     "revoke": "Link zréckzéien",
     "revokeTitle": "Link fir {{name}} zréckzéien?",
-    "revokeText": "De Link funktionéiert direkt net méi. Kopien, déi d'Persoun schonn erofgelueden huet, bleiwen bei hir.",
+    "revokeText": "De Link funktionéiert direkt net méi. Kopien, déi d’Persoun schonn erofgelueden huet, bleiwen bei hir.",
     "revoked": "Link zréckgezunn",
     "page": {
       "for": "Gedeelt mat {{name}}",
-      "invalid": "Dëse Link ass ongëlteg oder ofgelaf, oder d'Dokument gouf geläscht. Wann dech w.e.g. un d'Persoun, déi en dir ginn huet."
+      "invalid": "Dëse Link ass ongëlteg oder ofgelaf, oder d’Dokument gouf geläscht. Kontaktéiert w.e.g. d’Persoun, déi en Iech ginn huet."
+    }
+  },
+  "areas": {
+    "general": "Allgemeng",
+    "unknown": "Anere Beräich",
+    "label": "Beräich",
+    "target": "Zilberäich",
+    "access": {
+      "READ": "Nëmme liesen",
+      "EDIT": "Liesen a beaarbechten",
+      "DELETE": "Beaarbechten a läschen"
+    }
+  },
+  "reminders": {
+    "title": "Erënnerungen",
+    "cardTitle": "Erënnerung",
+    "add": "Erënnerung uleeën",
+    "edit": "Erënnerung beaarbechten",
+    "create": "Uleeën",
+    "created": "Erënnerung ugeluecht",
+    "saved": "Erënnerung gespäichert",
+    "deleted": "Erënnerung geläscht",
+    "markedDone": "Erleedegt",
+    "dueDate": "Fälleg den",
+    "note": "Notiz",
+    "notePlaceholder": "z. B. Bezuelung kontrolléieren",
+    "assignee": "Wie këmmert sech drëm?",
+    "assigneeHint": "Dës Persoun gesäit d’Erënnerung ënner „Meng“ a kritt se per E-Mail. Zur Auswiel stinn all déi, déi d’Dokument gesinn.",
+    "me": "{{name}} (ech)",
+    "assignedTo": "fir {{name}}",
+    "doneBy": "erleedegt vun {{name}}",
+    "markDone": "Als erleedegt markéieren",
+    "reopen": "Nees opmaachen",
+    "delete": {
+      "label": "Erënnerung läschen",
+      "title": "Erënnerung läschen?",
+      "text": "D’Erënnerung gëtt ewechgeholl. D’Dokument bleift onverännert."
+    },
+    "accept": "Iwwerhuelen",
+    "dismiss": "Virschlag verwerfen",
+    "suggestionsHint": "D’KI huet an dësem Dokument Datume fonnt:",
+    "none": "Keng oppen Erënnerungen.",
+    "showDone_one": "{{count, number}} erleedegt Erënnerung uweisen",
+    "showDone_other": "{{count, number}} erleedegt Erënnerungen uweisen",
+    "hideDone": "Erleedegt verstoppen",
+    "scope": {
+      "label": "Wéi eng Erënnerungen",
+      "mine": "Meng",
+      "all": "All"
+    },
+    "dueTitle": "Fälleg",
+    "nothingDue": "Haut ass näischt fälleg.",
+    "upcomingTitle": "Geschwënn",
+    "suggestionsTitle": "Proposéiert Datumen",
+    "suggestionsPageHint": "Fristen an den nächste sechs Méint, déi d’KI an den Dokumenter fonnt huet. Iwwerhuelt se als Erënnerung oder verwerft se.",
+    "emptyTitle": "Keng Erënnerungen",
+    "emptyText": "Leet bei engem Dokument eng Erënnerung un – oder iwwerhuelt eng, déi d’KI proposéiert.",
+    "repeat": {
+      "label": "Widderhuelen",
+      "hint": "Wann Dir d’Erënnerung als erleedegt markéiert, gëtt déi nächst am selwechten Ofstand ugeluecht.",
+      "none": "Eemoleg",
+      "m1": "Méintlech",
+      "m3": "All Véierel Joer",
+      "m6": "All hallef Joer",
+      "m12": "Järlech",
+      "m24": "All zwee Joer",
+      "months_one": "All Mount",
+      "months_other": "All {{count}} Méint"
+    },
+    "fromContract": "aus dem Kontrakt"
+  },
+  "pages": {
+    "button": "Säiten",
+    "title": "Säite beaarbechten",
+    "intro": "Säiten zéien oder mat de Feiler réckelen, dréinen oder ewechhuelen. Gespäichert gëtt als nei Versioun – déi al bleift erhalen.",
+    "page": "Säit {{number}}",
+    "wasPage": "virdrun {{number}}",
+    "moveLeft": "No vir",
+    "moveRight": "No hannen",
+    "rotate": "Ëm 90° dréinen",
+    "remove": "Säit ewechhuelen",
+    "keep": "Säit behalen",
+    "noneLeft": "Op d’mannst eng Säit muss bleiwen.",
+    "saveFirst": "Fir d’éischt d’Ännerunge späicheren",
+    "saved": "Säite gespäichert",
+    "split": {
+      "here": "Vun hei un en eegent Dokument",
+      "title": "Dokument trennen?",
+      "text": "Säit {{page}} an all déi folgend ginn en eegent Dokument am selwechte Beräich. Et gëtt wéi en neit Dokument gelies an ageuerdnet; dëst Dokument behält d’Säiten dovir.",
+      "confirm": "Trennen",
+      "done": "Dokument getrennt",
+      "open": "Neit Dokument opmaachen"
+    },
+    "merge": {
+      "button": "Dokumenter uhänken",
+      "title": "Dokumenter uhänken",
+      "intro": "D’Säite vun den ausgewielten Dokumenter kommen an dëser Reiefolleg un d’Enn vun „{{title}}“.",
+      "search": "Dokumenter sichen …",
+      "none": "Keng passend Dokumenter.",
+      "noDeleteRight": "Dir däerft et net läschen – dofir och net uhänken.",
+      "hint": "Déi ugehaangen Dokumenter kommen duerno an d’Poubelle; iwwer den Historique kënnt Dir se 30 Deeg laang zréckhuelen.",
+      "confirm_one": "{{count}} Dokument uhänken",
+      "confirm_other": "{{count}} Dokumenter uhänken",
+      "done_one": "{{count}} Dokument ugehaang",
+      "done_other": "{{count}} Dokumenter ugehaang"
+    }
+  },
+  "contracts": {
+    "nav": "Kontrakter",
+    "title": "Kontrakter",
+    "pageIntro": "Laafzäiten a Kënnegungsfriste vun alle Kontrakter, déi Dir gesinn däerft – fir d’éischt déi, bei deene geschwënn eppes ze maachen ass.",
+    "scope": {
+      "label": "Uweisen",
+      "running": "Lafend",
+      "all": "All"
+    },
+    "emptyTitle": "Nach keng Kontrakter erfaasst",
+    "emptyText": "Maacht en Dokument op, zum Beispill e Stroum- oder Handyskontrakt, a gitt do d’Laafzäit an d’Kënnegungsfrist an. Rechtzäiteg virum Enn vun der Frist erschéngt dann eng Erënnerung.",
+    "cardTitle": "Kontrakt",
+    "none": "Ass dat e Kontrakt? Mat Laafzäit a Kënnegungsfrist erënnert AIDocuments Iech rechtzäiteg un d’Kënnegen.",
+    "add": "Als Kontrakt erfaassen",
+    "edit": "Kontrakt beaarbechten",
+    "intro": "Aus dem Enn vun der Laafzäit an der Kënnegungsfrist ergëtt sech, bis wéini gekënnegt muss sinn. Virdrun erschéngt eng Erënnerung; leeft d’Laafzäit ouni Kënnegung of, da verlängert de Kontrakt sech vu selwer.",
+    "saved": "Kontrakt gespäichert",
+    "removed": "Kontraktdonnéeën ewechgeholl",
+    "remove": {
+      "label": "Kontraktdonnéeën ewechhuelen",
+      "title": "Kontraktdonnéeën ewechhuelen?",
+      "text": "Laafzäit, Kënnegungsfrist an déi oppen Erënnerung dozou ginn ewechgeholl. D’Dokument selwer bleift."
+    },
+    "openEnded": "onbefrist",
+    "months_one": "{{count}} Mount",
+    "months_other": "{{count}} Méint",
+    "amountHint": "z. B. „49,90 € de Mount“",
+    "endDateHint": "Enn vun der aktueller Laafzäit; eidel = onbefrist",
+    "noticeHint": "Méint virum Enn vun der Laafzäit; eidel = bis zum Enn vun der Laafzäit",
+    "renewalHint": "Ouni Kënnegung verlängert de Kontrakt sech ëm esou vill Méint; 0 = en hält op",
+    "cancelledHint": "Da verlängert e sech net méi, an et kënnt keng Erënnerung méi.",
+    "fields": {
+      "partner": "Kontraktpartner",
+      "amount": "Betrag",
+      "startDate": "Ufank vum Kontrakt",
+      "endDate": "Laafzäit bis",
+      "notice": "Kënnegungsfrist (Méint)",
+      "renewal": "Verlängerung (Méint)",
+      "deadline": "Kënnege bis",
+      "reminderDays": "Erënneren (Deeg virdrun)",
+      "cancelled": "Gekënnegt"
+    },
+    "status": {
+      "ACTIVE": "Leeft",
+      "DUE_SOON": "Frist bal do",
+      "NOTICE_MISSED": "Frist verpasst",
+      "CANCELLED": "Gekënnegt",
+      "ENDED": "Ofgelaf",
+      "OPEN_ENDED": "Onbefrist"
+    },
+    "row": {
+      "cancelBy": "kënnege bis {{date}}",
+      "endsOn": "leeft den {{date}} of",
+      "term": "Laafzäit bis {{date}}",
+      "renews_one": "verlängert sech ëm {{count}} Mount",
+      "renews_other": "verlängert sech ëm {{count}} Méint"
+    }
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "intro": "Mat engem Passkey mellt Dir Iech ouni Passwuert un – fräigeschalt mat Fangerofdrock, Gesiicht oder Apparat-PIN. E gëllt nëmme fir dës Adress; eng gefälscht Websäit kann en net benotzen.",
+    "none": "Nach kee Passkey ugeluecht.",
+    "add": "Passkey derbäisetzen",
+    "create": "Passkey uleeën",
+    "name": "Numm",
+    "nameHint": "Domat Dir e méi spéit erëmerkennt, z. B. „Laptop“ oder „Passwuertmanager“.",
+    "password": "Äert Passwuert",
+    "passwordHint": "Wie e Passkey uleet, kënnt an Zukunft ouni Passwuert eran – dofir eemol zur Bestätegung.",
+    "added": "Passkey ugeluecht",
+    "removed": "Passkey ewechgeholl",
+    "synced": "synchroniséiert",
+    "lastUsed": "fir d’lescht benotzt {{time}}",
+    "created": "ugeluecht {{time}}, nach net benotzt",
+    "unsupported": "Dëse Browser kann hei keng Passkeys benotzen. Passkeys funktionéieren nëmmen iwwer HTTPS (oder localhost).",
+    "unsupportedIp": "Passkeys funktionéieren nëmmen iwwer HTTPS a mat engem Numm an der Adress, net mat enger IP-Adress.",
+    "remove": {
+      "label": "Passkey ewechhuelen",
+      "title": "Passkey ewechhuelen?",
+      "text": "Mat „{{name}}“ kann sech duerno kee méi umellen. Am Passwuertmanager respektiv um Apparat bleift e gespäichert, bis Dir en do läscht.",
+      "confirm": "Ewechhuelen"
     }
   }
 }

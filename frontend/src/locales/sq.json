@@ -3,7 +3,7 @@
     "save": "Ruaj",
     "cancel": "Anulo",
     "close": "Mbyll",
-    "edit": "Ndrysho",
+    "edit": "Redakto",
     "delete": "Fshi",
     "remove": "Hiq",
     "add": "Shto",
@@ -44,7 +44,9 @@
     "login": {
       "title": "Mirë se u ktheve",
       "subtitle": "Hyr që të kesh qasje te dokumentet e tua.",
-      "submit": "Hyr"
+      "submit": "Hyr",
+      "or": "ose",
+      "passkey": "Hyr me çelës kalimi"
     },
     "setup": {
       "title": "Konfiguro AIDocuments",
@@ -81,8 +83,8 @@
       "dark": "Tema e errët"
     },
     "search": {
-      "placeholder": "Kërkim me fjalë kyçe: dokumente, etiketa, përmbajtje …",
-      "placeholderAi": "Kërkim me IA: pyet me fjalët e tua – p.sh. “faturat nga Kia nga 2024”",
+      "placeholder": "Kërkim me fjalë kyçe: dokumente, etiketa, përmbajtje…",
+      "placeholderAi": "Kërkim me IA: pyet me fjalët e tua – p.sh. „faturat nga Kia nga 2024“",
       "labelAi": "IA",
       "label": "Kërko dokumente",
       "clear": "Pastro kërkimin",
@@ -102,26 +104,49 @@
       "changed": "Fjalëkalimi u ndryshua"
     },
     "dropzone": {
-      "title": "Lësho skedarët PDF këtu",
-      "hint": "Mund të lëshosh disa skedarë njëherësh. Ata ruhen, analizohen dhe etiketohen."
+      "title": "Lësho skedarët PDF ose fotot këtu",
+      "hint": "Mund të lëshosh disa skedarë njëherësh. Fotot (JPG, PNG, HEIC) shndërrohen në PDF. Gjithçka ruhet, analizohet dhe etiketohet."
+    },
+    "remindersDue_one": "{{count, number}} kujtesë për t’u kryer",
+    "remindersDue_other": "{{count, number}} kujtesa për t’u kryer",
+    "profile": {
+      "email": "Adresa e email-it",
+      "saved": "U ruajt"
+    },
+    "notifications": {
+      "title": "Njoftimet me email",
+      "emailHint": "Këtu vijnë kujtesat për t’u kryer që të janë caktuar ty dhe njoftimet që aktivizon më poshtë – në gjuhën në të cilën po e përdor aplikacionin tani. Lëre bosh nëse nuk dëshiron të marrësh email-e.",
+      "digest": "Dokumente të reja çdo ditë",
+      "digestHint": "Një herë në ditë, një listë e dokumenteve që kanë ardhur në hapësirat e tua të punës – vetëm në ditët me dokumente të reja.",
+      "admin": "Njoftime për administratorët",
+      "adminHint": "Kur mbarojnë afatet e ruajtjes (asgjë nuk fshihet automatikisht) dhe kur një kuti postare nuk mund të kontrollohet disa herë radhazi.",
+      "needsEmail": "Pa adresë nuk dërgohet asnjë email."
     }
   },
   "upload": {
-    "onlyPdf": "Mund të shtohen vetëm skedarë PDF.",
+    "onlyPdf": "Mund të shtohen vetëm skedarë PDF dhe foto (JPG, PNG, HEIC).",
     "uploadingFile": "Po ngarkohet „{{name}}“…",
-    "uploadingFiles_one": "Po ngarkohet {{count, number}} skedar PDF…",
-    "uploadingFiles_other": "Po ngarkohen {{count, number}} skedarë PDF…",
+    "uploadingFiles_one": "Po ngarkohet {{count, number}} skedar…",
+    "uploadingFiles_other": "Po ngarkohen {{count, number}} skedarë…",
     "created_one": "U shtua {{count, number}} dokument",
     "created_other": "U shtuan {{count, number}} dokumente",
     "processingInBackground": "Përpunimi vazhdon në sfond.",
     "duplicates_one": "{{count, number}} ekziston tashmë",
     "duplicates_other": "{{count, number}} ekzistojnë tashmë",
-    "rejected_one": "{{count, number}} skedar nuk është PDF i vlefshëm",
-    "rejected_other": "{{count, number}} skedarë nuk janë PDF të vlefshëm",
+    "rejected_one": "{{count, number}} skedar nuk u shtua",
+    "rejected_other": "{{count, number}} skedarë nuk u shtuan",
     "onlyDuplicates_one": "Ky dokument ekziston tashmë.",
     "onlyDuplicates_other": "Këto dokumente ekzistojnë tashmë.",
-    "noneValid": "Asnjë nga skedarët nuk është PDF i vlefshëm.",
-    "failed": "Ngarkimi dështoi"
+    "noneValid": "Asnjë nga skedarët nuk mund të shtohej.",
+    "failed": "Ngarkimi dështoi",
+    "intoArea": "Hapësira e punës: {{area}}",
+    "combine": {
+      "title": "Të bashkohen fotot në një dokument?",
+      "text": "Ke zgjedhur disa foto. Nëse janë faqet e një dokumenti – p.sh. të një letre me disa faqe – ato bëhen një PDF sipas radhës së emrave të skedarëve; radhën mund ta ndryshosh më pas te „Faqet“. Përndryshe çdo foto bëhet dokument më vete.",
+      "one": "Si një dokument",
+      "separate": "Çdo foto veçmas",
+      "tooMuch": "Fotot janë tepër të shumta ose tepër të mëdha për një dokument (maksimumi 100 foto dhe gjithsej 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -175,12 +200,13 @@
       "activeTo": "deri më {{date}}",
       "removeOne": "Hiq filtrin „{{label}}“",
       "removeAll": "Hiq të gjithë filtrat",
-      "clear": "Hiq filtrat"
+      "clear": "Hiq filtrat",
+      "retentionExpired": "Ruajtja ka skaduar"
     },
     "empty": {
       "libraryTitle": "Ende asnjë dokument",
-      "libraryHint": "Thjesht tërhiq skedarë PDF në këtë dritare ose përdor „Ngarko“.",
-      "libraryHintAdmin": "Thjesht tërhiq skedarë PDF në këtë dritare ose përdor „Ngarko“. Te cilësimet mund të konfigurosh një kuti postare ose një dosje importi, nga të cilat skedarët e rinj PDF importohen automatikisht.",
+      "libraryHint": "Thjesht tërhiq skedarë PDF ose foto në këtë dritare ose përdor „Ngarko“.",
+      "libraryHintAdmin": "Thjesht tërhiq skedarë PDF ose foto në këtë dritare ose përdor „Ngarko“. Te cilësimet mund të konfigurosh një kuti postare ose një dosje importi, nga të cilat dokumentet e reja importohen automatikisht.",
       "noResultsTitle": "Nuk u gjet asgjë",
       "noResultsSearch": "Asnjë dokument nuk përputhet me këtë kërkim. Kërkimi gjen edhe pjesë fjalësh – provo një term më të shkurtër ose më pak fjalë.",
       "noResultsFilters": "Asnjë dokument nuk përputhet me filtrat e zgjedhur."
@@ -189,7 +215,26 @@
     "loadingAll_other": "U ngarkuan {{loaded, number}} nga {{count, number}} dokumente…",
     "loadMore": "Shfaq më shumë ({{remaining, number}})",
     "aiSearch": {
-      "notice": "Kërkim me IA: “{{question}}”. Filtrat tregojnë si u kuptua pyetja."
+      "notice": "Kërkim me IA: „{{question}}“. Filtrat tregojnë si u kuptua pyetja."
+    },
+    "export": {
+      "label_one": "Eksporto {{count, number}} dokument si ZIP",
+      "label_other": "Eksporto të gjitha {{count, number}} dokumentet e kësaj liste si ZIP",
+      "started_one": "Filloi eksportimi i {{count, number}} dokumenti",
+      "started_other": "Filloi eksportimi i {{count, number}} dokumenteve",
+      "contents": "Skedari ZIP përmban skedarët PDF, si dhe të gjitha të dhënat si tabelë (documents.csv) dhe si documents.json.",
+      "failed": "Eksportimi dështoi"
+    },
+    "mailboxNotice": {
+      "text_one": "Kutia postare „{{names}}“ nuk ka mundur të kontrollohet disa herë radhazi – prej saj nuk po vijnë dokumente.",
+      "text_other": "Këto kuti postare nuk kanë mundur të kontrollohen disa herë radhazi: {{names}}. Prej tyre nuk po vijnë dokumente.",
+      "action": "Shiko kutitë postare"
+    },
+    "backupNotice": {
+      "never": "Ende nuk ka asnjë kopje rezervë të dokumenteve të tua.",
+      "overdue": "Kopja e fundit rezervë: {{when}}. Ka kaluar më shumë kohë sesa është caktuar.",
+      "failed": "Kopja rezervë automatike dështoi: {{reason}}",
+      "action": "Te kopja rezervë"
     }
   },
   "document": {
@@ -213,7 +258,7 @@
       "restored": "Origjinali u rikthye"
     },
     "duplicate": {
-      "notice": "Ndoshta dublikatë: përmbajtja e këtij dokumenti përputhet me “{{title}}”.",
+      "notice": "Ndoshta dublikatë: përmbajtja e këtij dokumenti përputhet me „{{title}}“.",
       "open": "Te dokumenti tjetër",
       "dismiss": "Nuk është dublikatë",
       "dismissed": "U shënua: nuk është dublikatë"
@@ -263,19 +308,21 @@
     },
     "noText": "Për këtë dokument nuk ka tekst – ka gjasa të jetë një skanim pa shtresë teksti. Kur IA është konfiguruar dhe njohja e tekstit është aktivizuar, përmbajtja transkriptohet gjatë analizës.",
     "edit": {
-      "title": "Ndrysho dokumentin",
-      "saved": "Ndryshimet u ruajtën"
+      "title": "Redakto dokumentin",
+      "saved": "Ndryshimet u ruajtën",
+      "areaHint": "Përcakton se kush e sheh dokumentin.",
+      "areaMoveHint": "Më pas do ta shohin vetëm anëtarët e „{{area}}“ dhe administratorët."
     },
     "delete": {
       "title": "Të fshihet dokumenti?",
-      "text": "“{{title}}” do të fshihet. Në historik mund ta zhbësh këtë për 30 ditë; pas kësaj hiqet përgjithmonë.",
+      "text": "„{{title}}“ do të fshihet. Në historik mund ta zhbësh këtë për 30 ditë; pas kësaj hiqet përgjithmonë.",
       "confirm": "Fshi"
     },
     "chat": {
       "intro": "Bëj një pyetje për këtë dokument – IA përgjigjet bazuar në përmbajtjen e tij.",
-      "placeholder": "Pyet diçka për këtë dokument …",
+      "placeholder": "Pyet diçka për këtë dokument…",
       "send": "Dërgo",
-      "thinking": "IA po lexon dokumentin …",
+      "thinking": "IA po lexon dokumentin…",
       "notConfigured": "Për pyetje rreth dokumentit duhet të jetë konfiguruar një IA.",
       "restart": "Fillo nga e para",
       "suggestions": {
@@ -300,16 +347,25 @@
         "EDITED": "Redaktuar",
         "ORIGINAL_RESTORED": "Origjinali u rikthye",
         "VERSION_RESTORED": "Versioni {{from}} u rikthye",
-        "UNDONE": "Ndryshimi u zhbë"
+        "UNDONE": "Ndryshimi u zhbë",
+        "PAGES": "Faqet u ndryshuan",
+        "MERGED": "Dokumentet u bashkëngjitën"
       }
-    }
+    },
+    "retention": {
+      "label": "Ruajtja",
+      "until": "deri më {{date}} – nuk mund të fshihet deri atëherë",
+      "expired": "afati skadoi më {{date}}",
+      "locked": "Duhet ruajtur deri më {{date}} – mund të fshihet vetëm pas kësaj"
+    },
+    "readOnly": "Në këtë hapësirë pune ke të drejtë vetëm ta shikosh këtë dokument."
   },
   "settings": {
     "title": "Cilësimet",
     "mailboxes": {
       "title": "Kutitë postare",
-      "navHint": "Serverë IMAP nga të cilët importohen bashkëngjitjet PDF",
-      "intro": "Bashkëngjitjet PDF importohen automatikisht nga këto kuti postare IMAP. Kutitë postare vetëm lexohen – email-et mbeten të pandryshuara dhe të palexuara.",
+      "navHint": "Serverë IMAP nga të cilët importohen bashkëngjitjet PDF dhe fotot",
+      "intro": "Bashkëngjitjet PDF dhe fotot e bashkëngjitura (si PDF) importohen automatikisht nga këto kuti postare IMAP; teksti i email-eve dhe logot e ngulitura jo. Kutitë postare vetëm lexohen – email-et mbeten të pandryshuara dhe të palexuara.",
       "add": "Shto kuti postare",
       "emptyTitle": "Ende asnjë kuti postare e konfiguruar",
       "emptyText": "Shkruaj kredencialet e një kutie postare IMAP – për shembull të asaj ku skaneri yt dërgon dokumentet.",
@@ -326,7 +382,7 @@
         "text": "Kutia postare „{{name}}“ nuk do të kontrollohet më. Dokumentet e importuara tashmë ruhen."
       },
       "dialog": {
-        "editTitle": "Ndrysho kutinë postare",
+        "editTitle": "Redakto kutinë postare",
         "description": "Kredencialet i merr nga ofruesi yt i email-it. Fjalëkalimi ruhet i enkriptuar.",
         "name": "Emri",
         "nameHint": "Sipas dëshirës, p.sh. „Skaneri“ ose „Faturat“",
@@ -342,7 +398,7 @@
         "since": "Vetëm email-et nga data",
         "sinceHint": "Opsionale – email-et më të vjetra anashkalohen",
         "enabled": "Kontrollo automatikisht",
-        "enabledHint": "Kutia postare kontrollohet për skedarë të rinj PDF sipas intervalit të caktuar.",
+        "enabledHint": "Kutia postare kontrollohet për bashkëngjitje të reja sipas intervalit të caktuar.",
         "filter": {
           "title": "Filtër",
           "intro": "Përpunohen vetëm email-et që plotësojnë të gjitha kushtet. Një term për rresht; shkronjat e mëdha dhe të vogla nuk kanë rëndësi, mjafton një pjesë e tekstit. Fushat bosh nuk kufizojnë asgjë.",
@@ -350,30 +406,31 @@
           "subjectExcludes": "Subjekti nuk përmban asnjë nga këto terma",
           "senderIncludes": "Dërguesi përmban një nga këto terma",
           "senderExcludes": "Dërguesi nuk përmban asnjë nga këto terma",
-          "senderHint": "Emër ose adresë, p.sh. “@example.com”",
-          "newOnly": "Filtri vlen për email-et që mbërrijnë pas marrjes së fundit; email-et e kontrolluara tashmë nuk përpunohen sërish."
+          "senderHint": "Emër ose adresë, p.sh. „@example.com“",
+          "newOnly": "Filtri vlen për email-et që mbërrijnë pas kontrollit të fundit; email-et e kontrolluara tashmë nuk përpunohen sërish."
         },
-        "interval": "Intervali i marrjes në minuta",
-        "intervalHint": "Lëreni bosh për intervalin e përgjithshëm (aktualisht {{interval}})."
+        "interval": "Intervali i kontrollit në minuta",
+        "intervalHint": "Lëre bosh për intervalin e përgjithshëm (aktualisht {{interval}}).",
+        "areaHint": "Dokumentet e importuara shkojnë në këtë hapësirë pune."
       },
       "filterActive": "Filtri aktiv",
-      "schedule": "Marrje çdo {{interval}} · e radhës {{when}}",
-      "scheduleSoon": "Marrje çdo {{interval}} · e radhës së shpejti"
+      "schedule": "Kontroll çdo {{interval}} · i radhës {{when}}",
+      "scheduleSoon": "Kontroll çdo {{interval}} · i radhës së shpejti"
     },
     "import": {
-      "title": "Orari dhe dosja e importit",
+      "title": "Kontrolli dhe dosja e importit",
       "navHint": "Intervali i kontrollit dhe direktoria e mbikëqyrur",
-      "intro": "Përcakton sa shpesh aplikacioni kërkon skedarë të rinj PDF – në kutitë postare dhe në dosjen e importit.",
+      "intro": "Përcakton sa shpesh aplikacioni kërkon dokumente të reja – në kutitë postare dhe në dosjen e importit.",
       "saved": "Cilësimet u ruajtën",
       "interval": {
         "title": "Intervali i kontrollit",
-        "text": "Sa shpesh aplikacioni kontrollon dosjen hyrëse dhe të gjitha kutitë postare pa interval të vetin për PDF të reja.",
+        "text": "Sa shpesh aplikacioni kontrollon dosjen e importit dhe të gjitha kutitë postare pa interval të vetin për dokumente të reja.",
         "label": "Çdo … minuta",
         "nextRun": "Kontrolli tjetër automatik {{when}}."
       },
       "folder": {
         "title": "Dosja e importit",
-        "text": "Një direktori në server që mbikëqyret për skedarë të rinj PDF – për shembull destinacioni i një skaneri rrjeti. Kërkohet edhe në nëndosje.",
+        "text": "Një direktori në server që mbikëqyret për skedarë të rinj PDF dhe foto (JPG, PNG, HEIC) – për shembull destinacioni i një skaneri rrjeti. Kërkohet edhe në nëndosje.",
         "enable": "Mbikëqyr dosjen e importit",
         "path": "Shtegu në server",
         "pathHint": "Shteg absolut. Në kontejnerin Docker kjo është dosja e montuar, zakonisht {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Po kontrollohet dosja…",
         "neverScanned": "Ende e pakontrolluar.",
         "scanNow": "Kontrollo tani",
-        "scanStarted": "Dosja e importit po kontrollohet."
+        "scanStarted": "Dosja e importit po kontrollohet.",
+        "areaHint": "Dokumentet nga dosja shkojnë në këtë hapësirë pune."
       }
     },
     "ai": {
@@ -480,7 +538,7 @@
       "disabled": "Çaktivizuar",
       "lastLogin": "Hyrja e fundit {{when}}",
       "neverLoggedIn": "Asnjë hyrje deri tani",
-      "editUser": "Ndrysho {{name}}",
+      "editUser": "Redakto {{name}}",
       "deleteUser": "Fshi {{name}}",
       "saved": "Përdoruesi u ruajt",
       "created": "Përdoruesi u krijua",
@@ -495,7 +553,7 @@
         "role": "Roli",
         "roleHints": {
           "ADMIN": "Mund të bëjë gjithçka – përfshirë ndryshimin e cilësimeve, menaxhimin e përdoruesve dhe fshirjen e dokumenteve.",
-          "USER": "Mund të shohë, të kërkojë e të ngarkojë dokumente dhe të ndryshojë të dhënat e tyre."
+          "USER": "Mund të shohë, të kërkojë e të ngarkojë dokumente dhe të redaktojë të dhënat e tyre."
         },
         "active": "Llogari aktive",
         "activeHint": "Llogaritë e çaktivizuara nuk mund të hyjnë; sesionet aktive mbyllen menjëherë.",
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} do të hyjë më pas vetëm me fjalëkalim dhe mund ta konfigurojë sërish vërtetimin me dy faktorë – për shembull pas humbjes së telefonit.",
       "resetTwoFactorConfirm": "Rivendos",
       "twoFactorReset": "Vërtetimi me dy faktorë u rivendos"
+    },
+    "areas": {
+      "title": "Hapësirat e punës",
+      "navHint": "Kush cilat dokumente sheh",
+      "intro": "Çdo dokument ndodhet në saktësisht një hapësirë pune. Përdoruesit shohin vetëm dokumentet e hapësirave të punës ku janë anëtarë, si dhe ato të hapësirave të hapura për të gjithë.",
+      "add": "Krijo hapësirë pune",
+      "everyone": "Për të gjithë",
+      "restricted": "E kufizuar",
+      "visibleForAll": "e dukshme për këdo që ka hyrë",
+      "members": "Anëtarët: {{names}}",
+      "adminsOnly": "vetëm administratorët",
+      "adminHint": "Administratorët shohin të gjitha hapësirat e punës, edhe pa qenë anëtarë.",
+      "edit": "Redakto {{name}}",
+      "saved": "Hapësira e punës u ruajt",
+      "created": "Hapësira e punës u krijua",
+      "deleted": "Hapësira e punës u fshi",
+      "delete": {
+        "label": "Fshi {{name}}",
+        "title": "Të fshihet hapësira e punës?",
+        "text": "Hapësira e punës „{{name}}“ do të fshihet. Kjo është e mundur vetëm për sa kohë që asnjë dokument, kuti postare apo dosje importi nuk e përdor."
+      },
+      "dialog": {
+        "name": "Emri",
+        "namePlaceholder": "p.sh. Kontabiliteti",
+        "generalNameHint": "Lëre bosh që hapësira e punës të quhet „E përgjithshme“ në çdo gjuhë.",
+        "everyone": "E dukshme për të gjithë",
+        "everyoneHint": "Të gjithë përdoruesit që kanë hyrë shohin dokumentet e kësaj hapësire pune.",
+        "members": "Anëtarët",
+        "membersHint": "Vetëm anëtarët dhe administratorët shohin dokumentet e kësaj hapësire pune. Për çdo anëtar zgjidh nëse mund vetëm të lexojë, edhe të redaktojë apo edhe të fshijë.",
+        "noUsers": "Ende nuk ka përdorues pa rolin e administratorit.",
+        "create": "Krijo",
+        "everyoneAccess": "Të drejtat për të gjithë",
+        "accessOf": "Të drejtat e {{name}}",
+        "membersHintEveryone": "Të gjithë shohin dokumentet e kësaj hapësire pune. Shto këtu anëtarë nëse duhet të kenë më shumë të drejta se të gjithë të tjerët."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Ruajtja",
+      "navHint": "Afatet dhe bllokimi i fshirjes",
+      "intro": "Përcakto sa kohë duhet të ruhen dokumentet e një lloji – për shembull faturat për dhjetë vjet. Afati llogaritet nga fundi i vitit nga i cili është dokumenti. Deri atëherë askush nuk mund ta fshijë.",
+      "permanent": "Një bllokim nuk mund të hiqet – as nga administratorët. Nëse një rregull shkurtohet ose fshihet, ose ndryshon lloji i një dokumenti, afati i vendosur tashmë mbetet në fuqi.",
+      "add": "Krijo rregull",
+      "years_one": "{{count, number}} vit",
+      "years_other": "{{count, number}} vjet",
+      "edit": "Redakto rregullin për {{category}}",
+      "saved": "Rregulli u ruajt",
+      "created": "Rregulli u krijua",
+      "deleted": "Rregulli u fshi",
+      "emptyTitle": "Ende nuk ka rregulla ruajtjeje",
+      "emptyText": "Pa rregull, dokumentet mund të fshihen në çdo kohë.",
+      "delete": {
+        "label": "Fshi rregullin për {{category}}",
+        "title": "Të fshihet rregulli?",
+        "text": "Dokumentet e reja të llojit „{{category}}“ nuk do të marrin më afat. Dokumentet e bllokuara tashmë mbeten të bllokuara deri në fund të afatit të tyre."
+      },
+      "dialog": {
+        "categoryHint": "Siç shfaqet te dokumenti; shkronjat e mëdha dhe të vogla nuk kanë rëndësi.",
+        "years": "Afati i ruajtjes në vite",
+        "yearsHint": "Llogaritet nga fundi i vitit të datës së dokumentit (pa datë: të ditës kur u shtua).",
+        "shorterHint": "Një afat më i shkurtër vlen vetëm për dokumentet që ende nuk kanë afat. Dokumentet e bllokuara tashmë mbeten të tilla deri në fund të afatit të tyre aktual.",
+        "create": "Krijo"
+      }
+    },
+    "mailOut": {
+      "title": "Dërgimi i email-eve",
+      "navHint": "Njoftime me email",
+      "intro": "Aplikacioni dërgon njoftime për kujtesat që janë për t’u kryer përmes këtij serveri SMTP – një herë për çdo kujtesë, të mbledhura në një email për çdo person. Marrësi është ai që merret me kujtesën dhe ka vendosur një adresë te menyja e përdoruesit.",
+      "enabled": "Dërgo njoftime me email",
+      "enabledHint": "Kur dërgimi çaktivizohet, kujtesat shfaqen vetëm në aplikacion.",
+      "host": "Serveri SMTP",
+      "port": "Porta",
+      "security": "Enkriptimi",
+      "unencrypted": "Pa enkriptim",
+      "usernameHint": "Lëre bosh nëse serveri nuk kërkon hyrje.",
+      "passwordKeepHint": "Lëre bosh për të mbajtur fjalëkalimin e ruajtur.",
+      "from": "Adresa e dërguesit",
+      "fromHint": "Serveri duhet ta lejojë për llogarinë tënde.",
+      "appUrl": "Adresa e aplikacionit",
+      "appUrlHint": "Për lidhjet në email-e, p.sh. https://docs.example.com. Bosh = pa lidhje.",
+      "digestHour": "Dërgimi",
+      "fromHour": "nga ora {{hour}}",
+      "saved": "Cilësimet e email-it u ruajtën",
+      "test": "Mesazh prove te {{address}}",
+      "testNeedsAddress": "Për mesazhin e provës, vendos adresën tënde të email-it te menyja e përdoruesit.",
+      "testSavedHint": "Prova përdor cilësimet e ruajtura – ruaji më parë."
+    },
+    "backup": {
+      "title": "Kopje rezervë dhe importim",
+      "navHint": "Kopje rezervë e gjithçkaje njëherësh, importim eksportesh",
+      "intro": "Një kopje rezervë përmban gjithçka që nevojitet për ta rikthyer AIDocuments saktësisht siç është. Një importim merr dokumentet nga eksporti i një instalimi tjetër – me të dhënat e tyre.",
+      "backupTitle": "Kopje rezervë me një klik",
+      "backupText": "Një ZIP me bazën e të dhënave, të gjitha dokumentet përfshirë versionet e mëparshme, imazhet e parapamjes dhe çelësin për fjalëkalimet e ruajtura. Ndërkohë aplikacioni vazhdon të punojë.",
+      "size": "Madhësia",
+      "sizeValue_one": "rreth {{size}} në {{count, number}} skedar",
+      "sizeValue_other": "rreth {{size}} në {{count, number}} skedarë",
+      "last": "Kopja e fundit",
+      "never": "asnjëherë",
+      "keyWarning": "Kopja rezervë nuk është e enkriptuar dhe përmban çelësin për fjalëkalimet e ruajtura (kutitë postare, IA, vërtetimi me dy faktorë). Ruaje po aq sigurt sa vetë dokumentet.",
+      "restore": "Për rikthim: ndalo AIDocuments, nxirr përmbajtjen e ZIP-it në një dosje të zbrazët të dhënash dhe nise sërish. Udhëzimet gjenden në ZIP (README.txt).",
+      "download": "Shkarko kopjen rezervë",
+      "started": "Kopja rezervë po shkarkohet.",
+      "externalDatabase": "Kopja rezervë me një klik është e disponueshme vetëm me bazën e integruar të të dhënave. Me MariaDB, bëj kopje rezervë të bazës së të dhënave me mjetet e saj (p.sh. mariadb-dump) dhe po ashtu të dosjes së të dhënave.",
+      "importTitle": "Importo një eksport",
+      "importText": "Një ZIP nga „Eksporto“ në listën e dokumenteve – edhe nga një instalim tjetër. Titulli, lloji i dokumentit, etiketat dhe të dhënat e tjera ruhen; IA nuk i lexon sërish dokumentet. Skedarët që ekzistojnë tashmë anashkalohen.",
+      "file": "Skedari ZIP",
+      "areaHint": "Dokumentet shkojnë këtu – ose vetëm ato, hapësira e punës e të cilave nuk ekziston këtu.",
+      "matchAreas": "Vendosi në hapësira pune me të njëjtin emër",
+      "matchAreasHint": "Nëse këtu ka një hapësirë pune me të njëjtin emër si në eksport, dokumentet shkojnë atje.",
+      "import": "Importo",
+      "importing": "Po importohet…",
+      "result": "Të importuara: {{imported, number}} · ekzistonin tashmë: {{duplicates, number}} · të paimportuara: {{failed, number}}",
+      "auto": {
+        "title": "Kopje rezervë automatike",
+        "text": "Një herë në ditë AIDocuments ruan një kopje rezervë të plotë si ZIP në një dosje dhe mban prej tyre më të fundit. Më mirë është që dosja të jetë në një disk tjetër ose në një disk rrjeti – përndryshe, nëse prishet disku me të dhënat, humbasin edhe kopjet rezervë.",
+        "enable": "Bëj kopje rezervë automatikisht çdo ditë",
+        "hour": "Ora",
+        "keep": "Mbaj",
+        "keepHint": "Numri i kopjeve; më të vjetrat fshihen.",
+        "directory": "Dosja",
+        "directoryHint": "Shteg i plotë në server. Lëre bosh për vlerën e paracaktuar. Në kontejnerin Docker dosja duhet të jetë e montuar.",
+        "warnAfterDays": "Paralajmëro pas (ditësh)",
+        "warnAfterDaysHint": "Njoftim në listën e dokumenteve kur nuk është bërë kopje rezervë për kaq kohë – as me dorë, as automatikisht. 0 = mos paralajmëro kurrë.",
+        "lastRun": "Ekzekutimi i fundit",
+        "nextRun": "Ekzekutimi i radhës",
+        "running": "Po krijohet kopja rezervë…",
+        "ok": "me sukses, {{when}}",
+        "failed": "dështoi, {{when}}",
+        "stored_one": "{{count, number}} kopje rezervë në {{directory}}",
+        "stored_other": "{{count, number}} kopje rezervë në {{directory}}",
+        "runNow": "Bëj kopje tani",
+        "saveFirst": "Ruaj më parë ndryshimet.",
+        "runStarted": "Kopja rezervë po krijohet në sfond.",
+        "done": "Kopja rezervë u krijua.",
+        "saved": "Cilësimet u ruajtën.",
+        "externalDatabase": "Kopja rezervë automatike është e disponueshme vetëm me bazën e integruar të të dhënave. Me MariaDB, bëj kopje rezervë të bazës së të dhënave me mjetet e saj (p.sh. një mariadb-dump çdo natë) dhe po ashtu të dosjes së të dhënave."
+      }
     }
   },
   "history": {
@@ -565,7 +760,8 @@
   "confirmCode": {
     "title": "Konfirmo ndryshimin",
     "text": "Ndryshimet në llogari, kuti postare dhe cilësime kërkojnë një kod aktual nga aplikacioni i vërtetimit. Konfirmimi vlen 10 minuta.",
-    "submit": "Konfirmo"
+    "submit": "Konfirmo",
+    "passkey": "Konfirmo me çelës kalimi"
   },
   "share": {
     "button": "Ndaj",
@@ -573,9 +769,9 @@
     "intro": "Krijon një lidhje me të cilën një person pa llogari mund të hapë pikërisht këtë dokument.",
     "recipient": "Me kë po e ndan?",
     "recipientHint": "Emri i personit – që më vonë të shohësh kujt ia dhe lidhjen.",
-    "permission": "A mund ta modifikojë ky person dokumentin?",
+    "permission": "A mund ta redaktojë ky person dokumentin?",
     "viewOnly": "Vetëm shikim",
-    "canEdit": "Mund të modifikojë",
+    "canEdit": "Mund të redaktojë",
     "viewHint": "Personi mund ta shikojë, ta printojë dhe ta shkarkojë PDF-në.",
     "editHint": "Personi mund edhe të shënojë, të shkruajë, të nënshkruajë dhe të ruajë PDF-në. Çdo ruajtje bëhet version i ri; titulli, etiketat dhe të dhënat e tjera mbeten të fshehura.",
     "validity": "E vlefshme për",
@@ -585,7 +781,7 @@
     "linkHint": "Kushdo që ka këtë lidhje mund ta hapë dokumentin – jepja vetëm {{name}}. Mund ta anulosh në çdo kohë te pamja e dokumentit.",
     "copy": "Kopjo lidhjen",
     "copied": "Lidhja u kopjua",
-    "listTitle": "E ndarë jashtë",
+    "listTitle": "E ndarë me persona të jashtëm",
     "expired": "ka skaduar",
     "validUntil": "e vlefshme deri më {{date}}",
     "noExpiry": "pa skadim",
@@ -598,6 +794,193 @@
     "page": {
       "for": "E ndarë me {{name}}",
       "invalid": "Kjo lidhje është e pavlefshme ose ka skaduar, ose dokumenti është fshirë. Drejtohu personit që ta dha."
+    }
+  },
+  "areas": {
+    "general": "E përgjithshme",
+    "unknown": "Hapësirë tjetër pune",
+    "label": "Hapësira e punës",
+    "target": "Hapësira e synuar",
+    "access": {
+      "READ": "Vetëm lexim",
+      "EDIT": "Lexim dhe redaktim",
+      "DELETE": "Redaktim dhe fshirje"
+    }
+  },
+  "reminders": {
+    "title": "Kujtesat",
+    "cardTitle": "Kujtesa",
+    "add": "Shto kujtesë",
+    "edit": "Redakto kujtesën",
+    "create": "Krijo",
+    "created": "Kujtesa u shtua",
+    "saved": "Kujtesa u ruajt",
+    "deleted": "Kujtesa u fshi",
+    "markedDone": "U krye",
+    "dueDate": "Afati",
+    "note": "Shënim",
+    "notePlaceholder": "p.sh. kontrollo pagesën",
+    "assignee": "Kush merret me të?",
+    "assigneeHint": "Ky person e sheh kujtesën te „Të miat“ dhe merr njoftimin me email. Mund të zgjidhet kushdo që e sheh dokumentin.",
+    "me": "{{name}} (unë)",
+    "assignedTo": "për {{name}}",
+    "doneBy": "kryer nga {{name}}",
+    "markDone": "Shëno si të kryer",
+    "reopen": "Rihap",
+    "delete": {
+      "label": "Fshi kujtesën",
+      "title": "Të fshihet kujtesa?",
+      "text": "Kujtesa do të hiqet. Dokumenti mbetet i pandryshuar."
+    },
+    "accept": "Shto",
+    "dismiss": "Hidh poshtë sugjerimin",
+    "suggestionsHint": "IA gjeti data në këtë dokument:",
+    "none": "Nuk ka kujtesa të hapura.",
+    "showDone_one": "Shfaq {{count, number}} kujtesë të kryer",
+    "showDone_other": "Shfaq {{count, number}} kujtesa të kryera",
+    "hideDone": "Fshih të kryerat",
+    "scope": {
+      "label": "Cilat kujtesa",
+      "mine": "Të miat",
+      "all": "Të gjitha"
+    },
+    "dueTitle": "Për t’u kryer",
+    "nothingDue": "Sot nuk ka asgjë për t’u kryer.",
+    "upcomingTitle": "Së shpejti",
+    "suggestionsTitle": "Data të sugjeruara",
+    "suggestionsPageHint": "Afate në gjashtë muajt e ardhshëm që IA gjeti në dokumente. Shtoji si kujtesë ose hidhi poshtë.",
+    "emptyTitle": "Nuk ka kujtesa",
+    "emptyText": "Shto një kujtesë te një dokument – ose prano një që sugjeron IA.",
+    "repeat": {
+      "label": "Përsëritja",
+      "hint": "Kur e shënon kujtesën si të kryer, krijohet tjetra me të njëjtin interval.",
+      "none": "Një herë",
+      "m1": "Çdo muaj",
+      "m3": "Çdo tremujor",
+      "m6": "Çdo gjashtë muaj",
+      "m12": "Çdo vit",
+      "m24": "Çdo dy vjet",
+      "months_one": "Çdo muaj",
+      "months_other": "Çdo {{count}} muaj"
+    },
+    "fromContract": "nga kontrata"
+  },
+  "pages": {
+    "button": "Faqet",
+    "title": "Redakto faqet",
+    "intro": "Tërhiq faqet ose zhvendosi me shigjetat, rrotulloji ose hiqi. Ruajtja krijon një version të ri – i mëparshmi mbetet.",
+    "page": "Faqja {{number}}",
+    "wasPage": "më parë {{number}}",
+    "moveLeft": "Zhvendose përpara",
+    "moveRight": "Zhvendose prapa",
+    "rotate": "Rrotullo 90°",
+    "remove": "Hiq faqen",
+    "keep": "Mbaje faqen",
+    "noneLeft": "Duhet të mbetet të paktën një faqe.",
+    "saveFirst": "Ruaj fillimisht ndryshimet",
+    "saved": "Faqet u ruajtën",
+    "split": {
+      "here": "Dokument më vete nga kjo faqe",
+      "title": "Të ndahet dokumenti?",
+      "text": "Faqja {{page}} dhe të gjitha faqet pasuese bëhen një dokument më vete në të njëjtën hapësirë pune. Ai lexohet dhe renditet si një dokument i sapoardhur; ky dokument mban faqet para saj.",
+      "confirm": "Ndaje",
+      "done": "Dokumenti u nda",
+      "open": "Hap dokumentin e ri"
+    },
+    "merge": {
+      "button": "Bashkëngjit dokumente",
+      "title": "Bashkëngjit dokumente",
+      "intro": "Faqet e dokumenteve të zgjedhura shtohen me këtë radhë në fund të „{{title}}“.",
+      "search": "Kërko dokumente…",
+      "none": "Nuk ka dokumente që përputhen.",
+      "noDeleteRight": "Nuk ke të drejtë ta fshish – prandaj nuk mund ta bashkëngjitësh.",
+      "hint": "Më pas dokumentet e bashkëngjitura shkojnë në kosh; mund të rikthehen nga historiku brenda 30 ditëve.",
+      "confirm_one": "Bashkëngjit {{count}} dokument",
+      "confirm_other": "Bashkëngjit {{count}} dokumente",
+      "done_one": "{{count}} dokument u bashkëngjit",
+      "done_other": "{{count}} dokumente u bashkëngjitën"
+    }
+  },
+  "contracts": {
+    "nav": "Kontratat",
+    "title": "Kontratat",
+    "pageIntro": "Kohëzgjatja dhe afatet e njoftimit të të gjitha kontratave që mund të shohësh – së pari ato për të cilat së shpejti duhet bërë diçka.",
+    "scope": {
+      "label": "Shfaq",
+      "running": "Në fuqi",
+      "all": "Të gjitha"
+    },
+    "emptyTitle": "Ende nuk ka kontrata të regjistruara",
+    "emptyText": "Hap një dokument, p.sh. një kontratë energjie elektrike ose telefoni, dhe regjistro aty kohëzgjatjen dhe afatin e njoftimit. Atëherë, në kohë para skadimit të afatit, shfaqet një kujtesë.",
+    "cardTitle": "Kontrata",
+    "none": "A është kjo kontratë? Me kohëzgjatjen dhe afatin e njoftimit, AIDocuments të kujton në kohë ta anulosh.",
+    "add": "Regjistroje si kontratë",
+    "edit": "Redakto kontratën",
+    "intro": "Nga fundi i kohëzgjatjes dhe afati i njoftimit del data deri kur duhet anuluar. Para saj shfaqet një kujtesë; nëse kohëzgjatja mbaron pa anulim, kontrata rinovohet automatikisht.",
+    "saved": "Kontrata u ruajt",
+    "removed": "Të dhënat e kontratës u hoqën",
+    "remove": {
+      "label": "Hiq të dhënat e kontratës",
+      "title": "Të hiqen të dhënat e kontratës?",
+      "text": "Hiqen kohëzgjatja, afati i njoftimit dhe kujtesa e hapur përkatëse. Vetë dokumenti mbetet."
+    },
+    "openEnded": "pa afat",
+    "months_one": "{{count}} muaj",
+    "months_other": "{{count}} muaj",
+    "amountHint": "p.sh. „49,90 € në muaj“",
+    "endDateHint": "Fundi i kohëzgjatjes aktuale; bosh = pa afat",
+    "noticeHint": "Muaj para fundit të kohëzgjatjes; bosh = deri në fund të kohëzgjatjes",
+    "renewalHint": "Pa anulim, kontrata rinovohet me kaq muaj; 0 = mbaron",
+    "cancelledHint": "Atëherë nuk rinovohet më dhe nuk shfaqen më kujtesa.",
+    "fields": {
+      "partner": "Pala kontraktuese",
+      "amount": "Shuma",
+      "startDate": "Fillimi i kontratës",
+      "endDate": "Kohëzgjatja deri më",
+      "notice": "Afati i njoftimit (muaj)",
+      "renewal": "Rinovimi (muaj)",
+      "deadline": "Anulo deri më",
+      "reminderDays": "Kujto (ditë më parë)",
+      "cancelled": "E anuluar"
+    },
+    "status": {
+      "ACTIVE": "Në fuqi",
+      "DUE_SOON": "Afati po afron",
+      "NOTICE_MISSED": "Afati u humb",
+      "CANCELLED": "E anuluar",
+      "ENDED": "Përfunduar",
+      "OPEN_ENDED": "Pa afat"
+    },
+    "row": {
+      "cancelBy": "anulo deri më {{date}}",
+      "endsOn": "mbaron më {{date}}",
+      "term": "kohëzgjatja deri më {{date}}",
+      "renews_one": "rinovohet me {{count}} muaj",
+      "renews_other": "rinovohet me {{count}} muaj"
+    }
+  },
+  "passkeys": {
+    "title": "Çelësat e kalimit",
+    "intro": "Me një çelës kalimi hyn pa fjalëkalim – e zhbllokon me gjurmën e gishtit, fytyrën ose PIN-in e pajisjes. Ai vlen vetëm për këtë adresë; një faqe e falsifikuar nuk mund ta përdorë.",
+    "none": "Ende nuk është shtuar asnjë çelës kalimi.",
+    "add": "Shto çelës kalimi",
+    "create": "Krijo çelës kalimi",
+    "name": "Emri",
+    "nameHint": "Që ta njohësh më vonë, p.sh. „Laptopi“ ose „Menaxheri i fjalëkalimeve“.",
+    "password": "Fjalëkalimi yt",
+    "passwordHint": "Kush shton një çelës kalimi, mund të hyjë më pas pa fjalëkalim – prandaj konfirmo një herë.",
+    "added": "Çelësi i kalimit u shtua",
+    "removed": "Çelësi i kalimit u hoq",
+    "synced": "i sinkronizuar",
+    "lastUsed": "përdorur së fundi {{time}}",
+    "created": "shtuar {{time}}, ende i papërdorur",
+    "unsupported": "Ky shfletues nuk mund të përdorë çelësa kalimi këtu. Çelësat e kalimit funksionojnë vetëm përmes HTTPS (ose localhost).",
+    "unsupportedIp": "Çelësat e kalimit funksionojnë vetëm përmes HTTPS dhe me një emër në adresë, jo me adresë IP.",
+    "remove": {
+      "label": "Hiq çelësin e kalimit",
+      "title": "Të hiqet çelësi i kalimit?",
+      "text": "Pas kësaj askush nuk mund të hyjë më me „{{name}}“. Ai mbetet i ruajtur në menaxherin e fjalëkalimeve ose në pajisje derisa ta fshish atje.",
+      "confirm": "Hiq"
     }
   }
 }

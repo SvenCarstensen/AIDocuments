@@ -6,7 +6,6 @@ import { toast } from 'sonner'
 import { sourceInfo } from '../components/documents'
 import { Alert, Button, Card, EmptyState, Spinner } from '../components/ui'
 import { api, errorMessage, type HistoryEntry } from '../lib/api'
-import { useAuth } from '../lib/auth'
 import { cx, formatDateTime } from '../lib/format'
 
 const PAGE_SIZE = 50
@@ -56,7 +55,6 @@ export function HistoryPage() {
 
 function HistoryRow({ entry }: { entry: HistoryEntry }) {
   const { t } = useTranslation()
-  const { isAdmin } = useAuth()
   const queryClient = useQueryClient()
   const undo = useMutation({
     mutationFn: () => api.undoHistory(entry.id),
@@ -69,8 +67,8 @@ function HistoryRow({ entry }: { entry: HistoryEntry }) {
     },
     onError: (e) => toast.error(errorMessage(e)),
   })
-  // ein gelöschtes Dokument zurückholen dürfen – wie das Löschen – nur Administratoren
-  const canUndo = entry.undoable && (entry.action !== 'DELETED' || isAdmin)
+  // ob das Recht im Bereich reicht (zurückholen nur, wer dort löschen darf), entscheidet der Server
+  const canUndo = entry.undoable
   const Icon = entry.action === 'IMPORTED' ? FilePlus2 : entry.action === 'EDITED' ? Pencil : Trash2
   const SourceIcon = entry.source ? sourceInfo[entry.source].icon : null
   const what =

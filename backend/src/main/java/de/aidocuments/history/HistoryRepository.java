@@ -41,12 +41,25 @@ public class HistoryRepository {
         return jdbc.sql("SELECT * FROM history WHERE id = ?").param(id).query(HistoryRepository::map).optional();
     }
 
-    public Page<HistoryEntry> findAllByOrderByAtDesc(Pageable pageable) {
-        List<HistoryEntry> content = jdbc.sql("SELECT * FROM history ORDER BY occurred_at DESC, id DESC"
-                        + " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset())
-                .query(HistoryRepository::map).list();
-        long total = jdbc.sql("SELECT COUNT(*) FROM history").query(Long.class).single();
-        return new PageImpl<>(content, pageable, total);
+    /** @param areas nur Einträge aus diesen Bereichen; {@code null} = alle */
+    public Page<HistoryEntry> findAllByOrderByAtDesc(Pageable pageable, java.util.Set<String> areas) {
+        if (areas != null && areas.isEmpty()) {
+            return new PageImpl<>(List.of(), pageable, 0);
+        }
+        String where = areas == null ? "" : " WHERE area_id IN (:areas)";
+        var content = jdbc.sql("SELECT * FROM history" + where + " ORDER BY occurred_at DESC, id DESC"
+                + " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset());
+        var count = jdbc.sql("SELECT COUNT(*) FROM history" + where);
+        if (areas != null) {
+            content = content.param("areas", areas);
+            count = count.param("areas", areas);
+        }
+        return new PageImpl<>(content.query(HistoryRepository::map).list(), pageable, count.query(Long.class).single());
+    }
+
+    /** Ein Dokument ist in einen anderen Bereich umgezogen – seine Einträge ziehen mit. */
+    public void moveDocument(String documentId, String areaId) {
+        jdbc.sql("UPDATE history SET area_id = ? WHERE document_id = ?").param(areaId).param(documentId).update();
     }
 
     /** Gibt es zu dem Dokument einen späteren, noch geltenden Schritt? Dann lässt sich dieser nicht mehr zurücknehmen. */
@@ -70,6 +83,7 @@ public class HistoryRepository {
         c.put("previous_file", entry.previousFile());
         c.put("undone_at", millis(entry.undoneAt()));
         c.put("undone_by", entry.undoneBy());
+        c.put("area_id", entry.areaId() == null ? de.aidocuments.area.Area.GENERAL : entry.areaId());
         db.upsert("history", c);
         return entry;
     }
@@ -88,6 +102,7 @@ public class HistoryRepository {
                 fromJson(rs.getString("before_details"), Details.class),
                 rs.getString("previous_file"),
                 instant(rs, "undone_at"),
-                rs.getString("undone_by"));
+                rs.getString("undone_by"),
+                rs.getString("area_id"));
     }
 }

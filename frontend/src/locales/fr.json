@@ -45,7 +45,9 @@
     "login": {
       "title": "Content de vous revoir",
       "subtitle": "Connectez-vous pour accéder à vos documents.",
-      "submit": "Se connecter"
+      "submit": "Se connecter",
+      "or": "ou",
+      "passkey": "Se connecter avec une clé d’accès"
     },
     "setup": {
       "title": "Configurer AIDocuments",
@@ -63,16 +65,16 @@
     },
     "twoFactor": {
       "title": "Confirmer la connexion",
-      "subtitle": "Saisis le code à 6 chiffres de ton application d'authentification.",
+      "subtitle": "Saisissez le code à 6 chiffres de votre application d’authentification.",
       "code": "Code",
-      "codeHint": "Pas d'accès à l'application ? Saisis plutôt l'un de tes codes de récupération.",
+      "codeHint": "Pas d’accès à l’application ? Saisissez plutôt l’un de vos codes de récupération.",
       "submit": "Confirmer",
       "back": "Retour à la connexion"
     },
     "twoFactorRequired": {
-      "title": "Configurer l'authentification à deux facteurs",
-      "subtitle": "L'authentification à deux facteurs est obligatoire pour les administrateurs. Configure-la maintenant pour continuer.",
-      "intro": "Il te faut une application d'authentification sur ton téléphone (p. ex. Google Authenticator, Microsoft Authenticator, 1Password ou Aegis)."
+      "title": "Configurer l’authentification à deux facteurs",
+      "subtitle": "L’authentification à deux facteurs est obligatoire pour les administrateurs. Configurez-la maintenant pour continuer.",
+      "intro": "Il vous faut une application d’authentification sur votre téléphone (p. ex. Google Authenticator, Microsoft Authenticator, 1Password ou Aegis)."
     }
   },
   "shell": {
@@ -82,12 +84,12 @@
       "dark": "Thème sombre"
     },
     "search": {
-      "placeholder": "Recherche par mots-clés : documents, mots-clés, contenus …",
+      "placeholder": "Recherche textuelle : documents, mots-clés, contenus…",
       "placeholderAi": "Recherche IA : posez votre question – p. ex. « factures de Kia de 2024 »",
       "labelAi": "IA",
       "label": "Rechercher des documents",
       "clear": "Effacer la recherche",
-      "askFailed": "La recherche se fait par mots-clés."
+      "askFailed": "La recherche textuelle est utilisée."
     },
     "userMenu": {
       "label": "Menu utilisateur ({{name}})",
@@ -103,16 +105,32 @@
       "changed": "Mot de passe modifié"
     },
     "dropzone": {
-      "title": "Déposez les PDF ici",
-      "hint": "Vous pouvez déposer plusieurs fichiers à la fois. Ils sont enregistrés, analysés et dotés de mots-clés."
+      "title": "Déposez des PDF ou des photos ici",
+      "hint": "Vous pouvez déposer plusieurs fichiers à la fois. Les photos (JPG, PNG, HEIC) sont converties en PDF. Tout est enregistré, analysé et doté de mots-clés."
+    },
+    "remindersDue_one": "{{count, number}} relance à traiter",
+    "remindersDue_many": "{{count, number}} de relances à traiter",
+    "remindersDue_other": "{{count, number}} relances à traiter",
+    "profile": {
+      "email": "Adresse e-mail",
+      "saved": "Enregistré"
+    },
+    "notifications": {
+      "title": "Notifications par e-mail",
+      "emailHint": "Les relances à traiter qui vous sont attribuées et les notifications que vous activez ci-dessous sont envoyées à cette adresse – dans la langue dans laquelle vous utilisez actuellement l’application. Laissez vide si vous ne souhaitez recevoir aucun e-mail.",
+      "digest": "Nouveaux documents chaque jour",
+      "digestHint": "Une fois par jour, la liste des documents arrivés dans vos espaces – uniquement les jours où il y en a de nouveaux.",
+      "admin": "Avis pour les administrateurs",
+      "adminHint": "Lorsque des délais de conservation expirent (rien n’est supprimé automatiquement) et lorsque la vérification d’une boîte mail échoue à plusieurs reprises.",
+      "needsEmail": "Sans adresse, aucun e-mail n’est envoyé."
     }
   },
   "upload": {
-    "onlyPdf": "Seuls les fichiers PDF peuvent être ajoutés.",
-    "uploadingFile": "Téléversement de « {{name}} » …",
-    "uploadingFiles_one": "Téléversement de {{count, number}} PDF …",
-    "uploadingFiles_many": "Téléversement de {{count, number}} de PDF …",
-    "uploadingFiles_other": "Téléversement de {{count, number}} PDF …",
+    "onlyPdf": "Seuls des PDF et des photos (JPG, PNG, HEIC) peuvent être ajoutés.",
+    "uploadingFile": "Téléversement de « {{name}} »…",
+    "uploadingFiles_one": "Téléversement de {{count, number}} fichier…",
+    "uploadingFiles_many": "Téléversement de {{count, number}} de fichiers…",
+    "uploadingFiles_other": "Téléversement de {{count, number}} fichiers…",
     "created_one": "{{count, number}} document ajouté",
     "created_many": "{{count, number}} de documents ajoutés",
     "created_other": "{{count, number}} documents ajoutés",
@@ -120,26 +138,34 @@
     "duplicates_one": "{{count, number}} existe déjà",
     "duplicates_many": "{{count, number}} existent déjà",
     "duplicates_other": "{{count, number}} existent déjà",
-    "rejected_one": "{{count, number}} fichier n’est pas un PDF valide",
-    "rejected_many": "{{count, number}} de fichiers ne sont pas des PDF valides",
-    "rejected_other": "{{count, number}} fichiers ne sont pas des PDF valides",
+    "rejected_one": "{{count, number}} fichier non ajouté",
+    "rejected_many": "{{count, number}} de fichiers non ajoutés",
+    "rejected_other": "{{count, number}} fichiers non ajoutés",
     "onlyDuplicates_one": "Ce document existe déjà.",
     "onlyDuplicates_many": "Ces documents existent déjà.",
     "onlyDuplicates_other": "Ces documents existent déjà.",
-    "noneValid": "Aucun des fichiers n’est un PDF valide.",
-    "failed": "Échec du téléversement"
+    "noneValid": "Aucun des fichiers n’a pu être ajouté.",
+    "failed": "Échec du téléversement",
+    "intoArea": "Espace : {{area}}",
+    "combine": {
+      "title": "Combiner les photos en un seul document ?",
+      "text": "Vous avez sélectionné plusieurs photos. S’il s’agit des pages d’un même document – une lettre de plusieurs pages, par exemple –, elles forment un seul PDF dans l’ordre de leurs noms de fichier ; vous pourrez modifier l’ordre ensuite sous « Pages ». Sinon, chaque photo devient un document distinct.",
+      "one": "En un seul document",
+      "separate": "Chaque photo séparément",
+      "tooMuch": "Il y a trop de photos, ou des photos trop volumineuses, pour un seul document (100 photos et 240 Mo au total au maximum)."
+    }
   },
   "documents": {
     "status": {
       "pending": "En attente",
-      "processing": "Analyse",
+      "processing": "Analyse en cours",
       "failed": "Erreur",
       "textOnly": "Sans IA"
     },
     "ocrBadge": "Reconnaissance de texte",
     "aiNotice": {
       "text": "L’IA n’est pas encore configurée. Les nouveaux documents peuvent être recherchés par leur texte, mais ils ne sont ni résumés ni dotés de mots-clés.",
-      "builtinOcr": "Les numérisations sans couche de texte sont lues par la reconnaissance de texte intégrée, si bien qu’elles apparaissent aussi dans la recherche.",
+      "builtinOcr": "Les scans sans couche de texte sont lus par la reconnaissance de texte intégrée, si bien qu’ils apparaissent eux aussi dans la recherche.",
       "action": "Configurer maintenant"
     },
     "searchResults_one": "<count>{{count, number}} résultat</count> <query>pour « {{query}} »</query>",
@@ -182,22 +208,45 @@
       "activeTo": "jusqu’au {{date}}",
       "removeOne": "Retirer le filtre « {{label}} »",
       "removeAll": "Retirer tous les filtres",
-      "clear": "Retirer les filtres"
+      "clear": "Retirer les filtres",
+      "retentionExpired": "Délai expiré"
     },
     "empty": {
       "libraryTitle": "Aucun document pour l’instant",
-      "libraryHint": "Faites simplement glisser des fichiers PDF dans cette fenêtre ou utilisez « Téléverser ».",
-      "libraryHintAdmin": "Faites simplement glisser des fichiers PDF dans cette fenêtre ou utilisez « Téléverser ». Dans les paramètres, vous pouvez configurer une boîte mail ou un dossier d’import depuis lesquels les nouveaux PDF sont importés automatiquement.",
+      "libraryHint": "Faites simplement glisser des PDF ou des photos dans cette fenêtre ou utilisez « Téléverser ».",
+      "libraryHintAdmin": "Faites simplement glisser des PDF ou des photos dans cette fenêtre ou utilisez « Téléverser ». Dans les paramètres, vous pouvez configurer une boîte mail ou un dossier d’import depuis lesquels les nouveaux documents sont importés automatiquement.",
       "noResultsTitle": "Aucun résultat",
       "noResultsSearch": "Aucun document ne correspond à cette recherche. La recherche trouve aussi des parties de mots – essayez un terme plus court ou moins de mots.",
       "noResultsFilters": "Aucun document ne correspond aux filtres sélectionnés."
     },
-    "loadingAll_one": "{{loaded, number}} sur {{count, number}} document chargé …",
-    "loadingAll_many": "{{loaded, number}} sur {{count, number}} de documents chargés …",
-    "loadingAll_other": "{{loaded, number}} sur {{count, number}} documents chargés …",
+    "loadingAll_one": "{{loaded, number}} sur {{count, number}} document chargé…",
+    "loadingAll_many": "{{loaded, number}} sur {{count, number}} de documents chargés…",
+    "loadingAll_other": "{{loaded, number}} sur {{count, number}} documents chargés…",
     "loadMore": "Charger plus ({{remaining, number}})",
     "aiSearch": {
       "notice": "Recherche IA : « {{question}} ». Les filtres montrent comment la question a été comprise."
+    },
+    "export": {
+      "label_one": "Exporter {{count, number}} document au format ZIP",
+      "label_many": "Exporter les {{count, number}} de documents de cette liste au format ZIP",
+      "label_other": "Exporter les {{count, number}} documents de cette liste au format ZIP",
+      "started_one": "Export de {{count, number}} document lancé",
+      "started_many": "Export de {{count, number}} de documents lancé",
+      "started_other": "Export de {{count, number}} documents lancé",
+      "contents": "Le fichier ZIP contient les PDF ainsi que toutes les informations sous forme de tableau (documents.csv) et au format documents.json.",
+      "failed": "Échec de l’export"
+    },
+    "mailboxNotice": {
+      "text_one": "La boîte mail « {{names}} » n’a pas pu être vérifiée plusieurs fois de suite – aucun document n’en arrive pour le moment.",
+      "text_many": "Ces boîtes mail n’ont pas pu être vérifiées plusieurs fois de suite : {{names}}. Aucun document n’en arrive pour le moment.",
+      "text_other": "Ces boîtes mail n’ont pas pu être vérifiées plusieurs fois de suite : {{names}}. Aucun document n’en arrive pour le moment.",
+      "action": "Voir les boîtes mail"
+    },
+    "backupNotice": {
+      "never": "Il n’existe encore aucune sauvegarde de vos documents.",
+      "overdue": "Dernière sauvegarde : {{when}}. Cela dépasse le délai configuré.",
+      "failed": "La sauvegarde automatique a échoué : {{reason}}",
+      "action": "Aller à la sauvegarde"
     }
   },
   "document": {
@@ -246,7 +295,7 @@
       "allWith": "Tous les documents avec le mot-clé « {{tag}} »",
       "none": "Aucun mot-clé. <add>En ajouter</add>",
       "inputHint": "Validez avec Entrée ou une virgule. Les suggestions sont des mots-clés déjà utilisés.",
-      "inputPlaceholder": "Saisir un mot-clé …",
+      "inputPlaceholder": "Saisir un mot-clé…",
       "remove": "Retirer le mot-clé « {{tag}} »"
     },
     "keyFacts": "Points clés",
@@ -273,7 +322,9 @@
     "noText": "Ce document ne contient aucun texte – il s’agit probablement d’un scan sans couche de texte. Si l’IA est configurée et la reconnaissance de texte activée, le contenu est transcrit pendant l’analyse.",
     "edit": {
       "title": "Modifier le document",
-      "saved": "Modifications enregistrées"
+      "saved": "Modifications enregistrées",
+      "areaHint": "Détermine qui peut voir le document.",
+      "areaMoveHint": "Ensuite, seuls les membres de « {{area}} » et les administrateurs pourront le voir."
     },
     "delete": {
       "title": "Supprimer le document ?",
@@ -282,9 +333,9 @@
     },
     "chat": {
       "intro": "Posez une question sur ce document – l’IA répond d’après son contenu.",
-      "placeholder": "Posez une question sur ce document …",
+      "placeholder": "Posez une question sur ce document…",
       "send": "Envoyer",
-      "thinking": "L’IA lit le document …",
+      "thinking": "L’IA lit le document…",
       "notConfigured": "Pour poser des questions sur le document, une IA doit être configurée.",
       "restart": "Recommencer",
       "suggestions": {
@@ -301,7 +352,7 @@
       "download": "Télécharger la version {{number}}",
       "restore": "Restaurer la version {{number}}",
       "restoreTitle": "Restaurer la version {{number}} ?",
-      "restoreText": "Cette version devient la version actuelle. La version actuelle est conservée, et l'étape peut être annulée dans l'historique.",
+      "restoreText": "Cette version redevient la version actuelle. La version utilisée jusqu’ici est conservée, et l’opération peut être annulée dans l’historique.",
       "restoreConfirm": "Restaurer",
       "restored": "Version {{number}} restaurée",
       "kinds": {
@@ -309,22 +360,31 @@
         "EDITED": "Modifié",
         "ORIGINAL_RESTORED": "Original restauré",
         "VERSION_RESTORED": "Version {{from}} restaurée",
-        "UNDONE": "Modification annulée"
+        "UNDONE": "Modification annulée",
+        "PAGES": "Pages modifiées",
+        "MERGED": "Documents fusionnés"
       }
-    }
+    },
+    "retention": {
+      "label": "Conservation",
+      "until": "jusqu’au {{date}} – impossible à supprimer d’ici là",
+      "expired": "délai expiré le {{date}}",
+      "locked": "À conserver jusqu’au {{date}} – suppression possible seulement ensuite"
+    },
+    "readOnly": "Dans cet espace, vous pouvez uniquement consulter ce document."
   },
   "settings": {
     "title": "Paramètres",
     "mailboxes": {
       "title": "Boîtes mail",
-      "navHint": "Serveurs IMAP depuis lesquels les pièces jointes PDF sont importées",
-      "intro": "Les pièces jointes PDF sont importées automatiquement depuis ces boîtes mail IMAP. Les boîtes mail sont uniquement lues – les e-mails restent inchangés et non lus.",
+      "navHint": "Serveurs IMAP depuis lesquels les pièces jointes PDF et les photos sont importées",
+      "intro": "Les pièces jointes PDF et les photos jointes (converties en PDF) sont importées automatiquement depuis ces boîtes mail IMAP ; le texte des e-mails et les logos intégrés ne le sont pas. Les boîtes mail sont uniquement lues – les e-mails restent inchangés et non lus.",
       "add": "Ajouter une boîte mail",
       "emptyTitle": "Aucune boîte mail configurée pour l’instant",
       "emptyText": "Saisissez les identifiants d’une boîte mail IMAP – par exemple celle à laquelle votre scanner envoie les documents.",
       "paused": "En pause",
       "syncNow": "Vérifier maintenant",
-      "syncing": "Vérification de la boîte mail …",
+      "syncing": "Vérification de la boîte mail…",
       "neverSynced": "Pas encore vérifiée.",
       "saved": "Boîte mail enregistrée",
       "added": "Boîte mail ajoutée",
@@ -351,7 +411,7 @@
         "since": "Uniquement les e-mails à partir du",
         "sinceHint": "Facultatif – les e-mails plus anciens sont ignorés",
         "enabled": "Vérifier automatiquement",
-        "enabledHint": "La boîte mail est vérifiée à l’intervalle configuré pour rechercher de nouveaux PDF.",
+        "enabledHint": "La boîte mail est vérifiée à l’intervalle configuré pour rechercher de nouvelles pièces jointes.",
         "filter": {
           "title": "Filtre",
           "intro": "Seuls les e-mails qui remplissent toutes les conditions sont traités. Un terme par ligne ; majuscules et minuscules sont indifférentes, une partie du texte suffit. Un champ vide ne restreint rien.",
@@ -360,29 +420,30 @@
           "senderIncludes": "L’expéditeur contient l’un de ces termes",
           "senderExcludes": "L’expéditeur ne contient aucun de ces termes",
           "senderHint": "Nom ou adresse, p. ex. « @example.com »",
-          "newOnly": "Le filtre s’applique aux e-mails reçus après la dernière relève ; les e-mails déjà vérifiés ne sont pas traités à nouveau."
+          "newOnly": "Le filtre s’applique aux e-mails reçus après la dernière vérification ; les e-mails déjà vérifiés ne sont pas traités à nouveau."
         },
-        "interval": "Intervalle de relève en minutes",
-        "intervalHint": "Laisser vide pour utiliser l’intervalle général (actuellement {{interval}})."
+        "interval": "Intervalle de vérification en minutes",
+        "intervalHint": "Laissez vide pour utiliser l’intervalle général (actuellement {{interval}}).",
+        "areaHint": "Les documents importés sont placés dans cet espace."
       },
       "filterActive": "Filtre actif",
-      "schedule": "Relève toutes les {{interval}} · prochaine {{when}}",
-      "scheduleSoon": "Relève toutes les {{interval}} · prochaine sous peu"
+      "schedule": "Vérification toutes les {{interval}} · prochaine {{when}}",
+      "scheduleSoon": "Vérification toutes les {{interval}} · prochaine sous peu"
     },
     "import": {
-      "title": "Planification et dossier d’import",
+      "title": "Vérification et dossier d’import",
       "navHint": "Intervalle de vérification et dossier surveillé",
-      "intro": "Définit la fréquence à laquelle l’application recherche de nouveaux fichiers PDF – dans les boîtes mail et dans le dossier d’import.",
+      "intro": "Définit la fréquence à laquelle l’application recherche de nouveaux documents – dans les boîtes mail et dans le dossier d’import.",
       "saved": "Paramètres enregistrés",
       "interval": {
         "title": "Intervalle de vérification",
-        "text": "Fréquence à laquelle l’application vérifie le dossier d’entrée et toutes les boîtes sans intervalle propre à la recherche de nouveaux PDF.",
+        "text": "Fréquence à laquelle l’application vérifie le dossier d’import et toutes les boîtes mail sans intervalle propre à la recherche de nouveaux documents.",
         "label": "Toutes les … minutes",
         "nextRun": "Prochaine vérification automatique {{when}}."
       },
       "folder": {
         "title": "Dossier d’import",
-        "text": "Un répertoire du serveur qui est surveillé pour détecter de nouveaux fichiers PDF – par exemple la destination d’un scanner réseau. Les sous-dossiers sont également parcourus.",
+        "text": "Un répertoire du serveur qui est surveillé pour détecter de nouveaux PDF et de nouvelles photos (JPG, PNG, HEIC) – par exemple la destination d’un scanner réseau. Les sous-dossiers sont également parcourus.",
         "enable": "Surveiller le dossier d’import",
         "path": "Chemin sur le serveur",
         "pathHint": "Chemin absolu. Dans le conteneur Docker, il s’agit du dossier monté, en général {{path}}.",
@@ -391,10 +452,11 @@
         "move": "Déplacer vers « {{folder}} »",
         "keepHint": "Les fichiers restent inchangés. L’application mémorise ce qu’elle a déjà importé.",
         "moveHint": "Les fichiers importés sont déplacés dans le sous-dossier « {{folder}} » – le dossier d’import reste bien rangé.",
-        "scanning": "Vérification du dossier …",
+        "scanning": "Vérification du dossier…",
         "neverScanned": "Pas encore vérifié.",
         "scanNow": "Vérifier maintenant",
-        "scanStarted": "Le dossier d’import est en cours de vérification."
+        "scanStarted": "Le dossier d’import est en cours de vérification.",
+        "areaHint": "Les documents du dossier sont placés dans cet espace."
       }
     },
     "ai": {
@@ -460,7 +522,7 @@
       },
       "analysis": {
         "title": "Analyse",
-        "effort": "Niveau de précision",
+        "effort": "Profondeur d’analyse",
         "effortLevels": {
           "low": "Rapide",
           "medium": "Équilibré",
@@ -472,7 +534,7 @@
         "ocr": "Reconnaissance de texte pour les scans",
         "ocrHint": "L’application fait transcrire par l’IA les PDF numérisés sans couche de texte – ce n’est qu’ainsi qu’ils peuvent être trouvés par la recherche en texte intégral. Chaque scan demande plus de temps et coûte plus cher.",
         "quickOcrFirst": "D’abord une reconnaissance de texte rapide, puis affiner avec l’IA",
-        "quickOcrFirstHint": "Les nouvelles numérisations sont d’abord lues par la reconnaissance de texte intégrée (Tesseract) : elles sont consultables par recherche en quelques secondes. L’IA ajoute ensuite le titre, le résumé et les mots-clés à partir de ce texte."
+        "quickOcrFirstHint": "Les nouveaux scans sont d’abord lus par la reconnaissance de texte intégrée (Tesseract) : en quelques secondes, ils apparaissent dans la recherche. L’IA ajoute ensuite le titre, le résumé et les mots-clés à partir de ce texte."
       },
       "unanalyzed_one": "{{count, number}} document n’a pas encore été analysé par l’IA.",
       "unanalyzed_many": "{{count, number}} de documents n’ont pas encore été analysés par l’IA.",
@@ -513,11 +575,151 @@
         "create": "Créer"
       },
       "twoFactor": "2FA",
-      "resetTwoFactor": "Réinitialiser l'authentification à deux facteurs",
-      "resetTwoFactorHint": "L'authentification à deux facteurs est activée pour ce compte.",
-      "resetTwoFactorText": "{{name}} se connectera ensuite avec le mot de passe seul et pourra reconfigurer l'authentification à deux facteurs – par exemple après la perte du téléphone.",
+      "resetTwoFactor": "Réinitialiser l’authentification à deux facteurs",
+      "resetTwoFactorHint": "L’authentification à deux facteurs est activée pour ce compte.",
+      "resetTwoFactorText": "{{name}} se connectera ensuite avec le seul mot de passe et pourra reconfigurer l’authentification à deux facteurs – par exemple après la perte du téléphone contenant l’application.",
       "resetTwoFactorConfirm": "Réinitialiser",
       "twoFactorReset": "Authentification à deux facteurs réinitialisée"
+    },
+    "areas": {
+      "title": "Espaces",
+      "navHint": "Qui voit quels documents",
+      "intro": "Chaque document se trouve dans un seul espace. Les utilisateurs ne voient que les documents des espaces dont ils sont membres, ainsi que ceux des espaces ouverts à tous.",
+      "add": "Créer un espace",
+      "everyone": "Pour tous",
+      "restricted": "Restreint",
+      "visibleForAll": "visible par tous les utilisateurs connectés",
+      "members": "Membres : {{names}}",
+      "adminsOnly": "administrateurs uniquement",
+      "adminHint": "Les administrateurs voient tous les espaces, même sans en être membres.",
+      "edit": "Modifier {{name}}",
+      "saved": "Espace enregistré",
+      "created": "Espace créé",
+      "deleted": "Espace supprimé",
+      "delete": {
+        "label": "Supprimer {{name}}",
+        "title": "Supprimer l’espace ?",
+        "text": "L’espace « {{name}} » sera supprimé. Ce n’est possible que tant qu’aucun document, aucune boîte mail et aucun dossier d’import ne l’utilise."
+      },
+      "dialog": {
+        "name": "Nom",
+        "namePlaceholder": "p. ex. Comptabilité",
+        "generalNameHint": "Laissez vide pour que l’espace s’appelle « Général » dans toutes les langues.",
+        "everyone": "Visible par tous",
+        "everyoneHint": "Tous les utilisateurs connectés voient les documents de cet espace.",
+        "members": "Membres",
+        "membersHint": "Seuls les membres et les administrateurs voient les documents de cet espace. Pour chaque membre, choisissez s’il peut uniquement lire, aussi modifier ou également supprimer.",
+        "noUsers": "Il n’y a pas encore d’utilisateurs sans rôle d’administrateur.",
+        "create": "Créer",
+        "everyoneAccess": "Droits pour tous",
+        "accessOf": "Droits de {{name}}",
+        "membersHintEveryone": "Tout le monde voit les documents de cet espace. Ajoutez ici des membres s’ils doivent avoir plus de droits que les autres."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Conservation",
+      "navHint": "Délais et blocage de la suppression",
+      "intro": "Définissez combien de temps les documents d’un type doivent être conservés – par exemple dix ans pour les factures. Le délai court à partir de la fin de l’année dont date le document. D’ici là, personne ne peut le supprimer.",
+      "permanent": "Un blocage ne peut pas être levé – pas même par les administrateurs. Si une règle est raccourcie ou supprimée, ou si le type d’un document change, le délai déjà fixé reste valable.",
+      "add": "Créer une règle",
+      "years_one": "{{count, number}} an",
+      "years_many": "{{count, number}} d’années",
+      "years_other": "{{count, number}} ans",
+      "edit": "Modifier la règle pour {{category}}",
+      "saved": "Règle enregistrée",
+      "created": "Règle créée",
+      "deleted": "Règle supprimée",
+      "emptyTitle": "Aucune règle de conservation pour l’instant",
+      "emptyText": "Sans règle, les documents peuvent être supprimés à tout moment.",
+      "delete": {
+        "label": "Supprimer la règle pour {{category}}",
+        "title": "Supprimer la règle ?",
+        "text": "Les nouveaux documents du type « {{category}} » ne recevront plus de délai de conservation. Les documents déjà bloqués le restent jusqu’à la fin de leur délai."
+      },
+      "dialog": {
+        "categoryHint": "Tel qu’il figure sur le document ; majuscules et minuscules sont indifférentes.",
+        "years": "Délai de conservation en années",
+        "yearsHint": "Calculé à partir de la fin de l’année de la date du document (sans date : de l’année de son ajout).",
+        "shorterHint": "Un délai plus court ne s’applique qu’aux documents qui n’ont pas encore de délai. Les documents déjà bloqués le restent jusqu’à la fin de leur délai actuel.",
+        "create": "Créer"
+      }
+    },
+    "mailOut": {
+      "title": "Envoi d’e-mails",
+      "navHint": "Rappels par e-mail",
+      "intro": "L’application envoie les rappels des relances à traiter via ce serveur SMTP – une seule fois par relance, regroupés en un e-mail par personne. Le destinataire est la personne chargée de la relance, si elle a saisi une adresse dans le menu utilisateur.",
+      "enabled": "Envoyer les rappels par e-mail",
+      "enabledHint": "Si cette option est désactivée, les relances n’apparaissent que dans l’application.",
+      "host": "Serveur SMTP",
+      "port": "Port",
+      "security": "Chiffrement",
+      "unencrypted": "Aucun",
+      "usernameHint": "Laissez vide si le serveur n’exige pas d’identification.",
+      "passwordKeepHint": "Laissez vide pour conserver le mot de passe enregistré.",
+      "from": "Adresse d’expéditeur",
+      "fromHint": "Votre serveur doit l’autoriser pour votre compte.",
+      "appUrl": "Adresse de l’application",
+      "appUrlHint": "Pour les liens dans les e-mails, p. ex. https://docs.example.com. Vide = pas de liens.",
+      "digestHour": "Envoi",
+      "fromHour": "à partir de {{hour}}",
+      "saved": "Paramètres d’envoi enregistrés",
+      "test": "Message de test à {{address}}",
+      "testNeedsAddress": "Pour le message de test, saisissez votre propre adresse e-mail dans le menu utilisateur.",
+      "testSavedHint": "Le test utilise les paramètres enregistrés – enregistrez d’abord."
+    },
+    "backup": {
+      "title": "Sauvegarde et import",
+      "navHint": "Tout sauvegarder d’un coup, importer des exports",
+      "intro": "Une sauvegarde contient tout ce qu’il faut pour restaurer AIDocuments exactement à l’identique. Un import reprend les documents de l’export d’une autre installation – avec leurs informations.",
+      "backupTitle": "Sauvegarde en un clic",
+      "backupText": "Un ZIP contenant la base de données, tous les documents avec leurs versions antérieures, les miniatures et la clé des mots de passe enregistrés. L’application continue de fonctionner pendant ce temps.",
+      "size": "Taille",
+      "sizeValue_one": "environ {{size}}, {{count, number}} fichier",
+      "sizeValue_many": "environ {{size}}, {{count, number}} de fichiers",
+      "sizeValue_other": "environ {{size}}, {{count, number}} fichiers",
+      "last": "Dernière sauvegarde",
+      "never": "jamais",
+      "keyWarning": "La sauvegarde n’est pas chiffrée et contient la clé des mots de passe enregistrés (boîtes mail, IA, authentification à deux facteurs). Conservez-la avec autant de soin que les documents eux-mêmes.",
+      "restore": "Pour restaurer : arrêtez AIDocuments, extrayez le contenu du ZIP dans un répertoire de données vide et redémarrez. Les instructions se trouvent dans le ZIP (README.txt).",
+      "download": "Télécharger la sauvegarde",
+      "started": "La sauvegarde est en cours de téléchargement.",
+      "externalDatabase": "La sauvegarde en un clic n’est disponible qu’avec la base de données intégrée. Avec MariaDB, sauvegardez la base de données avec ses propres outils (comme mariadb-dump), ainsi que le répertoire de données.",
+      "importTitle": "Importer un export",
+      "importText": "Un ZIP créé avec « Exporter » dans la liste des documents – y compris dans une autre installation. Le titre, le type de document, les mots-clés et les autres informations sont conservés ; l’IA ne relit pas les documents. Les fichiers déjà présents sont ignorés.",
+      "file": "Fichier ZIP",
+      "areaHint": "Les documents sont placés ici – ou seulement ceux dont l’espace n’existe pas ici.",
+      "matchAreas": "Placer dans les espaces du même nom",
+      "matchAreasHint": "Si un espace porte ici le même nom que dans l’export, les documents y sont placés.",
+      "import": "Importer",
+      "importing": "Import en cours…",
+      "result": "Importés : {{imported, number}} · déjà présents : {{duplicates, number}} · non importés : {{failed, number}}",
+      "auto": {
+        "title": "Sauvegarde automatique",
+        "text": "Une fois par jour, AIDocuments enregistre une sauvegarde complète au format ZIP dans un dossier et conserve les plus récentes. Idéalement, ce dossier se trouve sur un autre disque ou sur un lecteur réseau – sinon, si le disque contenant les données tombe en panne, les sauvegardes sont perdues elles aussi.",
+        "enable": "Sauvegarder automatiquement chaque jour",
+        "hour": "Heure",
+        "keep": "Conserver",
+        "keepHint": "Nombre de sauvegardes ; les plus anciennes sont supprimées.",
+        "directory": "Dossier",
+        "directoryHint": "Chemin complet sur le serveur. Laissez vide pour utiliser l’emplacement par défaut. Dans le conteneur Docker, le dossier doit être monté.",
+        "warnAfterDays": "Avertir après (jours)",
+        "warnAfterDaysHint": "Avis dans la liste des documents lorsqu’aucune sauvegarde, manuelle ou automatique, n’a été effectuée depuis ce nombre de jours. 0 = ne jamais avertir.",
+        "lastRun": "Dernière exécution",
+        "nextRun": "Prochaine exécution",
+        "running": "Sauvegarde en cours…",
+        "ok": "réussie, {{when}}",
+        "failed": "échouée, {{when}}",
+        "stored_one": "{{count, number}} sauvegarde dans {{directory}}",
+        "stored_many": "{{count, number}} de sauvegardes dans {{directory}}",
+        "stored_other": "{{count, number}} sauvegardes dans {{directory}}",
+        "runNow": "Sauvegarder maintenant",
+        "saveFirst": "Enregistrez d’abord les modifications.",
+        "runStarted": "La sauvegarde s’exécute en arrière-plan.",
+        "done": "Sauvegarde créée.",
+        "saved": "Paramètres enregistrés.",
+        "externalDatabase": "La sauvegarde automatique n’est disponible qu’avec la base de données intégrée. Avec MariaDB, sauvegardez la base de données avec ses propres outils (par exemple un mariadb-dump chaque nuit), ainsi que le répertoire de données."
+      }
     }
   },
   "history": {
@@ -555,50 +757,51 @@
     "title": "Authentification à deux facteurs",
     "on": "Activée",
     "off": "Désactivée",
-    "intro": "Protège ton compte avec un second facteur : à la connexion, tu saisis en plus un code d'une application d'authentification sur ton téléphone (p. ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Protégez votre compte avec un second facteur : à la connexion, vous saisissez en plus un code provenant d’une application d’authentification sur votre téléphone (p. ex. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Configurer",
-    "scan": "Scanne le code QR avec ton application d'authentification ou saisis la clé manuellement. Saisis ensuite le code affiché et ton mot de passe.",
-    "qrAlt": "Code QR pour l'application d'authentification",
+    "scan": "Scannez le code QR avec votre application d’authentification ou saisissez la clé manuellement. Saisissez ensuite le code affiché par l’application et votre mot de passe.",
+    "qrAlt": "Code QR pour l’application d’authentification",
     "secret": "Clé",
-    "confirmCode": "Code de l'application",
+    "confirmCode": "Code de l’application",
     "activate": "Activer",
     "recoveryTitle": "Codes de récupération",
-    "recoveryText": "Conserve ces codes de récupération en lieu sûr. Chacun fonctionne une fois si tu ne peux pas utiliser l'application – par exemple si tu perds ton téléphone. Ils ne sont affichés que maintenant.",
+    "recoveryText": "Conservez ces codes de récupération en lieu sûr. Chacun ne fonctionne qu’une fois, si vous ne pouvez pas utiliser l’application – par exemple si vous perdez votre téléphone. Ils ne sont affichés que maintenant.",
     "download": "Enregistrer dans un fichier",
     "done": "Terminé",
-    "enabled": "L'authentification à deux facteurs est activée",
-    "disabled": "L'authentification à deux facteurs est désactivée",
-    "disableHint": "Pour la désactiver, saisis un code actuel de l'application (ou un code de récupération) et ton mot de passe.",
+    "enabled": "L’authentification à deux facteurs est activée",
+    "disabled": "L’authentification à deux facteurs est désactivée",
+    "disableHint": "Pour la désactiver, saisissez un code actuel de l’application (ou un code de récupération) et votre mot de passe.",
     "disable": "Désactiver",
     "recoveryLeft": "Codes de récupération inutilisés : {{count}}",
-    "adminCannotDisable": "En tant qu'administrateur, tu ne peux pas désactiver l'authentification à deux facteurs."
+    "adminCannotDisable": "En tant qu’administrateur, vous ne pouvez pas désactiver l’authentification à deux facteurs."
   },
   "confirmCode": {
     "title": "Confirmer la modification",
-    "text": "Les modifications des comptes, boîtes mail et paramètres nécessitent un code actuel de ton application d'authentification. La confirmation est valable 10 minutes.",
-    "submit": "Confirmer"
+    "text": "Les modifications des comptes, des boîtes mail et des paramètres nécessitent un code actuel de votre application d’authentification. La confirmation est valable 10 minutes.",
+    "submit": "Confirmer",
+    "passkey": "Confirmer avec une clé d’accès"
   },
   "share": {
     "button": "Partager",
     "title": "Partager le document",
-    "intro": "Crée un lien qui permet à une personne sans compte d'ouvrir uniquement ce document.",
-    "recipient": "Avec qui partages-tu ?",
-    "recipientHint": "Le nom de la personne – pour savoir plus tard à qui tu as donné le lien.",
+    "intro": "Crée un lien qui permet à une personne sans compte d’ouvrir uniquement ce document.",
+    "recipient": "Avec qui partagez-vous ?",
+    "recipientHint": "Le nom de la personne – pour savoir plus tard à qui vous avez donné le lien.",
     "permission": "Cette personne peut-elle modifier le document ?",
     "viewOnly": "Lecture seule",
     "canEdit": "Peut modifier",
     "viewHint": "La personne peut afficher, imprimer et télécharger le PDF.",
     "editHint": "La personne peut aussi annoter, écrire, signer et enregistrer le PDF. Chaque enregistrement crée une nouvelle version ; le titre, les mots-clés et les autres informations restent masqués.",
-    "validity": "Valable",
+    "validity": "Durée de validité",
     "unlimited": "Illimité",
     "create": "Créer le lien",
     "link": "Lien",
-    "linkHint": "Toute personne disposant de ce lien peut ouvrir le document – ne le transmets qu'à {{name}}. Tu peux le révoquer à tout moment dans la vue du document.",
+    "linkHint": "Toute personne disposant de ce lien peut ouvrir le document – ne le transmettez qu’à {{name}}. Vous pouvez le révoquer à tout moment dans la vue du document.",
     "copy": "Copier le lien",
     "copied": "Lien copié",
-    "listTitle": "Partagé à l'extérieur",
+    "listTitle": "Partagé à l’extérieur",
     "expired": "expiré",
-    "validUntil": "valable jusqu'au {{date}}",
+    "validUntil": "valable jusqu’au {{date}}",
     "noExpiry": "sans expiration",
     "lastOpened": "ouvert pour la dernière fois {{when}} (consultations : {{views}})",
     "neverOpened": "pas encore ouvert",
@@ -608,7 +811,200 @@
     "revoked": "Lien révoqué",
     "page": {
       "for": "Partagé avec {{name}}",
-      "invalid": "Ce lien n'est pas valide ou a expiré, ou le document a été supprimé. Adresse-toi à la personne qui te l'a donné."
+      "invalid": "Ce lien n’est pas valide ou a expiré, ou le document a été supprimé. Adressez-vous à la personne qui vous l’a donné."
+    }
+  },
+  "areas": {
+    "general": "Général",
+    "unknown": "Autre espace",
+    "label": "Espace",
+    "target": "Espace cible",
+    "access": {
+      "READ": "Lecture seule",
+      "EDIT": "Lecture et modification",
+      "DELETE": "Modification et suppression"
+    }
+  },
+  "reminders": {
+    "title": "Relances",
+    "cardTitle": "Relance",
+    "add": "Ajouter une relance",
+    "edit": "Modifier la relance",
+    "create": "Créer",
+    "created": "Relance ajoutée",
+    "saved": "Relance enregistrée",
+    "deleted": "Relance supprimée",
+    "markedDone": "Traitée",
+    "dueDate": "Échéance",
+    "note": "Note",
+    "notePlaceholder": "p. ex. vérifier le paiement",
+    "assignee": "Qui s’en charge ?",
+    "assigneeHint": "Cette personne voit la relance sous « Les miennes » et reçoit le rappel par e-mail. Toutes les personnes qui voient le document peuvent être choisies.",
+    "me": "{{name}} (moi)",
+    "assignedTo": "pour {{name}}",
+    "doneBy": "traitée par {{name}}",
+    "markDone": "Marquer comme traitée",
+    "reopen": "Rouvrir",
+    "delete": {
+      "label": "Supprimer la relance",
+      "title": "Supprimer la relance ?",
+      "text": "La relance sera supprimée. Le document reste inchangé."
+    },
+    "accept": "Ajouter",
+    "dismiss": "Rejeter la suggestion",
+    "suggestionsHint": "L’IA a trouvé des dates dans ce document :",
+    "none": "Aucune relance en cours.",
+    "showDone_one": "Afficher {{count, number}} relance traitée",
+    "showDone_many": "Afficher {{count, number}} de relances traitées",
+    "showDone_other": "Afficher {{count, number}} relances traitées",
+    "hideDone": "Masquer les relances traitées",
+    "scope": {
+      "label": "Quelles relances",
+      "mine": "Les miennes",
+      "all": "Toutes"
+    },
+    "dueTitle": "À traiter",
+    "nothingDue": "Rien à traiter aujourd’hui.",
+    "upcomingTitle": "À venir",
+    "suggestionsTitle": "Dates suggérées",
+    "suggestionsPageHint": "Échéances des six prochains mois que l’IA a trouvées dans les documents. Ajoutez-les comme relance ou rejetez-les.",
+    "emptyTitle": "Aucune relance",
+    "emptyText": "Ajoutez une relance à un document – ou acceptez-en une suggérée par l’IA.",
+    "repeat": {
+      "label": "Répéter",
+      "hint": "Lorsque vous marquez la relance comme traitée, la suivante est créée au même intervalle.",
+      "none": "Une seule fois",
+      "m1": "Tous les mois",
+      "m3": "Tous les trimestres",
+      "m6": "Tous les six mois",
+      "m12": "Tous les ans",
+      "m24": "Tous les deux ans",
+      "months_one": "Tous les mois",
+      "months_many": "Tous les {{count}} de mois",
+      "months_other": "Tous les {{count}} mois"
+    },
+    "fromContract": "issue du contrat"
+  },
+  "pages": {
+    "button": "Pages",
+    "title": "Modifier les pages",
+    "intro": "Faites glisser les pages ou déplacez-les avec les flèches, faites-les pivoter ou retirez-les. L’enregistrement crée une nouvelle version – la précédente est conservée.",
+    "page": "Page {{number}}",
+    "wasPage": "auparavant {{number}}",
+    "moveLeft": "Avancer",
+    "moveRight": "Reculer",
+    "rotate": "Faire pivoter de 90°",
+    "remove": "Retirer la page",
+    "keep": "Conserver la page",
+    "noneLeft": "Au moins une page doit rester.",
+    "saveFirst": "Enregistrez d’abord les modifications",
+    "saved": "Pages enregistrées",
+    "split": {
+      "here": "Nouveau document à partir d’ici",
+      "title": "Scinder le document ?",
+      "text": "La page {{page}} et toutes les suivantes deviennent un document distinct dans le même espace. Il est lu et classé comme un document nouvellement reçu ; ce document-ci conserve les pages précédentes.",
+      "confirm": "Scinder",
+      "done": "Document scindé",
+      "open": "Ouvrir le nouveau document"
+    },
+    "merge": {
+      "button": "Fusionner des documents",
+      "title": "Fusionner des documents",
+      "intro": "Les pages des documents choisis sont ajoutées dans cet ordre à la fin de « {{title}} ».",
+      "search": "Rechercher des documents…",
+      "none": "Aucun document correspondant.",
+      "noDeleteRight": "Vous n’avez pas le droit de le supprimer – vous ne pouvez donc pas le fusionner.",
+      "hint": "Les documents fusionnés sont ensuite placés dans la corbeille ; ils peuvent être restaurés depuis l’historique pendant 30 jours.",
+      "confirm_one": "Fusionner {{count}} document",
+      "confirm_many": "Fusionner {{count}} de documents",
+      "confirm_other": "Fusionner {{count}} documents",
+      "done_one": "{{count}} document fusionné",
+      "done_many": "{{count}} de documents fusionnés",
+      "done_other": "{{count}} documents fusionnés"
+    }
+  },
+  "contracts": {
+    "nav": "Contrats",
+    "title": "Contrats",
+    "pageIntro": "Durées et préavis de tous les contrats que vous pouvez voir – d’abord ceux pour lesquels il faudra bientôt agir.",
+    "scope": {
+      "label": "Afficher",
+      "running": "En cours",
+      "all": "Tous"
+    },
+    "emptyTitle": "Aucun contrat enregistré pour l’instant",
+    "emptyText": "Ouvrez un document, par exemple un contrat d’électricité ou de téléphone mobile, et saisissez-y sa durée et son préavis. Une relance apparaîtra alors suffisamment tôt avant la date limite.",
+    "cardTitle": "Contrat",
+    "none": "S’agit-il d’un contrat ? Avec sa durée et son préavis, AIDocuments vous rappelle à temps de le résilier.",
+    "add": "Enregistrer comme contrat",
+    "edit": "Modifier le contrat",
+    "intro": "L’échéance et le préavis déterminent la date limite de résiliation. Une relance apparaît avant cette date ; si le contrat arrive à échéance sans résiliation, il est reconduit automatiquement.",
+    "saved": "Contrat enregistré",
+    "removed": "Données du contrat supprimées",
+    "remove": {
+      "label": "Supprimer les données du contrat",
+      "title": "Supprimer les données du contrat ?",
+      "text": "La durée, le préavis et la relance en cours associée sont supprimés. Le document lui-même est conservé."
+    },
+    "openEnded": "sans échéance",
+    "months_one": "{{count}} mois",
+    "months_many": "{{count}} de mois",
+    "months_other": "{{count}} mois",
+    "amountHint": "p. ex. « 49,90 € par mois »",
+    "endDateHint": "Fin de la période en cours ; vide = sans échéance",
+    "noticeHint": "Mois avant l’échéance ; vide = jusqu’à l’échéance",
+    "renewalHint": "Sans résiliation, le contrat est reconduit pour ce nombre de mois ; 0 = il prend fin",
+    "cancelledHint": "Il n’est alors plus reconduit et aucune relance n’apparaît plus.",
+    "fields": {
+      "partner": "Partenaire contractuel",
+      "amount": "Montant",
+      "startDate": "Début du contrat",
+      "endDate": "En vigueur jusqu’au",
+      "notice": "Préavis (mois)",
+      "renewal": "Reconduction (mois)",
+      "deadline": "Résilier au plus tard le",
+      "reminderDays": "Relance (jours avant)",
+      "cancelled": "Résilié"
+    },
+    "status": {
+      "ACTIVE": "En cours",
+      "DUE_SOON": "Échéance proche",
+      "NOTICE_MISSED": "Délai dépassé",
+      "CANCELLED": "Résilié",
+      "ENDED": "Terminé",
+      "OPEN_ENDED": "Sans échéance"
+    },
+    "row": {
+      "cancelBy": "résilier au plus tard le {{date}}",
+      "endsOn": "prend fin le {{date}}",
+      "term": "en vigueur jusqu’au {{date}}",
+      "renews_one": "reconduction de {{count}} mois",
+      "renews_many": "reconduction de {{count}} de mois",
+      "renews_other": "reconduction de {{count}} mois"
+    }
+  },
+  "passkeys": {
+    "title": "Clés d’accès",
+    "intro": "Avec une clé d’accès, vous vous connectez sans mot de passe – en la déverrouillant par empreinte digitale, reconnaissance faciale ou code PIN de l’appareil. Elle ne fonctionne que pour cette adresse ; un site contrefait ne peut pas l’utiliser.",
+    "none": "Aucune clé d’accès ajoutée pour l’instant.",
+    "add": "Ajouter une clé d’accès",
+    "create": "Créer la clé d’accès",
+    "name": "Nom",
+    "nameHint": "Pour la reconnaître plus tard, p. ex. « Ordinateur portable » ou « Gestionnaire de mots de passe ».",
+    "password": "Votre mot de passe",
+    "passwordHint": "Une clé d’accès permet ensuite de se connecter sans mot de passe – confirmez donc une fois avec celui-ci.",
+    "added": "Clé d’accès ajoutée",
+    "removed": "Clé d’accès supprimée",
+    "synced": "synchronisée",
+    "lastUsed": "dernière utilisation {{time}}",
+    "created": "ajoutée {{time}}, pas encore utilisée",
+    "unsupported": "Ce navigateur ne peut pas utiliser de clés d’accès ici. Les clés d’accès ne fonctionnent qu’en HTTPS (ou sur localhost).",
+    "unsupportedIp": "Les clés d’accès ne fonctionnent qu’en HTTPS et avec un nom dans l’adresse, pas avec une adresse IP.",
+    "remove": {
+      "label": "Supprimer la clé d’accès",
+      "title": "Supprimer la clé d’accès ?",
+      "text": "Plus personne ne pourra se connecter avec « {{name}} ». Elle reste enregistrée dans le gestionnaire de mots de passe ou sur l’appareil jusqu’à ce que vous l’y supprimiez.",
+      "confirm": "Supprimer"
     }
   }
 }

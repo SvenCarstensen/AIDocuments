@@ -62,7 +62,8 @@ public class DocumentShareController {
 
     @GetMapping
     public List<ShareDto> list(@PathVariable String id) {
-        documents.require(id);
+        // die Liste enthält die Links selbst – auch solche, die bearbeiten dürfen; daher nur mit Bearbeitungsrecht
+        documents.requireEditable(id);
         Instant now = Instant.now();
         return shares.list(id).stream().map(share -> dto(share, shares.token(share), now)).toList();
     }
@@ -71,7 +72,7 @@ public class DocumentShareController {
     @ResponseStatus(HttpStatus.CREATED)
     public ShareDto create(@PathVariable String id, @Valid @RequestBody CreateShareRequest body,
                            @AuthenticationPrincipal UserPrincipal principal) {
-        documents.require(id);
+        documents.requireEditable(id);
         Instant expiresAt = body.expiresInDays() == null ? null
                 : Instant.now().plus(Duration.ofDays(body.expiresInDays()));
         String recipient = body.recipient().strip().replaceAll("\\p{Cntrl}", " ");
@@ -86,6 +87,7 @@ public class DocumentShareController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void revoke(@PathVariable String id, @PathVariable String shareId,
                        @AuthenticationPrincipal UserPrincipal principal) {
+        documents.requireEditable(id);
         if (!shares.revoke(id, shareId)) {
             throw ApiException.notFound("error.share.notFound");
         }

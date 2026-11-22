@@ -44,7 +44,9 @@
     "login": {
       "title": "Velkomin aftur",
       "subtitle": "Skráðu þig inn til að nálgast skjölin þín.",
-      "submit": "Skrá inn"
+      "submit": "Skrá inn",
+      "or": "eða",
+      "passkey": "Skrá inn með aðgangslykli"
     },
     "setup": {
       "title": "Setja upp AIDocuments",
@@ -81,7 +83,7 @@
       "dark": "Dökkt þema"
     },
     "search": {
-      "placeholder": "Leit eftir leitarorðum: skjöl, merki, efni …",
+      "placeholder": "Leit eftir leitarorðum: skjöl, efnisorð, efni …",
       "placeholderAi": "Gervigreindarleit: spurðu með eigin orðum – t.d. „reikningar frá Kia frá 2024“",
       "labelAi": "Gervigreind",
       "label": "Leita í skjölum",
@@ -102,26 +104,49 @@
       "changed": "Lykilorði breytt"
     },
     "dropzone": {
-      "title": "Slepptu PDF-skrám hér",
-      "hint": "Þú getur sleppt mörgum skrám í einu. Þær eru vistaðar, greindar og fá efnisorð."
+      "title": "Slepptu PDF-skrám eða myndum hér",
+      "hint": "Þú getur sleppt mörgum skrám í einu. Myndum (JPG, PNG, HEIC) er breytt í PDF-skrár. Allt er vistað, greint og fær efnisorð."
+    },
+    "remindersDue_one": "{{count, number}} áminning komin á tíma",
+    "remindersDue_other": "{{count, number}} áminningar komnar á tíma",
+    "profile": {
+      "email": "Netfang",
+      "saved": "Vistað"
+    },
+    "notifications": {
+      "title": "Tilkynningar í tölvupósti",
+      "emailHint": "Hingað berast áminningar sem komnar eru á tíma og þér hefur verið úthlutað, ásamt þeim tilkynningum sem þú kveikir á hér fyrir neðan – á tungumálinu sem þú notar forritið á núna. Skildu eftir autt ef þú vilt engan tölvupóst.",
+      "digest": "Ný skjöl á hverjum degi",
+      "digestHint": "Einu sinni á dag listi yfir skjölin sem hafa bæst við á svæðunum þínum – aðeins á dögum þegar ný skjöl berast.",
+      "admin": "Tilkynningar fyrir stjórnendur",
+      "adminHint": "Þegar varðveislutími rennur út (engu er eytt sjálfkrafa) og þegar ítrekað tekst ekki að athuga pósthólf.",
+      "needsEmail": "Án netfangs er enginn tölvupóstur sendur."
     }
   },
   "upload": {
-    "onlyPdf": "Aðeins er hægt að bæta við PDF-skrám.",
+    "onlyPdf": "Aðeins er hægt að bæta við PDF-skrám og myndum (JPG, PNG, HEIC).",
     "uploadingFile": "Hleð upp „{{name}}“ …",
-    "uploadingFiles_one": "Hleð upp {{count, number}} PDF-skrá …",
-    "uploadingFiles_other": "Hleð upp {{count, number}} PDF-skrám …",
+    "uploadingFiles_one": "Hleð upp {{count, number}} skrá …",
+    "uploadingFiles_other": "Hleð upp {{count, number}} skrám …",
     "created_one": "{{count, number}} skjali bætt við",
     "created_other": "{{count, number}} skjölum bætt við",
     "processingInBackground": "Vinnslan heldur áfram í bakgrunni.",
     "duplicates_one": "{{count, number}} er þegar til",
     "duplicates_other": "{{count, number}} eru þegar til",
-    "rejected_one": "{{count, number}} skrá er ekki gild PDF-skrá",
-    "rejected_other": "{{count, number}} skrár eru ekki gildar PDF-skrár",
-    "onlyDuplicates_one": "Ekkert nýtt – þetta er þegar til.",
+    "rejected_one": "{{count, number}} skrá var ekki bætt við",
+    "rejected_other": "{{count, number}} skrám var ekki bætt við",
+    "onlyDuplicates_one": "Þetta skjal er þegar til.",
     "onlyDuplicates_other": "Þessi skjöl eru þegar til.",
-    "noneValid": "Engin skránna er gild PDF-skrá.",
-    "failed": "Upphleðsla mistókst"
+    "noneValid": "Ekki var hægt að bæta neinni skránna við.",
+    "failed": "Upphleðsla mistókst",
+    "intoArea": "Svæði: {{area}}",
+    "combine": {
+      "title": "Sameina myndir í eitt skjal?",
+      "text": "Þú valdir nokkrar myndir. Ef þær eru síður úr einu og sama skjali – til dæmis bréfi á mörgum síðum – verða þær að einni PDF-skrá í röð skráarheitanna; röðinni má breyta síðar undir „Síður“. Annars verður hver mynd að sérstöku skjali.",
+      "one": "Sem eitt skjal",
+      "separate": "Hverja mynd fyrir sig",
+      "tooMuch": "Myndirnar eru of margar eða of stórar fyrir eitt skjal (í mesta lagi 100 myndir og samtals 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -133,7 +158,7 @@
     "ocrBadge": "Ljóslestur",
     "aiNotice": {
       "text": "Gervigreindin hefur ekki verið sett upp enn. Hægt er að leita í texta nýrra skjala, en þau fá hvorki samantekt né efnisorð.",
-      "builtinOcr": "Innbyggð textagreining les skannanir án textalags, svo einnig er hægt að leita í þeim.",
+      "builtinOcr": "Innbyggður ljóslestur les skannanir án textalags, svo einnig er hægt að leita í þeim.",
       "action": "Setja upp núna"
     },
     "searchResults_one": "<count>{{count, number}} niðurstaða</count> <query>fyrir „{{query}}“</query>",
@@ -175,12 +200,13 @@
       "activeTo": "til {{date}}",
       "removeOne": "Fjarlægja síuna „{{label}}“",
       "removeAll": "Fjarlægja allar síur",
-      "clear": "Fjarlægja síur"
+      "clear": "Fjarlægja síur",
+      "retentionExpired": "Varðveislutími liðinn"
     },
     "empty": {
       "libraryTitle": "Engin skjöl enn",
-      "libraryHint": "Dragðu einfaldlega PDF-skrár inn í þennan glugga eða notaðu „Hlaða upp“.",
-      "libraryHintAdmin": "Dragðu einfaldlega PDF-skrár inn í þennan glugga eða notaðu „Hlaða upp“. Í stillingunum geturðu sett upp pósthólf eða innflutningsmöppu sem nýjar PDF-skrár eru fluttar sjálfkrafa inn úr.",
+      "libraryHint": "Dragðu einfaldlega PDF-skrár eða myndir inn í þennan glugga eða notaðu „Hlaða upp“.",
+      "libraryHintAdmin": "Dragðu einfaldlega PDF-skrár eða myndir inn í þennan glugga eða notaðu „Hlaða upp“. Í stillingunum geturðu sett upp pósthólf eða innflutningsmöppu sem ný skjöl eru sjálfkrafa flutt inn úr.",
       "noResultsTitle": "Ekkert fannst",
       "noResultsSearch": "Ekkert skjal passar við þessa leit. Leitin finnur einnig orðhluta – prófaðu styttra leitarorð eða færri orð.",
       "noResultsFilters": "Ekkert skjal passar við valdar síur."
@@ -190,11 +216,30 @@
     "loadMore": "Sækja fleiri ({{remaining, number}})",
     "aiSearch": {
       "notice": "Gervigreindarleit: „{{question}}“. Síurnar sýna hvernig spurningin var skilin."
+    },
+    "export": {
+      "label_one": "Flytja út {{count, number}} skjal sem ZIP",
+      "label_other": "Flytja út öll {{count, number}} skjöl þessa lista sem ZIP",
+      "started_one": "Útflutningur á {{count, number}} skjali hafinn",
+      "started_other": "Útflutningur á {{count, number}} skjölum hafinn",
+      "contents": "ZIP-skráin inniheldur PDF-skrárnar og allar upplýsingar sem töflu (documents.csv) og sem documents.json.",
+      "failed": "Útflutningur mistókst"
+    },
+    "mailboxNotice": {
+      "text_one": "Ítrekað hefur ekki tekist að athuga pósthólfið „{{names}}“ – engin skjöl berast þaðan eins og er.",
+      "text_other": "Ítrekað hefur ekki tekist að athuga þessi pósthólf: {{names}}. Engin skjöl berast þaðan eins og er.",
+      "action": "Skoða pósthólf"
+    },
+    "backupNotice": {
+      "never": "Ekkert afrit er enn til af skjölunum þínum.",
+      "overdue": "Síðasta afrit: {{when}}. Það er lengra síðan en stillt er.",
+      "failed": "Sjálfvirk afritun mistókst: {{reason}}",
+      "action": "Fara í afritun"
     }
   },
   "document": {
     "backToList": "Til baka í yfirlit",
-    "download": "Hlaða niður",
+    "download": "Sækja",
     "reprocess": "Greina aftur",
     "reprocessHint": "Lesa PDF-skrána aftur og láta gervigreindina greina hana",
     "reprocessStarted": "Verið er að greina skjalið aftur.",
@@ -264,7 +309,9 @@
     "noText": "Enginn texti er til fyrir þetta skjal – líklega er það skönnun án textalags. Þegar gervigreindin hefur verið sett upp og ljóslestur er virkur er efnið skrifað upp við greiningu.",
     "edit": {
       "title": "Breyta skjali",
-      "saved": "Breytingar vistaðar"
+      "saved": "Breytingar vistaðar",
+      "areaHint": "Ákvarðar hverjir sjá skjalið.",
+      "areaMoveHint": "Eftir það sjá það aðeins meðlimir svæðisins „{{area}}“ og stjórnendur."
     },
     "delete": {
       "title": "Eyða skjali?",
@@ -286,30 +333,39 @@
     },
     "versions": {
       "title": "Útgáfur",
-      "intro": "Hver breyting á PDF-skjalinu býr til nýja útgáfu. Eldri útgáfur eru geymdar og hægt er að skoða þær, sækja eða endurheimta.",
+      "intro": "Hver breyting á PDF-skránni býr til nýja útgáfu. Eldri útgáfur eru geymdar og hægt er að skoða þær, sækja eða endurheimta.",
       "current": "núverandi",
       "view": "Skoða útgáfu {{number}}",
       "download": "Sækja útgáfu {{number}}",
       "restore": "Endurheimta útgáfu {{number}}",
       "restoreTitle": "Endurheimta útgáfu {{number}}?",
-      "restoreText": "Útgáfan verður sú núverandi. Núverandi útgáfa er geymd og hægt er að afturkalla skrefið í ferlinum.",
+      "restoreText": "Útgáfan verður sú núverandi. Núverandi útgáfa er geymd og hægt er að afturkalla skrefið í sögunni.",
       "restoreConfirm": "Endurheimta",
       "restored": "Útgáfa {{number}} endurheimt",
       "kinds": {
         "IMPORTED": "Flutt inn",
         "EDITED": "Breytt",
-        "ORIGINAL_RESTORED": "Upprunalegt endurheimt",
+        "ORIGINAL_RESTORED": "Frumrit endurheimt",
         "VERSION_RESTORED": "Útgáfa {{from}} endurheimt",
-        "UNDONE": "Breyting afturkölluð"
+        "UNDONE": "Breyting afturkölluð",
+        "PAGES": "Síðum breytt",
+        "MERGED": "Skjölum bætt við"
       }
-    }
+    },
+    "retention": {
+      "label": "Varðveisla",
+      "until": "til {{date}} – ekki hægt að eyða því fyrr",
+      "expired": "tíminn rann út {{date}}",
+      "locked": "Varðveita skal til {{date}} – aðeins hægt að eyða eftir það"
+    },
+    "readOnly": "Á þessu svæði máttu aðeins skoða skjalið."
   },
   "settings": {
     "title": "Stillingar",
     "mailboxes": {
       "title": "Pósthólf",
-      "navHint": "IMAP-þjónar sem PDF-viðhengi eru sótt frá",
-      "intro": "PDF-viðhengi eru flutt sjálfkrafa inn úr þessum IMAP-pósthólfum. Pósthólfin eru aðeins lesin – tölvupóstar haldast óbreyttir og ólesnir.",
+      "navHint": "IMAP-þjónar sem PDF- og myndviðhengi eru flutt inn úr",
+      "intro": "PDF-viðhengi og meðfylgjandi myndir (sem PDF) eru flutt sjálfkrafa inn úr þessum IMAP-pósthólfum, en ekki texti tölvupóstanna eða innfelld merki. Pósthólfin eru aðeins lesin – tölvupóstar haldast óbreyttir og ólesnir.",
       "add": "Bæta við pósthólfi",
       "emptyTitle": "Ekkert pósthólf hefur verið sett upp enn",
       "emptyText": "Sláðu inn aðgangsupplýsingar IMAP-pósthólfs – til dæmis pósthólfsins sem skanninn þinn sendir skjöl í.",
@@ -342,7 +398,7 @@
         "since": "Aðeins tölvupóstar frá",
         "sinceHint": "Valfrjálst – eldri tölvupóstum er sleppt",
         "enabled": "Athuga sjálfkrafa",
-        "enabledHint": "Leitað er að nýjum PDF-skrám í pósthólfinu með stilltu millibili.",
+        "enabledHint": "Leitað er að nýjum viðhengjum í pósthólfinu með stilltu millibili.",
         "filter": {
           "title": "Sía",
           "intro": "Aðeins tölvupóstar sem uppfylla öll skilyrði eru unnir. Eitt orð í hverja línu; hástafir og lágstafir skipta ekki máli og hluti textans nægir. Tóm svæði takmarka ekkert.",
@@ -351,29 +407,30 @@
           "senderIncludes": "Sendandinn inniheldur eitt þessara orða",
           "senderExcludes": "Sendandinn inniheldur ekkert þessara orða",
           "senderHint": "Nafn eða netfang, t.d. „@example.com“",
-          "newOnly": "Sían gildir um tölvupóst sem berst eftir síðustu sókn; tölvupóstur sem þegar hefur verið skoðaður er ekki unninn aftur."
+          "newOnly": "Sían gildir um tölvupóst sem berst eftir síðustu athugun; tölvupóstur sem þegar hefur verið athugaður er ekki unninn aftur."
         },
-        "interval": "Sóknartíðni í mínútum",
-        "intervalHint": "Skildu eftir autt til að nota almennu tíðnina (núna {{interval}})."
+        "interval": "Athugunarbil í mínútum",
+        "intervalHint": "Skildu eftir autt til að nota almenna athugunarbilið (núna {{interval}}).",
+        "areaHint": "Innflutt skjöl fara á þetta svæði."
       },
       "filterActive": "Sía virk",
-      "schedule": "Sótt á {{interval}} fresti · næst {{when}}",
-      "scheduleSoon": "Sótt á {{interval}} fresti · næst innan skamms"
+      "schedule": "Athugunarbil: {{interval}} · næst {{when}}",
+      "scheduleSoon": "Athugunarbil: {{interval}} · næst innan skamms"
     },
     "import": {
       "title": "Áætlun og innflutningsmappa",
       "navHint": "Athugunarbil og vöktuð mappa",
-      "intro": "Ákvarðar hversu oft forritið leitar að nýjum PDF-skrám – í pósthólfunum og í innflutningsmöppunni.",
+      "intro": "Ákvarðar hversu oft forritið leitar að nýjum skjölum – í pósthólfunum og í innflutningsmöppunni.",
       "saved": "Stillingar vistaðar",
       "interval": {
         "title": "Athugunarbil",
-        "text": "Hversu oft forritið athugar innhólfsmöppuna og öll pósthólf án eigin tíðni að nýjum PDF-skjölum.",
+        "text": "Svo oft athugar forritið hvort ný skjöl séu komin í innflutningsmöppuna og öll pósthólf án eigin athugunarbils.",
         "label": "Á … mínútna fresti",
         "nextRun": "Næsta sjálfvirka athugun {{when}}."
       },
       "folder": {
         "title": "Innflutningsmappa",
-        "text": "Mappa á þjóninum þar sem fylgst er með nýjum PDF-skrám – til dæmis mappan sem netskanni vistar í. Einnig er leitað í undirmöppum.",
+        "text": "Mappa á þjóninum þar sem fylgst er með nýjum PDF-skrám og myndum (JPG, PNG, HEIC) – til dæmis mappan sem netskanni vistar í. Einnig er leitað í undirmöppum.",
         "enable": "Vakta innflutningsmöppu",
         "path": "Slóð á þjóninum",
         "pathHint": "Algild slóð. Í Docker-gámnum er þetta tengda mappan, yfirleitt {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Athuga möppu …",
         "neverScanned": "Ekki athugað enn.",
         "scanNow": "Athuga núna",
-        "scanStarted": "Verið er að athuga innflutningsmöppuna."
+        "scanStarted": "Verið er að athuga innflutningsmöppuna.",
+        "areaHint": "Skjöl úr möppunni fara á þetta svæði."
       }
     },
     "ai": {
@@ -462,8 +520,8 @@
         "outputLanguageHint": "Gervigreindin skrifar titil, samantekt og efnisorð á þessu tungumáli.",
         "ocr": "Ljóslestur skannaðra skjala",
         "ocrHint": "Forritið lætur gervigreindina skrifa upp skannaðar PDF-skrár án textalags – aðeins þannig finnast þær í heildartextaleit. Hver skönnun tekur lengri tíma og kostar meira.",
-        "quickOcrFirst": "Fyrst hröð textagreining, síðan fínstilling með gervigreind",
-        "quickOcrFirstHint": "Nýjar skannanir les innbyggða textagreiningin (Tesseract) fyrst – eftir nokkrar sekúndur er hægt að leita í þeim. Síðan bætir gervigreindin við titli, samantekt og efnisorðum út frá þessum texta."
+        "quickOcrFirst": "Fyrst hraður ljóslestur, síðan fínpússun með gervigreind",
+        "quickOcrFirstHint": "Nýjar skannanir les innbyggði ljóslesturinn (Tesseract) fyrst – eftir nokkrar sekúndur er hægt að leita í þeim. Síðan bætir gervigreindin við titli, samantekt og efnisorðum út frá þessum texta."
       },
       "unanalyzed_one": "Gervigreindin hefur ekki enn greint {{count, number}} skjal.",
       "unanalyzed_other": "Gervigreindin hefur ekki enn greint {{count, number}} skjöl.",
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} skráir sig þá aðeins inn með lykilorði og getur sett upp tveggja þátta auðkenningu aftur – til dæmis eftir að síminn týndist.",
       "resetTwoFactorConfirm": "Endurstilla",
       "twoFactorReset": "Tveggja þátta auðkenning endurstillt"
+    },
+    "areas": {
+      "title": "Svæði",
+      "navHint": "Hver sér hvaða skjöl",
+      "intro": "Hvert skjal er á nákvæmlega einu svæði. Notendur sjá aðeins skjölin á þeim svæðum sem þeir eru meðlimir í, auk skjalanna á svæðum sem eru opin öllum.",
+      "add": "Stofna svæði",
+      "everyone": "Fyrir alla",
+      "restricted": "Takmarkað",
+      "visibleForAll": "sýnilegt öllum innskráðum",
+      "members": "Meðlimir: {{names}}",
+      "adminsOnly": "aðeins stjórnendur",
+      "adminHint": "Stjórnendur sjá öll svæði, líka án aðildar.",
+      "edit": "Breyta {{name}}",
+      "saved": "Svæði vistað",
+      "created": "Svæði stofnað",
+      "deleted": "Svæði eytt",
+      "delete": {
+        "label": "Eyða {{name}}",
+        "title": "Eyða svæði?",
+        "text": "Svæðinu „{{name}}“ verður eytt. Það er aðeins hægt á meðan engin skjöl, ekkert pósthólf og engin innflutningsmappa nota það."
+      },
+      "dialog": {
+        "name": "Heiti",
+        "namePlaceholder": "t.d. Bókhald",
+        "generalNameHint": "Skildu eftir autt til að svæðið heiti „Almennt“ á öllum tungumálum.",
+        "everyone": "Sýnilegt öllum",
+        "everyoneHint": "Allir innskráðir notendur sjá skjölin á þessu svæði.",
+        "members": "Meðlimir",
+        "membersHint": "Aðeins meðlimir og stjórnendur sjá skjölin á þessu svæði. Fyrir hvern meðlim velurðu hvort hann megi aðeins lesa, líka breyta eða einnig eyða.",
+        "noUsers": "Enn eru engir notendur án stjórnandahlutverks.",
+        "create": "Stofna",
+        "everyoneAccess": "Allir mega",
+        "accessOf": "Heimild fyrir {{name}}",
+        "membersHintEveryone": "Allir sjá skjölin á þessu svæði. Bættu meðlimum við hér ef þeir eiga að mega meira en allir aðrir."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Varðveisla",
+      "navHint": "Varðveislutími og eyðingarlás",
+      "intro": "Tilgreindu hve lengi þarf að varðveita skjöl af tiltekinni skjalategund – reikninga til dæmis í tíu ár. Tíminn er talinn frá lokum ársins sem skjalið er frá. Fram að því getur enginn eytt því.",
+      "permanent": "Ekki er hægt að aflétta lás – ekki einu sinni stjórnendur geta það. Ef regla er stytt eða henni eytt, eða ef skjalategund skjals breytist, gildir sá varðveislutími sem þegar hefur verið settur áfram.",
+      "add": "Stofna reglu",
+      "years_one": "{{count, number}} ár",
+      "years_other": "{{count, number}} ár",
+      "edit": "Breyta reglu fyrir {{category}}",
+      "saved": "Regla vistuð",
+      "created": "Regla stofnuð",
+      "deleted": "Reglu eytt",
+      "emptyTitle": "Engar varðveislureglur enn",
+      "emptyText": "Án reglu er hægt að eyða skjölum hvenær sem er.",
+      "delete": {
+        "label": "Eyða reglu fyrir {{category}}",
+        "title": "Eyða reglu?",
+        "text": "Ný skjöl af tegundinni „{{category}}“ fá þá ekki lengur varðveislutíma. Skjöl sem þegar eru læst haldast læst þar til varðveislutími þeirra rennur út."
+      },
+      "dialog": {
+        "categoryHint": "Eins og hún stendur á skjalinu; hástafir og lágstafir skipta ekki máli.",
+        "years": "Varðveislutími í árum",
+        "yearsHint": "Talinn frá lokum ársins sem skjalið er dagsett (án dagsetningar: ársins sem því var bætt við).",
+        "shorterHint": "Styttri tími gildir aðeins um skjöl sem hafa ekki enn fengið varðveislutíma. Skjöl sem þegar eru læst haldast læst til loka núverandi varðveislutíma síns.",
+        "create": "Stofna"
+      }
+    },
+    "mailOut": {
+      "title": "Sending tölvupósts",
+      "navHint": "Áminningar í tölvupósti",
+      "intro": "Í gegnum þennan SMTP-þjón sendir forritið tölvupóst um áminningar sem eru komnar á tíma – einu sinni fyrir hverja áminningu, safnað saman í einn tölvupóst á mann. Viðtakandi er sá sem sér um áminninguna og hefur skráð netfang í notandavalmyndinni.",
+      "enabled": "Senda áminningar í tölvupósti",
+      "enabledHint": "Ef slökkt er á þessu birtast áminningar aðeins í forritinu.",
+      "host": "SMTP-þjónn",
+      "port": "Gátt",
+      "security": "Dulkóðun",
+      "unencrypted": "Engin",
+      "usernameHint": "Skildu eftir autt ef þjónninn krefst ekki innskráningar.",
+      "passwordKeepHint": "Skildu eftir autt til að halda vistaða lykilorðinu.",
+      "from": "Netfang sendanda",
+      "fromHint": "Þjónninn þinn þarf að leyfa það fyrir aðganginn þinn.",
+      "appUrl": "Slóð forritsins",
+      "appUrlHint": "Fyrir tengla í tölvupóstunum, t.d. https://docs.example.com. Autt = engir tenglar.",
+      "digestHour": "Sending",
+      "fromHour": "frá kl. {{hour}}",
+      "saved": "Stillingar tölvupósts vistaðar",
+      "test": "Prófunarpóstur til {{address}}",
+      "testNeedsAddress": "Skráðu þitt eigið netfang í notandavalmyndinni til að fá prófunarpóstinn.",
+      "testSavedHint": "Prófunin notar vistuðu stillingarnar – vistaðu því fyrst."
+    },
+    "backup": {
+      "title": "Afritun og innflutningur",
+      "navHint": "Afrita allt í einu, flytja inn útflutning",
+      "intro": "Afrit inniheldur allt sem þarf til að endurheimta AIDocuments nákvæmlega eins og það er. Innflutningur flytur inn skjöl úr útflutningi frá annarri uppsetningu – ásamt upplýsingum þeirra.",
+      "backupTitle": "Afrit með einum smelli",
+      "backupText": "ZIP-skrá með gagnagrunninum, öllum skjölum ásamt eldri útgáfum, smámyndunum og lyklinum að vistuðum lykilorðum. Forritið heldur áfram að keyra á meðan.",
+      "size": "Stærð",
+      "sizeValue_one": "um {{size}} í {{count, number}} skrá",
+      "sizeValue_other": "um {{size}} í {{count, number}} skrám",
+      "last": "Síðasta afrit",
+      "never": "aldrei",
+      "keyWarning": "Afritið er ekki dulkóðað og inniheldur lykilinn að vistuðu lykilorðunum (pósthólf, gervigreind, tveggja þátta auðkenning). Geymdu það jafn tryggilega og skjölin sjálf.",
+      "restore": "Til að endurheimta: stöðvaðu AIDocuments, afþjappaðu innihald ZIP-skrárinnar í tóma gagnamöppu og ræstu það aftur. Leiðbeiningar fylgja í ZIP-skránni (README.txt).",
+      "download": "Sækja afrit",
+      "started": "Verið er að sækja afritið.",
+      "externalDatabase": "Afrit með einum smelli er aðeins í boði með innbyggða gagnagrunninum. Með MariaDB afritarðu gagnagrunninn með hans eigin verkfærum (t.d. mariadb-dump) og auk þess gagnamöppuna.",
+      "importTitle": "Flytja inn útflutning",
+      "importText": "ZIP-skrá úr „Flytja út“ í skjalalistanum – líka frá annarri uppsetningu. Titill, skjalategund, efnisorð og aðrar upplýsingar haldast; gervigreindin les skjölin ekki aftur. Skrám sem eru þegar til er sleppt.",
+      "file": "ZIP-skrá",
+      "areaHint": "Hingað fara skjölin – eða aðeins þau sem eiga svæði sem er ekki til hér.",
+      "matchAreas": "Setja á svæði með sama heiti",
+      "matchAreasHint": "Ef svæði hér hefur sama heiti og í útflutningnum fara skjölin þangað.",
+      "import": "Flytja inn",
+      "importing": "Flyt inn …",
+      "result": "Flutt inn: {{imported, number}} · þegar til: {{duplicates, number}} · ekki flutt inn: {{failed, number}}",
+      "auto": {
+        "title": "Sjálfvirk afritun",
+        "text": "Einu sinni á dag vistar AIDocuments heildarafrit sem ZIP-skrá í möppu og geymir þau nýjustu. Best er að mappan sé á öðrum diski eða netdrifi – ef diskurinn með gögnunum bilar glatast afritin annars líka.",
+        "enable": "Afrita sjálfkrafa á hverjum degi",
+        "hour": "Tími",
+        "keep": "Geyma",
+        "keepHint": "Fjöldi afrita; eldri afritum er eytt.",
+        "directory": "Mappa",
+        "directoryHint": "Full slóð á þjóninum. Hafðu autt til að nota sjálfgefnu möppuna. Í Docker-gámnum þarf mappan að vera tengd.",
+        "warnAfterDays": "Vara við eftir (daga)",
+        "warnAfterDaysHint": "Ábending í skjalalistanum þegar ekkert afrit hefur verið tekið svo lengi – handvirkt eða sjálfvirkt. 0 = aldrei vara við.",
+        "lastRun": "Síðasta keyrsla",
+        "nextRun": "Næsta keyrsla",
+        "running": "Afritun í gangi …",
+        "ok": "tókst, {{when}}",
+        "failed": "mistókst, {{when}}",
+        "stored_one": "{{count, number}} afrit í {{directory}}",
+        "stored_other": "{{count, number}} afrit í {{directory}}",
+        "runNow": "Afrita núna",
+        "saveFirst": "Vistaðu breytingarnar fyrst.",
+        "runStarted": "Afritunin keyrir í bakgrunni.",
+        "done": "Afrit vistað.",
+        "saved": "Stillingar vistaðar.",
+        "externalDatabase": "Sjálfvirk afritun er aðeins í boði með innbyggða gagnagrunninum. Með MariaDB afritarðu gagnagrunninn með hans eigin verkfærum (t.d. mariadb-dump á hverri nóttu) og auk þess gagnamöppuna."
+      }
     }
   },
   "history": {
@@ -528,7 +723,7 @@
     },
     "by": "af {{user}}",
     "automatic": "sjálfvirkt",
-    "more": "Hlaða fleiri",
+    "more": "Sækja fleiri",
     "undo": "Afturkalla",
     "undone": "Afturkallað"
   },
@@ -565,7 +760,8 @@
   "confirmCode": {
     "title": "Staðfesta breytingu",
     "text": "Breytingar á aðgöngum, pósthólfum og stillingum krefjast gilds kóða úr auðkenningarforritinu þínu. Staðfestingin gildir í 10 mínútur.",
-    "submit": "Staðfesta"
+    "submit": "Staðfesta",
+    "passkey": "Staðfesta með aðgangslykli"
   },
   "share": {
     "button": "Deila",
@@ -576,8 +772,8 @@
     "permission": "Má viðkomandi breyta skjalinu?",
     "viewOnly": "Aðeins skoða",
     "canEdit": "Má breyta",
-    "viewHint": "Viðkomandi getur skoðað, prentað og sótt PDF-skjalið.",
-    "editHint": "Viðkomandi getur líka merkt við, skrifað í, undirritað og vistað PDF-skjalið. Hver vistun verður ný útgáfa; titill, merki og aðrar upplýsingar eru faldar.",
+    "viewHint": "Viðkomandi getur skoðað, prentað og sótt PDF-skrána.",
+    "editHint": "Viðkomandi getur líka merkt við, skrifað í, undirritað og vistað PDF-skrána. Hver vistun verður ný útgáfa; titil, efnisorð og aðrar upplýsingar sér viðkomandi ekki.",
     "validity": "Gildir í",
     "unlimited": "Ótakmarkað",
     "create": "Búa til tengil",
@@ -598,6 +794,193 @@
     "page": {
       "for": "Deilt með {{name}}",
       "invalid": "Þessi tengill er ógildur eða útrunninn, eða skjalinu hefur verið eytt. Hafðu samband við þann sem gaf þér hann."
+    }
+  },
+  "areas": {
+    "general": "Almennt",
+    "unknown": "Annað svæði",
+    "label": "Svæði",
+    "target": "Marksvæði",
+    "access": {
+      "READ": "Aðeins lesa",
+      "EDIT": "Lesa og breyta",
+      "DELETE": "Breyta og eyða"
+    }
+  },
+  "reminders": {
+    "title": "Áminningar",
+    "cardTitle": "Áminning",
+    "add": "Stofna áminningu",
+    "edit": "Breyta áminningu",
+    "create": "Stofna",
+    "created": "Áminning stofnuð",
+    "saved": "Áminning vistuð",
+    "deleted": "Áminningu eytt",
+    "markedDone": "Lokið",
+    "dueDate": "Dagsetning",
+    "note": "Athugasemd",
+    "notePlaceholder": "t.d. athuga greiðslu",
+    "assignee": "Hver sér um þetta?",
+    "assigneeHint": "Þessi einstaklingur sér áminninguna undir „Mínar“ og fær hana í tölvupósti. Hægt er að velja alla sem sjá skjalið.",
+    "me": "{{name}} (ég)",
+    "assignedTo": "fyrir {{name}}",
+    "doneBy": "lokið af {{name}}",
+    "markDone": "Merkja sem lokið",
+    "reopen": "Opna aftur",
+    "delete": {
+      "label": "Eyða áminningu",
+      "title": "Eyða áminningu?",
+      "text": "Áminningin verður fjarlægð. Skjalið helst óbreytt."
+    },
+    "accept": "Bæta við",
+    "dismiss": "Hafna tillögu",
+    "suggestionsHint": "Gervigreindin fann dagsetningar í þessu skjali:",
+    "none": "Engar opnar áminningar.",
+    "showDone_one": "Sýna {{count, number}} lokna áminningu",
+    "showDone_other": "Sýna {{count, number}} loknar áminningar",
+    "hideDone": "Fela loknar",
+    "scope": {
+      "label": "Hvaða áminningar",
+      "mine": "Mínar",
+      "all": "Allar"
+    },
+    "dueTitle": "Komið á tíma",
+    "nothingDue": "Ekkert er komið á tíma í dag.",
+    "upcomingTitle": "Á næstunni",
+    "suggestionsTitle": "Tillögur að dagsetningum",
+    "suggestionsPageHint": "Frestir á næstu sex mánuðum sem gervigreindin fann í skjölunum. Bættu þeim við sem áminningu eða hafnaðu þeim.",
+    "emptyTitle": "Engar áminningar",
+    "emptyText": "Stofnaðu áminningu fyrir skjal – eða bættu við áminningu sem gervigreindin leggur til.",
+    "repeat": {
+      "label": "Endurtaka",
+      "hint": "Þegar þú merkir áminninguna sem lokið verður sú næsta til með sama millibili.",
+      "none": "Einu sinni",
+      "m1": "Mánaðarlega",
+      "m3": "Ársfjórðungslega",
+      "m6": "Á hálfs árs fresti",
+      "m12": "Árlega",
+      "m24": "Annað hvert ár",
+      "months_one": "Á {{count}} mánaðar fresti",
+      "months_other": "Á {{count}} mánaða fresti"
+    },
+    "fromContract": "úr samningnum"
+  },
+  "pages": {
+    "button": "Síður",
+    "title": "Breyta síðum",
+    "intro": "Dragðu síðurnar eða færðu þær með örvunum, snúðu þeim eða fjarlægðu þær. Þegar vistað er verður til ný útgáfa – sú fyrri er geymd.",
+    "page": "Síða {{number}}",
+    "wasPage": "áður {{number}}",
+    "moveLeft": "Færa framar",
+    "moveRight": "Færa aftar",
+    "rotate": "Snúa um 90°",
+    "remove": "Fjarlægja síðu",
+    "keep": "Halda síðu",
+    "noneLeft": "Að minnsta kosti ein síða verður að vera eftir.",
+    "saveFirst": "Vistaðu breytingarnar fyrst",
+    "saved": "Síður vistaðar",
+    "split": {
+      "here": "Sérstakt skjal héðan",
+      "title": "Skipta skjali?",
+      "text": "Síða {{page}} og allar síður á eftir henni verða að sérstöku skjali á sama svæði. Það er lesið og flokkað eins og nýmóttekið skjal; þetta skjal heldur síðunum á undan.",
+      "confirm": "Skipta",
+      "done": "Skjali skipt",
+      "open": "Opna nýja skjalið"
+    },
+    "merge": {
+      "button": "Bæta við skjölum",
+      "title": "Bæta við skjölum",
+      "intro": "Síðum valinna skjala er bætt aftast við „{{title}}“ í þessari röð.",
+      "search": "Leita að skjölum …",
+      "none": "Engin skjöl passa.",
+      "noDeleteRight": "Þú mátt ekki eyða því – þess vegna geturðu ekki bætt því við.",
+      "hint": "Skjölin sem bætt er við fara síðan í ruslið; hægt er að endurheimta þau úr sögunni í 30 daga.",
+      "confirm_one": "Bæta {{count}} skjali við",
+      "confirm_other": "Bæta {{count}} skjölum við",
+      "done_one": "{{count}} skjali bætt við",
+      "done_other": "{{count}} skjölum bætt við"
+    }
+  },
+  "contracts": {
+    "nav": "Samningar",
+    "title": "Samningar",
+    "pageIntro": "Gildistími og uppsagnarfrestur allra samninga sem þú mátt sjá – fyrst þeir sem bráðum þarf að bregðast við.",
+    "scope": {
+      "label": "Sýna",
+      "running": "Í gildi",
+      "all": "Allir"
+    },
+    "emptyTitle": "Engir samningar skráðir enn",
+    "emptyText": "Opnaðu skjal, til dæmis raforku- eða farsímasamning, og skráðu þar gildistíma og uppsagnarfrest. Í tæka tíð áður en fresturinn rennur út birtist þá áminning.",
+    "cardTitle": "Samningur",
+    "none": "Er þetta samningur? Með gildistíma og uppsagnarfresti minnir AIDocuments þig tímanlega á að segja honum upp.",
+    "add": "Skrá sem samning",
+    "edit": "Breyta samningi",
+    "intro": "Út frá lokum gildistímans og uppsagnarfrestinum ræðst hvenær segja þarf samningnum upp í síðasta lagi. Áður en að því kemur birtist áminning; renni gildistíminn út án uppsagnar framlengist samningurinn sjálfkrafa.",
+    "saved": "Samningur vistaður",
+    "removed": "Samningsupplýsingar fjarlægðar",
+    "remove": {
+      "label": "Fjarlægja samningsupplýsingar",
+      "title": "Fjarlægja samningsupplýsingar?",
+      "text": "Gildistími, uppsagnarfrestur og opna áminningin sem þeim fylgir eru fjarlægð. Skjalið sjálft helst óbreytt."
+    },
+    "openEnded": "ótímabundinn",
+    "months_one": "{{count}} mánuður",
+    "months_other": "{{count}} mánuðir",
+    "amountHint": "t.d. „9.990 kr. á mánuði“",
+    "endDateHint": "Lok núverandi gildistíma; autt = ótímabundinn",
+    "noticeHint": "Mánuðir fyrir lok gildistímans; autt = fram að lokum gildistímans",
+    "renewalHint": "Án uppsagnar framlengist samningurinn um svo marga mánuði; 0 = hann rennur út",
+    "cancelledHint": "Þá framlengist hann ekki lengur og engar fleiri áminningar birtast.",
+    "fields": {
+      "partner": "Samningsaðili",
+      "amount": "Upphæð",
+      "startDate": "Upphaf samnings",
+      "endDate": "Gildir til",
+      "notice": "Uppsagnarfrestur (mánuðir)",
+      "renewal": "Framlenging (mánuðir)",
+      "deadline": "Uppsögn í síðasta lagi",
+      "reminderDays": "Minna á (dögum áður)",
+      "cancelled": "Sagt upp"
+    },
+    "status": {
+      "ACTIVE": "Í gildi",
+      "DUE_SOON": "Frestur nálgast",
+      "NOTICE_MISSED": "Frestur liðinn",
+      "CANCELLED": "Sagt upp",
+      "ENDED": "Útrunninn",
+      "OPEN_ENDED": "Ótímabundinn"
+    },
+    "row": {
+      "cancelBy": "segja upp í síðasta lagi {{date}}",
+      "endsOn": "rennur út {{date}}",
+      "term": "gildir til {{date}}",
+      "renews_one": "framlengist um {{count}} mánuð",
+      "renews_other": "framlengist um {{count}} mánuði"
+    }
+  },
+  "passkeys": {
+    "title": "Aðgangslyklar",
+    "intro": "Með aðgangslykli skráirðu þig inn án lykilorðs – staðfest með fingrafari, andliti eða PIN-númeri tækisins. Hann gildir aðeins fyrir þessa slóð; fölsuð síða getur ekki notað hann.",
+    "none": "Engum aðgangslykli hefur verið bætt við enn.",
+    "add": "Bæta við aðgangslykli",
+    "create": "Búa til aðgangslykil",
+    "name": "Heiti",
+    "nameHint": "Svo þú þekkir hann aftur síðar, t.d. „Fartölva“ eða „Lykilorðastjóri“.",
+    "password": "Lykilorðið þitt",
+    "passwordHint": "Sá sem bætir við aðgangslykli getur framvegis skráð sig inn án lykilorðs – staðfestu því einu sinni.",
+    "added": "Aðgangslykli bætt við",
+    "removed": "Aðgangslykill fjarlægður",
+    "synced": "samstilltur",
+    "lastUsed": "síðast notaður {{time}}",
+    "created": "bætt við {{time}}, ekki notaður enn",
+    "unsupported": "Þessi vafri getur ekki notað aðgangslykla hér. Aðgangslyklar virka aðeins um HTTPS (eða localhost).",
+    "unsupportedIp": "Aðgangslyklar virka aðeins um HTTPS og með heiti í slóðinni, ekki með IP-tölu.",
+    "remove": {
+      "label": "Fjarlægja aðgangslykil",
+      "title": "Fjarlægja aðgangslykil?",
+      "text": "Eftir það getur enginn skráð sig inn með „{{name}}“. Hann verður áfram vistaður í lykilorðastjóranum eða á tækinu þar til þú eyðir honum þar.",
+      "confirm": "Fjarlægja"
     }
   }
 }

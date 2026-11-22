@@ -14,9 +14,8 @@ import {
   ConfirmDialog,
   Spinner,
 } from "../components/ui";
-import { api, type Doc, errorMessage } from "../lib/api";
-import { useAuth } from "../lib/auth";
-import { formatBytes, formatDateTime } from "../lib/format";
+import { api, canDelete, canEdit, type Doc, errorMessage } from "../lib/api";
+import { formatBytes, formatDateTime, formatLongDate } from "../lib/format";
 
 /**
  * Zwei Dokumente, die sich inhaltlich gleichen, nebeneinander: links das früher, rechts das später eingegangene.
@@ -93,9 +92,11 @@ export function DuplicatePage() {
           </h1>
           <p className="mt-1 text-sm text-muted">{t("duplicates.subtitle")}</p>
         </div>
-        <Button onClick={() => dismiss.mutate()} loading={dismiss.isPending}>
-          {t("document.duplicate.dismiss")}
-        </Button>
+        {later.data && canEdit(later.data) && (
+          <Button onClick={() => dismiss.mutate()} loading={dismiss.isPending}>
+            {t("document.duplicate.dismiss")}
+          </Button>
+        )}
       </div>
 
       {/* gemeinsames Zeilenraster: Kopfbereiche gleich hoch, die PDF-Ansichten beginnen auf derselben Höhe */}
@@ -131,7 +132,6 @@ function DuplicateSide({
   onDeleted: () => Promise<void>;
 }) {
   const { t } = useTranslation();
-  const { isAdmin } = useAuth();
   const [confirm, setConfirm] = useState(false);
   const SourceIcon = sourceInfo[doc.source].icon;
   const remove = useMutation({
@@ -171,12 +171,14 @@ function DuplicateSide({
               )}
             </p>
           </div>
-          {isAdmin && (
+          {canDelete(doc) && (
             <Button
               variant="ghost"
               className="!text-danger hover:!bg-danger-soft"
               icon={<Trash2 className="size-4" aria-hidden />}
               onClick={() => setConfirm(true)}
+              disabled={doc.retentionLocked}
+              title={doc.retentionLocked && doc.retainUntil ? t("document.retention.locked", { date: formatLongDate(doc.retainUntil) }) : undefined}
             >
               {t("duplicates.deleteThis")}
             </Button>

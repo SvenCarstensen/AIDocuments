@@ -10,6 +10,9 @@ backend/config/*
 # Frontend
 frontend/node_modules/
 frontend/dist/
+# Oberflächentests (npm run test:e2e)
+frontend/test-results/
+frontend/playwright-report/
 
 # IDE / OS
 .idea/

@@ -31,11 +31,14 @@ import org.springframework.web.servlet.LocaleResolver;
  *       Server nur die Anmeldung selbst ({@code /api/auth/**} – Status, Abmelden, Passwort, Einrichten). Alles andere
  *       beantwortet er mit 403 – die Oberfläche zeigt dann die Einrichtung, aber auch wer sie umgeht, kommt nicht
  *       weiter.</li>
- *   <li>Änderungen an Konten, Postfächern und Einstellungen verlangen einen frischen Code aus der App
+ *   <li>Änderungen an Konten, Bereichen, Postfächern und Einstellungen verlangen einen frischen Code aus der App
  *       ({@link RecentConfirmation}): Sonst könnte jemand an einer offen gelassenen Sitzung ein eigenes
  *       Administratorkonto anlegen, Passwort und Zwei-Faktor-Anmeldung eines anderen zurücksetzen oder die KI auf einen
  *       eigenen Server umleiten und damit alle Dokumente abgreifen. Die Antwort ist dann 403 mit
  *       {@code "code": "confirmationRequired"}; die Oberfläche fragt den Code ab und wiederholt die Anfrage.</li>
+ *   <li>Der Export vieler Dokumente auf einmal verlangt den frischen Code von jedem, der die Zwei-Faktor-Anmeldung
+ *       nutzt – nicht nur von Administratoren: Eine offen gelassene Sitzung genügt nicht, um das ganze Archiv
+ *       mitzunehmen.</li>
  * </ul>
  */
 public class AdminTwoFactorFilter extends OncePerRequestFilter {
@@ -50,7 +53,12 @@ public class AdminTwoFactorFilter extends OncePerRequestFilter {
     /** öffentlich (Teilen-Links) – dort zählt nicht, wer angemeldet ist */
     private static final RequestMatcher SHARE = matcher("/api/share/**");
     private static final List<RequestMatcher> CONFIRMED = List.of(
-            matcher("/api/users/**"), matcher("/api/mail-accounts/**"), matcher("/api/settings/**"));
+            matcher("/api/users/**"), matcher("/api/mail-accounts/**"), matcher("/api/settings/**"),
+            // wer welchen Bereich sieht, entscheidet über den Zugriff auf Dokumente
+            matcher("/api/areas/**"));
+    private static final RequestMatcher EXPORT = matcher("/api/documents/export");
+    /** Passkeys anlegen und entfernen: entscheidet, wer künftig ohne Passwort hereinkommt */
+    private static final RequestMatcher PASSKEYS = matcher("/api/auth/passkeys/**");
     private static final Set<String> SAFE_METHODS = Set.of("GET", "HEAD", "OPTIONS");
 
     private final Messages messages;
@@ -74,6 +82,16 @@ public class AdminTwoFactorFilter extends OncePerRequestFilter {
             }
             if (principal.isAdmin() && principal.twoFactorEnabled() && !SAFE_METHODS.contains(request.getMethod())
                     && CONFIRMED.stream().anyMatch(m -> m.matches(request)) && !RecentConfirmation.isRecent(request)) {
+                refuse(request, response, path, "error.twoFactor.confirmationRequired", "confirmationRequired");
+                return;
+            }
+            if (principal.twoFactorEnabled() && !SAFE_METHODS.contains(request.getMethod())
+                    && PASSKEYS.matches(request) && !RecentConfirmation.isRecent(request)) {
+                refuse(request, response, path, "error.twoFactor.confirmationRequired", "confirmationRequired");
+                return;
+            }
+            if (principal.twoFactorEnabled() && "POST".equals(request.getMethod()) && EXPORT.matches(request)
+                    && !RecentConfirmation.isRecent(request)) {
                 refuse(request, response, path, "error.twoFactor.confirmationRequired", "confirmationRequired");
                 return;
             }

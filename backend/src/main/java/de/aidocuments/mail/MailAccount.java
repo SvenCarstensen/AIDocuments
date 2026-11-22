@@ -22,6 +22,8 @@ public class MailAccount {
     private boolean enabled;
     /** Welche E-Mails ausgewertet werden (Betreff, Absender); {@link MailFilter#NONE} = alle. */
     private MailFilter filter = MailFilter.NONE;
+    /** In welchen Bereich die übernommenen Dokumente kommen. */
+    private String areaId = de.aidocuments.area.Area.GENERAL;
     /** Eigenes Abrufintervall in Minuten; {@code null} = das allgemeine (siehe {@link MailSchedule}). */
     private Integer intervalMinutes;
     /** IMAP-UIDVALIDITY und zuletzt verarbeitete UID – so wird jede E-Mail genau einmal geprüft. */
@@ -140,6 +142,14 @@ public class MailAccount {
 
     public void setFilter(MailFilter filter) {
         this.filter = filter == null ? MailFilter.NONE : filter;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId == null ? de.aidocuments.area.Area.GENERAL : areaId;
     }
 
     public Integer getIntervalMinutes() {

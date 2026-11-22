@@ -1,7 +1,9 @@
-import { ShieldCheck } from 'lucide-react'
+import { Fingerprint, ShieldCheck } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { type FormEvent, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { api, ApiError, errorMessage, setConfirmHandler } from '../lib/api'
+import { getPasskey, isCancelled, passkeysSupported } from '../lib/passkey'
 import { Alert, Button, Field, Input, Modal } from './ui'
 
 /**
@@ -15,6 +17,8 @@ export function ConfirmCodeHost() {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const pending = useRef<Array<(ok: boolean) => void>>([])
+  // den Weg per Passkey nur anbieten, wenn das Konto einen hat
+  const passkeys = useQuery({ queryKey: ['passkeys'], queryFn: api.passkeys, enabled: open && passkeysSupported() })
 
   useEffect(() => {
     setConfirmHandler(
@@ -35,6 +39,23 @@ export function ConfirmCodeHost() {
     setError(null)
     setBusy(false)
     waiting.forEach((resolve) => resolve(ok))
+  }
+
+  /** Statt des Codes: mit einem eigenen Passkey bestätigen. */
+  async function confirmWithPasskey() {
+    setBusy(true)
+    setError(null)
+    try {
+      const credential = await getPasskey(await api.passkeyLoginOptions())
+      if (credential) {
+        await api.passkeyConfirm(credential)
+        finish(true)
+        return
+      }
+    } catch (e) {
+      if (!isCancelled(e)) setError(errorMessage(e))
+    }
+    setBusy(false)
   }
 
   async function submit(event: FormEvent) {
@@ -77,7 +98,12 @@ export function ConfirmCodeHost() {
             />
           )}
         </Field>
-        <div className="mt-1 flex justify-end gap-2">
+        <div className="mt-1 flex flex-wrap justify-end gap-2">
+          {passkeysSupported() && (passkeys.data?.length ?? 0) > 0 && (
+            <Button className="mr-auto" icon={<Fingerprint className="size-4" aria-hidden />} disabled={busy} onClick={() => void confirmWithPasskey()}>
+              {t('confirmCode.passkey')}
+            </Button>
+          )}
           <Button onClick={() => finish(false)}>{t('common.cancel')}</Button>
           <Button type="submit" variant="primary" icon={<ShieldCheck className="size-4" aria-hidden />} loading={busy}>
             {t('confirmCode.submit')}

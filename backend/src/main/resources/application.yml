@@ -84,6 +84,10 @@ app:
     interval: ${AIDOCS_IMPORT_INTERVAL:5m}
     # Überwachter Eingangsordner; leer = aus. Im Docker-Image ist /import vorbelegt.
     directory: ${AIDOCS_IMPORT_DIR:}
+  backup:
+    # Ordner der automatischen Sicherung; leer = "backups" im Datenverzeichnis. Besser auf einer anderen Platte
+    # (in der Oberfläche unter Einstellungen → Sicherung & Import änderbar).
+    directory: ${AIDOCS_BACKUP_DIR:}
 
 logging:
   level:

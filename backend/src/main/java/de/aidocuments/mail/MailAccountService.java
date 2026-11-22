@@ -23,9 +23,11 @@ public class MailAccountService {
     private final SecretCipher cipher;
     private final Messages messages;
     private final MailSchedule schedule;
+    private final de.aidocuments.area.AreaRepository areas;
 
     public MailAccountService(MailAccountRepository accounts, DocumentRepository documents, SecretCipher cipher,
-                              Messages messages, MailSchedule schedule) {
+                              Messages messages, MailSchedule schedule, de.aidocuments.area.AreaRepository areas) {
+        this.areas = areas;
         this.messages = messages;
         this.schedule = schedule;
         this.accounts = accounts;
@@ -129,6 +131,12 @@ public class MailAccountService {
         account.setEnabled(request.enabled());
         account.setFilter(filter(request));
         account.setIntervalMinutes(request.intervalMinutes());
+        String areaId = request.areaId() == null || request.areaId().isBlank()
+                ? de.aidocuments.area.Area.GENERAL : request.areaId();
+        if (areas.findById(areaId).isEmpty()) {
+            throw ApiException.badRequest("error.area.notFound");
+        }
+        account.setAreaId(areaId);
         if (request.password() != null && !request.password().isBlank()) {
             account.setPasswordEncrypted(cipher.encrypt(request.password()));
         }
@@ -141,7 +149,8 @@ public class MailAccountService {
     private MailAccountDto toDto(MailAccount a) {
         return new MailAccountDto(a.getId(), a.getName(), a.getHost(), a.getPort(), a.getSecurity(),
                 a.getUsername(), a.getFolder(), a.getImportSince(), a.isEnabled(), MailDtos.MailFilterDto.of(a.getFilter()),
-                a.getIntervalMinutes(), schedule.intervalMinutes(a), schedule.nextSyncAt(a), a.getLastSyncAt(),
+                a.getIntervalMinutes(), schedule.intervalMinutes(a), schedule.nextSyncAt(a), a.getAreaId(),
+                a.getLastSyncAt(),
                 a.getLastSyncStatus(), messages.localize(a.getLastSyncMessage()),
                 documents.countByMailAccountId(a.getId()));
     }

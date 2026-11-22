@@ -44,7 +44,9 @@
     "login": {
       "title": "Welkom terug",
       "subtitle": "Log in om bij je documenten te komen.",
-      "submit": "Inloggen"
+      "submit": "Inloggen",
+      "or": "of",
+      "passkey": "Inloggen met een toegangssleutel"
     },
     "setup": {
       "title": "AIDocuments instellen",
@@ -61,12 +63,12 @@
       }
     },
     "twoFactor": {
-      "title": "Aanmelding bevestigen",
+      "title": "Inloggen bevestigen",
       "subtitle": "Voer de 6-cijferige code uit je authenticator-app in.",
       "code": "Code",
       "codeHint": "Geen toegang tot de app? Voer in plaats daarvan een van je herstelcodes in.",
       "submit": "Bevestigen",
-      "back": "Terug naar aanmelden"
+      "back": "Terug naar inloggen"
     },
     "twoFactorRequired": {
       "title": "Tweestapsverificatie instellen",
@@ -81,8 +83,8 @@
       "dark": "Donker thema"
     },
     "search": {
-      "placeholder": "Zoeken op trefwoorden: documenten, labels, inhoud …",
-      "placeholderAi": "AI-zoeken: vraag in je eigen woorden – bijv. ‘facturen van Kia uit 2024’",
+      "placeholder": "Zoeken op trefwoorden: documenten, tags, inhoud …",
+      "placeholderAi": "AI-zoeken: vraag in je eigen woorden – bijv. “facturen van Kia uit 2024”",
       "labelAi": "AI",
       "label": "Documenten doorzoeken",
       "clear": "Zoekopdracht wissen",
@@ -102,26 +104,49 @@
       "changed": "Wachtwoord gewijzigd"
     },
     "dropzone": {
-      "title": "Sleep PDF’s hierheen",
-      "hint": "Je kunt meerdere bestanden tegelijk neerzetten. Ze worden opgeslagen, geanalyseerd en van tags voorzien."
+      "title": "Sleep PDF’s of foto’s hierheen",
+      "hint": "Je kunt meerdere bestanden tegelijk neerzetten. Foto’s (JPG, PNG, HEIC) worden PDF’s. Alles wordt opgeslagen, geanalyseerd en van tags voorzien."
+    },
+    "remindersDue_one": "{{count, number}} opvolging te doen",
+    "remindersDue_other": "{{count, number}} opvolgingen te doen",
+    "profile": {
+      "email": "E-mailadres",
+      "saved": "Opgeslagen"
+    },
+    "notifications": {
+      "title": "E-mailmeldingen",
+      "emailHint": "Hierheen gaan opvolgingen die aan jou zijn toegewezen en de meldingen die je hieronder inschakelt – in de taal waarin je de toepassing nu gebruikt. Laat leeg als je geen e-mails wilt ontvangen.",
+      "digest": "Dagelijks nieuwe documenten",
+      "digestHint": "Eén keer per dag een lijst van de documenten die in jouw ruimtes zijn binnengekomen – alleen op dagen met nieuwe documenten.",
+      "admin": "Meldingen voor beheerders",
+      "adminHint": "Wanneer bewaartermijnen aflopen (er wordt niets automatisch verwijderd) en wanneer een mailbox herhaaldelijk niet kan worden gecontroleerd.",
+      "needsEmail": "Zonder adres worden er geen e-mails verstuurd."
     }
   },
   "upload": {
-    "onlyPdf": "Alleen PDF-bestanden kunnen worden toegevoegd.",
+    "onlyPdf": "Alleen PDF’s en foto’s (JPG, PNG, HEIC) kunnen worden toegevoegd.",
     "uploadingFile": "“{{name}}” wordt geüpload …",
-    "uploadingFiles_one": "{{count, number}} PDF wordt geüpload …",
-    "uploadingFiles_other": "{{count, number}} PDF’s worden geüpload …",
+    "uploadingFiles_one": "{{count, number}} bestand wordt geüpload …",
+    "uploadingFiles_other": "{{count, number}} bestanden worden geüpload …",
     "created_one": "{{count, number}} document toegevoegd",
     "created_other": "{{count, number}} documenten toegevoegd",
     "processingInBackground": "De verwerking gaat op de achtergrond door.",
     "duplicates_one": "{{count, number}} bestaat al",
     "duplicates_other": "{{count, number}} bestaan al",
-    "rejected_one": "{{count, number}} bestand is geen geldige PDF",
-    "rejected_other": "{{count, number}} bestanden zijn geen geldige PDF’s",
+    "rejected_one": "{{count, number}} bestand niet toegevoegd",
+    "rejected_other": "{{count, number}} bestanden niet toegevoegd",
     "onlyDuplicates_one": "Dit document bestaat al.",
     "onlyDuplicates_other": "Deze documenten bestaan al.",
-    "noneValid": "Geen van de bestanden is een geldige PDF.",
-    "failed": "Uploaden mislukt"
+    "noneValid": "Geen van de bestanden kon worden toegevoegd.",
+    "failed": "Uploaden mislukt",
+    "intoArea": "Ruimte: {{area}}",
+    "combine": {
+      "title": "Foto’s samenvoegen tot één document?",
+      "text": "Je hebt meerdere foto’s gekozen. Zijn het de pagina’s van één document – bijvoorbeeld een brief van meerdere pagina’s – dan worden ze in de volgorde van hun bestandsnamen één PDF; de volgorde kun je daarna wijzigen onder “Pagina’s”. Anders wordt elke foto een apart document.",
+      "one": "Als één document",
+      "separate": "Elke foto apart",
+      "tooMuch": "Dit zijn te veel of te grote foto’s voor één document (maximaal 100 foto’s en samen 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -175,12 +200,13 @@
       "activeTo": "t/m {{date}}",
       "removeOne": "Filter “{{label}}” verwijderen",
       "removeAll": "Alle filters verwijderen",
-      "clear": "Filters verwijderen"
+      "clear": "Filters verwijderen",
+      "retentionExpired": "Bewaartermijn verstreken"
     },
     "empty": {
       "libraryTitle": "Nog geen documenten",
-      "libraryHint": "Sleep PDF-bestanden gewoon naar dit venster of gebruik “Uploaden”.",
-      "libraryHintAdmin": "Sleep PDF-bestanden gewoon naar dit venster of gebruik “Uploaden”. In de instellingen kun je een mailbox of een importmap instellen waaruit nieuwe PDF’s automatisch worden geïmporteerd.",
+      "libraryHint": "Sleep PDF’s of foto’s gewoon naar dit venster of gebruik “Uploaden”.",
+      "libraryHintAdmin": "Sleep PDF’s of foto’s gewoon naar dit venster of gebruik “Uploaden”. In de instellingen kun je een mailbox of een importmap instellen waaruit nieuwe documenten automatisch worden geïmporteerd.",
       "noResultsTitle": "Niets gevonden",
       "noResultsSearch": "Geen enkel document past bij deze zoekopdracht. Er wordt ook op delen van woorden gezocht – probeer een kortere term of minder woorden.",
       "noResultsFilters": "Geen enkel document voldoet aan de gekozen filters."
@@ -189,7 +215,26 @@
     "loadingAll_other": "{{loaded, number}} van {{count, number}} documenten geladen …",
     "loadMore": "Meer laden ({{remaining, number}})",
     "aiSearch": {
-      "notice": "AI-zoeken: ‘{{question}}’. De filters tonen hoe de vraag is begrepen."
+      "notice": "AI-zoeken: “{{question}}”. De filters tonen hoe de vraag is begrepen."
+    },
+    "export": {
+      "label_one": "{{count, number}} document exporteren als ZIP",
+      "label_other": "Alle {{count, number}} documenten van deze lijst exporteren als ZIP",
+      "started_one": "Export van {{count, number}} document gestart",
+      "started_other": "Export van {{count, number}} documenten gestart",
+      "contents": "Het ZIP-bestand bevat de PDF’s en alle gegevens als tabel (documents.csv) en als documents.json.",
+      "failed": "Exporteren mislukt"
+    },
+    "mailboxNotice": {
+      "text_one": "De mailbox “{{names}}” kon meerdere keren achter elkaar niet worden gecontroleerd – er komen nu geen documenten uit binnen.",
+      "text_other": "Deze mailboxen konden meerdere keren achter elkaar niet worden gecontroleerd: {{names}}. Er komen nu geen documenten uit binnen.",
+      "action": "Mailboxen bekijken"
+    },
+    "backupNotice": {
+      "never": "Er is nog geen back-up van je documenten.",
+      "overdue": "Laatste back-up: {{when}}. Dat is langer geleden dan ingesteld.",
+      "failed": "De automatische back-up is mislukt: {{reason}}",
+      "action": "Naar back-up"
     }
   },
   "document": {
@@ -213,7 +258,7 @@
       "restored": "Origineel hersteld"
     },
     "duplicate": {
-      "notice": "Mogelijk een duplicaat: dit document komt inhoudelijk overeen met ‘{{title}}’.",
+      "notice": "Mogelijk een duplicaat: dit document komt inhoudelijk overeen met “{{title}}”.",
       "open": "Naar het andere document",
       "dismiss": "Geen duplicaat",
       "dismissed": "Genoteerd: geen duplicaat"
@@ -264,11 +309,13 @@
     "noText": "Er is geen tekst voor dit document – waarschijnlijk is het een scan zonder tekstlaag. Als de AI is ingesteld en tekstherkenning is ingeschakeld, wordt de inhoud tijdens de analyse getranscribeerd.",
     "edit": {
       "title": "Document bewerken",
-      "saved": "Wijzigingen opgeslagen"
+      "saved": "Wijzigingen opgeslagen",
+      "areaHint": "Bepaalt wie het document kan zien.",
+      "areaMoveHint": "Daarna kunnen alleen leden van “{{area}}” en beheerders het zien."
     },
     "delete": {
       "title": "Document verwijderen?",
-      "text": "‘{{title}}’ wordt verwijderd. In de geschiedenis kun je dit 30 dagen lang ongedaan maken; daarna wordt het definitief verwijderd.",
+      "text": "“{{title}}” wordt verwijderd. In de geschiedenis kun je dit 30 dagen lang ongedaan maken; daarna wordt het definitief verwijderd.",
       "confirm": "Verwijderen"
     },
     "chat": {
@@ -286,7 +333,7 @@
     },
     "versions": {
       "title": "Versies",
-      "intro": "Elke wijziging van de pdf levert een nieuwe versie op. Oudere versies blijven bewaard en kunnen worden bekeken, gedownload of hersteld.",
+      "intro": "Elke wijziging aan de PDF levert een nieuwe versie op. Oudere versies blijven bewaard en kunnen worden bekeken, gedownload of hersteld.",
       "current": "actueel",
       "view": "Versie {{number}} bekijken",
       "download": "Versie {{number}} downloaden",
@@ -300,16 +347,25 @@
         "EDITED": "Bewerkt",
         "ORIGINAL_RESTORED": "Origineel hersteld",
         "VERSION_RESTORED": "Versie {{from}} hersteld",
-        "UNDONE": "Wijziging ongedaan gemaakt"
+        "UNDONE": "Wijziging ongedaan gemaakt",
+        "PAGES": "Pagina’s gewijzigd",
+        "MERGED": "Documenten toegevoegd"
       }
-    }
+    },
+    "retention": {
+      "label": "Bewaartermijn",
+      "until": "tot {{date}} – tot dan niet te verwijderen",
+      "expired": "verstreken op {{date}}",
+      "locked": "Moet worden bewaard tot {{date}} – pas daarna te verwijderen"
+    },
+    "readOnly": "In deze ruimte mag je dit document alleen bekijken."
   },
   "settings": {
     "title": "Instellingen",
     "mailboxes": {
       "title": "Mailboxen",
-      "navHint": "IMAP-servers waaruit PDF-bijlagen worden geïmporteerd",
-      "intro": "Uit deze IMAP-mailboxen worden PDF-bijlagen automatisch geïmporteerd. De mailboxen worden alleen gelezen – e-mails blijven ongewijzigd en ongelezen.",
+      "navHint": "IMAP-servers waaruit PDF- en fotobijlagen worden geïmporteerd",
+      "intro": "Uit deze IMAP-mailboxen worden PDF-bijlagen en bijgevoegde foto’s (als PDF) automatisch geïmporteerd, maar niet de tekst van de e-mails en ingesloten logo’s. De mailboxen worden alleen gelezen – e-mails blijven ongewijzigd en ongelezen.",
       "add": "Mailbox toevoegen",
       "emptyTitle": "Nog geen mailbox ingesteld",
       "emptyText": "Vul de inloggegevens van een IMAP-mailbox in – bijvoorbeeld de mailbox waar je scanner documenten naartoe stuurt.",
@@ -342,7 +398,7 @@
         "since": "Alleen e-mails vanaf",
         "sinceHint": "Optioneel – oudere e-mails worden overgeslagen",
         "enabled": "Automatisch controleren",
-        "enabledHint": "De mailbox wordt met het ingestelde interval op nieuwe PDF’s gecontroleerd.",
+        "enabledHint": "De mailbox wordt met het ingestelde interval op nieuwe bijlagen gecontroleerd.",
         "filter": {
           "title": "Filter",
           "intro": "Alleen e-mails die aan alle voorwaarden voldoen worden verwerkt. Eén term per regel; hoofdletters en kleine letters maken niet uit, een deel van de tekst is genoeg. Lege velden beperken niets.",
@@ -350,11 +406,12 @@
           "subjectExcludes": "Onderwerp bevat geen van deze termen",
           "senderIncludes": "Afzender bevat een van deze termen",
           "senderExcludes": "Afzender bevat geen van deze termen",
-          "senderHint": "Naam of adres, bijv. ‘@example.com’",
+          "senderHint": "Naam of adres, bijv. “@example.com”",
           "newOnly": "Het filter geldt voor e-mails die na de laatste controle binnenkomen; al gecontroleerde e-mails worden niet opnieuw verwerkt."
         },
         "interval": "Controle-interval in minuten",
-        "intervalHint": "Leeg laten voor het algemene interval (nu {{interval}})."
+        "intervalHint": "Leeg laten voor het algemene interval (nu {{interval}}).",
+        "areaHint": "Geïmporteerde documenten komen in deze ruimte."
       },
       "filterActive": "Filter actief",
       "schedule": "Controle elke {{interval}} · volgende {{when}}",
@@ -363,17 +420,17 @@
     "import": {
       "title": "Schema & importmap",
       "navHint": "Controle-interval en bewaakte map",
-      "intro": "Bepaalt hoe vaak de toepassing naar nieuwe PDF-bestanden zoekt – in de mailboxen en in de importmap.",
+      "intro": "Bepaalt hoe vaak de toepassing naar nieuwe documenten zoekt – in de mailboxen en in de importmap.",
       "saved": "Instellingen opgeslagen",
       "interval": {
         "title": "Controle-interval",
-        "text": "Zo vaak controleert de applicatie de invoermap en alle postvakken zonder eigen interval op nieuwe pdf’s.",
+        "text": "Zo vaak controleert de toepassing de importmap en alle mailboxen zonder eigen interval op nieuwe documenten.",
         "label": "Om de … minuten",
         "nextRun": "Volgende automatische controle {{when}}."
       },
       "folder": {
         "title": "Importmap",
-        "text": "Een map op de server die op nieuwe PDF-bestanden wordt bewaakt – bijvoorbeeld de doelmap van een netwerkscanner. Submappen worden ook doorzocht.",
+        "text": "Een map op de server die op nieuwe PDF’s en foto’s (JPG, PNG, HEIC) wordt bewaakt – bijvoorbeeld de doelmap van een netwerkscanner. Submappen worden ook doorzocht.",
         "enable": "Importmap bewaken",
         "path": "Pad op de server",
         "pathHint": "Absoluut pad. In de Docker-container is dit de gekoppelde map, meestal {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Map wordt gecontroleerd …",
         "neverScanned": "Nog niet gecontroleerd.",
         "scanNow": "Nu controleren",
-        "scanStarted": "De importmap wordt gecontroleerd."
+        "scanStarted": "De importmap wordt gecontroleerd.",
+        "areaHint": "Documenten uit de map komen in deze ruimte."
       }
     },
     "ai": {
@@ -463,7 +521,7 @@
         "ocr": "Tekstherkenning voor scans",
         "ocrHint": "De toepassing laat gescande PDF’s zonder tekstlaag door de AI transcriberen – pas dan zijn ze te vinden via zoeken in de volledige tekst. Elke scan kost meer tijd en geld.",
         "quickOcrFirst": "Eerst snelle tekstherkenning, daarna verfijnen met de AI",
-        "quickOcrFirstHint": "Nieuwe scans worden eerst gelezen door de ingebouwde tekstherkenning (Tesseract) – binnen enkele seconden zijn ze doorzoekbaar. Daarna voegt de AI titel, samenvatting en trefwoorden toe op basis van deze tekst."
+        "quickOcrFirstHint": "Nieuwe scans worden eerst gelezen door de ingebouwde tekstherkenning (Tesseract) – binnen enkele seconden zijn ze doorzoekbaar. Daarna voegt de AI titel, samenvatting en tags toe op basis van deze tekst."
       },
       "unanalyzed_one": "{{count, number}} document is nog niet door de AI geanalyseerd.",
       "unanalyzed_other": "{{count, number}} documenten zijn nog niet door de AI geanalyseerd.",
@@ -504,9 +562,146 @@
       "twoFactor": "2FA",
       "resetTwoFactor": "Tweestapsverificatie resetten",
       "resetTwoFactorHint": "Voor dit account is tweestapsverificatie ingeschakeld.",
-      "resetTwoFactorText": "{{name}} meldt zich daarna alleen met het wachtwoord aan en kan tweestapsverificatie opnieuw instellen – bijvoorbeeld na verlies van de telefoon.",
+      "resetTwoFactorText": "{{name}} logt daarna alleen met het wachtwoord in en kan tweestapsverificatie opnieuw instellen – bijvoorbeeld na verlies van de telefoon.",
       "resetTwoFactorConfirm": "Resetten",
       "twoFactorReset": "Tweestapsverificatie gereset"
+    },
+    "areas": {
+      "title": "Ruimtes",
+      "navHint": "Wie welke documenten ziet",
+      "intro": "Elk document staat in precies één ruimte. Gebruikers zien alleen de documenten van de ruimtes waarvan ze lid zijn, plus die van de ruimtes voor iedereen.",
+      "add": "Ruimte toevoegen",
+      "everyone": "Voor iedereen",
+      "restricted": "Beperkt",
+      "visibleForAll": "zichtbaar voor iedereen die is ingelogd",
+      "members": "Leden: {{names}}",
+      "adminsOnly": "alleen beheerders",
+      "adminHint": "Beheerders zien alle ruimtes, ook zonder lidmaatschap.",
+      "edit": "{{name}} bewerken",
+      "saved": "Ruimte opgeslagen",
+      "created": "Ruimte aangemaakt",
+      "deleted": "Ruimte verwijderd",
+      "delete": {
+        "label": "{{name}} verwijderen",
+        "title": "Ruimte verwijderen?",
+        "text": "De ruimte “{{name}}” wordt verwijderd. Dat kan alleen zolang geen documenten, mailbox of importmap deze ruimte gebruiken."
+      },
+      "dialog": {
+        "name": "Naam",
+        "namePlaceholder": "bijv. Boekhouding",
+        "generalNameHint": "Laat leeg om de ruimte in elke taal “Algemeen” te noemen.",
+        "everyone": "Zichtbaar voor iedereen",
+        "everyoneHint": "Alle ingelogde gebruikers zien de documenten in deze ruimte.",
+        "members": "Leden",
+        "membersHint": "Alleen leden en beheerders zien de documenten in deze ruimte. Per lid bepaal je of die alleen mag lezen, ook mag bewerken of daarnaast mag verwijderen.",
+        "noUsers": "Er zijn nog geen gebruikers zonder beheerdersrol.",
+        "create": "Aanmaken",
+        "everyoneAccess": "Iedereen mag",
+        "accessOf": "Recht van {{name}}",
+        "membersHintEveryone": "Iedereen ziet de documenten in deze ruimte. Voeg hier leden toe als die meer mogen dan alle anderen."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Bewaartermijnen",
+      "navHint": "Termijnen en verwijderblokkering",
+      "intro": "Leg vast hoe lang documenten van een bepaald documenttype bewaard moeten worden – facturen bijvoorbeeld tien jaar. De termijn telt vanaf het einde van het jaar waaruit het document stamt. Tot dan kan niemand het verwijderen.",
+      "permanent": "Een blokkering kan niet worden opgeheven – ook niet door beheerders. Als een regel wordt ingekort of verwijderd, of als het documenttype van een document verandert, blijft de al ingestelde termijn gelden.",
+      "add": "Regel toevoegen",
+      "years_one": "{{count, number}} jaar",
+      "years_other": "{{count, number}} jaar",
+      "edit": "Regel voor {{category}} bewerken",
+      "saved": "Regel opgeslagen",
+      "created": "Regel aangemaakt",
+      "deleted": "Regel verwijderd",
+      "emptyTitle": "Nog geen bewaarregels",
+      "emptyText": "Zonder regel kunnen documenten op elk moment worden verwijderd.",
+      "delete": {
+        "label": "Regel voor {{category}} verwijderen",
+        "title": "Regel verwijderen?",
+        "text": "Nieuwe documenten van het type “{{category}}” krijgen dan geen termijn meer. Documenten die al geblokkeerd zijn, blijven dat tot hun termijn afloopt."
+      },
+      "dialog": {
+        "categoryHint": "Zoals het bij het document staat; hoofdletters en kleine letters maken niet uit.",
+        "years": "Bewaartermijn in jaren",
+        "yearsHint": "Geteld vanaf het einde van het jaar van de documentdatum (zonder datum: van de dag van importeren).",
+        "shorterHint": "Een kortere termijn geldt alleen voor documenten die nog geen termijn hebben. Documenten die al geblokkeerd zijn, blijven dat tot het einde van hun huidige termijn.",
+        "create": "Aanmaken"
+      }
+    },
+    "mailOut": {
+      "title": "E-mail verzenden",
+      "navHint": "Herinneringen per e-mail",
+      "intro": "Via deze SMTP-server verstuurt de toepassing herinneringen aan opvolgingen die te doen zijn – één keer per opvolging, gebundeld in één e-mail per persoon. Ontvanger is degene die de opvolging afhandelt en in het gebruikersmenu een adres heeft opgegeven.",
+      "enabled": "Herinneringen per e-mail versturen",
+      "enabledHint": "Als dit uit staat, verschijnen opvolgingen alleen in de toepassing.",
+      "host": "SMTP-server",
+      "port": "Poort",
+      "security": "Versleuteling",
+      "unencrypted": "Geen",
+      "usernameHint": "Laat leeg als de server geen inloggegevens vereist.",
+      "passwordKeepHint": "Laat leeg om het opgeslagen wachtwoord te behouden.",
+      "from": "Afzenderadres",
+      "fromHint": "Je server moet dit adres voor je account toestaan.",
+      "appUrl": "Adres van de toepassing",
+      "appUrlHint": "Voor links in de e-mails, bijv. https://docs.example.com. Leeg = geen links.",
+      "digestHour": "Verzenden",
+      "fromHour": "vanaf {{hour}}",
+      "saved": "E-mailinstellingen opgeslagen",
+      "test": "Testbericht naar {{address}}",
+      "testNeedsAddress": "Geef voor het testbericht je eigen e-mailadres op in het gebruikersmenu.",
+      "testSavedHint": "De test gebruikt de opgeslagen instellingen – sla dus eerst op."
+    },
+    "backup": {
+      "title": "Back-up & import",
+      "navHint": "Alles in één keer back-uppen, exports overnemen",
+      "intro": "Een back-up bevat alles om AIDocuments precies zo te herstellen. Een import neemt documenten over uit de export van een andere installatie – met hun gegevens.",
+      "backupTitle": "Back-up met één klik",
+      "backupText": "Een ZIP met de database, alle documenten inclusief eerdere versies, de voorbeeldafbeeldingen en de sleutel voor opgeslagen wachtwoorden. De toepassing blijft intussen gewoon werken.",
+      "size": "Omvang",
+      "sizeValue_one": "ongeveer {{size}} in {{count, number}} bestand",
+      "sizeValue_other": "ongeveer {{size}} in {{count, number}} bestanden",
+      "last": "Laatste back-up",
+      "never": "nog nooit",
+      "keyWarning": "De back-up is niet versleuteld en bevat de sleutel voor de opgeslagen wachtwoorden (mailboxen, AI, tweestapsverificatie). Bewaar hem net zo veilig als de documenten zelf.",
+      "restore": "Herstellen: stop AIDocuments, pak de inhoud van de ZIP uit in een lege gegevensmap en start opnieuw. Een handleiding zit in de ZIP (README.txt).",
+      "download": "Back-up downloaden",
+      "started": "De back-up wordt gedownload.",
+      "externalDatabase": "Een back-up met één klik is alleen mogelijk met de ingebouwde database. Met MariaDB maak je een back-up van de database met de tools van MariaDB zelf (zoals mariadb-dump) en daarnaast van de gegevensmap.",
+      "importTitle": "Export importeren",
+      "importText": "Een ZIP uit “Exporteren” in de documentenlijst – ook van een andere installatie. Titel, documenttype, tags en de overige gegevens blijven behouden; de AI leest de documenten niet opnieuw. Bestanden die al bestaan, worden overgeslagen.",
+      "file": "ZIP-bestand",
+      "areaHint": "Hier komen de documenten terecht – of alleen die waarvan de ruimte hier niet bestaat.",
+      "matchAreas": "In ruimtes met dezelfde naam plaatsen",
+      "matchAreasHint": "Bestaat hier een ruimte met dezelfde naam als in de export, dan komen de documenten daar terecht.",
+      "import": "Importeren",
+      "importing": "Bezig met importeren …",
+      "result": "Overgenomen: {{imported, number}} · bestond al: {{duplicates, number}} · niet overgenomen: {{failed, number}}",
+      "auto": {
+        "title": "Automatische back-up",
+        "text": "Eén keer per dag schrijft AIDocuments een volledige back-up als ZIP naar een map en bewaart daarvan de nieuwste. De map staat het best op een andere schijf of een netwerkschijf – als de schijf met de gegevens uitvalt, zijn de back-ups anders ook weg.",
+        "enable": "Elke dag automatisch een back-up maken",
+        "hour": "Tijdstip",
+        "keep": "Bewaren",
+        "keepHint": "Aantal back-ups; oudere worden verwijderd.",
+        "directory": "Map",
+        "directoryHint": "Volledig pad op de server. Laat leeg voor de standaardmap. In de Docker-container moet de map gekoppeld zijn.",
+        "warnAfterDays": "Waarschuwen na (dagen)",
+        "warnAfterDaysHint": "Melding in de documentenlijst als er zo lang geen back-up is gemaakt – handmatig of automatisch. 0 = nooit waarschuwen.",
+        "lastRun": "Laatste uitvoering",
+        "nextRun": "Volgende uitvoering",
+        "running": "Back-up wordt gemaakt …",
+        "ok": "gelukt, {{when}}",
+        "failed": "mislukt, {{when}}",
+        "stored_one": "{{count, number}} back-up in {{directory}}",
+        "stored_other": "{{count, number}} back-ups in {{directory}}",
+        "runNow": "Nu back-up maken",
+        "saveFirst": "Sla eerst de wijzigingen op.",
+        "runStarted": "De back-up wordt op de achtergrond gemaakt.",
+        "done": "Back-up opgeslagen.",
+        "saved": "Instellingen opgeslagen.",
+        "externalDatabase": "Automatische back-ups zijn alleen mogelijk met de ingebouwde database. Met MariaDB maak je een back-up van de database met de tools van MariaDB zelf (bijvoorbeeld een nachtelijke mariadb-dump) en daarnaast van de gegevensmap."
+      }
     }
   },
   "history": {
@@ -544,7 +739,7 @@
     "title": "Tweestapsverificatie",
     "on": "Aan",
     "off": "Uit",
-    "intro": "Bescherm je account met een tweede factor: bij het aanmelden voer je dan ook een code in uit een authenticator-app op je telefoon (bijv. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Bescherm je account met een tweede factor: bij het inloggen voer je dan ook een code in uit een authenticator-app op je telefoon (bijv. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Instellen",
     "scan": "Scan de QR-code met je authenticator-app of voer de sleutel handmatig in. Voer daarna de code uit de app en je wachtwoord in.",
     "qrAlt": "QR-code voor de authenticator-app",
@@ -564,8 +759,9 @@
   },
   "confirmCode": {
     "title": "Wijziging bevestigen",
-    "text": "Wijzigingen aan accounts, postvakken en instellingen vereisen een actuele code uit je authenticator-app. De bevestiging is 10 minuten geldig.",
-    "submit": "Bevestigen"
+    "text": "Wijzigingen aan accounts, mailboxen en instellingen vereisen een actuele code uit je authenticator-app. De bevestiging is 10 minuten geldig.",
+    "submit": "Bevestigen",
+    "passkey": "Bevestigen met een toegangssleutel"
   },
   "share": {
     "button": "Delen",
@@ -576,8 +772,8 @@
     "permission": "Mag deze persoon het document bewerken?",
     "viewOnly": "Alleen bekijken",
     "canEdit": "Mag bewerken",
-    "viewHint": "De persoon kan de pdf bekijken, afdrukken en downloaden.",
-    "editHint": "De persoon kan de pdf ook markeren, beschrijven, ondertekenen en opslaan. Elke keer opslaan wordt een nieuwe versie; titel, labels en andere gegevens blijven verborgen.",
+    "viewHint": "De persoon kan de PDF bekijken, afdrukken en downloaden.",
+    "editHint": "De persoon kan de PDF ook markeren, beschrijven, ondertekenen en opslaan. Elke keer opslaan wordt een nieuwe versie; titel, tags en andere gegevens blijven verborgen.",
     "validity": "Geldig",
     "unlimited": "Onbeperkt",
     "create": "Link maken",
@@ -598,6 +794,193 @@
     "page": {
       "for": "Gedeeld met {{name}}",
       "invalid": "Deze link is ongeldig of verlopen, of het document is verwijderd. Neem contact op met de persoon die hem je gaf."
+    }
+  },
+  "areas": {
+    "general": "Algemeen",
+    "unknown": "Andere ruimte",
+    "label": "Ruimte",
+    "target": "Doelruimte",
+    "access": {
+      "READ": "Alleen lezen",
+      "EDIT": "Lezen en bewerken",
+      "DELETE": "Bewerken en verwijderen"
+    }
+  },
+  "reminders": {
+    "title": "Opvolgingen",
+    "cardTitle": "Opvolging",
+    "add": "Opvolging toevoegen",
+    "edit": "Opvolging bewerken",
+    "create": "Aanmaken",
+    "created": "Opvolging toegevoegd",
+    "saved": "Opvolging opgeslagen",
+    "deleted": "Opvolging verwijderd",
+    "markedDone": "Afgehandeld",
+    "dueDate": "Te doen op",
+    "note": "Notitie",
+    "notePlaceholder": "bijv. betaling controleren",
+    "assignee": "Wie handelt het af?",
+    "assigneeHint": "Deze persoon ziet de opvolging onder “Van mij” en krijgt de herinnering per e-mail. Je kunt iedereen kiezen die het document kan zien.",
+    "me": "{{name}} (ik)",
+    "assignedTo": "voor {{name}}",
+    "doneBy": "afgehandeld door {{name}}",
+    "markDone": "Markeren als afgehandeld",
+    "reopen": "Heropenen",
+    "delete": {
+      "label": "Opvolging verwijderen",
+      "title": "Opvolging verwijderen?",
+      "text": "De opvolging wordt verwijderd. Het document blijft ongewijzigd."
+    },
+    "accept": "Toevoegen",
+    "dismiss": "Voorstel negeren",
+    "suggestionsHint": "De AI heeft in dit document datums gevonden:",
+    "none": "Geen openstaande opvolgingen.",
+    "showDone_one": "{{count, number}} afgehandelde opvolging tonen",
+    "showDone_other": "{{count, number}} afgehandelde opvolgingen tonen",
+    "hideDone": "Afgehandelde verbergen",
+    "scope": {
+      "label": "Welke opvolgingen",
+      "mine": "Van mij",
+      "all": "Alle"
+    },
+    "dueTitle": "Te doen",
+    "nothingDue": "Vandaag is er niets te doen.",
+    "upcomingTitle": "Binnenkort",
+    "suggestionsTitle": "Voorgestelde datums",
+    "suggestionsPageHint": "Termijnen in de komende zes maanden die de AI in de documenten heeft gevonden. Voeg ze toe als opvolging of negeer ze.",
+    "emptyTitle": "Geen opvolgingen",
+    "emptyText": "Voeg bij een document een opvolging toe – of neem er een over die de AI voorstelt.",
+    "repeat": {
+      "label": "Herhalen",
+      "hint": "Vink je de opvolging af, dan wordt de volgende met dezelfde tussenpoos aangemaakt.",
+      "none": "Eenmalig",
+      "m1": "Maandelijks",
+      "m3": "Elk kwartaal",
+      "m6": "Elk halfjaar",
+      "m12": "Jaarlijks",
+      "m24": "Om de twee jaar",
+      "months_one": "Elke maand",
+      "months_other": "Om de {{count}} maanden"
+    },
+    "fromContract": "uit het contract"
+  },
+  "pages": {
+    "button": "Pagina’s",
+    "title": "Pagina’s bewerken",
+    "intro": "Sleep pagina’s of verplaats ze met de pijlen, draai ze of verwijder ze. Opslaan levert een nieuwe versie op – de vorige blijft bewaard.",
+    "page": "Pagina {{number}}",
+    "wasPage": "was {{number}}",
+    "moveLeft": "Naar voren",
+    "moveRight": "Naar achteren",
+    "rotate": "90° draaien",
+    "remove": "Pagina verwijderen",
+    "keep": "Pagina behouden",
+    "noneLeft": "Er moet minstens één pagina overblijven.",
+    "saveFirst": "Sla eerst de wijzigingen op",
+    "saved": "Pagina’s opgeslagen",
+    "split": {
+      "here": "Vanaf hier een apart document",
+      "title": "Document splitsen?",
+      "text": "Pagina {{page}} en alle volgende pagina’s worden een apart document in dezelfde ruimte. Het wordt gelezen en ingedeeld als een nieuw binnengekomen document; dit document houdt de pagina’s daarvoor.",
+      "confirm": "Splitsen",
+      "done": "Document gesplitst",
+      "open": "Nieuw document openen"
+    },
+    "merge": {
+      "button": "Documenten toevoegen",
+      "title": "Documenten toevoegen",
+      "intro": "De pagina’s van de gekozen documenten worden in deze volgorde achteraan “{{title}}” toegevoegd.",
+      "search": "Documenten zoeken …",
+      "none": "Geen passende documenten.",
+      "noDeleteRight": "Je mag het niet verwijderen – en dus ook niet toevoegen.",
+      "hint": "De toegevoegde documenten gaan daarna naar de prullenbak; via de geschiedenis kun je ze 30 dagen lang terughalen.",
+      "confirm_one": "{{count}} document toevoegen",
+      "confirm_other": "{{count}} documenten toevoegen",
+      "done_one": "{{count}} document toegevoegd",
+      "done_other": "{{count}} documenten toegevoegd"
+    }
+  },
+  "contracts": {
+    "nav": "Contracten",
+    "title": "Contracten",
+    "pageIntro": "Looptijden en opzegtermijnen van alle contracten die je mag zien – eerst die waarbij binnenkort iets moet gebeuren.",
+    "scope": {
+      "label": "Tonen",
+      "running": "Lopend",
+      "all": "Alle"
+    },
+    "emptyTitle": "Nog geen contracten vastgelegd",
+    "emptyText": "Open een document, bijvoorbeeld een energie- of telefooncontract, en leg daar de looptijd en opzegtermijn vast. Ruim vóór het einde van de opzegtermijn verschijnt dan een opvolging.",
+    "cardTitle": "Contract",
+    "none": "Is dit een contract? Met looptijd en opzegtermijn herinnert AIDocuments je op tijd aan het opzeggen.",
+    "add": "Vastleggen als contract",
+    "edit": "Contract bewerken",
+    "intro": "Uit het einde van de looptijd en de opzegtermijn volgt de datum waarop je uiterlijk moet opzeggen. Daarvoor verschijnt een opvolging; loopt de looptijd af zonder opzegging, dan wordt het contract automatisch verlengd.",
+    "saved": "Contract opgeslagen",
+    "removed": "Contractgegevens verwijderd",
+    "remove": {
+      "label": "Contractgegevens verwijderen",
+      "title": "Contractgegevens verwijderen?",
+      "text": "De looptijd, de opzegtermijn en de openstaande opvolging daarvoor worden verwijderd. Het document zelf blijft bewaard."
+    },
+    "openEnded": "onbepaalde tijd",
+    "months_one": "{{count}} maand",
+    "months_other": "{{count}} maanden",
+    "amountHint": "bijv. “€ 49,90 per maand”",
+    "endDateHint": "Einde van de huidige looptijd; leeg = onbepaalde tijd",
+    "noticeHint": "Maanden vóór het einde van de looptijd; leeg = tot het einde van de looptijd",
+    "renewalHint": "Zonder opzegging wordt het contract met zoveel maanden verlengd; 0 = het eindigt",
+    "cancelledHint": "Het wordt dan niet meer verlengd en er komen geen herinneringen meer.",
+    "fields": {
+      "partner": "Contractpartij",
+      "amount": "Bedrag",
+      "startDate": "Ingangsdatum",
+      "endDate": "Looptijd tot",
+      "notice": "Opzegtermijn (maanden)",
+      "renewal": "Verlenging (maanden)",
+      "deadline": "Opzeggen vóór",
+      "reminderDays": "Herinneren (dagen vooraf)",
+      "cancelled": "Opgezegd"
+    },
+    "status": {
+      "ACTIVE": "Loopt",
+      "DUE_SOON": "Termijn nadert",
+      "NOTICE_MISSED": "Termijn gemist",
+      "CANCELLED": "Opgezegd",
+      "ENDED": "Beëindigd",
+      "OPEN_ENDED": "Onbepaalde tijd"
+    },
+    "row": {
+      "cancelBy": "opzeggen vóór {{date}}",
+      "endsOn": "eindigt op {{date}}",
+      "term": "looptijd tot {{date}}",
+      "renews_one": "wordt met {{count}} maand verlengd",
+      "renews_other": "wordt met {{count}} maanden verlengd"
+    }
+  },
+  "passkeys": {
+    "title": "Toegangssleutels",
+    "intro": "Met een toegangssleutel log je in zonder wachtwoord – ontgrendeld met je vingerafdruk, gezicht of apparaatpincode. Hij werkt alleen voor dit adres; een nagemaakte website kan hem niet gebruiken.",
+    "none": "Nog geen toegangssleutel toegevoegd.",
+    "add": "Toegangssleutel toevoegen",
+    "create": "Toegangssleutel aanmaken",
+    "name": "Naam",
+    "nameHint": "Zodat je hem later herkent, bijv. “Laptop” of “Wachtwoordmanager”.",
+    "password": "Je wachtwoord",
+    "passwordHint": "Wie een toegangssleutel toevoegt, kan voortaan zonder wachtwoord inloggen – bevestig daarom één keer.",
+    "added": "Toegangssleutel toegevoegd",
+    "removed": "Toegangssleutel verwijderd",
+    "synced": "gesynchroniseerd",
+    "lastUsed": "laatst gebruikt {{time}}",
+    "created": "toegevoegd {{time}}, nog niet gebruikt",
+    "unsupported": "Deze browser kan hier geen toegangssleutels gebruiken. Toegangssleutels werken alleen via HTTPS (of localhost).",
+    "unsupportedIp": "Toegangssleutels werken alleen via HTTPS en met een naam in het adres, niet met een IP-adres.",
+    "remove": {
+      "label": "Toegangssleutel verwijderen",
+      "title": "Toegangssleutel verwijderen?",
+      "text": "Met “{{name}}” kan daarna niemand meer inloggen. In de wachtwoordmanager of op het apparaat blijft hij opgeslagen tot je hem daar verwijdert.",
+      "confirm": "Verwijderen"
     }
   }
 }

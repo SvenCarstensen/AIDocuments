@@ -3,7 +3,7 @@ import { Download, Eye, History, RotateCcw } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { api, type Doc, type DocVersion, errorMessage, versionUrl } from '../lib/api'
+import { api, canEdit, type Doc, type DocVersion, errorMessage, versionUrl } from '../lib/api'
 import { formatBytes, formatDateTime } from '../lib/format'
 import { Alert, Badge, Button, ConfirmDialog, IconButton, Modal, Spinner } from './ui'
 
@@ -80,7 +80,7 @@ export function VersionsDialog({ doc, open, onClose }: { doc: Doc; open: boolean
               <IconButton label={t('document.versions.download', { number: version.number })} onClick={() => download(version.number)}>
                 <Download className="size-4" />
               </IconButton>
-              {!version.current && (
+              {!version.current && canEdit(doc) && (
                 <IconButton label={t('document.versions.restore', { number: version.number })} onClick={() => setRestoring(version)}>
                   <RotateCcw className="size-4" />
                 </IconButton>

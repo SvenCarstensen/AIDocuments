@@ -1,7 +1,7 @@
 # AIDocuments
 
-Document management for PDFs: the application collects PDF files from IMAP mailboxes, a watched import folder
-or by upload, has an AI index them (title, summary, document type, correspondent, date, tags, key facts – and
+Document management for PDFs: the application collects PDF files and photos from IMAP mailboxes, a watched import
+folder or by upload, has an AI index them (title, summary, document type, correspondent, date, tags, key facts – and
 for scans the full text as well) and makes them searchable.
 
 ## Highlights
@@ -31,26 +31,36 @@ for scans the full text as well) and makes them searchable.
 
 | Area | What the application does |
 |---|---|
-| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread; optionally only e-mails whose subject and sender match a filter, see [Mailbox filter](#mailbox-filter)), new files from a watched folder, upload by button or drag & drop (several files at once). Files with identical content are recognised and not stored twice; the same letter scanned twice is marked as a possible duplicate (see [Duplicates](#duplicates)). |
+| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread; optionally only e-mails whose subject and sender match a filter, see [Mailbox filter](#mailbox-filter)), new files from a watched folder, upload by button or drag & drop (several files at once). Photos (JPG, PNG, HEIC) become one-page PDFs – see [Photos](#photos). Files with identical content are recognised and not stored twice; the same letter scanned twice is marked as a possible duplicate (see [Duplicates](#duplicates)). |
 | AI | Summary, document type, correspondent, document date, tags and key facts (amounts, deadlines, numbers …). Existing tags and correspondents are reused. Scans without a text layer are transcribed and thus become full-text searchable – by the built-in text recognition as long as no AI is set up. |
 | Search | Full text across content, title, tags, correspondent and key facts – with German stemming, results while typing and partial matches in the middle of a word. Filters for document type, tags, correspondent and period (collapsible). With an AI set up, the search box also understands questions in natural language – see [AI search](#ai-search). |
 | View | Grid and list view with thumbnails, detail page with PDF viewer, light and dark theme. Metadata can be edited by hand; tags can be removed and added directly on the document. |
-| Edit | Highlight, add text, draw, insert images or sign directly in the PDF viewer and save the changes. The original is always kept and can be downloaded or restored at any time. |
+| Edit | Highlight, add text, draw, insert images or sign directly in the PDF viewer and save the changes. Reorder, rotate and remove pages, split a document in two or append others to it. The original is always kept and can be downloaded or restored at any time. |
+| Areas | Admins group documents into areas and decide who may read, edit or delete in which one; mailboxes and the import folder file into an area of their own. See [Areas](#areas). |
+| Retention | Retention periods per document type: until the period has ended nobody can delete the document, not even an administrator. See [Retention periods](#retention-periods). |
+| Reminders | Follow-up dates on documents – suggested by the AI from deadlines in the document, confirmed or set by hand, assigned to a person, once or recurring. A *Due* list with a counter in the header, and an e-mail to the assignee when a reminder is due. See [Reminders](#reminders). |
+| Contracts | Term, notice period and automatic renewal of a contract – a reminder in good time before the notice deadline, and an overview of all contracts. See [Contracts](#contracts). |
+| Notifications | Optional daily e-mail with new documents; administrators are told when retention periods have ended and when a mailbox keeps failing. See [E-mail notifications](#e-mail-notifications). |
+| Export | All documents of the current list (search and filters included) as a ZIP file with the PDFs and their details as CSV and JSON. See [Export](#export). |
+| Backup & import | A complete backup as a ZIP file at the push of a button or automatically every night into a folder (keeping the newest ones, with a warning when the last backup is too old), and import of an export – from this or another installation – without the AI reading the documents again. See [Backup and import](#backup-and-import). |
 | Share | Send a link to one document to someone without an account – view only or with permission to edit, valid for a chosen period, revocable at any time. The document page shows with whom it is shared. See [Sharing documents](#sharing-documents). |
 | Ask | With an AI set up, ask questions about an open document (“When is the payment due?”) – answered from its content. |
-| Users | Initial setup with an administrator account, further accounts with the roles **Admin** and **User**; two-factor authentication with an authenticator app (mandatory for administrators). |
-| Settings | Mailboxes (each with its own check interval if you like), check interval and import folder, AI/LLM server, users – all in the user interface. |
+| Users | Initial setup with an administrator account, further accounts with the roles **Admin** and **User**; two-factor authentication with an authenticator app (mandatory for administrators); sign-in with a passkey. See [Passkeys](#passkeys). |
+| Settings | Mailboxes (each with its own check interval if you like), check interval and import folder, AI/LLM server, users, areas, retention periods, outgoing e-mail, backup – all in the user interface. |
 | Languages | User interface and server messages in 36 European languages. The first start uses the system language, English if there is no matching translation; switchable in the user menu. See [Languages](#languages). |
 
 ### Roles
 
 | | User | Admin |
 |---|:-:|:-:|
-| View, search and upload documents, edit metadata | ✓ | ✓ |
-| Annotate PDFs, restore originals and older versions, ask questions, mark “not a duplicate” | ✓ | ✓ |
-| Share documents by link and revoke links | ✓ | ✓ |
-| Delete documents, analyze them again | | ✓ |
-| Settings (mailboxes, schedule, AI), user management | | ✓ |
+| View, search and download documents, ask questions, export as ZIP, reminders | read | ✓ |
+| Upload, edit metadata, annotate PDFs and edit pages, versions, share links, contracts | edit | ✓ |
+| Move documents to the trash (once their retention period has ended) and restore them | delete | ✓ |
+| Analyze documents again | | ✓ |
+| Settings (mailboxes, schedule, AI, retention periods, outgoing e-mail, backup), users and areas | | ✓ |
+
+Users see only the documents of the [areas](#areas) they belong to, and what they may do there depends on their
+permission in that area (*read*, *edit* or *delete*); administrators see all areas and may do everything.
 
 ### Search
 
@@ -107,6 +117,22 @@ The integration test runs through initial setup, roles, upload, search, IMAP ret
 test mail server) and the import folder – once against the built-in SQLite database and once more against a
 real MariaDB (Testcontainers, needs a running Docker).
 
+User interface tests ([Playwright](https://playwright.dev)):
+
+```bash
+cd frontend && npm run test:e2e
+```
+
+They start a throwaway instance of their own – a backend on port 8091 with an empty temporary data directory (built
+with `./mvnw package -DskipTests` if `backend/target/aidocuments-backend-0.1.0.jar` is missing) and the Vite dev
+server on port 5198 – create test accounts (an administrator with two-factor sign-in, a user with view-only access
+to an area) and generated PDFs, and delete everything afterwards; a running installation is not touched. They cover
+sign-in, contracts and the reminder they create, editing pages, the read-only view, e-mail notification settings,
+the automatic backup with its warning, and passkeys (with a virtual authenticator in the test browser – nothing is
+stored on the computer). By default they use the installed Google Chrome; `AIDOCS_E2E_BROWSER=chromium` uses
+Playwright's own Chromium (`npx playwright install chromium` first). The report of the last run is in
+`frontend/playwright-report/`.
+
 ## Production with Docker
 
 One image contains the user interface, the backend, the built-in text recognition (Tesseract) and the built-in
@@ -156,9 +182,13 @@ use it as the import folder. Switch it off or change it under *Settings → Sche
 
 ### Backup
 
-Back up `/aidocuments` – with an external MariaDB the database as well. Stop the container before copying the
-directory, so the built-in database is not copied in the middle of a write. The file `secret.key` belongs in the
-backup: without it, stored mailbox passwords and API keys can no longer be decrypted.
+With the built-in database, *Settings → Backup* downloads a complete backup while the application keeps running,
+or writes one automatically every night – see [Backup and import](#backup-and-import). For the automatic backup,
+mount a folder on another disk or a network drive, e.g. `-v /mnt/nas/aidocuments-backups:/backups`, and set
+`AIDOCS_BACKUP_DIR=/backups` (or enter `/backups` in the settings). Otherwise back up `/aidocuments` – with an external MariaDB the
+database as well. Stop the container before copying the directory, so the built-in database is not copied in the
+middle of a write. The file `secret.key` belongs in the backup: without it, stored mailbox passwords and API keys
+can no longer be decrypted.
 
 ### First start
 
@@ -206,6 +236,8 @@ Built-in protection:
   is at most 10 minutes old (signing in with the code counts). An unattended administrator session alone is not
   enough to create accounts, reset passwords or two-factor authentication, or redirect the AI to another server;
   five wrong codes end the session.
+- **Passkeys:** sign-in with a passkey counts as both factors; adding one needs the password or, with two-factor
+  authentication, a current code. See [Passkeys](#passkeys).
 - **Requests:** CSRF protection (token renewed at sign-in) and a strict Content Security Policy.
 - **Sessions:** end when an account is changed, disabled or deleted, or its password is changed.
 - **Stored secrets:** mailbox passwords and API keys are only used for the host name they were saved for, and
@@ -213,7 +245,7 @@ Built-in protection:
 - **PDFs:** scripts and XFA forms in the viewer are off; crafted files (compression bombs, gigantic pages) are
   rejected instead of exhausting memory.
 - **Limits:** 50 MB per file uploaded in the browser (250 MB for edited PDFs, e-mail attachments and the import
-  folder), 25 PDF attachments per e-mail, and a limit on AI requests per user (2 at a time, 60 per hour). Below
+  folder), 25 attachments (PDFs and photos) per e-mail, and a limit on AI requests per user (2 at a time, 60 per hour). Below
   1 GB of free disk space no new files or versions are accepted, so the database never runs out of space; mail
   import then pauses and picks up where it left off.
 
@@ -228,6 +260,7 @@ values saved in the user interface take precedence.
 | `AIDOCS_DB_USER` / `AIDOCS_DB_PASSWORD` | Credentials for the external MariaDB | empty |
 | `AIDOCS_DATA_DIR` | Storage for PDFs, search index, key file and the built-in database | `./data` (in the image: `/aidocuments`) |
 | `AIDOCS_IMPORT_DIR` | Watched import folder | empty = off (in the image: `/import`) |
+| `AIDOCS_BACKUP_DIR` | Default folder of the automatic backup (can be changed in the interface) | `backups/` in the data directory |
 | `AIDOCS_IMPORT_INTERVAL` | General check interval (import folder and mailboxes without their own), e.g. `5m`; only until it is changed in the interface | `5m` |
 | `AIDOCS_AI_PROVIDER` | LLM provider: `anthropic`, `openai`, `moonshot`, `lm-studio`, `openai-compatible` | `anthropic` |
 | `AIDOCS_AI_BASE_URL` | Address of the LLM server | the provider's default address |
@@ -340,6 +373,183 @@ for example every minute for the scanner mailbox and once an hour for a mailbox 
 interval counts from the start of the last check, including one started with *Check now*; after a restart, from the
 last check before it. The mailbox list shows the interval and when the next check is due.
 
+## Areas
+
+Areas decide who sees which documents. Every document belongs to exactly one area. The area *General* exists from
+the start, is visible to everyone and cannot be deleted; existing documents are in it. Under *Settings → Areas*
+administrators create further areas and either open them to everyone or name their members – everyone else does
+not see their documents at all: not in the list, the search, the facets, the reminders or by direct link (the
+server answers “not found”). Administrators always see every area.
+
+**Permissions:** for an area open to everyone, and for every member of a restricted area, the administrator chooses
+what they may do – each level includes the previous one:
+
+| Permission | allows |
+|---|---|
+| Read | view, search and download documents, ask questions, export, reminders |
+| Edit | also upload, change details and the PDF (annotations, pages), restore versions, share links, contracts |
+| Delete | also move documents to the trash and restore them |
+
+In an area open to everyone, members can be given more than everyone else. *Edit* is the default, so areas that
+existed before keep their behaviour. The interface hides what someone may not do, and the server refuses it
+anyway. The trash is emptied automatically after 30 days.
+
+Uploads go into the area the document list is currently filtered to, otherwise into *General*. Each mailbox and the
+import folder have a target area of their own. A document can be moved to another area on its page; moving it into
+a restricted area hides it from everyone who is not a member. An area that still holds documents or is the target
+of a mailbox or the import folder cannot be deleted.
+
+Identical files are stored only once in the whole library. If someone uploads a file that already exists in an area
+they cannot see, they are told that it exists – but not where, and without a link.
+
+## Retention periods
+
+Under *Settings → Retention periods* administrators set, per document type (for example *Invoice* or *Tax
+assessment*), how many years documents of that type must be kept (1 to 100). The period runs until December 31 of
+the year of the document date plus that many years (the date of import if the document has no date). Until then
+**nobody can delete the document – not even an administrator**, neither directly nor by emptying the trash; the
+document page shows the date. A period never becomes shorter: shortening a rule or changing the document type of a
+document keeps the date already reached. The filter *Retention expired* lists the documents that may be deleted
+now.
+
+## Reminders
+
+A reminder is a date on a document by which someone has to act – pay, cancel, reply. When the AI finds deadlines in
+a document (“payable by”, “notice period until” …), the document page and the *Reminders* page suggest them; a
+click turns a suggestion into a reminder, or dismisses it. Reminders can also be set by hand, with a note and a
+person responsible (only people who can see the document). The bell in the header shows how many are due; the
+*Reminders* page lists them as *Due*, *Upcoming* and *Suggested* – for yourself or for everyone.
+
+**Recurring reminders:** a reminder can repeat monthly, quarterly, every six months, yearly or every two years.
+Ticking it off creates the next one with the same note and person responsible – counted from the previous date,
+not from the day it was ticked off, so the rhythm does not drift.
+
+**E-mail:** once *Settings → Outgoing e-mail* is set up (SMTP server, sender, address of the application for the
+links), each person gets one e-mail per due reminder, from the configured hour on, bundled into one message per
+person and in the language the interface had when they saved their address. Everyone enters their own address under
+*Email notifications* in the user menu. The SMTP password is stored encrypted and, like the mailbox passwords, only ever sent to
+the server it was entered for; the connection is encrypted (SSL/TLS or STARTTLS) and the server certificate checked.
+
+## Contracts
+
+*Record as contract* on the document page turns a document – an electricity, phone or insurance contract – into a
+contract with partner, start, end of the current term, notice period in months, automatic renewal in months and an
+amount. From the end of the term and the notice period follows the date by which notice must be given; a
+[reminder](#reminders) for the chosen person appears a configurable number of days before it (14 by default). If the
+term ends without notice, a daily run renews it by the renewal period and sets up the next reminder. *Cancelled*
+stops renewal and reminders; the contract then simply runs until the end of its term. A contract without an end
+date is open-ended.
+
+The *Contracts* page lists every contract the user can see, those needing action soon first, with status (*running*,
+*notice due soon*, *notice period missed*, *cancelled*, *ended*, *open-ended*). Recording and changing contracts needs
+the *edit* permission in the document's area.
+
+## E-mail notifications
+
+Once *Settings → Outgoing e-mail* is set up, everyone can choose under *Email notifications* in the user menu (together
+with their e-mail address):
+
+- **New documents:** once a day, from the configured hour on, one e-mail with the documents that arrived since the
+  last one – only those the person can see, at most 50 listed, with links. Off by default.
+- **For administrators** (on by default): an e-mail when retention periods have ended and documents may be deleted
+  (once per document; again if its retention date changes), and when a mailbox has failed three checks in a row
+  (once per series of failures – the next successful check resets it). Administrators also see a notice above the
+  document list as long as a mailbox keeps failing.
+
+E-mails are written in the language the interface had when the person saved their settings.
+
+## Photos
+
+Photos and images – JPG, PNG and HEIC (iPhone) – are accepted everywhere PDFs are: upload, import folder and e-mail
+attachments. Each becomes a one-page PDF and from then on is a document like any other: thumbnail, text recognition,
+AI analysis. JPEGs are embedded unchanged (no recompression) and turned upright according to their EXIF orientation;
+PNGs are taken over losslessly. Duplicates are recognised by the photo itself, so the same photo sent twice is stored
+once. HEIC needs `heif-convert` (libheif), which the Docker image includes; on macOS `sips` is used instead. Images
+with more than 60 megapixels are refused.
+
+From e-mails only photos that were really attached are imported – not logos and banners embedded in the HTML text,
+and no image shorter than 500 pixels on its short side. The text of the e-mail itself is not imported.
+
+## Export
+
+The archive icon above the document list exports every document of the current list – with the search and all
+filters, not just the page shown – as a ZIP file: the PDFs in `documents/` (named “date title.pdf”), plus
+`documents.csv` (semicolon-separated, UTF-8, opens directly in Excel and LibreOffice) and `documents.json` with all
+details, including summary, tags, key facts, area and retention date. Only documents the user can see are included.
+If the user has two-factor authentication, the export asks for a current code from the authenticator app first, so
+an unattended session is not enough to take the whole archive along. The download link works once, for five
+minutes, and only in the same session.
+
+## Backup and import
+
+**Backup** (administrators, built-in database only): *Settings → Backup* downloads one ZIP file with everything
+needed to restore the installation – a consistent copy of the database taken while the application runs, the PDF
+files including originals and older versions, the thumbnails and `secret.key`. The search index is left out; it is
+rebuilt on start. The page shows the size and when the last backup was made. Like the export, the download asks for
+a current authenticator code first and the link works once, for five minutes. The ZIP contains the key for the
+stored mailbox passwords and API keys – keep it as safe as the server itself. With an external MariaDB, back up the
+database with its own tools (`mariadb-dump`) and the directory `/aidocuments` as described under
+[Backup](#backup).
+
+**Automatic backup** (administrators, built-in database only): under *Settings → Backup → Automatic backup*,
+switch on *Back up automatically every day* and choose:
+
+- the **time** (a full hour; the backup runs within five minutes after it – if the server was off, as soon as it is
+  running again that day),
+- how many backups to **keep** (1–90; older ones are deleted – only files named
+  `AIDocuments-Sicherung-<date>-<time>.zip`, nothing else in the folder is touched),
+- the **folder** – a full path on the server; empty means `AIDOCS_BACKUP_DIR` or, without it, `backups/` in the data
+  directory. Folders inside the data that is being backed up (`files/`, `thumbnails/`, …) are refused. Put the folder
+  on another disk or a network drive: if the disk with the data fails, backups on it are lost as well. In Docker, the
+  folder has to be mounted (see [Backup](#backup)).
+
+Each backup is the same ZIP as the manual download, written as `<name>.zip.part` first and renamed when it is
+complete, so a half-written file never counts as a backup. If there is not enough free space (roughly the size of the
+data, plus 1 GB on the data disk), the run fails with a message saying how much is missing. *Back up now* starts a run immediately. The card shows the last
+run, the next one and the backups in the folder.
+
+**Warning when the last backup is too old:** administrators see a notice above the document list when there is no
+backup yet, when the last backup – manual or automatic – is older than *Warn after (days)* (default 7, 0 = never),
+or when the last automatic backup failed. A failed run is retried every hour; administrators with an e-mail address
+also get one e-mail per series of failures (when [outgoing e-mail](#e-mail-notifications) is set up). With an
+external MariaDB the automatic backup is not available – schedule `mariadb-dump` and a copy of `/aidocuments`
+yourself, e.g. with cron.
+
+**Restoring** a backup:
+
+1. Stop the application (`docker compose down`).
+2. Empty the data directory (the volume `/aidocuments`) and unpack the ZIP into it, so that `aidocuments.db`,
+   `secret.key`, `files/` and `thumbnails/` lie directly inside. `README.txt` can be deleted.
+3. Start the application again. It rebuilds the search index; sign in with the accounts of the backup.
+
+**Import** (administrators): *Settings → Backup → Import* takes a ZIP file made by the [export](#export) – from
+this installation or from another one – and creates a document for every PDF in it, with title, summary, document
+type, correspondent, date, tags, key facts, retention date and full text as they were. The AI does not read the
+documents again. The documents go into the chosen area or, if you like, into the area of the same name where one
+exists. Files that are already there are skipped – also edited documents whose original is already here, recognised by the checksum of the original file – so an import can safely be repeated; the result lists how many
+documents were imported, already there or not imported, and why. Behind a reverse proxy, raise its limit on the
+request size for large imports (nginx: `client_max_body_size`, Traefik: the buffering middleware) – the
+application itself accepts as much as fits on the disk while keeping 1 GB free.
+
+## Passkeys
+
+A passkey signs in without user name, password or authenticator code: the browser or phone asks for fingerprint,
+face or device PIN, and the passkey proves who you are – it cannot be phished, because it only works for the address
+it was created for. Under *Passkeys* in the user menu everyone can add passkeys (up to 20, e.g. laptop and phone),
+name them and remove them. Adding one asks for the password, or for a current code from the authenticator app if
+two-factor authentication is set up, so an unattended session is not enough to add a passkey of your own. The sign-in
+page then offers *Sign in with passkey*. A passkey can also confirm administrative changes and the export instead of
+an authenticator code.
+
+Administrators still have to set up two-factor authentication; afterwards they can sign in with a passkey as well.
+Failed attempts count towards the [sign-in lockout](#behind-a-reverse-proxy-https) like wrong passwords.
+
+Requirements: browsers offer passkeys only over **HTTPS** (or on `localhost`) and only for a **host name** – not when
+the application is opened by its IP address. A passkey belongs to the host name it was created under; after moving
+the application to another address, sign in with the password and add the passkeys again. Deleting an account
+deletes its passkeys. In development, open <http://localhost:5173> instead of <http://127.0.0.1:5173> to try them; the
+Vite server passes the address on to the backend unchanged.
+
 ## Duplicates
 
 Files with identical content are recognised on import and not stored twice. Beyond that, the application recognises
@@ -362,8 +572,15 @@ is always completely visible. Scripts and XFA forms embedded in PDFs are never r
 in the history – creates a new numbered version. No version is ever overwritten. *Versions* on the document page
 lists them with date, user and kind of change; each one can be viewed, downloaded or restored. Restoring makes a
 copy of the old version the newest one, so the step can itself be undone. The files live next to the document
-(`files/…/<id>.original.pdf`, `<id>.ver<n>.pdf`, …) and are removed only when the document is deleted for good.
+(`files/…/<id>.original.pdf`, `<id>.v<timestamp>.pdf`, …) and are removed only when the document is deleted for good.
 Changes to title, tags and other details are recorded in the history, where they can be undone.
+
+**Pages:** *Pages* on the document page shows all pages as thumbnails. Drag them or use the arrows to reorder them,
+rotate them by 90° or remove them; *Separate document from here* turns a page and all following ones into a new
+document in the same area, which is read and filed like a newly received one. *Append documents* adds the pages of
+other documents to the end, in the chosen order; the appended documents go to the trash, so this needs the *delete*
+permission for them. Every change is a new version – the previous one stays and can be restored. If the text came
+from text recognition, it is recognised again in the background after reordering.
 
 PDF.js is fetched in a fixed version with checksum by `frontend/scripts/fetch-pdfjs.mjs` (runs automatically before
 `npm run dev` and `npm run build`) into `frontend/public/pdfjs/`, which is not in Git.
@@ -432,7 +649,11 @@ backend/     Spring Boot application
     search/     Lucene full-text index
     mail/       IMAP mailboxes and retrieval
     importer/   import folder and check interval
-    user/       users, roles, sign-in
+    user/       users, roles, sign-in, passkeys
+    area/       areas and their permissions
+    contract/   contracts and notice periods
+    notify/     e-mail notifications
+    backup/     backup ZIP
     settings/   AI and schedule settings
     security/   access control, encryption of stored secrets
 frontend/    React user interface

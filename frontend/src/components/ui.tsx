@@ -296,13 +296,15 @@ interface ModalProps {
   description?: ReactNode
   children: ReactNode
   footer?: ReactNode
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
 }
 
 /** Modaler Dialog auf Basis des nativen <dialog>: Fokusfalle, Escape und Hintergrundsperre inklusive. */
 export function Modal({ open, onClose, title, description, children, footer, size = 'md' }: ModalProps) {
   const { t } = useTranslation()
   const ref = useRef<HTMLDialogElement>(null)
+  const titleId = useId()
+  const descriptionId = useId()
 
   useEffect(() => {
     const dialog = ref.current
@@ -320,6 +322,9 @@ export function Modal({ open, onClose, title, description, children, footer, siz
   return (
     <dialog
       ref={ref}
+      // Bildschirmleser nennen beim Öffnen Titel und Beschreibung
+      aria-labelledby={titleId}
+      aria-describedby={description ? descriptionId : undefined}
       onCancel={(event) => {
         event.preventDefault()
         onClose()
@@ -329,14 +334,20 @@ export function Modal({ open, onClose, title, description, children, footer, siz
       }}
       className={cx(
         'm-auto w-[calc(100vw-2rem)] animate-rise rounded-2xl border border-line bg-surface p-0 shadow-pop',
-        size === 'sm' ? 'max-w-md' : size === 'lg' ? 'max-w-2xl' : 'max-w-lg',
+        size === 'sm' ? 'max-w-md' : size === 'lg' ? 'max-w-2xl' : size === 'xl' ? 'max-w-5xl' : 'max-w-lg',
       )}
     >
       <div className="flex max-h-[calc(100dvh-4rem)] flex-col">
         <header className="flex items-start gap-4 px-6 pt-5 pb-1">
           <div className="min-w-0 flex-1">
-            <h2 className="text-lg font-semibold text-ink">{title}</h2>
-            {description && <p className="mt-1 text-sm leading-relaxed text-muted">{description}</p>}
+            <h2 id={titleId} className="text-lg font-semibold text-ink">
+              {title}
+            </h2>
+            {description && (
+              <p id={descriptionId} className="mt-1 text-sm leading-relaxed text-muted">
+                {description}
+              </p>
+            )}
           </div>
           <IconButton label={t('common.close')} onClick={onClose} className="-mt-1 -mr-2">
             <X className="size-5" />

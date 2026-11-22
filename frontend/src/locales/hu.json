@@ -44,12 +44,14 @@
     "login": {
       "title": "Üdv újra",
       "subtitle": "Jelentkezz be a dokumentumaid eléréséhez.",
-      "submit": "Bejelentkezés"
+      "submit": "Bejelentkezés",
+      "or": "vagy",
+      "passkey": "Bejelentkezés azonosítókulccsal"
     },
     "setup": {
       "title": "Az AIDocuments beállítása",
       "subtitle": "Először hozd létre az adminisztrátori fiókot. További felhasználókat később a beállításokban adhatsz hozzá.",
-      "code": "Telepítési kód",
+      "code": "Beállítási kód",
       "codeHint": "Induláskor megjelenik a szerver naplójában (Docker: docker compose logs).",
       "adminAccount": "Adminisztrátori fiók",
       "repeatPassword": "Jelszó megismétlése",
@@ -70,7 +72,7 @@
     },
     "twoFactorRequired": {
       "title": "Kétlépcsős azonosítás beállítása",
-      "subtitle": "Rendszergazdák számára a kétlépcsős azonosítás kötelező. A folytatáshoz állítsd be most.",
+      "subtitle": "Az adminisztrátorok számára kötelező a kétlépcsős azonosítás. A folytatáshoz állítsd be most.",
       "intro": "Szükséged lesz egy hitelesítő alkalmazásra a telefonodon (pl. Google Authenticator, Microsoft Authenticator, 1Password vagy Aegis)."
     }
   },
@@ -81,7 +83,7 @@
       "dark": "Sötét téma"
     },
     "search": {
-      "placeholder": "Kulcsszavas keresés: dokumentumok, címkék, tartalom …",
+      "placeholder": "Kulcsszavas keresés: dokumentumok, címkék, tartalom…",
       "placeholderAi": "MI-keresés: kérdezz a saját szavaiddal – pl. „a Kia számlái 2024-ből”",
       "labelAi": "MI",
       "label": "Dokumentumok keresése",
@@ -102,26 +104,49 @@
       "changed": "Jelszó módosítva"
     },
     "dropzone": {
-      "title": "Húzd ide a PDF-eket",
-      "hint": "Egyszerre több fájlt is ide húzhatsz. A rendszer eltárolja, elemzi és címkézi őket."
+      "title": "Húzd ide a PDF-eket vagy a fotókat",
+      "hint": "Egyszerre több fájlt is ide húzhatsz. A fotókból (JPG, PNG, HEIC) PDF lesz. A rendszer mindent eltárol, elemez és címkéz."
+    },
+    "remindersDue_one": "{{count, number}} esedékes emlékeztető",
+    "remindersDue_other": "{{count, number}} esedékes emlékeztető",
+    "profile": {
+      "email": "E-mail-cím",
+      "saved": "Mentve"
+    },
+    "notifications": {
+      "title": "E-mail-értesítések",
+      "emailHint": "Ide érkeznek a hozzád rendelt esedékes emlékeztetők és az alább bekapcsolt értesítések – azon a nyelven, amelyen éppen használod az alkalmazást. Hagyd üresen, ha nem szeretnél e-maileket.",
+      "digest": "Új dokumentumok naponta",
+      "digestHint": "Naponta egyszer egy lista a munkaterületeidre érkezett dokumentumokról – csak azokon a napokon, amikor van új dokumentum.",
+      "admin": "Értesítések adminisztrátoroknak",
+      "adminHint": "Amikor lejárnak a megőrzési idők (magától semmi sem törlődik), és amikor egy postafiókot ismételten nem sikerül ellenőrizni.",
+      "needsEmail": "Cím nélkül nem küldünk e-maileket."
     }
   },
   "upload": {
-    "onlyPdf": "Csak PDF-fájlok adhatók hozzá.",
+    "onlyPdf": "Csak PDF-fájlok és fotók (JPG, PNG, HEIC) adhatók hozzá.",
     "uploadingFile": "„{{name}}” feltöltése…",
-    "uploadingFiles_one": "{{count, number}} PDF feltöltése…",
-    "uploadingFiles_other": "{{count, number}} PDF feltöltése…",
+    "uploadingFiles_one": "{{count, number}} fájl feltöltése…",
+    "uploadingFiles_other": "{{count, number}} fájl feltöltése…",
     "created_one": "{{count, number}} dokumentum hozzáadva",
     "created_other": "{{count, number}} dokumentum hozzáadva",
     "processingInBackground": "A feldolgozás a háttérben folytatódik.",
     "duplicates_one": "{{count, number}} már létezik",
     "duplicates_other": "{{count, number}} már létezik",
-    "rejected_one": "{{count, number}} fájl nem érvényes PDF",
-    "rejected_other": "{{count, number}} fájl nem érvényes PDF",
+    "rejected_one": "{{count, number}} fájlt nem sikerült hozzáadni",
+    "rejected_other": "{{count, number}} fájlt nem sikerült hozzáadni",
     "onlyDuplicates_one": "Ez a dokumentum már létezik.",
     "onlyDuplicates_other": "Ezek a dokumentumok már léteznek.",
-    "noneValid": "Egyik fájl sem érvényes PDF.",
-    "failed": "A feltöltés nem sikerült"
+    "noneValid": "Egyik fájlt sem sikerült hozzáadni.",
+    "failed": "A feltöltés nem sikerült",
+    "intoArea": "Munkaterület: {{area}}",
+    "combine": {
+      "title": "Egy dokumentummá egyesíted a fotókat?",
+      "text": "Több fotót választottál ki. Ha ezek egy dokumentum oldalai – például egy többoldalas levélé –, a fájlnevek sorrendjében egyetlen PDF lesz belőlük; a sorrendet utána az „Oldalak” alatt módosíthatod. Ellenkező esetben minden fotóból külön dokumentum lesz.",
+      "one": "Egy dokumentumként",
+      "separate": "Minden fotó külön",
+      "tooMuch": "Egy dokumentumhoz túl sok vagy túl nagy a fotó (legfeljebb 100 fotó és összesen 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -133,7 +158,7 @@
     "ocrBadge": "Szövegfelismerés",
     "aiNotice": {
       "text": "Az MI még nincs beállítva. Az új dokumentumok a szövegük alapján kereshetők, de nem készül róluk összefoglaló, és címkéket sem kapnak.",
-      "builtinOcr": "A szövegréteg nélküli szkenneléseket a beépített szövegfelismerés olvassa be, így ezekben is lehet keresni.",
+      "builtinOcr": "A szövegréteg nélküli szkennelt dokumentumokat a beépített szövegfelismerés olvassa be, így ezekben is lehet keresni.",
       "action": "Beállítás most"
     },
     "searchResults_one": "<count>{{count, number}} találat</count> <query>erre: „{{query}}”</query>",
@@ -175,12 +200,13 @@
       "activeTo": "eddig: {{date}}",
       "removeOne": "„{{label}}” szűrő eltávolítása",
       "removeAll": "Összes szűrő eltávolítása",
-      "clear": "Szűrők eltávolítása"
+      "clear": "Szűrők eltávolítása",
+      "retentionExpired": "Lejárt megőrzés"
     },
     "empty": {
       "libraryTitle": "Még nincsenek dokumentumok",
-      "libraryHint": "Egyszerűen húzd a PDF-fájlokat ebbe az ablakba, vagy használd a „Feltöltés” gombot.",
-      "libraryHintAdmin": "Egyszerűen húzd a PDF-fájlokat ebbe az ablakba, vagy használd a „Feltöltés” gombot. A beállításokban megadhatsz egy postafiókot vagy egy importmappát, ahonnan az új PDF-ek automatikusan bekerülnek.",
+      "libraryHint": "Egyszerűen húzd a PDF-eket vagy fotókat ebbe az ablakba, vagy használd a „Feltöltés” gombot.",
+      "libraryHintAdmin": "Egyszerűen húzd a PDF-eket vagy fotókat ebbe az ablakba, vagy használd a „Feltöltés” gombot. A beállításokban megadhatsz egy postafiókot vagy egy importmappát, ahonnan az új dokumentumok automatikusan bekerülnek.",
       "noResultsTitle": "Nincs találat",
       "noResultsSearch": "Egyetlen dokumentum sem felel meg ennek a keresésnek. A kereső szórészleteket is megtalál – próbálkozz rövidebb kifejezéssel vagy kevesebb szóval.",
       "noResultsFilters": "Egyetlen dokumentum sem felel meg a kiválasztott szűrőknek."
@@ -190,6 +216,25 @@
     "loadMore": "Továbbiak betöltése ({{remaining, number}})",
     "aiSearch": {
       "notice": "MI-keresés: „{{question}}”. A szűrők mutatják, hogyan értelmeztük a kérdést."
+    },
+    "export": {
+      "label_one": "{{count, number}} dokumentum exportálása ZIP-fájlként",
+      "label_other": "A lista összes ({{count, number}}) dokumentumának exportálása ZIP-fájlként",
+      "started_one": "{{count, number}} dokumentum exportálása elindult",
+      "started_other": "{{count, number}} dokumentum exportálása elindult",
+      "contents": "A ZIP-fájl tartalmazza a PDF-eket, valamint az összes adatot táblázatként (documents.csv) és documents.json fájlként.",
+      "failed": "Az exportálás nem sikerült"
+    },
+    "mailboxNotice": {
+      "text_one": "A(z) „{{names}}” postafiók ellenőrzése többször egymás után nem sikerült – jelenleg nem érkeznek onnan dokumentumok.",
+      "text_other": "Ezeknek a postafiókoknak az ellenőrzése többször egymás után nem sikerült: {{names}}. Jelenleg nem érkeznek onnan dokumentumok.",
+      "action": "Postafiókok megtekintése"
+    },
+    "backupNotice": {
+      "never": "Még nincs biztonsági mentés a dokumentumaidról.",
+      "overdue": "Utolsó mentés: {{when}}. Ez régebben volt, mint a beállított határ.",
+      "failed": "Az automatikus biztonsági mentés nem sikerült: {{reason}}",
+      "action": "Ugrás a biztonsági mentéshez"
     }
   },
   "document": {
@@ -208,8 +253,8 @@
       "modified": "Módosítva: {{when}} – az eredeti megőrizve.",
       "downloadOriginal": "Eredeti letöltése",
       "restoreOriginal": "Eredeti visszaállítása",
-      "restoreTitle": "Visszaállítja az eredetit?",
-      "restoreText": "A módosított változat elvész. A dokumentum ezután pontosan olyan lesz, mint amikor beérkezett.",
+      "restoreTitle": "Visszaállítod az eredetit?",
+      "restoreText": "A módosított verzió elvész. A dokumentum ezután pontosan olyan lesz, mint amikor beérkezett.",
       "restored": "Az eredeti visszaállítva"
     },
     "duplicate": {
@@ -264,7 +309,9 @@
     "noText": "Ehhez a dokumentumhoz nincs szöveg – valószínűleg szövegréteg nélküli szkennelt dokumentum. Ha az MI be van állítva, és a szövegfelismerés be van kapcsolva, a tartalom átírása az elemzés során megtörténik.",
     "edit": {
       "title": "Dokumentum szerkesztése",
-      "saved": "Módosítások mentve"
+      "saved": "Módosítások mentve",
+      "areaHint": "Meghatározza, ki láthatja a dokumentumot.",
+      "areaMoveHint": "Ezután csak a(z) „{{area}}” munkaterület tagjai és az adminisztrátorok láthatják."
     },
     "delete": {
       "title": "Törlöd a dokumentumot?",
@@ -273,9 +320,9 @@
     },
     "chat": {
       "intro": "Tegyél fel egy kérdést erről a dokumentumról – az MI a tartalma alapján válaszol.",
-      "placeholder": "Kérdezz valamit erről a dokumentumról …",
+      "placeholder": "Kérdezz valamit erről a dokumentumról…",
       "send": "Küldés",
-      "thinking": "Az MI olvassa a dokumentumot …",
+      "thinking": "Az MI olvassa a dokumentumot…",
       "notConfigured": "A dokumentumra vonatkozó kérdésekhez be kell állítani egy MI-t.",
       "restart": "Újrakezdés",
       "suggestions": {
@@ -300,16 +347,25 @@
         "EDITED": "Szerkesztve",
         "ORIGINAL_RESTORED": "Eredeti visszaállítva",
         "VERSION_RESTORED": "{{from}}. verzió visszaállítva",
-        "UNDONE": "Módosítás visszavonva"
+        "UNDONE": "Módosítás visszavonva",
+        "PAGES": "Oldalak módosítva",
+        "MERGED": "Dokumentumok hozzáfűzve"
       }
-    }
+    },
+    "retention": {
+      "label": "Megőrzés",
+      "until": "eddig: {{date}} – addig nem törölhető",
+      "expired": "a megőrzési idő lejárt: {{date}}",
+      "locked": "Megőrzendő eddig: {{date}} – csak azután törölhető"
+    },
+    "readOnly": "Ezen a munkaterületen ezt a dokumentumot csak megtekintheted."
   },
   "settings": {
     "title": "Beállítások",
     "mailboxes": {
       "title": "Postafiókok",
-      "navHint": "IMAP-szerverek, amelyekről a rendszer PDF-mellékleteket importál",
-      "intro": "Ezekből az IMAP-postafiókokból a rendszer automatikusan importálja a PDF-mellékleteket. A postafiókokat csak olvassa – az e-mailek változatlanok és olvasatlanok maradnak.",
+      "navHint": "IMAP-szerverek, amelyekről a rendszer PDF- és fotómellékleteket importál",
+      "intro": "Ezekből az IMAP-postafiókokból a rendszer automatikusan importálja a PDF-mellékleteket és a csatolt fotókat (PDF-ként); az e-mailek szövegét és a beágyazott logókat nem. A postafiókokat csak olvassa – az e-mailek változatlanok és olvasatlanok maradnak.",
       "add": "Postafiók hozzáadása",
       "emptyTitle": "Még nincs beállított postafiók",
       "emptyText": "Add meg egy IMAP-postafiók hozzáférési adatait – például azét a postafiókét, amelyre a szkennered a dokumentumokat küldi.",
@@ -342,7 +398,7 @@
         "since": "Csak az ettől a naptól érkezett e-mailek",
         "sinceHint": "Nem kötelező – a régebbi e-mailek kimaradnak",
         "enabled": "Automatikus ellenőrzés",
-        "enabledHint": "A rendszer a beállított időközönként új PDF-eket keres a postafiókban.",
+        "enabledHint": "A rendszer a beállított időközönként új mellékleteket keres a postafiókban.",
         "filter": {
           "title": "Szűrő",
           "intro": "Csak azok az e-mailek kerülnek feldolgozásra, amelyek minden feltételnek megfelelnek. Soronként egy kifejezés; a kis- és nagybetű nem számít, a szöveg egy része is elég. Az üres mezők nem korlátoznak semmit.",
@@ -351,29 +407,30 @@
           "senderIncludes": "A feladó tartalmazza valamelyik kifejezést",
           "senderExcludes": "A feladó egyik kifejezést sem tartalmazza",
           "senderHint": "Név vagy cím, pl. „@example.com”",
-          "newOnly": "A szűrő a legutóbbi lekérés után érkező e-mailekre vonatkozik; a már ellenőrzött e-maileket nem dolgozza fel újra."
+          "newOnly": "A szűrő a legutóbbi ellenőrzés után érkező e-mailekre vonatkozik; a már ellenőrzött e-maileket nem dolgozza fel újra."
         },
-        "interval": "Lekérési időköz percben",
-        "intervalHint": "Hagyja üresen az általános időközhöz (jelenleg {{interval}})."
+        "interval": "Ellenőrzési időköz percben",
+        "intervalHint": "Hagyd üresen az általános időköz használatához (jelenleg {{interval}}).",
+        "areaHint": "Az importált dokumentumok erre a munkaterületre kerülnek."
       },
       "filterActive": "Szűrő bekapcsolva",
-      "schedule": "Lekérés {{interval}} időközzel · következő: {{when}}",
-      "scheduleSoon": "Lekérés {{interval}} időközzel · következő hamarosan"
+      "schedule": "Ellenőrzési időköz: {{interval}} · következő: {{when}}",
+      "scheduleSoon": "Ellenőrzési időköz: {{interval}} · következő hamarosan"
     },
     "import": {
-      "title": "Ütemezés és importmappa",
+      "title": "Ellenőrzés és importmappa",
       "navHint": "Ellenőrzési időköz és figyelt mappa",
-      "intro": "Azt határozza meg, milyen gyakran keres az alkalmazás új PDF-fájlokat – a postafiókokban és az importmappában.",
+      "intro": "Azt határozza meg, milyen gyakran keres az alkalmazás új dokumentumokat – a postafiókokban és az importmappában.",
       "saved": "Beállítások mentve",
       "interval": {
         "title": "Ellenőrzési időköz",
-        "text": "Milyen gyakran ellenőrzi az alkalmazás a bemeneti mappát és a saját időköz nélküli postafiókokat új PDF-ek után.",
+        "text": "Milyen gyakran ellenőrzi az alkalmazás az importmappát és a saját időköz nélküli postafiókokat új dokumentumok után.",
         "label": "… percenként",
         "nextRun": "Következő automatikus ellenőrzés: {{when}}."
       },
       "folder": {
         "title": "Importmappa",
-        "text": "Egy mappa a szerveren, amelyet a rendszer új PDF-fájlok után figyel – például egy hálózati szkenner célmappája. Az almappákat is átvizsgálja.",
+        "text": "Egy mappa a szerveren, amelyet a rendszer új PDF-ek és fotók (JPG, PNG, HEIC) után figyel – például egy hálózati szkenner célmappája. Az almappákat is átvizsgálja.",
         "enable": "Importmappa figyelése",
         "path": "Elérési út a szerveren",
         "pathHint": "Abszolút elérési út. Docker-konténerben ez a csatolt mappa, általában {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Mappa ellenőrzése…",
         "neverScanned": "Még nem volt ellenőrizve.",
         "scanNow": "Ellenőrzés most",
-        "scanStarted": "Az importmappa ellenőrzése folyamatban van."
+        "scanStarted": "Az importmappa ellenőrzése folyamatban van.",
+        "areaHint": "A mappából érkező dokumentumok erre a munkaterületre kerülnek."
       }
     },
     "ai": {
@@ -463,7 +521,7 @@
         "ocr": "Szövegfelismerés szkennelt dokumentumokhoz",
         "ocrHint": "A szövegréteg nélküli szkennelt PDF-eket az alkalmazás az MI-vel íratja át – csak így találja meg őket a teljes szöveges keresés. Minden szkennelt dokumentum több időbe és többe kerül.",
         "quickOcrFirst": "Előbb gyors szövegfelismerés, majd finomítás MI-vel",
-        "quickOcrFirstHint": "Az új szkenneléseket először a beépített szövegfelismerés (Tesseract) olvassa be – másodperceken belül kereshetők. Ezután az MI e szöveg alapján hozzáadja a címet, az összefoglalót és a címkéket."
+        "quickOcrFirstHint": "Az új szkennelt dokumentumokat először a beépített szövegfelismerés (Tesseract) olvassa be – másodperceken belül kereshetők. Ezután az MI e szöveg alapján hozzáadja a címet, az összefoglalót és a címkéket."
       },
       "unanalyzed_one": "{{count, number}} dokumentumot még nem elemzett az MI.",
       "unanalyzed_other": "{{count, number}} dokumentumot még nem elemzett az MI.",
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} ezután csak jelszóval jelentkezik be, és újra beállíthatja a kétlépcsős azonosítást – például a telefon elvesztése után.",
       "resetTwoFactorConfirm": "Visszaállítás",
       "twoFactorReset": "Kétlépcsős azonosítás visszaállítva"
+    },
+    "areas": {
+      "title": "Munkaterületek",
+      "navHint": "Ki melyik dokumentumokat látja",
+      "intro": "Minden dokumentum pontosan egy munkaterülethez tartozik. A felhasználók csak azoknak a munkaterületeknek a dokumentumait látják, amelyeknek tagjai, valamint a mindenki számára nyitott munkaterületekét.",
+      "add": "Munkaterület létrehozása",
+      "everyone": "Mindenkinek",
+      "restricted": "Korlátozott",
+      "visibleForAll": "minden bejelentkezett felhasználó látja",
+      "members": "Tagok: {{names}}",
+      "adminsOnly": "csak adminisztrátorok",
+      "adminHint": "Az adminisztrátorok tagság nélkül is minden munkaterületet látnak.",
+      "edit": "{{name}} szerkesztése",
+      "saved": "Munkaterület mentve",
+      "created": "Munkaterület létrehozva",
+      "deleted": "Munkaterület törölve",
+      "delete": {
+        "label": "{{name}} törlése",
+        "title": "Törlöd a munkaterületet?",
+        "text": "A(z) „{{name}}” munkaterület törlődik. Ez csak akkor lehetséges, ha egyetlen dokumentum, postafiók vagy importmappa sem használja."
+      },
+      "dialog": {
+        "name": "Név",
+        "namePlaceholder": "pl. Könyvelés",
+        "generalNameHint": "Ha üresen hagyod, a munkaterület neve minden nyelven „Általános” lesz.",
+        "everyone": "Mindenki láthatja",
+        "everyoneHint": "Minden bejelentkezett felhasználó látja ennek a munkaterületnek a dokumentumait.",
+        "members": "Tagok",
+        "membersHint": "Csak a tagok és az adminisztrátorok látják ennek a munkaterületnek a dokumentumait. Tagonként beállíthatod, hogy csak olvashat, szerkeszthet is, vagy törölhet is.",
+        "noUsers": "Még nincs adminisztrátori szerepkör nélküli felhasználó.",
+        "create": "Létrehozás",
+        "everyoneAccess": "Mindenki jogosultsága",
+        "accessOf": "{{name}} jogosultsága",
+        "membersHintEveryone": "Mindenki látja ennek a munkaterületnek a dokumentumait. Itt adhatsz meg tagokat, ha nekik több jogot szeretnél adni, mint a többieknek."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Megőrzés",
+      "navHint": "Megőrzési idők és törlési zárolás",
+      "intro": "Add meg, mennyi ideig kell megőrizni az egyes dokumentumtípusok dokumentumait – például a számlákat tíz évig. Az idő annak az évnek a végétől számít, amelyből a dokumentum származik. Addig senki sem törölheti.",
+      "permanent": "A zárolás nem oldható fel – még az adminisztrátorok sem tehetik meg. Ha egy szabályt lerövidítenek vagy törölnek, vagy megváltozik egy dokumentum típusa, a már beállított megőrzési idő érvényben marad.",
+      "add": "Szabály létrehozása",
+      "years_one": "{{count, number}} év",
+      "years_other": "{{count, number}} év",
+      "edit": "Szabály szerkesztése: {{category}}",
+      "saved": "Szabály mentve",
+      "created": "Szabály létrehozva",
+      "deleted": "Szabály törölve",
+      "emptyTitle": "Még nincsenek megőrzési szabályok",
+      "emptyText": "Szabály nélkül a dokumentumok bármikor törölhetők.",
+      "delete": {
+        "label": "Szabály törlése: {{category}}",
+        "title": "Törlöd a szabályt?",
+        "text": "Az új „{{category}}” típusú dokumentumok ezután nem kapnak megőrzési időt. A már zárolt dokumentumok megőrzési idejük végéig zárolva maradnak."
+      },
+      "dialog": {
+        "categoryHint": "Ahogyan a dokumentumon szerepel; a kis- és nagybetű nem számít.",
+        "years": "Megőrzési idő években",
+        "yearsHint": "A dokumentum dátuma szerinti év végétől számítva (dátum nélkül: a hozzáadás évének végétől).",
+        "shorterHint": "A rövidebb idő csak azokra a dokumentumokra vonatkozik, amelyeknek még nincs megőrzési idejük. A már zárolt dokumentumok a jelenlegi megőrzési idejük végéig zárolva maradnak.",
+        "create": "Létrehozás"
+      }
+    },
+    "mailOut": {
+      "title": "E-mail-küldés",
+      "navHint": "Értesítések e-mailben",
+      "intro": "Az alkalmazás ezen az SMTP-szerveren keresztül küld értesítést az esedékes emlékeztetőkről – emlékeztetőnként egyszer, személyenként egy e-mailbe gyűjtve. A címzett az, aki az emlékeztetőért felel, és a felhasználói menüben megadott egy címet.",
+      "enabled": "Értesítések küldése e-mailben",
+      "enabledHint": "Kikapcsolva az emlékeztetők csak az alkalmazásban jelennek meg.",
+      "host": "SMTP-szerver",
+      "port": "Port",
+      "security": "Titkosítás",
+      "unencrypted": "Nincs",
+      "usernameHint": "Hagyd üresen, ha a szerver nem kér bejelentkezést.",
+      "passwordKeepHint": "Hagyd üresen a tárolt jelszó megtartásához.",
+      "from": "Feladó címe",
+      "fromHint": "A szervernek engedélyeznie kell a fiókod számára.",
+      "appUrl": "Az alkalmazás címe",
+      "appUrlHint": "Az e-mailekben lévő linkekhez, pl. https://docs.example.com. Üres = nincsenek linkek.",
+      "digestHour": "Küldés",
+      "fromHour": "{{hour}} órától",
+      "saved": "E-mail-beállítások mentve",
+      "test": "Tesztüzenet ide: {{address}}",
+      "testNeedsAddress": "A tesztüzenethez add meg a saját e-mail-címedet a felhasználói menüben.",
+      "testSavedHint": "A teszt a mentett beállításokat használja – előbb mentsd el őket."
+    },
+    "backup": {
+      "title": "Biztonsági mentés és import",
+      "navHint": "Teljes mentés egy lépésben, exportok importálása",
+      "intro": "A biztonsági mentés mindent tartalmaz, ami ahhoz kell, hogy az AIDocuments pontosan a mostani állapotában visszaállítható legyen. Az import egy másik telepítés exportjából vesz át dokumentumokat – az adataikkal együtt.",
+      "backupTitle": "Biztonsági mentés egy kattintással",
+      "backupText": "Egy ZIP-fájl az adatbázissal, az összes dokumentummal a korábbi verzióikkal együtt, a bélyegképekkel és a tárolt jelszavak kulcsával. Az alkalmazás közben tovább működik.",
+      "size": "Méret",
+      "sizeValue_one": "kb. {{size}}, {{count, number}} fájlban",
+      "sizeValue_other": "kb. {{size}}, {{count, number}} fájlban",
+      "last": "Utolsó mentés",
+      "never": "még soha",
+      "keyWarning": "A biztonsági mentés nincs titkosítva, és tartalmazza a tárolt jelszavak kulcsát (postafiókok, MI, kétlépcsős azonosítás). Ugyanolyan gondosan őrizd, mint magukat a dokumentumokat.",
+      "restore": "Visszaállítás: állítsd le az AIDocuments alkalmazást, csomagold ki a ZIP-fájl tartalmát egy üres adatkönyvtárba, majd indítsd újra. Az útmutató a ZIP-fájlban található (README.txt).",
+      "download": "Biztonsági mentés letöltése",
+      "started": "A biztonsági mentés letöltése folyamatban.",
+      "externalDatabase": "Az egy kattintásos biztonsági mentés csak a beépített adatbázissal érhető el. MariaDB esetén az adatbázist annak saját eszközeivel (például mariadb-dump) mentsd, és mellé az adatkönyvtárat is.",
+      "importTitle": "Export importálása",
+      "importText": "A dokumentumlista „Exportálás” funkciójával készült ZIP-fájl – akár egy másik telepítésből is. A cím, a dokumentumtípus, a címkék és a többi adat megmarad; az MI nem olvassa el újra a dokumentumokat. A már meglévő fájlok kimaradnak.",
+      "file": "ZIP-fájl",
+      "areaHint": "Ide kerülnek a dokumentumok – vagy csak azok, amelyeknek a munkaterülete itt nem létezik.",
+      "matchAreas": "Elhelyezés az azonos nevű munkaterületeken",
+      "matchAreasHint": "Ha itt van olyan munkaterület, amelynek ugyanaz a neve, mint az exportban, a dokumentumok oda kerülnek.",
+      "import": "Importálás",
+      "importing": "Importálás…",
+      "result": "Importálva: {{imported, number}} · már megvolt: {{duplicates, number}} · nem importálva: {{failed, number}}",
+      "auto": {
+        "title": "Automatikus biztonsági mentés",
+        "text": "Az AIDocuments naponta egyszer teljes biztonsági mentést készít ZIP-fájlként egy mappába, és ezek közül a legújabbakat megtartja. A mappa lehetőleg egy másik lemezen vagy hálózati meghajtón legyen – különben ha az adatokat tároló lemez meghibásodik, a mentések is elvesznek.",
+        "enable": "Napi automatikus biztonsági mentés",
+        "hour": "Időpont",
+        "keep": "Megőrzés",
+        "keepHint": "A megtartott mentések száma; a régebbiek törlődnek.",
+        "directory": "Mappa",
+        "directoryHint": "Teljes elérési út a szerveren. Az alapértelmezéshez hagyd üresen. Docker-konténerben a mappát csatolni kell.",
+        "warnAfterDays": "Figyelmeztetés ennyi nap után",
+        "warnAfterDaysHint": "Értesítés a dokumentumlistában, ha ennyi ideje nem készült mentés – sem kézzel, sem automatikusan. 0 = soha ne figyelmeztessen.",
+        "lastRun": "Utolsó futás",
+        "nextRun": "Következő futás",
+        "running": "Mentés folyamatban…",
+        "ok": "sikeres, {{when}}",
+        "failed": "sikertelen, {{when}}",
+        "stored_one": "{{count, number}} mentés itt: {{directory}}",
+        "stored_other": "{{count, number}} mentés itt: {{directory}}",
+        "runNow": "Mentés most",
+        "saveFirst": "Előbb mentsd el a módosításokat.",
+        "runStarted": "A mentés a háttérben fut.",
+        "done": "A mentés elkészült.",
+        "saved": "Beállítások mentve.",
+        "externalDatabase": "Az automatikus biztonsági mentés csak a beépített adatbázissal érhető el. MariaDB esetén az adatbázist annak saját eszközeivel (például éjszakánként futtatott mariadb-dump paranccsal) mentsd, és mellé az adatkönyvtárat is."
+      }
     }
   },
   "history": {
@@ -537,7 +732,7 @@
     "subtitle": "A két dokumentum tartalma megegyezik. Tartsd meg az egyiket, és töröld a másikat – vagy jelöld, hogy nem másolatok.",
     "older": "Korábban érkezett",
     "newer": "Később érkezett",
-    "deleteThis": "Ennek a törlése",
+    "deleteThis": "Ennek törlése",
     "compare": "Összehasonlítás egymás mellett"
   },
   "twoFactor": {
@@ -560,12 +755,13 @@
     "disableHint": "A kikapcsoláshoz add meg az alkalmazás aktuális kódját (vagy egy helyreállító kódot) és a jelszavadat.",
     "disable": "Kikapcsolás",
     "recoveryLeft": "Fel nem használt helyreállító kódok: {{count}}",
-    "adminCannotDisable": "Rendszergazdaként nem kapcsolhatod ki a kétlépcsős azonosítást."
+    "adminCannotDisable": "Adminisztrátorként nem kapcsolhatod ki a kétlépcsős azonosítást."
   },
   "confirmCode": {
     "title": "Módosítás megerősítése",
     "text": "A fiókok, postafiókok és beállítások módosításához a hitelesítő alkalmazás aktuális kódja szükséges. A megerősítés 10 percig érvényes.",
-    "submit": "Megerősítés"
+    "submit": "Megerősítés",
+    "passkey": "Megerősítés azonosítókulccsal"
   },
   "share": {
     "button": "Megosztás",
@@ -598,6 +794,193 @@
     "page": {
       "for": "Megosztva vele: {{name}}",
       "invalid": "Ez a link érvénytelen vagy lejárt, vagy a dokumentumot törölték. Fordulj ahhoz, aki a linket adta."
+    }
+  },
+  "areas": {
+    "general": "Általános",
+    "unknown": "Másik munkaterület",
+    "label": "Munkaterület",
+    "target": "Célmunkaterület",
+    "access": {
+      "READ": "Csak olvasás",
+      "EDIT": "Olvasás és szerkesztés",
+      "DELETE": "Szerkesztés és törlés"
+    }
+  },
+  "reminders": {
+    "title": "Emlékeztetők",
+    "cardTitle": "Emlékeztető",
+    "add": "Emlékeztető hozzáadása",
+    "edit": "Emlékeztető szerkesztése",
+    "create": "Létrehozás",
+    "created": "Emlékeztető létrehozva",
+    "saved": "Emlékeztető mentve",
+    "deleted": "Emlékeztető törölve",
+    "markedDone": "Elintézve",
+    "dueDate": "Esedékesség",
+    "note": "Megjegyzés",
+    "notePlaceholder": "pl. fizetés ellenőrzése",
+    "assignee": "Ki intézi?",
+    "assigneeHint": "Ez a személy a „Saját” alatt látja az emlékeztetőt, és e-mailben értesítést kap róla. Bárki kiválasztható, aki látja a dokumentumot.",
+    "me": "{{name}} (én)",
+    "assignedTo": "felelős: {{name}}",
+    "doneBy": "elintézte: {{name}}",
+    "markDone": "Megjelölés elintézettként",
+    "reopen": "Újranyitás",
+    "delete": {
+      "label": "Emlékeztető törlése",
+      "title": "Törlöd az emlékeztetőt?",
+      "text": "Az emlékeztető törlődik. A dokumentum változatlan marad."
+    },
+    "accept": "Hozzáadás",
+    "dismiss": "Javaslat elvetése",
+    "suggestionsHint": "Az MI dátumokat talált ebben a dokumentumban:",
+    "none": "Nincsenek nyitott emlékeztetők.",
+    "showDone_one": "{{count, number}} elintézett emlékeztető megjelenítése",
+    "showDone_other": "{{count, number}} elintézett emlékeztető megjelenítése",
+    "hideDone": "Elintézettek elrejtése",
+    "scope": {
+      "label": "Mely emlékeztetők",
+      "mine": "Saját",
+      "all": "Összes"
+    },
+    "dueTitle": "Esedékes",
+    "nothingDue": "Ma nincs semmi esedékes.",
+    "upcomingTitle": "Hamarosan",
+    "suggestionsTitle": "Javasolt dátumok",
+    "suggestionsPageHint": "A következő hat hónap határidői, amelyeket az MI a dokumentumokban talált. Add hozzá őket emlékeztetőként, vagy vesd el őket.",
+    "emptyTitle": "Nincsenek emlékeztetők",
+    "emptyText": "Adj hozzá emlékeztetőt egy dokumentumhoz – vagy fogadd el az MI egyik javaslatát.",
+    "repeat": {
+      "label": "Ismétlés",
+      "hint": "Ha elintézettként jelölöd meg az emlékeztetőt, a következő ugyanekkora időközzel jön létre.",
+      "none": "Egyszeri",
+      "m1": "Havonta",
+      "m3": "Negyedévente",
+      "m6": "Félévente",
+      "m12": "Évente",
+      "m24": "Kétévente",
+      "months_one": "Minden hónapban",
+      "months_other": "{{count}} havonta"
+    },
+    "fromContract": "a szerződésből"
+  },
+  "pages": {
+    "button": "Oldalak",
+    "title": "Oldalak szerkesztése",
+    "intro": "Húzd az oldalakat, vagy mozgasd őket a nyilakkal, forgasd el vagy távolítsd el őket. A mentés új verziót hoz létre – az előző megmarad.",
+    "page": "{{number}}. oldal",
+    "wasPage": "korábban: {{number}}.",
+    "moveLeft": "Előrébb",
+    "moveRight": "Hátrébb",
+    "rotate": "Forgatás 90°-kal",
+    "remove": "Oldal eltávolítása",
+    "keep": "Oldal megtartása",
+    "noneLeft": "Legalább egy oldalnak meg kell maradnia.",
+    "saveFirst": "Előbb mentsd a módosításokat",
+    "saved": "Oldalak mentve",
+    "split": {
+      "here": "Innentől külön dokumentum",
+      "title": "Szétválasztod a dokumentumot?",
+      "text": "A(z) {{page}}. oldal és az összes utána következő külön dokumentum lesz ugyanezen a munkaterületen. A rendszer úgy olvassa be és sorolja be, mint egy újonnan érkezett dokumentumot; ebben a dokumentumban az előtte lévő oldalak maradnak.",
+      "confirm": "Szétválasztás",
+      "done": "Dokumentum szétválasztva",
+      "open": "Új dokumentum megnyitása"
+    },
+    "merge": {
+      "button": "Dokumentumok hozzáfűzése",
+      "title": "Dokumentumok hozzáfűzése",
+      "intro": "A kiválasztott dokumentumok oldalai ebben a sorrendben kerülnek a(z) „{{title}}” végére.",
+      "search": "Dokumentumok keresése…",
+      "none": "Nincs megfelelő dokumentum.",
+      "noDeleteRight": "Nem törölheted – ezért hozzá sem fűzheted.",
+      "hint": "A hozzáfűzött dokumentumok ezután a lomtárba kerülnek; az előzményekből 30 napig visszaállíthatók.",
+      "confirm_one": "{{count}} dokumentum hozzáfűzése",
+      "confirm_other": "{{count}} dokumentum hozzáfűzése",
+      "done_one": "{{count}} dokumentum hozzáfűzve",
+      "done_other": "{{count}} dokumentum hozzáfűzve"
+    }
+  },
+  "contracts": {
+    "nav": "Szerződések",
+    "title": "Szerződések",
+    "pageIntro": "Az összes általad látható szerződés futamideje és felmondási ideje – elöl azok, amelyeknél hamarosan teendő van.",
+    "scope": {
+      "label": "Megjelenítés",
+      "running": "Hatályosak",
+      "all": "Összes"
+    },
+    "emptyTitle": "Még nincs rögzített szerződés",
+    "emptyText": "Nyiss meg egy dokumentumot, például egy áram- vagy mobilszerződést, és rögzítsd ott a futamidőt és a felmondási időt. A határidő előtt kellő időben megjelenik egy emlékeztető.",
+    "cardTitle": "Szerződés",
+    "none": "Ez egy szerződés? Ha megadod a futamidőt és a felmondási időt, az AIDocuments időben emlékeztet a felmondásra.",
+    "add": "Rögzítés szerződésként",
+    "edit": "Szerződés szerkesztése",
+    "intro": "A futamidő végéből és a felmondási időből adódik, hogy meddig kell felmondani. Előtte megjelenik egy emlékeztető; ha a futamidő felmondás nélkül telik le, a szerződés automatikusan meghosszabbodik.",
+    "saved": "Szerződés mentve",
+    "removed": "Szerződésadatok eltávolítva",
+    "remove": {
+      "label": "Szerződésadatok eltávolítása",
+      "title": "Eltávolítod a szerződésadatokat?",
+      "text": "A futamidő, a felmondási idő és a hozzájuk tartozó nyitott emlékeztető törlődik. Maga a dokumentum megmarad."
+    },
+    "openEnded": "határozatlan idejű",
+    "months_one": "{{count}} hónap",
+    "months_other": "{{count}} hónap",
+    "amountHint": "pl. „havi 49,90 €”",
+    "endDateHint": "Az aktuális futamidő vége; üres = határozatlan idejű",
+    "noticeHint": "Hány hónappal a futamidő vége előtt; üres = a futamidő végéig",
+    "renewalHint": "Felmondás nélkül a szerződés ennyi hónappal hosszabbodik meg; 0 = megszűnik",
+    "cancelledHint": "Ekkor már nem hosszabbodik meg, és nem jön több emlékeztető.",
+    "fields": {
+      "partner": "Szerződő fél",
+      "amount": "Összeg",
+      "startDate": "Szerződés kezdete",
+      "endDate": "Futamidő vége",
+      "notice": "Felmondási idő (hónap)",
+      "renewal": "Meghosszabbodás (hónap)",
+      "deadline": "Felmondási határidő",
+      "reminderDays": "Emlékeztetés (nappal előtte)",
+      "cancelled": "Felmondva"
+    },
+    "status": {
+      "ACTIVE": "Hatályos",
+      "DUE_SOON": "Közeleg a határidő",
+      "NOTICE_MISSED": "Lekésett határidő",
+      "CANCELLED": "Felmondva",
+      "ENDED": "Megszűnt",
+      "OPEN_ENDED": "Határozatlan idejű"
+    },
+    "row": {
+      "cancelBy": "felmondási határidő: {{date}}",
+      "endsOn": "megszűnik: {{date}}",
+      "term": "futamidő vége: {{date}}",
+      "renews_one": "{{count}} hónappal meghosszabbodik",
+      "renews_other": "{{count}} hónappal meghosszabbodik"
+    }
+  },
+  "passkeys": {
+    "title": "Azonosítókulcsok",
+    "intro": "Azonosítókulccsal jelszó nélkül jelentkezhetsz be – ujjlenyomattal, arcfelismeréssel vagy az eszköz PIN-kódjával feloldva. Csak ehhez a címhez érvényes; egy hamisított oldal nem tudja használni.",
+    "none": "Még nincs hozzáadott azonosítókulcs.",
+    "add": "Azonosítókulcs hozzáadása",
+    "create": "Azonosítókulcs létrehozása",
+    "name": "Név",
+    "nameHint": "Hogy később felismerd, pl. „Laptop” vagy „Jelszókezelő”.",
+    "password": "A jelszavad",
+    "passwordHint": "Aki azonosítókulcsot ad hozzá, ezentúl jelszó nélkül is be tud lépni – ezért egyszer erősítsd meg a jelszavaddal.",
+    "added": "Azonosítókulcs hozzáadva",
+    "removed": "Azonosítókulcs eltávolítva",
+    "synced": "szinkronizálva",
+    "lastUsed": "utoljára használva: {{time}}",
+    "created": "hozzáadva: {{time}}, még nem használt",
+    "unsupported": "Ez a böngésző itt nem tud azonosítókulcsot használni. Az azonosítókulcsok csak HTTPS-en keresztül (vagy localhoston) működnek.",
+    "unsupportedIp": "Az azonosítókulcsok csak HTTPS-en keresztül és névvel a címben működnek, IP-címmel nem.",
+    "remove": {
+      "label": "Azonosítókulcs eltávolítása",
+      "title": "Eltávolítod az azonosítókulcsot?",
+      "text": "A(z) „{{name}}” kulccsal ezután senki sem tud bejelentkezni. A jelszókezelőben, illetve az eszközön tárolva marad, amíg ott nem törlöd.",
+      "confirm": "Eltávolítás"
     }
   }
 }

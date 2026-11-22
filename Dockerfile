@@ -43,9 +43,11 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw -q -B -DskipTests package \
 FROM eclipse-temurin:21-jre
 ARG OCR_LANGUAGES
 # Schriften und FreeType braucht die PDF-Vorschau (Rendern der ersten Seite), Tesseract die Texterkennung,
-# gosu das Abgeben der root-Rechte beim Start. Die Anwendung läuft als eigener Benutzer "aidocuments".
+# gosu das Abgeben der root-Rechte beim Start, heif-convert (libheif mit HEVC-Decoder) das Umwandeln von iPhone-Fotos
+# (HEIC). Die Anwendung läuft als eigener Benutzer "aidocuments".
 RUN apt-get update \
     && apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core libfreetype6 gosu \
+        libheif-examples libheif-plugin-libde265 \
         tesseract-ocr $(for lang in ${OCR_LANGUAGES}; do printf 'tesseract-ocr-%s ' "$lang"; done) \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --system --gid 999 aidocuments \

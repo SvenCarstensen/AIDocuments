@@ -44,7 +44,9 @@
     "login": {
       "title": "Tekrar hoş geldiniz",
       "subtitle": "Belgelerinize erişmek için oturum açın.",
-      "submit": "Oturum aç"
+      "submit": "Oturum aç",
+      "or": "veya",
+      "passkey": "Geçiş anahtarıyla oturum aç"
     },
     "setup": {
       "title": "AIDocuments kurulumu",
@@ -56,22 +58,22 @@
       "submit": "Hesabı oluştur ve başla",
       "features": {
         "import": "Posta kutunuzdan ve içe aktarma klasöründen PDF’ler",
-        "ai": "Yapay zeka özetler ve etiketler",
+        "ai": "Yapay zekâ özetler ve etiketler",
         "search": "Belgelerin içinde tam metin araması"
       }
     },
     "twoFactor": {
       "title": "Oturum açmayı onayla",
-      "subtitle": "Kimlik doğrulama uygulamandaki 6 haneli kodu gir.",
+      "subtitle": "Kimlik doğrulama uygulamanızdaki 6 haneli kodu girin.",
       "code": "Kod",
-      "codeHint": "Uygulamaya erişemiyor musun? Bunun yerine kurtarma kodlarından birini gir.",
+      "codeHint": "Uygulamaya erişemiyor musunuz? Bunun yerine kurtarma kodlarınızdan birini girin.",
       "submit": "Onayla",
       "back": "Oturum açmaya dön"
     },
     "twoFactorRequired": {
-      "title": "İki adımlı doğrulamayı kur",
-      "subtitle": "Yöneticiler için iki adımlı doğrulama zorunludur. Devam etmek için şimdi kur.",
-      "intro": "Telefonunda bir kimlik doğrulama uygulamasına ihtiyacın var (ör. Google Authenticator, Microsoft Authenticator, 1Password veya Aegis)."
+      "title": "İki adımlı doğrulamayı kurun",
+      "subtitle": "Yöneticiler için iki adımlı doğrulama zorunludur. Devam etmek için şimdi kurun.",
+      "intro": "Bunun için telefonunuzda bir kimlik doğrulama uygulamasına ihtiyacınız var (ör. Google Authenticator, Microsoft Authenticator, 1Password veya Aegis)."
     }
   },
   "shell": {
@@ -81,7 +83,7 @@
       "dark": "Koyu tema"
     },
     "search": {
-      "placeholder": "Anahtar kelime araması: belgeler, etiketler, içerik …",
+      "placeholder": "Anahtar kelime araması: belgeler, etiketler, içerik…",
       "placeholderAi": "Yapay zekâ araması: kendi sözlerinizle sorun – ör. “Kia’nın 2024 faturaları”",
       "labelAi": "YZ",
       "label": "Belgelerde ara",
@@ -90,8 +92,8 @@
     },
     "userMenu": {
       "label": "Kullanıcı menüsü ({{name}})",
-      "aiActive": "Yapay zeka etkin",
-      "aiNotConfigured": "Yapay zeka ayarlanmadı",
+      "aiActive": "Yapay zekâ etkin",
+      "aiNotConfigured": "Yapay zekâ ayarlanmadı",
       "changePassword": "Parolayı değiştir",
       "licenses": "Üçüncü taraf lisansları",
       "logout": "Oturumu kapat"
@@ -102,37 +104,60 @@
       "changed": "Parola değiştirildi"
     },
     "dropzone": {
-      "title": "PDF’leri buraya bırakın",
-      "hint": "Aynı anda birden fazla dosya bırakabilirsiniz. Dosyalar kaydedilir, analiz edilir ve etiketlenir."
+      "title": "PDF’leri veya fotoğrafları buraya bırakın",
+      "hint": "Aynı anda birden fazla dosya bırakabilirsiniz. Fotoğraflar (JPG, PNG, HEIC) PDF’ye dönüştürülür. Hepsi kaydedilir, analiz edilir ve etiketlenir."
+    },
+    "remindersDue_one": "{{count, number}} hatırlatıcının zamanı geldi",
+    "remindersDue_other": "{{count, number}} hatırlatıcının zamanı geldi",
+    "profile": {
+      "email": "E-posta adresi",
+      "saved": "Kaydedildi"
+    },
+    "notifications": {
+      "title": "E-posta bildirimleri",
+      "emailHint": "Size atanan ve zamanı gelen hatırlatıcılar ile aşağıda açtığınız bildirimler bu adrese gönderilir – uygulamayı şu anda kullandığınız dilde. E-posta almak istemiyorsanız boş bırakın.",
+      "digest": "Her gün yeni belgeler",
+      "digestHint": "Günde bir kez, alanlarınıza eklenen belgelerin listesi – yalnızca yeni belge olan günlerde.",
+      "admin": "Yöneticiler için bildirimler",
+      "adminHint": "Saklama süreleri dolduğunda (hiçbir şey otomatik olarak silinmez) ve bir posta kutusu tekrar tekrar kontrol edilemediğinde.",
+      "needsEmail": "Adres girilmezse e-posta gönderilmez."
     }
   },
   "upload": {
-    "onlyPdf": "Yalnızca PDF dosyaları eklenebilir.",
+    "onlyPdf": "Yalnızca PDF’ler ve fotoğraflar (JPG, PNG, HEIC) eklenebilir.",
     "uploadingFile": "“{{name}}” yükleniyor…",
-    "uploadingFiles_one": "{{count, number}} PDF yükleniyor…",
-    "uploadingFiles_other": "{{count, number}} PDF yükleniyor…",
+    "uploadingFiles_one": "{{count, number}} dosya yükleniyor…",
+    "uploadingFiles_other": "{{count, number}} dosya yükleniyor…",
     "created_one": "{{count, number}} belge eklendi",
     "created_other": "{{count, number}} belge eklendi",
     "processingInBackground": "İşleme arka planda devam ediyor.",
     "duplicates_one": "{{count, number}} belge zaten mevcut",
     "duplicates_other": "{{count, number}} belge zaten mevcut",
-    "rejected_one": "{{count, number}} dosya geçerli bir PDF değil",
-    "rejected_other": "{{count, number}} dosya geçerli bir PDF değil",
+    "rejected_one": "{{count, number}} dosya eklenmedi",
+    "rejected_other": "{{count, number}} dosya eklenmedi",
     "onlyDuplicates_one": "Bu belge zaten mevcut.",
     "onlyDuplicates_other": "Bu belgeler zaten mevcut.",
-    "noneValid": "Dosyaların hiçbiri geçerli bir PDF değil.",
-    "failed": "Yükleme başarısız oldu"
+    "noneValid": "Dosyaların hiçbiri eklenemedi.",
+    "failed": "Yükleme başarısız oldu",
+    "intoArea": "Alan: {{area}}",
+    "combine": {
+      "title": "Fotoğraflar tek bir belgede birleştirilsin mi?",
+      "text": "Birden fazla fotoğraf seçtiniz. Bunlar tek bir belgenin sayfalarıysa – örneğin birkaç sayfalık bir mektup –, dosya adlarının sırasıyla tek bir PDF’de birleştirilir; sırayı daha sonra “Sayfalar” bölümünden değiştirebilirsiniz. Aksi takdirde her fotoğraf ayrı bir belge olur.",
+      "one": "Tek belge olarak",
+      "separate": "Her fotoğraf ayrı",
+      "tooMuch": "Tek bir belge için fotoğraflar çok fazla veya çok büyük (en fazla 100 fotoğraf ve toplam 240 MB)."
+    }
   },
   "documents": {
     "status": {
       "pending": "Bekliyor",
       "processing": "Analiz ediliyor",
       "failed": "Hata",
-      "textOnly": "Yapay zekasız"
+      "textOnly": "Yapay zekâsız"
     },
     "ocrBadge": "Metin tanıma",
     "aiNotice": {
-      "text": "Yapay zeka henüz ayarlanmadı. Yeni belgeler metinleri üzerinden aranabilir, ancak özetlenmez ve etiketlenmez.",
+      "text": "Yapay zekâ henüz ayarlanmadı. Yeni belgeler metinleri üzerinden aranabilir, ancak özetlenmez ve etiketlenmez.",
       "builtinOcr": "Metin katmanı olmayan taramalar yerleşik metin tanıma ile okunur; böylece onlarda da arama yapılabilir.",
       "action": "Şimdi ayarla"
     },
@@ -140,7 +165,7 @@
     "searchResults_other": "<query>“{{query}}” için</query> <count>{{count, number}} sonuç</count>",
     "progress": {
       "inProgress": "{{documents, number}} belge işleniyor",
-      "inProgressHint": "Yapay zeka analizini bekliyor veya şu anda analiz ediliyor",
+      "inProgressHint": "Yapay zekâ analizini bekliyor veya şu anda analiz ediliyor",
       "remaining": "yaklaşık {{duration}} kaldı",
       "remainingLessThan": "en fazla {{duration}} kaldı",
       "finishHint": "Tahmini bitiş: {{time}} – son işlenen belgelerin hızına göre hesaplandı"
@@ -175,12 +200,13 @@
       "activeTo": "{{date}} ve öncesi",
       "removeOne": "“{{label}}” filtresini kaldır",
       "removeAll": "Tüm filtreleri kaldır",
-      "clear": "Filtreleri kaldır"
+      "clear": "Filtreleri kaldır",
+      "retentionExpired": "Saklama süresi doldu"
     },
     "empty": {
       "libraryTitle": "Henüz belge yok",
-      "libraryHint": "PDF dosyalarını bu pencereye sürüklemeniz veya “Yükle” düğmesini kullanmanız yeterli.",
-      "libraryHintAdmin": "PDF dosyalarını bu pencereye sürüklemeniz veya “Yükle” düğmesini kullanmanız yeterli. Ayarlarda, yeni PDF’lerin otomatik olarak içe aktarılacağı bir posta kutusu veya içe aktarma klasörü tanımlayabilirsiniz.",
+      "libraryHint": "PDF’leri veya fotoğrafları bu pencereye sürüklemeniz ya da “Yükle” düğmesini kullanmanız yeterli.",
+      "libraryHintAdmin": "PDF’leri veya fotoğrafları bu pencereye sürüklemeniz ya da “Yükle” düğmesini kullanmanız yeterli. Ayarlarda, yeni belgelerin otomatik olarak içe aktarılacağı bir posta kutusu veya içe aktarma klasörü tanımlayabilirsiniz.",
       "noResultsTitle": "Hiçbir şey bulunamadı",
       "noResultsSearch": "Bu aramayla eşleşen belge yok. Arama, kelime parçalarını da bulur – daha kısa bir terim veya daha az kelime deneyin.",
       "noResultsFilters": "Seçilen filtrelerle eşleşen belge yok."
@@ -190,13 +216,32 @@
     "loadMore": "Daha fazla göster ({{remaining, number}})",
     "aiSearch": {
       "notice": "Yapay zekâ araması: “{{question}}”. Filtreler sorunun nasıl anlaşıldığını gösterir."
+    },
+    "export": {
+      "label_one": "{{count, number}} belgeyi ZIP olarak dışa aktar",
+      "label_other": "Bu listedeki {{count, number}} belgenin tümünü ZIP olarak dışa aktar",
+      "started_one": "{{count, number}} belgenin dışa aktarımı başladı",
+      "started_other": "{{count, number}} belgenin dışa aktarımı başladı",
+      "contents": "ZIP dosyası, PDF’lerin yanı sıra tüm bilgileri tablo (documents.csv) ve documents.json olarak içerir.",
+      "failed": "Dışa aktarma başarısız oldu"
+    },
+    "mailboxNotice": {
+      "text_one": "“{{names}}” posta kutusu art arda birkaç kez kontrol edilemedi – şu anda bu kutudan belge gelmiyor.",
+      "text_other": "Şu posta kutuları art arda birkaç kez kontrol edilemedi: {{names}}. Şu anda bunlardan belge gelmiyor.",
+      "action": "Posta kutularını görüntüle"
+    },
+    "backupNotice": {
+      "never": "Belgelerinizin henüz bir yedeği yok.",
+      "overdue": "Son yedekleme: {{when}}. Bu, ayarlanan süreyi aşıyor.",
+      "failed": "Otomatik yedekleme başarısız oldu: {{reason}}",
+      "action": "Yedeklemeye git"
     }
   },
   "document": {
     "backToList": "Listeye dön",
     "download": "İndir",
     "reprocess": "Yeniden analiz et",
-    "reprocessHint": "PDF’yi yeniden oku ve yapay zekaya analiz ettir",
+    "reprocessHint": "PDF’yi yeniden okur ve yapay zekâya analiz ettirir",
     "reprocessStarted": "Belge yeniden analiz ediliyor.",
     "deleted": "Belge silindi",
     "pdfTitle": "PDF: {{title}}",
@@ -209,7 +254,7 @@
       "downloadOriginal": "Orijinali indir",
       "restoreOriginal": "Orijinali geri yükle",
       "restoreTitle": "Orijinal geri yüklensin mi?",
-      "restoreText": "Değiştirilmiş sürüm silinecek. Belge daha sonra tam olarak geldiği gibi olacak.",
+      "restoreText": "Değiştirilmiş sürüm atılacak. Belge ardından tam olarak geldiği andaki hâline döner.",
       "restored": "Orijinal geri yüklendi"
     },
     "duplicate": {
@@ -220,7 +265,7 @@
     },
     "openInNewTab": "Yeni sekmede aç",
     "processingNotice": "Belge işleniyor. Analiz biter bitmez özet ve etiketler burada görünecek.",
-    "textOnlyNotice": "Yapay zeka olmadan dizine eklendi: belge, metni üzerinden aranabilir, ancak özeti ve otomatik etiketleri yok.",
+    "textOnlyNotice": "Yapay zekâ olmadan dizine eklendi: belge, metni üzerinden aranabilir, ancak özeti ve otomatik etiketleri yok.",
     "tabs": {
       "overview": "Genel bakış",
       "text": "Tam metin",
@@ -261,10 +306,12 @@
       "FOLDER": "İçe aktarma klasörü",
       "UPLOAD": "Yüklendi"
     },
-    "noText": "Bu belge için metin yok – muhtemelen metin katmanı olmayan bir tarama. Yapay zeka ayarlanmış ve metin tanıma etkinse içerik analiz sırasında metne dökülür.",
+    "noText": "Bu belge için metin yok – muhtemelen metin katmanı olmayan bir tarama. Yapay zekâ ayarlanmış ve metin tanıma etkinse içerik analiz sırasında metne dökülür.",
     "edit": {
       "title": "Belgeyi düzenle",
-      "saved": "Değişiklikler kaydedildi"
+      "saved": "Değişiklikler kaydedildi",
+      "areaHint": "Belgeyi kimlerin göreceğini belirler.",
+      "areaMoveHint": "Bundan sonra belgeyi yalnızca “{{area}}” alanının üyeleri ve yöneticiler görebilir."
     },
     "delete": {
       "title": "Belge silinsin mi?",
@@ -273,9 +320,9 @@
     },
     "chat": {
       "intro": "Bu belge hakkında bir soru sorun – yapay zekâ içeriğine göre yanıtlar.",
-      "placeholder": "Bu belge hakkında bir şey sorun …",
+      "placeholder": "Bu belge hakkında bir şey sorun…",
       "send": "Gönder",
-      "thinking": "Yapay zekâ belgeyi okuyor …",
+      "thinking": "Yapay zekâ belgeyi okuyor…",
       "notConfigured": "Belge hakkında soru sormak için bir yapay zekâ ayarlanmış olmalıdır.",
       "restart": "Yeniden başla",
       "suggestions": {
@@ -286,11 +333,11 @@
     },
     "versions": {
       "title": "Sürümler",
-      "intro": "PDF'deki her değişiklik yeni bir sürüm oluşturur. Eski sürümler korunur; görüntülenebilir, indirilebilir veya geri yüklenebilir.",
+      "intro": "PDF’deki her değişiklik yeni bir sürüm oluşturur. Eski sürümler korunur; görüntülenebilir, indirilebilir veya geri yüklenebilir.",
       "current": "güncel",
-      "view": "Sürüm {{number}} görüntüle",
-      "download": "Sürüm {{number}} indir",
-      "restore": "Sürüm {{number}} geri yükle",
+      "view": "{{number}}. sürümü görüntüle",
+      "download": "{{number}}. sürümü indir",
+      "restore": "{{number}}. sürümü geri yükle",
       "restoreTitle": "Sürüm {{number}} geri yüklensin mi?",
       "restoreText": "Bu sürüm güncel sürüm olur. Şimdiki sürüm korunur ve adım geçmişte geri alınabilir.",
       "restoreConfirm": "Geri yükle",
@@ -300,16 +347,25 @@
         "EDITED": "Düzenlendi",
         "ORIGINAL_RESTORED": "Orijinal geri yüklendi",
         "VERSION_RESTORED": "Sürüm {{from}} geri yüklendi",
-        "UNDONE": "Değişiklik geri alındı"
+        "UNDONE": "Değişiklik geri alındı",
+        "PAGES": "Sayfalar değiştirildi",
+        "MERGED": "Belgeler birleştirildi"
       }
-    }
+    },
+    "retention": {
+      "label": "Saklama",
+      "until": "{{date}} tarihine kadar – o zamana kadar silinemez",
+      "expired": "süre {{date}} tarihinde doldu",
+      "locked": "{{date}} tarihine kadar saklanmalıdır – ancak bu tarihten sonra silinebilir"
+    },
+    "readOnly": "Bu alanda bu belgeyi yalnızca görüntüleyebilirsiniz."
   },
   "settings": {
     "title": "Ayarlar",
     "mailboxes": {
       "title": "Posta kutuları",
-      "navHint": "PDF eklerinin içe aktarıldığı IMAP sunucuları",
-      "intro": "PDF ekleri bu IMAP posta kutularından otomatik olarak içe aktarılır. Posta kutuları yalnızca okunur – e-postalar değişmeden ve okunmamış olarak kalır.",
+      "navHint": "PDF ve fotoğraf eklerinin içe aktarıldığı IMAP sunucuları",
+      "intro": "PDF ekleri ve ekli fotoğraflar (PDF olarak) bu IMAP posta kutularından otomatik olarak içe aktarılır; e-postaların metni ve gömülü logolar aktarılmaz. Posta kutuları yalnızca okunur – e-postalar değişmeden ve okunmamış olarak kalır.",
       "add": "Posta kutusu ekle",
       "emptyTitle": "Henüz posta kutusu ayarlanmadı",
       "emptyText": "Bir IMAP posta kutusunun erişim bilgilerini girin – örneğin tarayıcınızın belgeleri gönderdiği posta kutusu.",
@@ -342,7 +398,7 @@
         "since": "Yalnızca şu tarihten sonraki e-postalar",
         "sinceHint": "İsteğe bağlı – daha eski e-postalar atlanır",
         "enabled": "Otomatik kontrol et",
-        "enabledHint": "Posta kutusu, ayarlanan aralıklarla yeni PDF’ler için kontrol edilir.",
+        "enabledHint": "Posta kutusu, ayarlanan aralıklarla yeni ekler için kontrol edilir.",
         "filter": {
           "title": "Filtre",
           "intro": "Yalnızca tüm koşulları karşılayan e-postalar işlenir. Her satıra bir terim; büyük/küçük harf fark etmez, metnin bir kısmı yeterlidir. Boş alanlar hiçbir şeyi kısıtlamaz.",
@@ -351,29 +407,30 @@
           "senderIncludes": "Gönderen bu terimlerden birini içeriyor",
           "senderExcludes": "Gönderen bu terimlerden hiçbirini içermiyor",
           "senderHint": "Ad veya adres, ör. “@example.com”",
-          "newOnly": "Filtre, son almadan sonra gelen e-postalar için geçerlidir; daha önce kontrol edilmiş e-postalar yeniden işlenmez."
+          "newOnly": "Filtre, son kontrolden sonra gelen e-postalar için geçerlidir; daha önce kontrol edilmiş e-postalar yeniden işlenmez."
         },
-        "interval": "Dakika cinsinden alma aralığı",
-        "intervalHint": "Genel aralığı kullanmak için boş bırakın (şu anda {{interval}})."
+        "interval": "Dakika cinsinden kontrol aralığı",
+        "intervalHint": "Genel aralığı kullanmak için boş bırakın (şu anda {{interval}}).",
+        "areaHint": "İçe aktarılan belgeler bu alana gider."
       },
       "filterActive": "Filtre etkin",
-      "schedule": "Her {{interval}} alınır · sonraki: {{when}}",
-      "scheduleSoon": "Her {{interval}} alınır · sonraki birazdan"
+      "schedule": "Her {{interval}} kontrol edilir · sonraki: {{when}}",
+      "scheduleSoon": "Her {{interval}} kontrol edilir · sonraki birazdan"
     },
     "import": {
-      "title": "Zamanlama ve içe aktarma klasörü",
+      "title": "Kontrol ve içe aktarma klasörü",
       "navHint": "Kontrol aralığı ve izlenen dizin",
-      "intro": "Uygulamanın posta kutularında ve içe aktarma klasöründe ne sıklıkla yeni PDF dosyası arayacağını belirler.",
+      "intro": "Uygulamanın posta kutularında ve içe aktarma klasöründe ne sıklıkla yeni belge arayacağını belirler.",
       "saved": "Ayarlar kaydedildi",
       "interval": {
         "title": "Kontrol aralığı",
-        "text": "Uygulamanın giriş klasörünü ve kendi aralığı olmayan tüm posta kutularını yeni PDF’ler için ne sıklıkla kontrol ettiği.",
+        "text": "Uygulamanın içe aktarma klasörünü ve kendi aralığı olmayan tüm posta kutularını yeni belgeler için ne sıklıkla kontrol ettiği.",
         "label": "Her … dakikada bir",
         "nextRun": "Sonraki otomatik kontrol: {{when}}."
       },
       "folder": {
         "title": "İçe aktarma klasörü",
-        "text": "Sunucuda yeni PDF dosyaları için izlenen bir dizin – örneğin bir ağ tarayıcısının hedef klasörü. Alt klasörler de aranır.",
+        "text": "Sunucuda yeni PDF’ler ve fotoğraflar (JPG, PNG, HEIC) için izlenen bir dizin – örneğin bir ağ tarayıcısının hedef klasörü. Alt klasörler de aranır.",
         "enable": "İçe aktarma klasörünü izle",
         "path": "Sunucudaki yol",
         "pathHint": "Mutlak yol. Docker kapsayıcısında bu, bağlanan klasördür; genellikle {{path}}.",
@@ -385,16 +442,17 @@
         "scanning": "Klasör kontrol ediliyor…",
         "neverScanned": "Henüz kontrol edilmedi.",
         "scanNow": "Şimdi kontrol et",
-        "scanStarted": "İçe aktarma klasörü kontrol ediliyor."
+        "scanStarted": "İçe aktarma klasörü kontrol ediliyor.",
+        "areaHint": "Klasördeki belgeler bu alana gider."
       }
     },
     "ai": {
-      "title": "Yapay zeka",
+      "title": "Yapay zekâ",
       "navHint": "LLM sunucusu, model ve metin tanıma",
-      "intro": "Yapay zeka her yeni PDF’yi okur, özetler, belge türünü ve etiketleri belirler, tutar veya son tarih gibi temel bilgileri çıkarır.",
+      "intro": "Yapay zekâ her yeni PDF’yi okur, özetler, belge türünü ve etiketleri belirler, tutar veya son tarih gibi temel bilgileri çıkarır.",
       "configured": "Ayarlandı",
       "notConfigured": "Ayarlanmadı",
-      "saved": "Yapay zeka ayarları kaydedildi",
+      "saved": "Yapay zekâ ayarları kaydedildi",
       "server": {
         "title": "LLM sunucusu",
         "provider": "Sağlayıcı",
@@ -408,7 +466,7 @@
       "privacy": {
         "title": "{{provider}} kullanıldığında belgeleriniz bu bilgisayardan çıkar",
         "text": "Analiz için her PDF’nin içeriği internet üzerinden {{provider}} sunucularına iletilir ve orada işlenir – faturalar, sözleşmeler, doktor raporları ve resmî yazışmalar da buna dahildir.",
-        "recommendation": "<emphasis>Öneri:</emphasis> yerel bir yapay zeka kullanın. Kendi ağınızdaki <lmStudio>LM Studio</lmStudio> veya <compatible>OpenAI uyumlu bir sunucu</compatible> ile tüm içerik sizde kalır."
+        "recommendation": "<emphasis>Öneri:</emphasis> yerel bir yapay zekâ kullanın. Kendi ağınızdaki <lmStudio>LM Studio</lmStudio> veya <compatible>OpenAI uyumlu bir sunucu</compatible> ile tüm içerik sizde kalır."
       },
       "providers": {
         "ANTHROPIC": {
@@ -459,14 +517,14 @@
         },
         "effortHint": "Daha titiz analiz daha özenli sonuç verir, ancak belge başına daha yavaş ve daha pahalıdır.",
         "outputLanguage": "Sonuçların dili",
-        "outputLanguageHint": "Yapay zeka başlığı, özeti ve etiketleri bu dilde yazar.",
+        "outputLanguageHint": "Yapay zekâ başlığı, özeti ve etiketleri bu dilde yazar.",
         "ocr": "Taramalar için metin tanıma",
-        "ocrHint": "Uygulama, metin katmanı olmayan taranmış PDF’leri yapay zekaya metne döktürür – tam metin aramasında ancak bu şekilde bulunabilirler. Her tarama daha fazla zaman alır ve daha pahalıya gelir.",
+        "ocrHint": "Uygulama, metin katmanı olmayan taranmış PDF’leri yapay zekâya metne döktürür – tam metin aramasında ancak bu şekilde bulunabilirler. Her tarama daha fazla zaman alır ve daha pahalıya gelir.",
         "quickOcrFirst": "Önce hızlı metin tanıma, ardından yapay zekâ ile iyileştirme",
         "quickOcrFirstHint": "Yeni taramalar önce yerleşik metin tanıma (Tesseract) ile okunur – birkaç saniye içinde aranabilir olur. Ardından yapay zekâ bu metne dayanarak başlık, özet ve etiketleri ekler."
       },
-      "unanalyzed_one": "{{count, number}} belge henüz yapay zeka tarafından analiz edilmedi.",
-      "unanalyzed_other": "{{count, number}} belge henüz yapay zeka tarafından analiz edilmedi.",
+      "unanalyzed_one": "{{count, number}} belge henüz yapay zekâ tarafından analiz edilmedi.",
+      "unanalyzed_other": "{{count, number}} belge henüz yapay zekâ tarafından analiz edilmedi.",
       "analyzeNow": "Şimdi analiz et",
       "analysisStarted_one": "{{count, number}} belge şimdi analiz ediliyor.",
       "analysisStarted_other": "{{count, number}} belge şimdi analiz ediliyor."
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} bundan sonra yalnızca parolayla oturum açar ve iki adımlı doğrulamayı yeniden kurabilir – örneğin telefonunu kaybettikten sonra.",
       "resetTwoFactorConfirm": "Sıfırla",
       "twoFactorReset": "İki adımlı doğrulama sıfırlandı"
+    },
+    "areas": {
+      "title": "Alanlar",
+      "navHint": "Kim hangi belgeleri görür",
+      "intro": "Her belge tam olarak bir alanda bulunur. Kullanıcılar yalnızca üyesi oldukları alanların ve herkese açık alanların belgelerini görür.",
+      "add": "Alan oluştur",
+      "everyone": "Herkese açık",
+      "restricted": "Kısıtlı",
+      "visibleForAll": "oturum açan herkes görebilir",
+      "members": "Üyeler: {{names}}",
+      "adminsOnly": "yalnızca yöneticiler",
+      "adminHint": "Yöneticiler, üye olmasalar bile tüm alanları görür.",
+      "edit": "{{name}} alanını düzenle",
+      "saved": "Alan kaydedildi",
+      "created": "Alan oluşturuldu",
+      "deleted": "Alan silindi",
+      "delete": {
+        "label": "{{name}} alanını sil",
+        "title": "Alan silinsin mi?",
+        "text": "“{{name}}” alanı silinecek. Bu, yalnızca alanı hiçbir belge, posta kutusu veya içe aktarma klasörü kullanmıyorsa mümkündür."
+      },
+      "dialog": {
+        "name": "Ad",
+        "namePlaceholder": "ör. Muhasebe",
+        "generalNameHint": "Boş bırakırsanız alanın adı her dilde “Genel” olur.",
+        "everyone": "Herkes görebilir",
+        "everyoneHint": "Oturum açan tüm kullanıcılar bu alandaki belgeleri görür.",
+        "members": "Üyeler",
+        "membersHint": "Bu alandaki belgeleri yalnızca üyeler ve yöneticiler görür. Her üye için yalnızca görüntüleyebileceğini mi, düzenleyebileceğini mi, yoksa silebileceğini de mi seçin.",
+        "noUsers": "Henüz yönetici rolü olmayan kullanıcı yok.",
+        "create": "Oluştur",
+        "everyoneAccess": "Herkesin yetkisi",
+        "accessOf": "{{name}} için yetki",
+        "membersHintEveryone": "Bu alandaki belgeleri herkes görür. Diğer herkesten daha fazla yetkiye sahip olması gereken kişileri buraya üye olarak ekleyin."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Saklama",
+      "navHint": "Süreler ve silme kilidi",
+      "intro": "Bir türdeki belgelerin ne kadar süre saklanması gerektiğini belirleyin – örneğin faturalar için on yıl. Süre, belgenin ait olduğu yılın sonundan itibaren hesaplanır. O zamana kadar belgeyi kimse silemez.",
+      "permanent": "Kilit kaldırılamaz – yöneticiler tarafından bile. Bir kural kısaltılır veya silinirse ya da bir belgenin türü değişirse, önceden belirlenmiş süre geçerliliğini korur.",
+      "add": "Kural oluştur",
+      "years_one": "{{count, number}} yıl",
+      "years_other": "{{count, number}} yıl",
+      "edit": "{{category}} kuralını düzenle",
+      "saved": "Kural kaydedildi",
+      "created": "Kural oluşturuldu",
+      "deleted": "Kural silindi",
+      "emptyTitle": "Henüz saklama kuralı yok",
+      "emptyText": "Kural olmadan belgeler istenildiği zaman silinebilir.",
+      "delete": {
+        "label": "{{category}} kuralını sil",
+        "title": "Kural silinsin mi?",
+        "text": "“{{category}}” türündeki yeni belgelere artık saklama süresi atanmayacak. Zaten kilitli olan belgeler sürelerinin sonuna kadar kilitli kalır."
+      },
+      "dialog": {
+        "categoryHint": "Belgede göründüğü gibi; büyük/küçük harf fark etmez.",
+        "years": "Yıl olarak saklama süresi",
+        "yearsHint": "Belge tarihinin yılının sonundan itibaren hesaplanır (tarih yoksa: belgenin eklendiği yılın sonundan).",
+        "shorterHint": "Daha kısa bir süre yalnızca henüz süresi olmayan belgeler için geçerlidir. Zaten kilitli olanlar mevcut sürelerinin sonuna kadar kilitli kalır.",
+        "create": "Oluştur"
+      }
+    },
+    "mailOut": {
+      "title": "E-posta gönderimi",
+      "navHint": "E-postayla hatırlatmalar",
+      "intro": "Uygulama, zamanı gelen hatırlatıcılar için hatırlatma e-postalarını bu SMTP sunucusu üzerinden gönderir – her hatırlatıcı için bir kez, kişi başına tek bir e-postada toplanmış olarak. Alıcı, hatırlatıcıyla ilgilenen ve kullanıcı menüsünde bir adres girmiş olan kişidir.",
+      "enabled": "Hatırlatmaları e-postayla gönder",
+      "enabledHint": "Kapalıyken hatırlatıcılar yalnızca uygulamada görünür.",
+      "host": "SMTP sunucusu",
+      "port": "Port",
+      "security": "Şifreleme",
+      "unencrypted": "Yok",
+      "usernameHint": "Sunucu oturum açma gerektirmiyorsa boş bırakın.",
+      "passwordKeepHint": "Kayıtlı parolayı korumak için boş bırakın.",
+      "from": "Gönderen adresi",
+      "fromHint": "Sunucunun bu adrese hesabınız için izin vermesi gerekir.",
+      "appUrl": "Uygulamanın adresi",
+      "appUrlHint": "E-postalardaki bağlantılar için, ör. https://docs.example.com. Boş = bağlantı yok.",
+      "digestHour": "Gönderim",
+      "fromHour": "saat {{hour}} itibarıyla",
+      "saved": "E-posta gönderimi ayarları kaydedildi",
+      "test": "{{address}} adresine test iletisi",
+      "testNeedsAddress": "Test iletisi için kullanıcı menüsünde kendi e-posta adresinizi girin.",
+      "testSavedHint": "Test, kayıtlı ayarları kullanır – lütfen önce kaydedin."
+    },
+    "backup": {
+      "title": "Yedekleme ve içe aktarma",
+      "navHint": "Tek seferde tam yedek, dışa aktarımları içe aktarma",
+      "intro": "Yedek, AIDocuments’ı tam olarak şimdiki hâliyle geri yüklemek için gereken her şeyi içerir. İçe aktarma, başka bir kurulumun dışa aktarımındaki belgeleri bilgileriyle birlikte alır.",
+      "backupTitle": "Tek tıkla yedekleme",
+      "backupText": "Veritabanını, önceki sürümleri dahil tüm belgeleri, önizleme görsellerini ve kayıtlı parolaların anahtarını içeren bir ZIP. Uygulama bu sırada çalışmaya devam eder.",
+      "size": "Boyut",
+      "sizeValue_one": "yaklaşık {{size}}, {{count, number}} dosya",
+      "sizeValue_other": "yaklaşık {{size}}, {{count, number}} dosya",
+      "last": "Son yedekleme",
+      "never": "hiç yapılmadı",
+      "keyWarning": "Yedek şifrelenmemiştir ve kayıtlı parolaların (posta kutuları, yapay zekâ, iki adımlı doğrulama) anahtarını içerir. Yedeği belgelerin kendisi kadar güvenli saklayın.",
+      "restore": "Geri yüklemek için: AIDocuments’ı durdurun, ZIP’in içeriğini boş bir veri dizinine çıkarın ve yeniden başlatın. Talimatlar ZIP’in içindedir (README.txt).",
+      "download": "Yedeği indir",
+      "started": "Yedek indiriliyor.",
+      "externalDatabase": "Tek tıkla yedekleme yalnızca yerleşik veritabanıyla kullanılabilir. MariaDB kullanıyorsanız veritabanını kendi araçlarıyla (ör. mariadb-dump) yedekleyin, veri dizinini de ayrıca yedekleyin.",
+      "importTitle": "Dışa aktarımı içe aktar",
+      "importText": "Belge listesindeki “Dışa aktar” ile oluşturulmuş bir ZIP – başka bir kurulumdan da olabilir. Başlık, belge türü, etiketler ve diğer bilgiler korunur; yapay zekâ belgeleri yeniden okumaz. Zaten var olan dosyalar atlanır.",
+      "file": "ZIP dosyası",
+      "areaHint": "Belgeler buraya gelir – ya da yalnızca alanı burada bulunmayanlar.",
+      "matchAreas": "Aynı adlı alanlara yerleştir",
+      "matchAreasHint": "Burada dışa aktarımdakiyle aynı ada sahip bir alan varsa belgeler oraya gider.",
+      "import": "İçe aktar",
+      "importing": "İçe aktarılıyor…",
+      "result": "İçe aktarılan: {{imported, number}} · zaten mevcut: {{duplicates, number}} · içe aktarılamayan: {{failed, number}}",
+      "auto": {
+        "title": "Otomatik yedekleme",
+        "text": "AIDocuments günde bir kez eksiksiz bir yedeği ZIP olarak bir klasöre kaydeder ve bunların en yenilerini saklar. Klasörün başka bir diskte veya bir ağ sürücüsünde olması en iyisidir – aksi halde verilerin bulunduğu disk arızalanırsa yedekler de kaybolur.",
+        "enable": "Her gün otomatik olarak yedekle",
+        "hour": "Saat",
+        "keep": "Sakla",
+        "keepHint": "Yedek sayısı; daha eskileri silinir.",
+        "directory": "Klasör",
+        "directoryHint": "Sunucudaki tam yol. Varsayılan için boş bırakın. Docker kapsayıcısında klasörün bağlanmış olması gerekir.",
+        "warnAfterDays": "Uyarı süresi (gün)",
+        "warnAfterDaysHint": "Bu süre boyunca ne elle ne de otomatik olarak yedek alınmadıysa belge listesinde bir uyarı gösterilir. 0 = hiçbir zaman uyarma.",
+        "lastRun": "Son çalışma",
+        "nextRun": "Sonraki çalışma",
+        "running": "Yedekleniyor…",
+        "ok": "başarılı, {{when}}",
+        "failed": "başarısız, {{when}}",
+        "stored_one": "{{directory}} içinde {{count, number}} yedek",
+        "stored_other": "{{directory}} içinde {{count, number}} yedek",
+        "runNow": "Şimdi yedekle",
+        "saveFirst": "Lütfen önce değişiklikleri kaydedin.",
+        "runStarted": "Yedekleme arka planda çalışıyor.",
+        "done": "Yedek oluşturuldu.",
+        "saved": "Ayarlar kaydedildi.",
+        "externalDatabase": "Otomatik yedekleme yalnızca yerleşik veritabanıyla kullanılabilir. MariaDB kullanıyorsanız veritabanını kendi araçlarıyla (ör. her gece çalışan bir mariadb-dump ile) yedekleyin, veri dizinini de ayrıca yedekleyin."
+      }
     }
   },
   "history": {
@@ -528,7 +723,7 @@
     },
     "by": "{{user}} tarafından",
     "automatic": "otomatik",
-    "more": "Daha fazla yükle",
+    "more": "Daha fazla göster",
     "undo": "Geri al",
     "undone": "Geri alındı"
   },
@@ -544,45 +739,46 @@
     "title": "İki adımlı doğrulama",
     "on": "Açık",
     "off": "Kapalı",
-    "intro": "Hesabını ikinci bir faktörle koru: oturum açarken telefonundaki bir kimlik doğrulama uygulamasından da kod girersin (ör. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Hesabınızı ikinci bir faktörle koruyun: oturum açarken telefonunuzdaki bir kimlik doğrulama uygulamasından bir kod da girersiniz (ör. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Kur",
-    "scan": "QR kodunu kimlik doğrulama uygulamanla tara veya anahtarı elle gir. Ardından uygulamadaki kodu ve parolanı gir.",
+    "scan": "QR kodunu kimlik doğrulama uygulamanızla tarayın veya anahtarı elle girin. Ardından uygulamadaki kodu ve parolanızı girin.",
     "qrAlt": "Kimlik doğrulama uygulaması için QR kodu",
     "secret": "Anahtar",
     "confirmCode": "Uygulamadaki kod",
     "activate": "Etkinleştir",
     "recoveryTitle": "Kurtarma kodları",
-    "recoveryText": "Bu kurtarma kodlarını güvenli bir yerde sakla. Uygulamayı kullanamazsan – örneğin telefonunu kaybedersen – her biri bir kez çalışır. Yalnızca şimdi gösterilirler.",
+    "recoveryText": "Bu kurtarma kodlarını güvenli bir yerde saklayın. Uygulamayı kullanamazsanız – örneğin telefonunuzu kaybederseniz – her biri bir kez çalışır. Yalnızca şimdi gösterilirler.",
     "download": "Dosya olarak kaydet",
     "done": "Tamam",
     "enabled": "İki adımlı doğrulama açık",
-    "disabled": "İki adımlı doğrulama kapatıldı",
-    "disableHint": "Kapatmak için uygulamadaki güncel bir kodu (veya bir kurtarma kodunu) ve parolanı gir.",
+    "disabled": "İki adımlı doğrulama kapalı",
+    "disableHint": "Kapatmak için uygulamadaki güncel bir kodu (veya bir kurtarma kodunu) ve parolanızı girin.",
     "disable": "Kapat",
     "recoveryLeft": "Kullanılmamış kurtarma kodları: {{count}}",
-    "adminCannotDisable": "Yönetici olarak iki adımlı doğrulamayı kapatamazsın."
+    "adminCannotDisable": "Yönetici olarak iki adımlı doğrulamayı kapatamazsınız."
   },
   "confirmCode": {
     "title": "Değişikliği onayla",
-    "text": "Hesaplar, posta kutuları ve ayarlardaki değişiklikler için kimlik doğrulama uygulamandan güncel bir kod gerekir. Onay 10 dakika geçerlidir.",
-    "submit": "Onayla"
+    "text": "Hesaplar, posta kutuları ve ayarlardaki değişiklikler için kimlik doğrulama uygulamanızdan güncel bir kod gerekir. Onay 10 dakika geçerlidir.",
+    "submit": "Onayla",
+    "passkey": "Geçiş anahtarıyla onayla"
   },
   "share": {
     "button": "Paylaş",
     "title": "Belgeyi paylaş",
     "intro": "Hesabı olmayan bir kişinin yalnızca bu belgeyi açabileceği bir bağlantı oluşturur.",
-    "recipient": "Kiminle paylaşıyorsun?",
-    "recipientHint": "Kişinin adı – bağlantıyı kime verdiğini daha sonra görebilmen için.",
+    "recipient": "Kiminle paylaşıyorsunuz?",
+    "recipientHint": "Kişinin adı – bağlantıyı kime verdiğinizi daha sonra görebilmeniz için.",
     "permission": "Bu kişi belgeyi düzenleyebilir mi?",
     "viewOnly": "Yalnızca görüntüleme",
     "canEdit": "Düzenleyebilir",
-    "viewHint": "Kişi PDF'yi görüntüleyebilir, yazdırabilir ve indirebilir.",
-    "editHint": "Kişi ayrıca PDF'yi işaretleyebilir, üzerine yazabilir, imzalayabilir ve kaydedebilir. Her kayıt yeni bir sürüm olur; başlık, etiketler ve diğer bilgiler gizli kalır.",
+    "viewHint": "Kişi PDF’yi görüntüleyebilir, yazdırabilir ve indirebilir.",
+    "editHint": "Kişi ayrıca PDF’yi işaretleyebilir, üzerine yazabilir, imzalayabilir ve kaydedebilir. Her kayıt yeni bir sürüm olur; başlık, etiketler ve diğer bilgiler gizli kalır.",
     "validity": "Geçerlilik",
     "unlimited": "Sınırsız",
     "create": "Bağlantı oluştur",
     "link": "Bağlantı",
-    "linkHint": "Bu bağlantıya sahip olan herkes belgeyi açabilir – yalnızca {{name}} ile paylaş. Belge görünümünde istediğin zaman geri alabilirsin.",
+    "linkHint": "Bu bağlantıya sahip olan herkes belgeyi açabilir – bağlantıyı yalnızca {{name}} ile paylaşın. Bağlantıyı belge görünümünde istediğiniz zaman geri alabilirsiniz.",
     "copy": "Bağlantıyı kopyala",
     "copied": "Bağlantı kopyalandı",
     "listTitle": "Dışarıyla paylaşıldı",
@@ -597,7 +793,194 @@
     "revoked": "Bağlantı geri alındı",
     "page": {
       "for": "Paylaşılan kişi: {{name}}",
-      "invalid": "Bu bağlantı geçersiz ya da süresi dolmuş veya belge silinmiş. Bağlantıyı sana veren kişiye başvur."
+      "invalid": "Bu bağlantı geçersiz ya da süresi dolmuş veya belge silinmiş. Bağlantıyı size veren kişiye başvurun."
+    }
+  },
+  "areas": {
+    "general": "Genel",
+    "unknown": "Diğer alan",
+    "label": "Alan",
+    "target": "Hedef alan",
+    "access": {
+      "READ": "Yalnızca görüntüleme",
+      "EDIT": "Görüntüleme ve düzenleme",
+      "DELETE": "Düzenleme ve silme"
+    }
+  },
+  "reminders": {
+    "title": "Hatırlatıcılar",
+    "cardTitle": "Hatırlatıcı",
+    "add": "Hatırlatıcı ekle",
+    "edit": "Hatırlatıcıyı düzenle",
+    "create": "Oluştur",
+    "created": "Hatırlatıcı eklendi",
+    "saved": "Hatırlatıcı kaydedildi",
+    "deleted": "Hatırlatıcı silindi",
+    "markedDone": "Tamamlandı",
+    "dueDate": "Son tarih",
+    "note": "Not",
+    "notePlaceholder": "ör. ödemeyi kontrol et",
+    "assignee": "Kim ilgilenecek?",
+    "assigneeHint": "Bu kişi hatırlatıcıyı “Benimkiler” altında görür ve bildirimi e-postayla alır. Belgeyi görebilen herkes seçilebilir.",
+    "me": "{{name}} (ben)",
+    "assignedTo": "{{name}} için",
+    "doneBy": "tamamlayan: {{name}}",
+    "markDone": "Tamamlandı olarak işaretle",
+    "reopen": "Yeniden aç",
+    "delete": {
+      "label": "Hatırlatıcıyı sil",
+      "title": "Hatırlatıcı silinsin mi?",
+      "text": "Hatırlatıcı kaldırılacak. Belge değişmeden kalır."
+    },
+    "accept": "Ekle",
+    "dismiss": "Öneriyi reddet",
+    "suggestionsHint": "Yapay zekâ bu belgede şu tarihleri buldu:",
+    "none": "Açık hatırlatıcı yok.",
+    "showDone_one": "{{count, number}} tamamlanmış hatırlatıcıyı göster",
+    "showDone_other": "{{count, number}} tamamlanmış hatırlatıcıyı göster",
+    "hideDone": "Tamamlananları gizle",
+    "scope": {
+      "label": "Hangi hatırlatıcılar",
+      "mine": "Benimkiler",
+      "all": "Tümü"
+    },
+    "dueTitle": "Zamanı gelenler",
+    "nothingDue": "Bugün zamanı gelen bir şey yok.",
+    "upcomingTitle": "Yaklaşanlar",
+    "suggestionsTitle": "Önerilen tarihler",
+    "suggestionsPageHint": "Yapay zekânın belgelerde bulduğu, önümüzdeki altı aya ait son tarihler. Bunları hatırlatıcı olarak ekleyin veya reddedin.",
+    "emptyTitle": "Hatırlatıcı yok",
+    "emptyText": "Bir belgeye hatırlatıcı ekleyin – ya da yapay zekânın önerdiği birini kabul edin.",
+    "repeat": {
+      "label": "Tekrarla",
+      "hint": "Hatırlatıcıyı tamamlandı olarak işaretlediğinizde bir sonraki aynı aralıkla oluşturulur.",
+      "none": "Tek seferlik",
+      "m1": "Aylık",
+      "m3": "Üç ayda bir",
+      "m6": "Altı ayda bir",
+      "m12": "Yıllık",
+      "m24": "İki yılda bir",
+      "months_one": "Her ay",
+      "months_other": "{{count}} ayda bir"
+    },
+    "fromContract": "sözleşmeden"
+  },
+  "pages": {
+    "button": "Sayfalar",
+    "title": "Sayfaları düzenle",
+    "intro": "Sayfaları sürükleyin veya oklarla taşıyın, döndürün ya da kaldırın. Kaydetmek yeni bir sürüm oluşturur – önceki sürüm korunur.",
+    "page": "Sayfa {{number}}",
+    "wasPage": "önceden {{number}}",
+    "moveLeft": "Öne taşı",
+    "moveRight": "Geriye taşı",
+    "rotate": "90° döndür",
+    "remove": "Sayfayı kaldır",
+    "keep": "Sayfayı koru",
+    "noneLeft": "En az bir sayfa kalmalıdır.",
+    "saveFirst": "Önce değişiklikleri kaydedin",
+    "saved": "Sayfalar kaydedildi",
+    "split": {
+      "here": "Buradan itibaren ayrı belge",
+      "title": "Belge bölünsün mü?",
+      "text": "Sayfa {{page}} ve sonraki tüm sayfalar aynı alanda ayrı bir belge olur. Yeni belge, yeni gelmiş bir belge gibi okunur ve sınıflandırılır; bu belgede önceki sayfalar kalır.",
+      "confirm": "Böl",
+      "done": "Belge bölündü",
+      "open": "Yeni belgeyi aç"
+    },
+    "merge": {
+      "button": "Belgeleri birleştir",
+      "title": "Belgeleri birleştir",
+      "intro": "Seçilen belgelerin sayfaları bu sırayla “{{title}}” belgesinin sonuna eklenir.",
+      "search": "Belgelerde ara…",
+      "none": "Eşleşen belge yok.",
+      "noDeleteRight": "Bu belgeyi silme yetkiniz yok – bu yüzden birleştiremezsiniz.",
+      "hint": "Birleştirilen belgeler ardından çöp kutusuna taşınır; 30 gün boyunca geçmişten geri yüklenebilir.",
+      "confirm_one": "{{count}} belgeyi birleştir",
+      "confirm_other": "{{count}} belgeyi birleştir",
+      "done_one": "{{count}} belge birleştirildi",
+      "done_other": "{{count}} belge birleştirildi"
+    }
+  },
+  "contracts": {
+    "nav": "Sözleşmeler",
+    "title": "Sözleşmeler",
+    "pageIntro": "Görebildiğiniz tüm sözleşmelerin süreleri ve fesih bildirim süreleri – önce yakında işlem gerektirenler.",
+    "scope": {
+      "label": "Göster",
+      "running": "Devam edenler",
+      "all": "Tümü"
+    },
+    "emptyTitle": "Henüz sözleşme kaydedilmedi",
+    "emptyText": "Elektrik veya telefon sözleşmesi gibi bir belgeyi açın ve orada sözleşme süresini ve fesih bildirim süresini girin. Böylece son tarihten önce zamanında bir hatırlatıcı görünür.",
+    "cardTitle": "Sözleşme",
+    "none": "Bu bir sözleşme mi? Sözleşme süresini ve fesih bildirim süresini girerseniz AIDocuments size fesih için zamanında hatırlatır.",
+    "add": "Sözleşme olarak kaydet",
+    "edit": "Sözleşmeyi düzenle",
+    "intro": "Sözleşme süresinin sonu ve fesih bildirim süresinden, sözleşmenin en geç ne zaman feshedilmesi gerektiği hesaplanır. Bu tarihten önce bir hatırlatıcı görünür; süre fesih olmadan dolarsa sözleşme otomatik olarak uzar.",
+    "saved": "Sözleşme kaydedildi",
+    "removed": "Sözleşme bilgileri kaldırıldı",
+    "remove": {
+      "label": "Sözleşme bilgilerini kaldır",
+      "title": "Sözleşme bilgileri kaldırılsın mı?",
+      "text": "Sözleşme süresi, fesih bildirim süresi ve bunlara ait açık hatırlatıcı kaldırılır. Belgenin kendisi kalır."
+    },
+    "openEnded": "süresiz",
+    "months_one": "{{count}} ay",
+    "months_other": "{{count}} ay",
+    "amountHint": "ör. “ayda 49,90 €”",
+    "endDateHint": "Geçerli sözleşme süresinin sonu; boş = süresiz",
+    "noticeHint": "Süre bitiminden kaç ay önce; boş = süre bitimine kadar",
+    "renewalHint": "Feshedilmezse sözleşme bu kadar ay uzar; 0 = sona erer",
+    "cancelledHint": "Bu durumda sözleşme artık uzamaz ve başka hatırlatıcı görünmez.",
+    "fields": {
+      "partner": "Sözleşme tarafı",
+      "amount": "Tutar",
+      "startDate": "Sözleşme başlangıcı",
+      "endDate": "Süre bitişi",
+      "notice": "Fesih bildirim süresi (ay)",
+      "renewal": "Uzama (ay)",
+      "deadline": "Son fesih tarihi",
+      "reminderDays": "Hatırlat (kaç gün önce)",
+      "cancelled": "Feshedildi"
+    },
+    "status": {
+      "ACTIVE": "Devam ediyor",
+      "DUE_SOON": "Süre yaklaşıyor",
+      "NOTICE_MISSED": "Süre kaçırıldı",
+      "CANCELLED": "Feshedildi",
+      "ENDED": "Sona erdi",
+      "OPEN_ENDED": "Süresiz"
+    },
+    "row": {
+      "cancelBy": "son fesih: {{date}}",
+      "endsOn": "bitiş: {{date}}",
+      "term": "süre sonu: {{date}}",
+      "renews_one": "{{count}} ay uzar",
+      "renews_other": "{{count}} ay uzar"
+    }
+  },
+  "passkeys": {
+    "title": "Geçiş anahtarları",
+    "intro": "Geçiş anahtarıyla parola olmadan oturum açarsınız – kilidini parmak izinizle, yüzünüzle veya cihaz PIN’inizle açarak. Yalnızca bu adreste çalışır; sahte bir site onu kullanamaz.",
+    "none": "Henüz geçiş anahtarı eklenmedi.",
+    "add": "Geçiş anahtarı ekle",
+    "create": "Geçiş anahtarı oluştur",
+    "name": "Ad",
+    "nameHint": "Daha sonra tanıyabilmeniz için, ör. “Dizüstü bilgisayar” veya “Parola yöneticisi”.",
+    "password": "Parolanız",
+    "passwordHint": "Geçiş anahtarı ekleyen kişi bundan sonra parola olmadan oturum açabilir – bu yüzden lütfen bir kez onaylayın.",
+    "added": "Geçiş anahtarı eklendi",
+    "removed": "Geçiş anahtarı kaldırıldı",
+    "synced": "eşitlenmiş",
+    "lastUsed": "son kullanım: {{time}}",
+    "created": "eklenme: {{time}}, henüz kullanılmadı",
+    "unsupported": "Bu tarayıcı burada geçiş anahtarı kullanamıyor. Geçiş anahtarları yalnızca HTTPS (veya localhost) üzerinden çalışır.",
+    "unsupportedIp": "Geçiş anahtarları yalnızca HTTPS üzerinden ve adreste bir alan adı olduğunda çalışır, IP adresiyle çalışmaz.",
+    "remove": {
+      "label": "Geçiş anahtarını kaldır",
+      "title": "Geçiş anahtarı kaldırılsın mı?",
+      "text": "Bundan sonra kimse “{{name}}” ile oturum açamaz. Anahtar, siz oradan silene kadar parola yöneticisinde veya cihazda kayıtlı kalır.",
+      "confirm": "Kaldır"
     }
   }
 }

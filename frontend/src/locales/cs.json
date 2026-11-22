@@ -46,7 +46,9 @@
     "login": {
       "title": "Vítejte zpět",
       "subtitle": "Přihlaste se a získejte přístup ke svým dokumentům.",
-      "submit": "Přihlásit se"
+      "submit": "Přihlásit se",
+      "or": "nebo",
+      "passkey": "Přihlásit se přístupovým klíčem"
     },
     "setup": {
       "title": "Nastavení AIDocuments",
@@ -64,16 +66,16 @@
     },
     "twoFactor": {
       "title": "Potvrdit přihlášení",
-      "subtitle": "Zadej 6místný kód z ověřovací aplikace.",
+      "subtitle": "Zadejte 6místný kód z ověřovací aplikace.",
       "code": "Kód",
-      "codeHint": "Nemáš přístup k aplikaci? Zadej místo toho jeden ze svých záložních kódů.",
+      "codeHint": "Nemáte přístup k aplikaci? Zadejte místo toho jeden ze svých záložních kódů.",
       "submit": "Potvrdit",
       "back": "Zpět k přihlášení"
     },
     "twoFactorRequired": {
       "title": "Nastavit dvoufázové ověření",
-      "subtitle": "Pro administrátory je dvoufázové ověření povinné. Nastav ho teď, abys mohl pokračovat.",
-      "intro": "Potřebuješ ověřovací aplikaci v telefonu (např. Google Authenticator, Microsoft Authenticator, 1Password nebo Aegis)."
+      "subtitle": "Pro správce je dvoufázové ověření povinné. Chcete-li pokračovat, nastavte ho nyní.",
+      "intro": "Potřebujete k tomu ověřovací aplikaci v telefonu (např. Google Authenticator, Microsoft Authenticator, 1Password nebo Aegis)."
     }
   },
   "shell": {
@@ -83,8 +85,8 @@
       "dark": "Tmavý motiv"
     },
     "search": {
-      "placeholder": "Vyhledávání podle klíčových slov: dokumenty, štítky, obsah …",
-      "placeholderAi": "Vyhledávání AI: ptej se vlastními slovy – např. „faktury od Kia z roku 2024“",
+      "placeholder": "Vyhledávání podle klíčových slov: dokumenty, štítky, obsah…",
+      "placeholderAi": "Vyhledávání AI: ptejte se vlastními slovy – např. „faktury od Kia z roku 2024“",
       "labelAi": "AI",
       "label": "Hledat dokumenty",
       "clear": "Vymazat hledání",
@@ -104,17 +106,34 @@
       "changed": "Heslo bylo změněno"
     },
     "dropzone": {
-      "title": "Přetáhněte sem soubory PDF",
-      "hint": "Můžete přetáhnout několik souborů najednou. Uloží se, analyzují a opatří štítky."
+      "title": "Přetáhněte sem soubory PDF nebo fotografie",
+      "hint": "Můžete přetáhnout několik souborů najednou. Fotografie (JPG, PNG, HEIC) se převedou na PDF. Vše se uloží, analyzuje a opatří štítky."
+    },
+    "remindersDue_one": "{{count, number}} připomenutí k vyřízení",
+    "remindersDue_few": "{{count, number}} připomenutí k vyřízení",
+    "remindersDue_many": "{{count, number}} připomenutí k vyřízení",
+    "remindersDue_other": "{{count, number}} připomenutí k vyřízení",
+    "profile": {
+      "email": "E-mailová adresa",
+      "saved": "Uloženo"
+    },
+    "notifications": {
+      "title": "E-mailová upozornění",
+      "emailHint": "Sem se posílají připomenutí k vyřízení, která jsou vám přidělena, a upozornění, která zapnete níže – v jazyce, ve kterém aplikaci právě používáte. Pokud nechcete dostávat žádné e-maily, nechte pole prázdné.",
+      "digest": "Nové dokumenty každý den",
+      "digestHint": "Jednou denně seznam dokumentů, které přibyly ve vašich oblastech – jen ve dnech, kdy nějaké nové dokumenty přibyly.",
+      "admin": "Upozornění pro správce",
+      "adminHint": "Když uplynou lhůty uchovávání (nic se nesmaže automaticky) a když se schránku opakovaně nedaří zkontrolovat.",
+      "needsEmail": "Bez adresy se žádné e-maily neposílají."
     }
   },
   "upload": {
-    "onlyPdf": "Přidat lze pouze soubory PDF.",
-    "uploadingFile": "Nahrávání „{{name}}“ …",
-    "uploadingFiles_one": "Nahrává se {{count, number}} soubor PDF …",
-    "uploadingFiles_few": "Nahrávají se {{count, number}} soubory PDF …",
-    "uploadingFiles_many": "Nahrává se {{count, number}} souboru PDF …",
-    "uploadingFiles_other": "Nahrává se {{count, number}} souborů PDF …",
+    "onlyPdf": "Přidat lze pouze soubory PDF a fotografie (JPG, PNG, HEIC).",
+    "uploadingFile": "Nahrávání „{{name}}“…",
+    "uploadingFiles_one": "Nahrává se {{count, number}} soubor…",
+    "uploadingFiles_few": "Nahrávají se {{count, number}} soubory…",
+    "uploadingFiles_many": "Nahrává se {{count, number}} souboru…",
+    "uploadingFiles_other": "Nahrává se {{count, number}} souborů…",
     "created_one": "Přidán {{count, number}} dokument",
     "created_few": "Přidány {{count, number}} dokumenty",
     "created_many": "Přidáno {{count, number}} dokumentu",
@@ -124,16 +143,24 @@
     "duplicates_few": "{{count, number}} dokumenty již existují",
     "duplicates_many": "{{count, number}} dokumentu již existuje",
     "duplicates_other": "{{count, number}} dokumentů již existuje",
-    "rejected_one": "{{count, number}} soubor není platný PDF",
-    "rejected_few": "{{count, number}} soubory nejsou platné PDF",
-    "rejected_many": "{{count, number}} souboru není platný PDF",
-    "rejected_other": "{{count, number}} souborů není platných PDF",
+    "rejected_one": "{{count, number}} soubor nebyl přidán",
+    "rejected_few": "{{count, number}} soubory nebyly přidány",
+    "rejected_many": "{{count, number}} souboru nebylo přidáno",
+    "rejected_other": "{{count, number}} souborů nebylo přidáno",
     "onlyDuplicates_one": "Tento dokument již existuje.",
     "onlyDuplicates_few": "Tyto dokumenty již existují.",
     "onlyDuplicates_many": "Tyto dokumenty již existují.",
     "onlyDuplicates_other": "Tyto dokumenty již existují.",
-    "noneValid": "Žádný ze souborů není platný PDF.",
-    "failed": "Nahrávání se nezdařilo"
+    "noneValid": "Žádný ze souborů nebylo možné přidat.",
+    "failed": "Nahrávání se nezdařilo",
+    "intoArea": "Oblast: {{area}}",
+    "combine": {
+      "title": "Spojit fotografie do jednoho dokumentu?",
+      "text": "Vybrali jste několik fotografií. Pokud jde o stránky jednoho dokumentu – třeba vícestránkového dopisu –, vznikne z nich jedno PDF v pořadí názvů souborů; pořadí můžete později změnit v části „Stránky“. Jinak se z každé fotografie stane samostatný dokument.",
+      "one": "Jako jeden dokument",
+      "separate": "Každou fotografii zvlášť",
+      "tooMuch": "Na jeden dokument je to příliš mnoho nebo příliš velkých fotografií (nejvýše 100 fotografií a celkem 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -153,8 +180,8 @@
     "searchResults_many": "<count>{{count, number}} výsledku</count> <query>pro „{{query}}“</query>",
     "searchResults_other": "<count>{{count, number}} výsledků</count> <query>pro „{{query}}“</query>",
     "progress": {
-      "inProgress": "{{documents, number}} se zpracovává",
-      "inProgressHint": "Čeká na analýzu pomocí AI nebo se právě analyzuje",
+      "inProgress": "Zpracovává se: {{documents, number}}",
+      "inProgressHint": "Čekají na analýzu pomocí AI nebo se právě analyzují",
       "remaining": "zbývá přibližně {{duration}}",
       "remainingLessThan": "zbývá méně než {{duration}}",
       "finishHint": "Předpokládané dokončení: {{time}} – odhad podle tempa naposledy zpracovaných dokumentů"
@@ -162,7 +189,7 @@
     "sort": {
       "label": "Řazení",
       "relevance": "Nejlepší shoda",
-      "newest": "Nejnovější první",
+      "newest": "Od nejnovějších",
       "date": "Podle data dokumentu"
     },
     "view": {
@@ -189,23 +216,49 @@
       "activeTo": "do {{date}}",
       "removeOne": "Odebrat filtr „{{label}}“",
       "removeAll": "Odebrat všechny filtry",
-      "clear": "Odebrat filtry"
+      "clear": "Odebrat filtry",
+      "retentionExpired": "Lhůta uchovávání uplynula"
     },
     "empty": {
       "libraryTitle": "Zatím žádné dokumenty",
-      "libraryHint": "Stačí přetáhnout soubory PDF do tohoto okna nebo použít „Nahrát“.",
-      "libraryHintAdmin": "Stačí přetáhnout soubory PDF do tohoto okna nebo použít „Nahrát“. V nastavení můžete nastavit e-mailovou schránku nebo složku pro import, ze které se nové soubory PDF importují automaticky.",
+      "libraryHint": "Stačí přetáhnout soubory PDF nebo fotografie do tohoto okna nebo použít tlačítko „Nahrát“.",
+      "libraryHintAdmin": "Stačí přetáhnout soubory PDF nebo fotografie do tohoto okna nebo použít tlačítko „Nahrát“. V nastavení můžete přidat e-mailovou schránku nebo nastavit složku pro import, ze které se nové dokumenty importují automaticky.",
       "noResultsTitle": "Nic nenalezeno",
       "noResultsSearch": "Tomuto hledání neodpovídá žádný dokument. Hledání najde i části slov – zkuste kratší výraz nebo méně slov.",
       "noResultsFilters": "Vybraným filtrům neodpovídá žádný dokument."
     },
-    "loadingAll_one": "Načteno {{loaded, number}} z {{count, number}} dokumentu …",
-    "loadingAll_few": "Načteno {{loaded, number}} z {{count, number}} dokumentů …",
-    "loadingAll_many": "Načteno {{loaded, number}} z {{count, number}} dokumentu …",
-    "loadingAll_other": "Načteno {{loaded, number}} z {{count, number}} dokumentů …",
+    "loadingAll_one": "Načteno {{loaded, number}} z {{count, number}} dokumentu…",
+    "loadingAll_few": "Načteno {{loaded, number}} z {{count, number}} dokumentů…",
+    "loadingAll_many": "Načteno {{loaded, number}} z {{count, number}} dokumentu…",
+    "loadingAll_other": "Načteno {{loaded, number}} z {{count, number}} dokumentů…",
     "loadMore": "Načíst další ({{remaining, number}})",
     "aiSearch": {
       "notice": "Vyhledávání AI: „{{question}}“. Filtry ukazují, jak byla otázka pochopena."
+    },
+    "export": {
+      "label_one": "Exportovat {{count, number}} dokument jako ZIP",
+      "label_few": "Exportovat všechny {{count, number}} dokumenty tohoto seznamu jako ZIP",
+      "label_many": "Exportovat {{count, number}} dokumentu tohoto seznamu jako ZIP",
+      "label_other": "Exportovat všech {{count, number}} dokumentů tohoto seznamu jako ZIP",
+      "started_one": "Export {{count, number}} dokumentu byl zahájen",
+      "started_few": "Export {{count, number}} dokumentů byl zahájen",
+      "started_many": "Export {{count, number}} dokumentu byl zahájen",
+      "started_other": "Export {{count, number}} dokumentů byl zahájen",
+      "contents": "Soubor ZIP obsahuje soubory PDF a všechny údaje jako tabulku (documents.csv) a jako documents.json.",
+      "failed": "Export se nezdařil"
+    },
+    "mailboxNotice": {
+      "text_one": "Schránku „{{names}}“ se opakovaně nedaří zkontrolovat – nepřicházejí z ní žádné dokumenty.",
+      "text_few": "Tyto schránky se opakovaně nedaří zkontrolovat: {{names}}. Nepřicházejí z nich žádné dokumenty.",
+      "text_many": "Tyto schránky se opakovaně nedaří zkontrolovat: {{names}}. Nepřicházejí z nich žádné dokumenty.",
+      "text_other": "Tyto schránky se opakovaně nedaří zkontrolovat: {{names}}. Nepřicházejí z nich žádné dokumenty.",
+      "action": "Zobrazit schránky"
+    },
+    "backupNotice": {
+      "never": "Zatím neexistuje žádná záloha vašich dokumentů.",
+      "overdue": "Poslední záloha: {{when}}. To je déle, než je nastaveno.",
+      "failed": "Automatická záloha se nezdařila: {{reason}}",
+      "action": "Přejít k záloze"
     }
   },
   "document": {
@@ -221,7 +274,7 @@
       "discard": "Zahodit",
       "save": "Uložit změny",
       "saved": "Změny uloženy – originál zůstává zachován.",
-      "modified": "Změněno {{when}} – originál je uschován.",
+      "modified": "Změněno {{when}} – originál je zachován.",
       "downloadOriginal": "Stáhnout originál",
       "restoreOriginal": "Obnovit originál",
       "restoreTitle": "Obnovit originál?",
@@ -254,7 +307,7 @@
       "allWith": "Všechny dokumenty se štítkem „{{tag}}“",
       "none": "Žádné štítky. <add>Přidat štítky</add>",
       "inputHint": "Potvrďte klávesou Enter nebo čárkou. Návrhy jsou štítky, které se již používají.",
-      "inputPlaceholder": "Zadejte štítek …",
+      "inputPlaceholder": "Zadejte štítek…",
       "remove": "Odebrat štítek „{{tag}}“"
     },
     "keyFacts": "Klíčové údaje",
@@ -262,10 +315,10 @@
       "title": "Podrobnosti",
       "file": "Soubor",
       "size": "Velikost",
-      "pageCount_one": "{{count, number}} strana",
-      "pageCount_few": "{{count, number}} strany",
-      "pageCount_many": "{{count, number}} strany",
-      "pageCount_other": "{{count, number}} stran",
+      "pageCount_one": "{{count, number}} stránka",
+      "pageCount_few": "{{count, number}} stránky",
+      "pageCount_many": "{{count, number}} stránky",
+      "pageCount_other": "{{count, number}} stránek",
       "language": "Jazyk",
       "source": "Zdroj",
       "mailSubject": "Předmět",
@@ -282,18 +335,20 @@
     "noText": "Pro tento dokument není k dispozici žádný text – pravděpodobně jde o sken bez textové vrstvy. Pokud je AI nastavena a rozpoznávání textu zapnuto, obsah se při analýze přepíše.",
     "edit": {
       "title": "Upravit dokument",
-      "saved": "Změny byly uloženy"
+      "saved": "Změny byly uloženy",
+      "areaHint": "Určuje, kdo dokument uvidí.",
+      "areaMoveHint": "Poté ho uvidí jen členové oblasti „{{area}}“ a správci."
     },
     "delete": {
       "title": "Smazat dokument?",
-      "text": "„{{title}}“ bude smazán. V historii to můžeš 30 dní vrátit zpět; potom bude odstraněn natrvalo.",
+      "text": "Dokument „{{title}}“ bude smazán. V historii to můžete 30 dní vrátit zpět, poté bude smazán natrvalo.",
       "confirm": "Smazat"
     },
     "chat": {
-      "intro": "Zeptej se na tento dokument – AI odpoví podle jeho obsahu.",
-      "placeholder": "Zeptej se na něco v tomto dokumentu …",
+      "intro": "Zeptejte se na tento dokument – AI odpoví podle jeho obsahu.",
+      "placeholder": "Zeptejte se na něco k tomuto dokumentu…",
       "send": "Odeslat",
-      "thinking": "AI čte dokument …",
+      "thinking": "AI čte dokument…",
       "notConfigured": "Pro dotazy k dokumentu musí být nastavena AI.",
       "restart": "Začít znovu",
       "suggestions": {
@@ -318,22 +373,31 @@
         "EDITED": "Upraveno",
         "ORIGINAL_RESTORED": "Originál obnoven",
         "VERSION_RESTORED": "Verze {{from}} obnovena",
-        "UNDONE": "Změna vrácena zpět"
+        "UNDONE": "Změna vrácena zpět",
+        "PAGES": "Stránky změněny",
+        "MERGED": "Dokumenty připojeny"
       }
-    }
+    },
+    "retention": {
+      "label": "Uchovávání",
+      "until": "do {{date}} – do té doby nelze smazat",
+      "expired": "lhůta uplynula {{date}}",
+      "locked": "Nutno uchovávat do {{date}} – smazat lze až poté"
+    },
+    "readOnly": "V této oblasti můžete tento dokument jen zobrazit."
   },
   "settings": {
     "title": "Nastavení",
     "mailboxes": {
       "title": "E-mailové schránky",
-      "navHint": "Servery IMAP, ze kterých se importují přílohy PDF",
-      "intro": "Přílohy PDF se z těchto schránek IMAP importují automaticky. Schránky se pouze čtou – e-maily zůstávají beze změny a nepřečtené.",
+      "navHint": "Servery IMAP, ze kterých se importují přílohy PDF a fotografie",
+      "intro": "Z těchto schránek IMAP se automaticky importují přílohy PDF a přiložené fotografie (jako PDF); text e-mailů a vložená loga nikoli. Schránky se pouze čtou – e-maily zůstávají beze změny a nepřečtené.",
       "add": "Přidat schránku",
       "emptyTitle": "Zatím není nastavena žádná schránka",
       "emptyText": "Zadejte přihlašovací údaje schránky IMAP – například té, kam váš skener posílá dokumenty.",
       "paused": "Pozastaveno",
       "syncNow": "Zkontrolovat nyní",
-      "syncing": "Kontrola schránky …",
+      "syncing": "Kontrola schránky…",
       "neverSynced": "Zatím nekontrolováno.",
       "saved": "Schránka byla uložena",
       "added": "Schránka byla přidána",
@@ -360,7 +424,7 @@
         "since": "Pouze e-maily od",
         "sinceHint": "Volitelné – starší e-maily se přeskočí",
         "enabled": "Kontrolovat automaticky",
-        "enabledHint": "Schránka se v nastaveném intervalu kontroluje, zda neobsahuje nové soubory PDF.",
+        "enabledHint": "Schránka se v nastaveném intervalu kontroluje, zda neobsahuje nové přílohy.",
         "filter": {
           "title": "Filtr",
           "intro": "Zpracují se jen e-maily, které splňují všechny podmínky. Jeden výraz na řádek; na velikosti písmen nezáleží, stačí část textu. Prázdná pole nic neomezují.",
@@ -369,29 +433,30 @@
           "senderIncludes": "Odesílatel obsahuje jeden z těchto výrazů",
           "senderExcludes": "Odesílatel neobsahuje žádný z těchto výrazů",
           "senderHint": "Jméno nebo adresa, např. „@example.com“",
-          "newOnly": "Filtr platí pro e-maily, které dorazí po posledním stahování; již zkontrolované e-maily se znovu nezpracují."
+          "newOnly": "Filtr platí pro e-maily, které dorazí po poslední kontrole; již zkontrolované e-maily se znovu nezpracují."
         },
-        "interval": "Interval stahování v minutách",
-        "intervalHint": "Ponechte prázdné pro obecný interval (nyní {{interval}})."
+        "interval": "Interval kontroly v minutách",
+        "intervalHint": "Nechte prázdné, chcete-li použít obecný interval (nyní {{interval}}).",
+        "areaHint": "Do této oblasti se ukládají importované dokumenty."
       },
       "filterActive": "Filtr aktivní",
-      "schedule": "Stahování každých {{interval}} · další {{when}}",
-      "scheduleSoon": "Stahování každých {{interval}} · další za chvíli"
+      "schedule": "Kontrola každých {{interval}} · další {{when}}",
+      "scheduleSoon": "Kontrola každých {{interval}} · další za chvíli"
     },
     "import": {
       "title": "Plán a složka pro import",
       "navHint": "Interval kontroly a sledovaný adresář",
-      "intro": "Určuje, jak často aplikace hledá nové soubory PDF – ve schránkách i ve složce pro import.",
+      "intro": "Určuje, jak často aplikace hledá nové dokumenty – ve schránkách i ve složce pro import.",
       "saved": "Nastavení bylo uloženo",
       "interval": {
         "title": "Interval kontroly",
-        "text": "Jak často aplikace kontroluje vstupní složku a všechny schránky bez vlastního intervalu, zda nejsou nové soubory PDF.",
+        "text": "Jak často aplikace kontroluje složku pro import a všechny schránky bez vlastního intervalu, zda nejsou nové dokumenty.",
         "label": "Každých … minut",
         "nextRun": "Další automatická kontrola {{when}}."
       },
       "folder": {
         "title": "Složka pro import",
-        "text": "Adresář na serveru, který se sleduje kvůli novým souborům PDF – například cíl síťového skeneru. Prohledávají se i podsložky.",
+        "text": "Adresář na serveru, který se sleduje kvůli novým souborům PDF a fotografiím (JPG, PNG, HEIC) – například cíl síťového skeneru. Prohledávají se i podsložky.",
         "enable": "Sledovat složku pro import",
         "path": "Cesta na serveru",
         "pathHint": "Absolutní cesta. V kontejneru Docker je to připojená složka, obvykle {{path}}.",
@@ -400,10 +465,11 @@
         "move": "Přesunout do „{{folder}}“",
         "keepHint": "Soubory zůstanou beze změny. Aplikace si pamatuje, co již importovala.",
         "moveHint": "Importované soubory se přesunou do podsložky „{{folder}}“ – složka pro import zůstane přehledná.",
-        "scanning": "Kontrola složky …",
+        "scanning": "Kontrola složky…",
         "neverScanned": "Zatím nekontrolováno.",
         "scanNow": "Zkontrolovat nyní",
-        "scanStarted": "Složka pro import se kontroluje."
+        "scanStarted": "Složka pro import se kontroluje.",
+        "areaHint": "Do této oblasti se ukládají dokumenty ze složky."
       }
     },
     "ai": {
@@ -529,12 +595,155 @@
       "resetTwoFactorText": "{{name}} se pak přihlásí jen heslem a může si dvoufázové ověření nastavit znovu – například po ztrátě telefonu.",
       "resetTwoFactorConfirm": "Resetovat",
       "twoFactorReset": "Dvoufázové ověření resetováno"
+    },
+    "areas": {
+      "title": "Oblasti",
+      "navHint": "Kdo vidí které dokumenty",
+      "intro": "Každý dokument patří právě do jedné oblasti. Uživatelé vidí jen dokumenty oblastí, jejichž jsou členy, a dokumenty oblastí přístupných všem.",
+      "add": "Přidat oblast",
+      "everyone": "Pro všechny",
+      "restricted": "Omezená",
+      "visibleForAll": "viditelná pro všechny přihlášené",
+      "members": "Členové: {{names}}",
+      "adminsOnly": "jen správci",
+      "adminHint": "Správci vidí všechny oblasti, i když nejsou jejich členy.",
+      "edit": "Upravit {{name}}",
+      "saved": "Oblast byla uložena",
+      "created": "Oblast byla vytvořena",
+      "deleted": "Oblast byla smazána",
+      "delete": {
+        "label": "Smazat {{name}}",
+        "title": "Smazat oblast?",
+        "text": "Oblast „{{name}}“ bude smazána. To je možné jen tehdy, pokud ji nepoužívají žádné dokumenty, schránka ani složka pro import."
+      },
+      "dialog": {
+        "name": "Název",
+        "namePlaceholder": "např. Účetnictví",
+        "generalNameHint": "Nechte prázdné a oblast se bude v každém jazyce jmenovat „Obecná“.",
+        "everyone": "Viditelná pro všechny",
+        "everyoneHint": "Dokumenty této oblasti vidí všichni přihlášení uživatelé.",
+        "members": "Členové",
+        "membersHint": "Dokumenty této oblasti vidí jen členové a správci. U každého člena určíte, zda smí jen číst, také upravovat, nebo navíc mazat.",
+        "noUsers": "Zatím neexistují žádní uživatelé bez role správce.",
+        "create": "Vytvořit",
+        "everyoneAccess": "Oprávnění pro všechny",
+        "accessOf": "Oprávnění uživatele {{name}}",
+        "membersHintEveryone": "Dokumenty této oblasti vidí všichni. Členy sem přidejte, pokud mají mít více oprávnění než ostatní."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Uchovávání",
+      "navHint": "Lhůty a blokace mazání",
+      "intro": "Nastavte, jak dlouho se musí dokumenty určitého typu uchovávat – například faktury deset let. Lhůta se počítá od konce roku, ze kterého dokument pochází. Do té doby ho nikdo nemůže smazat.",
+      "permanent": "Blokaci nelze zrušit – nemohou to udělat ani správci. Pokud se pravidlo zkrátí nebo smaže, nebo se změní typ dokumentu, zůstane již nastavená lhůta zachována.",
+      "add": "Přidat pravidlo",
+      "years_one": "{{count, number}} rok",
+      "years_few": "{{count, number}} roky",
+      "years_many": "{{count, number}} roku",
+      "years_other": "{{count, number}} let",
+      "edit": "Upravit pravidlo pro {{category}}",
+      "saved": "Pravidlo bylo uloženo",
+      "created": "Pravidlo bylo vytvořeno",
+      "deleted": "Pravidlo bylo smazáno",
+      "emptyTitle": "Zatím žádná pravidla uchovávání",
+      "emptyText": "Bez pravidla lze dokumenty kdykoli smazat.",
+      "delete": {
+        "label": "Smazat pravidlo pro {{category}}",
+        "title": "Smazat pravidlo?",
+        "text": "Nové dokumenty typu „{{category}}“ už nedostanou žádnou lhůtu. Již zablokované dokumenty zůstanou zablokované až do konce své lhůty."
+      },
+      "dialog": {
+        "categoryHint": "Tak, jak je uvedeno u dokumentu; na velikosti písmen nezáleží.",
+        "years": "Lhůta uchovávání v letech",
+        "yearsHint": "Počítá se od konce roku data dokumentu (bez data: dne přidání).",
+        "shorterHint": "Kratší lhůta platí jen pro dokumenty, které ještě žádnou lhůtu nemají. Již zablokované zůstanou zablokované až do konce své dosavadní lhůty.",
+        "create": "Vytvořit"
+      }
+    },
+    "mailOut": {
+      "title": "Odesílání e-mailů",
+      "navHint": "Upozornění e-mailem",
+      "intro": "Přes tento server SMTP odesílá aplikace upozornění na připomenutí k vyřízení – jednou za každé připomenutí, shromážděná do jednoho e-mailu pro každou osobu. Příjemcem je ten, kdo má připomenutí na starosti a zadal si adresu v nabídce uživatele.",
+      "enabled": "Odesílat upozornění e-mailem",
+      "enabledHint": "Když je vypnuto, zobrazují se připomenutí jen v aplikaci.",
+      "host": "Server SMTP",
+      "port": "Port",
+      "security": "Šifrování",
+      "unencrypted": "Žádné",
+      "usernameHint": "Nechte prázdné, pokud server nevyžaduje přihlášení.",
+      "passwordKeepHint": "Nechte prázdné, chcete-li ponechat uložené heslo.",
+      "from": "Adresa odesílatele",
+      "fromHint": "Server ji musí pro váš účet povolit.",
+      "appUrl": "Adresa aplikace",
+      "appUrlHint": "Pro odkazy v e-mailech, např. https://docs.example.com. Prázdné = bez odkazů.",
+      "digestHour": "Odesílání",
+      "fromHour": "od {{hour}}",
+      "saved": "Nastavení odesílání e-mailů bylo uloženo",
+      "test": "Testovací zpráva na {{address}}",
+      "testNeedsAddress": "Pro testovací zprávu zadejte v nabídce uživatele svou e-mailovou adresu.",
+      "testSavedHint": "Test používá uložená nastavení – nejprve prosím uložte."
+    },
+    "backup": {
+      "title": "Záloha a import",
+      "navHint": "Zálohovat vše najednou, importovat exporty",
+      "intro": "Záloha obsahuje vše, co je potřeba k obnovení AIDocuments přesně v současném stavu. Import převezme dokumenty z exportu jiné instalace – i s jejich údaji.",
+      "backupTitle": "Záloha jedním kliknutím",
+      "backupText": "ZIP s databází, všemi dokumenty včetně dřívějších verzí, náhledovými obrázky a klíčem k uloženým heslům. Aplikace mezitím běží dál.",
+      "size": "Velikost",
+      "sizeValue_one": "přibližně {{size}} ({{count, number}} soubor)",
+      "sizeValue_few": "přibližně {{size}} ({{count, number}} soubory)",
+      "sizeValue_many": "přibližně {{size}} ({{count, number}} souboru)",
+      "sizeValue_other": "přibližně {{size}} ({{count, number}} souborů)",
+      "last": "Poslední záloha",
+      "never": "zatím nikdy",
+      "keyWarning": "Záloha není šifrovaná a obsahuje klíč k uloženým heslům (schránky, AI, dvoufázové ověření). Uchovávejte ji stejně bezpečně jako samotné dokumenty.",
+      "restore": "Obnovení: ukončete AIDocuments, rozbalte obsah ZIPu do prázdného datového adresáře a aplikaci znovu spusťte. Návod je součástí ZIPu (README.txt).",
+      "download": "Stáhnout zálohu",
+      "started": "Záloha se stahuje.",
+      "externalDatabase": "Záloha jedním kliknutím je k dispozici jen s vestavěnou databází. U MariaDB zálohujte databázi jejími vlastními nástroji (např. mariadb-dump) a k tomu i datový adresář.",
+      "importTitle": "Importovat export",
+      "importText": "ZIP vytvořený pomocí „Exportovat“ v seznamu dokumentů – i z jiné instalace. Název, typ dokumentu, štítky a ostatní údaje zůstanou zachovány; AI dokumenty znovu nečte. Již existující soubory se přeskočí.",
+      "file": "Soubor ZIP",
+      "areaHint": "Sem se uloží dokumenty – nebo jen ty, jejichž oblast tu neexistuje.",
+      "matchAreas": "Uložit do oblastí se stejným názvem",
+      "matchAreasHint": "Pokud tu existuje oblast se stejným názvem jako v exportu, dokumenty se uloží do ní.",
+      "import": "Importovat",
+      "importing": "Importuje se…",
+      "result": "Importováno: {{imported, number}} · již existuje: {{duplicates, number}} · neimportováno: {{failed, number}}",
+      "auto": {
+        "title": "Automatická záloha",
+        "text": "Jednou denně uloží AIDocuments úplnou zálohu jako ZIP do složky a ponechá si nejnovější z nich. Ideálně by složka měla být na jiném disku nebo na síťovém disku – pokud disk s daty selže, přišli byste jinak i o zálohy.",
+        "enable": "Denně automaticky zálohovat",
+        "hour": "Čas",
+        "keep": "Uchovávat",
+        "keepHint": "Počet záloh; starší se smažou.",
+        "directory": "Složka",
+        "directoryHint": "Úplná cesta na serveru. Nechte prázdné, chcete-li použít výchozí složku. V kontejneru Docker musí být složka připojená.",
+        "warnAfterDays": "Upozornit po (dnech)",
+        "warnAfterDaysHint": "Upozornění v seznamu dokumentů, pokud se tolik dní nezálohovalo – ručně ani automaticky. 0 = nikdy neupozorňovat.",
+        "lastRun": "Poslední spuštění",
+        "nextRun": "Příští spuštění",
+        "running": "Probíhá zálohování…",
+        "ok": "úspěšně, {{when}}",
+        "failed": "neúspěšně, {{when}}",
+        "stored_one": "{{count, number}} záloha ve složce {{directory}}",
+        "stored_few": "{{count, number}} zálohy ve složce {{directory}}",
+        "stored_many": "{{count, number}} zálohy ve složce {{directory}}",
+        "stored_other": "{{count, number}} záloh ve složce {{directory}}",
+        "runNow": "Zálohovat nyní",
+        "saveFirst": "Nejprve uložte změny.",
+        "runStarted": "Záloha probíhá na pozadí.",
+        "done": "Záloha byla uložena.",
+        "saved": "Nastavení bylo uloženo.",
+        "externalDatabase": "Automatická záloha je k dispozici jen s vestavěnou databází. U MariaDB zálohujte databázi jejími vlastními nástroji (např. nočním spuštěním mariadb-dump) a k tomu i datový adresář."
+      }
     }
   },
   "history": {
     "nav": "Historie",
     "title": "Historie",
-    "subtitle": "Co se s tvými dokumenty stalo – nejnovější záznamy nahoře.",
+    "subtitle": "Co se s vašimi dokumenty stalo – nejnovější záznamy nahoře.",
     "empty": "Zatím žádné záznamy.",
     "actions": {
       "IMPORTED": "Importováno",
@@ -556,7 +765,7 @@
   },
   "duplicates": {
     "title": "Možný duplikát",
-    "subtitle": "Oba dokumenty mají stejný obsah. Jeden si nech a druhý smaž – nebo zaznamenej, že nejde o duplikáty.",
+    "subtitle": "Oba dokumenty mají stejný obsah. Jeden si ponechte a druhý smažte – nebo zaznamenejte, že nejde o duplikáty.",
     "older": "Přišel dříve",
     "newer": "Přišel později",
     "deleteThis": "Smazat tento",
@@ -566,35 +775,36 @@
     "title": "Dvoufázové ověření",
     "on": "Zapnuto",
     "off": "Vypnuto",
-    "intro": "Chraň svůj účet druhým faktorem: při přihlášení pak zadáš i kód z ověřovací aplikace v telefonu (např. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Chraňte svůj účet druhým faktorem: při přihlášení pak zadáte i kód z ověřovací aplikace v telefonu (např. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Nastavit",
-    "scan": "Naskenuj QR kód ověřovací aplikací nebo zadej klíč ručně. Pak zadej kód z aplikace a své heslo.",
+    "scan": "Naskenujte QR kód ověřovací aplikací nebo zadejte klíč ručně. Poté zadejte kód z aplikace a své heslo.",
     "qrAlt": "QR kód pro ověřovací aplikaci",
     "secret": "Klíč",
     "confirmCode": "Kód z aplikace",
     "activate": "Aktivovat",
     "recoveryTitle": "Záložní kódy",
-    "recoveryText": "Ulož si tyto záložní kódy na bezpečné místo. Každý funguje jednou, pokud nemůžeš použít aplikaci – například při ztrátě telefonu. Zobrazují se jen teď.",
+    "recoveryText": "Uložte si tyto záložní kódy na bezpečné místo. Každý funguje jednou, pokud nemůžete použít aplikaci – například při ztrátě telefonu. Zobrazují se jen nyní.",
     "download": "Uložit jako soubor",
     "done": "Hotovo",
     "enabled": "Dvoufázové ověření je zapnuté",
     "disabled": "Dvoufázové ověření je vypnuté",
-    "disableHint": "Pro vypnutí zadej aktuální kód z aplikace (nebo záložní kód) a své heslo.",
+    "disableHint": "Pro vypnutí zadejte aktuální kód z aplikace (nebo záložní kód) a své heslo.",
     "disable": "Vypnout",
     "recoveryLeft": "Nepoužité záložní kódy: {{count}}",
-    "adminCannotDisable": "Jako administrátor nemůžeš dvoufázové ověření vypnout."
+    "adminCannotDisable": "Jako správce nemůžete dvoufázové ověření vypnout."
   },
   "confirmCode": {
     "title": "Potvrdit změnu",
-    "text": "Změny účtů, poštovních schránek a nastavení vyžadují aktuální kód z ověřovací aplikace. Potvrzení platí 10 minut.",
-    "submit": "Potvrdit"
+    "text": "Změny účtů, e-mailových schránek a nastavení vyžadují aktuální kód z ověřovací aplikace. Potvrzení platí 10 minut.",
+    "submit": "Potvrdit",
+    "passkey": "Potvrdit přístupovým klíčem"
   },
   "share": {
     "button": "Sdílet",
     "title": "Sdílet dokument",
     "intro": "Vytvoří odkaz, kterým může osoba bez účtu otevřít právě tento dokument.",
-    "recipient": "S kým sdílíš?",
-    "recipientHint": "Jméno osoby – abys později věděl, komu jsi odkaz dal.",
+    "recipient": "S kým sdílíte?",
+    "recipientHint": "Jméno osoby – abyste později věděli, komu jste odkaz poskytli.",
     "permission": "Smí tato osoba dokument upravovat?",
     "viewOnly": "Jen zobrazit",
     "canEdit": "Smí upravovat",
@@ -604,7 +814,7 @@
     "unlimited": "Neomezeně",
     "create": "Vytvořit odkaz",
     "link": "Odkaz",
-    "linkHint": "Kdo má tento odkaz, může dokument otevřít – předej ho jen osobě {{name}}. Kdykoli ho můžeš zrušit v zobrazení dokumentu.",
+    "linkHint": "Kdo má tento odkaz, může dokument otevřít – předejte ho jen osobě {{name}}. Kdykoli ho můžete zrušit v zobrazení dokumentu.",
     "copy": "Kopírovat odkaz",
     "copied": "Odkaz zkopírován",
     "listTitle": "Sdíleno externě",
@@ -619,7 +829,206 @@
     "revoked": "Odkaz zrušen",
     "page": {
       "for": "Sdíleno s: {{name}}",
-      "invalid": "Tento odkaz je neplatný nebo vypršel, případně byl dokument smazán. Obrať se na osobu, která ti ho dala."
+      "invalid": "Tento odkaz je neplatný nebo vypršel, případně byl dokument smazán. Obraťte se na osobu, která vám ho poskytla."
+    }
+  },
+  "areas": {
+    "general": "Obecná",
+    "unknown": "Jiná oblast",
+    "label": "Oblast",
+    "target": "Cílová oblast",
+    "access": {
+      "READ": "Jen čtení",
+      "EDIT": "Čtení a úpravy",
+      "DELETE": "Úpravy a mazání"
+    }
+  },
+  "reminders": {
+    "title": "Připomenutí",
+    "cardTitle": "Připomenutí",
+    "add": "Přidat připomenutí",
+    "edit": "Upravit připomenutí",
+    "create": "Vytvořit",
+    "created": "Připomenutí bylo přidáno",
+    "saved": "Připomenutí bylo uloženo",
+    "deleted": "Připomenutí bylo smazáno",
+    "markedDone": "Vyřízeno",
+    "dueDate": "Termín",
+    "note": "Poznámka",
+    "notePlaceholder": "např. zkontrolovat platbu",
+    "assignee": "Kdo to má na starosti?",
+    "assigneeHint": "Tato osoba uvidí připomenutí v části „Moje“ a dostane upozornění e-mailem. Vybrat lze každého, kdo dokument vidí.",
+    "me": "{{name}} (já)",
+    "assignedTo": "pro: {{name}}",
+    "doneBy": "vyřídil(a): {{name}}",
+    "markDone": "Označit jako vyřízené",
+    "reopen": "Znovu otevřít",
+    "delete": {
+      "label": "Smazat připomenutí",
+      "title": "Smazat připomenutí?",
+      "text": "Připomenutí bude smazáno. Dokument zůstane beze změny."
+    },
+    "accept": "Přidat",
+    "dismiss": "Zahodit návrh",
+    "suggestionsHint": "AI našla v tomto dokumentu termíny:",
+    "none": "Žádná otevřená připomenutí.",
+    "showDone_one": "Zobrazit {{count, number}} vyřízené připomenutí",
+    "showDone_few": "Zobrazit {{count, number}} vyřízená připomenutí",
+    "showDone_many": "Zobrazit {{count, number}} vyřízeného připomenutí",
+    "showDone_other": "Zobrazit {{count, number}} vyřízených připomenutí",
+    "hideDone": "Skrýt vyřízená",
+    "scope": {
+      "label": "Která připomenutí",
+      "mine": "Moje",
+      "all": "Všechna"
+    },
+    "dueTitle": "K vyřízení",
+    "nothingDue": "Dnes není nic k vyřízení.",
+    "upcomingTitle": "Nadcházející",
+    "suggestionsTitle": "Navržené termíny",
+    "suggestionsPageHint": "Lhůty v příštích šesti měsících, které AI našla v dokumentech. Přidejte je jako připomenutí, nebo je zahoďte.",
+    "emptyTitle": "Žádná připomenutí",
+    "emptyText": "Přidejte k dokumentu připomenutí – nebo převezměte některé z těch, které navrhuje AI.",
+    "repeat": {
+      "label": "Opakování",
+      "hint": "Když připomenutí označíte jako vyřízené, vytvoří se další ve stejném intervalu.",
+      "none": "Jednorázově",
+      "m1": "Měsíčně",
+      "m3": "Čtvrtletně",
+      "m6": "Pololetně",
+      "m12": "Ročně",
+      "m24": "Každé dva roky",
+      "months_one": "Každý měsíc",
+      "months_few": "Každé {{count}} měsíce",
+      "months_many": "Každých {{count}} měsíce",
+      "months_other": "Každých {{count}} měsíců"
+    },
+    "fromContract": "ze smlouvy"
+  },
+  "pages": {
+    "button": "Stránky",
+    "title": "Upravit stránky",
+    "intro": "Stránky přetáhněte nebo přesuňte šipkami, otočte nebo odeberte. Uložením vznikne nová verze – předchozí zůstane zachována.",
+    "page": "Stránka {{number}}",
+    "wasPage": "dříve {{number}}",
+    "moveLeft": "Posunout dopředu",
+    "moveRight": "Posunout dozadu",
+    "rotate": "Otočit o 90°",
+    "remove": "Odebrat stránku",
+    "keep": "Ponechat stránku",
+    "noneLeft": "Musí zůstat alespoň jedna stránka.",
+    "saveFirst": "Nejprve uložte změny",
+    "saved": "Stránky uloženy",
+    "split": {
+      "here": "Od této stránky samostatný dokument",
+      "title": "Rozdělit dokument?",
+      "text": "Stránka {{page}} a všechny následující se stanou samostatným dokumentem ve stejné oblasti. Ten se zpracuje a zařadí jako nově přijatý; tento dokument si ponechá stránky před ní.",
+      "confirm": "Rozdělit",
+      "done": "Dokument rozdělen",
+      "open": "Otevřít nový dokument"
+    },
+    "merge": {
+      "button": "Připojit dokumenty",
+      "title": "Připojit dokumenty",
+      "intro": "Stránky vybraných dokumentů se v tomto pořadí přidají na konec dokumentu „{{title}}“.",
+      "search": "Hledat dokumenty…",
+      "none": "Žádné odpovídající dokumenty.",
+      "noDeleteRight": "Tento dokument nemůžete smazat – proto ho nelze připojit.",
+      "hint": "Připojené dokumenty se poté přesunou do koše; z historie je lze obnovit po dobu 30 dní.",
+      "confirm_one": "Připojit {{count}} dokument",
+      "confirm_few": "Připojit {{count}} dokumenty",
+      "confirm_many": "Připojit {{count}} dokumentu",
+      "confirm_other": "Připojit {{count}} dokumentů",
+      "done_one": "{{count}} dokument připojen",
+      "done_few": "{{count}} dokumenty připojeny",
+      "done_many": "{{count}} dokumentu připojeno",
+      "done_other": "{{count}} dokumentů připojeno"
+    }
+  },
+  "contracts": {
+    "nav": "Smlouvy",
+    "title": "Smlouvy",
+    "pageIntro": "Doba trvání a výpovědní lhůty všech smluv, které smíte vidět – nejdříve ty, u kterých bude brzy potřeba něco udělat.",
+    "scope": {
+      "label": "Zobrazit",
+      "running": "Platné",
+      "all": "Všechny"
+    },
+    "emptyTitle": "Zatím nejsou zadány žádné smlouvy",
+    "emptyText": "Otevřete dokument, například smlouvu na elektřinu nebo mobilní tarif, a zadejte u něj dobu trvání a výpovědní lhůtu. Včas před koncem lhůty se pak zobrazí připomenutí.",
+    "cardTitle": "Smlouva",
+    "none": "Je to smlouva? Když zadáte dobu trvání a výpovědní lhůtu, AIDocuments vám včas připomene výpověď.",
+    "add": "Zadat jako smlouvu",
+    "edit": "Upravit smlouvu",
+    "intro": "Z konce doby trvání a výpovědní lhůty vyplývá, do kdy je nutné smlouvu vypovědět. Předtím se zobrazí připomenutí; pokud doba trvání uplyne bez výpovědi, smlouva se automaticky prodlouží.",
+    "saved": "Smlouva uložena",
+    "removed": "Údaje o smlouvě odebrány",
+    "remove": {
+      "label": "Odebrat údaje o smlouvě",
+      "title": "Odebrat údaje o smlouvě?",
+      "text": "Doba trvání, výpovědní lhůta a související otevřené připomenutí budou odebrány. Samotný dokument zůstane."
+    },
+    "openEnded": "na dobu neurčitou",
+    "months_one": "{{count}} měsíc",
+    "months_few": "{{count}} měsíce",
+    "months_many": "{{count}} měsíce",
+    "months_other": "{{count}} měsíců",
+    "amountHint": "např. „499 Kč měsíčně“",
+    "endDateHint": "Konec aktuální doby trvání; prázdné = na dobu neurčitou",
+    "noticeHint": "Počet měsíců před koncem doby trvání; prázdné = do konce doby trvání",
+    "renewalHint": "Bez výpovědi se smlouva prodlouží o tolik měsíců; 0 = skončí",
+    "cancelledHint": "Smlouva se pak už neprodlouží a nezobrazí se žádné další připomenutí.",
+    "fields": {
+      "partner": "Smluvní partner",
+      "amount": "Částka",
+      "startDate": "Začátek smlouvy",
+      "endDate": "Platnost do",
+      "notice": "Výpovědní lhůta (měsíce)",
+      "renewal": "Prodloužení (měsíce)",
+      "deadline": "Vypovědět do",
+      "reminderDays": "Připomenout (dny předem)",
+      "cancelled": "Vypovězeno"
+    },
+    "status": {
+      "ACTIVE": "Platná",
+      "DUE_SOON": "Lhůta se blíží",
+      "NOTICE_MISSED": "Lhůta zmeškána",
+      "CANCELLED": "Vypovězená",
+      "ENDED": "Ukončená",
+      "OPEN_ENDED": "Na dobu neurčitou"
+    },
+    "row": {
+      "cancelBy": "vypovědět do {{date}}",
+      "endsOn": "končí {{date}}",
+      "term": "platnost do {{date}}",
+      "renews_one": "prodlužuje se o {{count}} měsíc",
+      "renews_few": "prodlužuje se o {{count}} měsíce",
+      "renews_many": "prodlužuje se o {{count}} měsíce",
+      "renews_other": "prodlužuje se o {{count}} měsíců"
+    }
+  },
+  "passkeys": {
+    "title": "Přístupové klíče",
+    "intro": "S přístupovým klíčem se přihlásíte bez hesla – odemknete ho otiskem prstu, obličejem nebo PIN kódem zařízení. Platí jen pro tuto adresu; podvodná stránka ho použít nemůže.",
+    "none": "Zatím nemáte žádný přístupový klíč.",
+    "add": "Přidat přístupový klíč",
+    "create": "Vytvořit přístupový klíč",
+    "name": "Název",
+    "nameHint": "Abyste ho později poznali, např. „Notebook“ nebo „Správce hesel“.",
+    "password": "Vaše heslo",
+    "passwordHint": "Kdo přidá přístupový klíč, může se od té doby přihlašovat bez hesla – proto to jednou potvrďte.",
+    "added": "Přístupový klíč přidán",
+    "removed": "Přístupový klíč odebrán",
+    "synced": "synchronizovaný",
+    "lastUsed": "naposledy použit {{time}}",
+    "created": "přidán {{time}}, zatím nepoužit",
+    "unsupported": "Tento prohlížeč zde nemůže přístupové klíče používat. Přístupové klíče fungují jen přes HTTPS (nebo na localhost).",
+    "unsupportedIp": "Přístupové klíče fungují jen přes HTTPS a s názvem v adrese, ne s IP adresou.",
+    "remove": {
+      "label": "Odebrat přístupový klíč",
+      "title": "Odebrat přístupový klíč?",
+      "text": "Pomocí „{{name}}“ se pak už nikdo nepřihlásí. Ve správci hesel nebo v zařízení zůstane klíč uložen, dokud ho tam nesmažete.",
+      "confirm": "Odebrat"
     }
   }
 }

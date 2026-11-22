@@ -36,9 +36,21 @@ public class UserService implements UserDetailsService {
     /** Zähler je Benutzer; jede sicherheitsrelevante Änderung macht bestehende Sitzungen ungültig. */
     private final Map<String, Long> versions = new ConcurrentHashMap<>();
 
-    public UserService(AppUserRepository users, PasswordEncoder passwordEncoder) {
+    private final de.aidocuments.area.AreaRepository areas;
+
+    private final de.aidocuments.reminder.ReminderRepository reminders;
+    private final de.aidocuments.contract.ContractRepository contracts;
+    private final PasskeyService passkeys;
+
+    public UserService(AppUserRepository users, PasswordEncoder passwordEncoder,
+                       de.aidocuments.area.AreaRepository areas, de.aidocuments.reminder.ReminderRepository reminders,
+                       de.aidocuments.contract.ContractRepository contracts, PasskeyService passkeys) {
+        this.passkeys = passkeys;
+        this.reminders = reminders;
+        this.contracts = contracts;
         this.users = users;
         this.passwordEncoder = passwordEncoder;
+        this.areas = areas;
     }
 
     @Override
@@ -160,6 +172,10 @@ public class UserService implements UserDetailsService {
             throw ApiException.conflict("error.user.lastAdmin");
         }
         users.delete(user);
+        areas.removeUser(id);
+        reminders.unassign(id);
+        contracts.unassign(id);
+        passkeys.deleteAll(id);
         invalidateSessions(id);
     }
 
@@ -169,6 +185,19 @@ public class UserService implements UserDetailsService {
      *
      * @return die Anmeldedaten mit dem neuen Stand – damit bleibt die aufrufende Sitzung gültig
      */
+    /** Das eigene Konto – für Schritte, die zusätzlich das Passwort verlangen (etwa einen Passkey anlegen). */
+    public AppUser requireOwnPassword(String id, String password) {
+        AppUser user = require(id);
+        if (password == null || !passwordEncoder.matches(password, user.getPasswordHash())) {
+            throw ApiException.badRequest("error.user.currentPasswordWrong");
+        }
+        return user;
+    }
+
+    public AppUser account(String id) {
+        return require(id);
+    }
+
     public UserPrincipal changeOwnPassword(String id, String currentPassword, String newPassword) {
         AppUser user = require(id);
         if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
@@ -178,6 +207,26 @@ public class UserService implements UserDetailsService {
         users.save(user);
         invalidateSessions(id);
         return principalOf(user);
+    }
+
+    /**
+     * Eigene Adresse für Erinnerungen; die Sprache der E-Mails ist die, in der die Oberfläche gerade läuft.
+     *
+     * @param email leer = keine E-Mails
+     */
+    public UserDto updateProfile(String id, UserDtos.ProfileRequest request, java.util.Locale locale) {
+        AppUser user = require(id);
+        String email = request.email();
+        user.setEmail(email == null || email.isBlank() ? null : email.strip());
+        user.setLocale(locale == null ? null : locale.toLanguageTag());
+        if (request.notifyNewDocuments() != null) {
+            user.setNotifyNewDocuments(request.notifyNewDocuments());
+        }
+        if (request.notifyAdmin() != null) {
+            user.setNotifyAdmin(request.notifyAdmin());
+        }
+        users.save(user);
+        return UserDto.of(user);
     }
 
     public void recordLogin(String id) {

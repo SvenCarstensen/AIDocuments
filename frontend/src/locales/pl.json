@@ -46,7 +46,9 @@
     "login": {
       "title": "Witaj ponownie",
       "subtitle": "Zaloguj się, aby uzyskać dostęp do swoich dokumentów.",
-      "submit": "Zaloguj się"
+      "submit": "Zaloguj się",
+      "or": "lub",
+      "passkey": "Zaloguj się kluczem dostępu"
     },
     "setup": {
       "title": "Konfiguracja AIDocuments",
@@ -83,7 +85,7 @@
       "dark": "Ciemny motyw"
     },
     "search": {
-      "placeholder": "Wyszukiwanie słów kluczowych: dokumenty, tagi, treść …",
+      "placeholder": "Wyszukiwanie według słów kluczowych: dokumenty, tagi, treść…",
       "placeholderAi": "Wyszukiwanie AI: pytaj własnymi słowami – np. „faktury od Kia z 2024”",
       "labelAi": "AI",
       "label": "Szukaj dokumentów",
@@ -93,7 +95,7 @@
     "userMenu": {
       "label": "Menu użytkownika ({{name}})",
       "aiActive": "AI aktywne",
-      "aiNotConfigured": "AI nie skonfigurowane",
+      "aiNotConfigured": "AI nieskonfigurowane",
       "changePassword": "Zmień hasło",
       "licenses": "Licencje stron trzecich",
       "logout": "Wyloguj się"
@@ -104,17 +106,34 @@
       "changed": "Hasło zostało zmienione"
     },
     "dropzone": {
-      "title": "Upuść tutaj pliki PDF",
-      "hint": "Możesz upuścić kilka plików naraz. Zostaną zapisane, przeanalizowane i oznaczone tagami."
+      "title": "Upuść tutaj pliki PDF lub zdjęcia",
+      "hint": "Możesz upuścić kilka plików naraz. Zdjęcia (JPG, PNG, HEIC) zostaną zamienione na pliki PDF. Wszystko zostanie zapisane, przeanalizowane i oznaczone tagami."
+    },
+    "remindersDue_one": "{{count, number}} przypomnienie do załatwienia",
+    "remindersDue_few": "{{count, number}} przypomnienia do załatwienia",
+    "remindersDue_many": "{{count, number}} przypomnień do załatwienia",
+    "remindersDue_other": "{{count, number}} przypomnienia do załatwienia",
+    "profile": {
+      "email": "Adres e-mail",
+      "saved": "Zapisano"
+    },
+    "notifications": {
+      "title": "Powiadomienia e-mail",
+      "emailHint": "Na ten adres trafiają przypisane do Ciebie przypomnienia do załatwienia oraz powiadomienia, które włączysz poniżej – w języku, w którym właśnie używasz aplikacji. Pozostaw puste, jeśli nie chcesz otrzymywać e-maili.",
+      "digest": "Codziennie nowe dokumenty",
+      "digestHint": "Raz dziennie lista dokumentów, które pojawiły się w Twoich obszarach – tylko w dni, w których są nowe dokumenty.",
+      "admin": "Powiadomienia dla administratorów",
+      "adminHint": "Gdy upływają okresy przechowywania (nic nie jest usuwane automatycznie) oraz gdy skrzynki pocztowej wielokrotnie nie udaje się sprawdzić.",
+      "needsEmail": "Bez adresu e-maile nie są wysyłane."
     }
   },
   "upload": {
-    "onlyPdf": "Można dodawać tylko pliki PDF.",
-    "uploadingFile": "Przesyłanie „{{name}}” …",
-    "uploadingFiles_one": "Przesyłanie {{count, number}} pliku PDF …",
-    "uploadingFiles_few": "Przesyłanie {{count, number}} plików PDF …",
-    "uploadingFiles_many": "Przesyłanie {{count, number}} plików PDF …",
-    "uploadingFiles_other": "Przesyłanie {{count, number}} pliku PDF …",
+    "onlyPdf": "Można dodawać tylko pliki PDF i zdjęcia (JPG, PNG, HEIC).",
+    "uploadingFile": "Przesyłanie „{{name}}”…",
+    "uploadingFiles_one": "Przesyłanie {{count, number}} pliku…",
+    "uploadingFiles_few": "Przesyłanie {{count, number}} plików…",
+    "uploadingFiles_many": "Przesyłanie {{count, number}} plików…",
+    "uploadingFiles_other": "Przesyłanie {{count, number}} pliku…",
     "created_one": "Dodano {{count, number}} dokument",
     "created_few": "Dodano {{count, number}} dokumenty",
     "created_many": "Dodano {{count, number}} dokumentów",
@@ -124,16 +143,24 @@
     "duplicates_few": "{{count, number}} dokumenty już istnieją",
     "duplicates_many": "{{count, number}} dokumentów już istnieje",
     "duplicates_other": "{{count, number}} dokumentu już istnieje",
-    "rejected_one": "{{count, number}} plik nie jest prawidłowym plikiem PDF",
-    "rejected_few": "{{count, number}} pliki nie są prawidłowymi plikami PDF",
-    "rejected_many": "{{count, number}} plików nie jest prawidłowymi plikami PDF",
-    "rejected_other": "{{count, number}} pliku nie jest prawidłowym plikiem PDF",
+    "rejected_one": "Nie dodano {{count, number}} pliku",
+    "rejected_few": "Nie dodano {{count, number}} plików",
+    "rejected_many": "Nie dodano {{count, number}} plików",
+    "rejected_other": "Nie dodano {{count, number}} pliku",
     "onlyDuplicates_one": "Ten dokument już istnieje.",
     "onlyDuplicates_few": "Te dokumenty już istnieją.",
     "onlyDuplicates_many": "Te dokumenty już istnieją.",
     "onlyDuplicates_other": "Te dokumenty już istnieją.",
-    "noneValid": "Żaden z plików nie jest prawidłowym plikiem PDF.",
-    "failed": "Przesyłanie nie powiodło się"
+    "noneValid": "Nie udało się dodać żadnego z plików.",
+    "failed": "Przesyłanie nie powiodło się",
+    "intoArea": "Obszar: {{area}}",
+    "combine": {
+      "title": "Połączyć zdjęcia w jeden dokument?",
+      "text": "Wybrano kilka zdjęć. Jeśli są to strony jednego dokumentu – na przykład wielostronicowego listu – powstanie z nich jeden plik PDF w kolejności nazw plików; kolejność możesz potem zmienić w sekcji „Strony”. W przeciwnym razie każde zdjęcie stanie się osobnym dokumentem.",
+      "one": "Jako jeden dokument",
+      "separate": "Każde zdjęcie osobno",
+      "tooMuch": "Tych zdjęć jest za dużo lub są za duże, by utworzyć z nich jeden dokument (maksymalnie 100 zdjęć i łącznie 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -154,7 +181,7 @@
     "searchResults_other": "<count>{{count, number}} wyniku</count> <query>dla „{{query}}”</query>",
     "progress": {
       "inProgress": "{{documents, number}} w toku",
-      "inProgressHint": "Oczekuje na analizę przez AI lub jest właśnie analizowane",
+      "inProgressHint": "Oczekują na analizę AI lub są właśnie analizowane",
       "remaining": "zostało ok. {{duration}}",
       "remainingLessThan": "zostało mniej niż {{duration}}",
       "finishHint": "Przewidywane zakończenie: {{time}} – szacunek na podstawie tempa ostatnio przetworzonych dokumentów"
@@ -162,8 +189,8 @@
     "sort": {
       "label": "Kolejność",
       "relevance": "Najlepsze dopasowanie",
-      "newest": "Najnowsze najpierw",
-      "date": "Wg daty dokumentu"
+      "newest": "Od najnowszych",
+      "date": "Według daty dokumentu"
     },
     "view": {
       "grid": "Widok siatki",
@@ -189,23 +216,49 @@
       "activeTo": "do {{date}}",
       "removeOne": "Usuń filtr „{{label}}”",
       "removeAll": "Usuń wszystkie filtry",
-      "clear": "Usuń filtry"
+      "clear": "Usuń filtry",
+      "retentionExpired": "Okres przechowywania upłynął"
     },
     "empty": {
       "libraryTitle": "Brak dokumentów",
-      "libraryHint": "Po prostu przeciągnij pliki PDF do tego okna lub użyj przycisku „Prześlij”.",
-      "libraryHintAdmin": "Po prostu przeciągnij pliki PDF do tego okna lub użyj przycisku „Prześlij”. W ustawieniach możesz skonfigurować skrzynkę pocztową lub folder importu, z którego nowe pliki PDF będą importowane automatycznie.",
+      "libraryHint": "Po prostu przeciągnij pliki PDF lub zdjęcia do tego okna albo użyj przycisku „Prześlij”.",
+      "libraryHintAdmin": "Po prostu przeciągnij pliki PDF lub zdjęcia do tego okna albo użyj przycisku „Prześlij”. W ustawieniach możesz skonfigurować skrzynkę pocztową lub folder importu, z którego nowe dokumenty będą importowane automatycznie.",
       "noResultsTitle": "Nic nie znaleziono",
       "noResultsSearch": "Żaden dokument nie pasuje do tego wyszukiwania. Wyszukiwanie znajduje także fragmenty słów – spróbuj krótszego terminu lub mniejszej liczby słów.",
       "noResultsFilters": "Żaden dokument nie pasuje do wybranych filtrów."
     },
-    "loadingAll_one": "Wczytano {{loaded, number}} z {{count, number}} dokumentu …",
-    "loadingAll_few": "Wczytano {{loaded, number}} z {{count, number}} dokumentów …",
-    "loadingAll_many": "Wczytano {{loaded, number}} z {{count, number}} dokumentów …",
-    "loadingAll_other": "Wczytano {{loaded, number}} z {{count, number}} dokumentu …",
+    "loadingAll_one": "Wczytano {{loaded, number}} z {{count, number}} dokumentu…",
+    "loadingAll_few": "Wczytano {{loaded, number}} z {{count, number}} dokumentów…",
+    "loadingAll_many": "Wczytano {{loaded, number}} z {{count, number}} dokumentów…",
+    "loadingAll_other": "Wczytano {{loaded, number}} z {{count, number}} dokumentu…",
     "loadMore": "Wczytaj więcej ({{remaining, number}})",
     "aiSearch": {
       "notice": "Wyszukiwanie AI: „{{question}}”. Filtry pokazują, jak zrozumiano pytanie."
+    },
+    "export": {
+      "label_one": "Eksportuj {{count, number}} dokument jako ZIP",
+      "label_few": "Eksportuj wszystkie {{count, number}} dokumenty z tej listy jako ZIP",
+      "label_many": "Eksportuj wszystkie {{count, number}} dokumentów z tej listy jako ZIP",
+      "label_other": "Eksportuj {{count, number}} dokumentu z tej listy jako ZIP",
+      "started_one": "Rozpoczęto eksport {{count, number}} dokumentu",
+      "started_few": "Rozpoczęto eksport {{count, number}} dokumentów",
+      "started_many": "Rozpoczęto eksport {{count, number}} dokumentów",
+      "started_other": "Rozpoczęto eksport {{count, number}} dokumentu",
+      "contents": "Plik ZIP zawiera pliki PDF oraz wszystkie dane w postaci tabeli (documents.csv) i jako documents.json.",
+      "failed": "Eksport nie powiódł się"
+    },
+    "mailboxNotice": {
+      "text_one": "Mimo kilku prób nie udaje się sprawdzić skrzynki pocztowej „{{names}}” – nie napływają z niej żadne dokumenty.",
+      "text_few": "Mimo kilku prób nie udaje się sprawdzić tych skrzynek pocztowych: {{names}}. Nie napływają z nich żadne dokumenty.",
+      "text_many": "Mimo kilku prób nie udaje się sprawdzić tych skrzynek pocztowych: {{names}}. Nie napływają z nich żadne dokumenty.",
+      "text_other": "Mimo kilku prób nie udaje się sprawdzić tych skrzynek pocztowych: {{names}}. Nie napływają z nich żadne dokumenty.",
+      "action": "Pokaż skrzynki"
+    },
+    "backupNotice": {
+      "never": "Nie ma jeszcze kopii zapasowej Twoich dokumentów.",
+      "overdue": "Ostatnia kopia zapasowa: {{when}}. To dawniej, niż ustawiono.",
+      "failed": "Automatyczna kopia zapasowa nie powiodła się: {{reason}}",
+      "action": "Przejdź do kopii zapasowej"
     }
   },
   "document": {
@@ -254,7 +307,7 @@
       "allWith": "Wszystkie dokumenty z tagiem „{{tag}}”",
       "none": "Brak tagów. <add>Dodaj tagi</add>",
       "inputHint": "Zatwierdź klawiszem Enter lub przecinkiem. Podpowiedzi to tagi, które są już używane.",
-      "inputPlaceholder": "Wpisz tag …",
+      "inputPlaceholder": "Wpisz tag…",
       "remove": "Usuń tag „{{tag}}”"
     },
     "keyFacts": "Kluczowe dane",
@@ -275,25 +328,27 @@
       "text": "Tekst"
     },
     "source": {
-      "MAIL": "Skrzynka e-mail",
+      "MAIL": "Skrzynka pocztowa",
       "FOLDER": "Folder importu",
       "UPLOAD": "Przesłano"
     },
     "noText": "Ten dokument nie zawiera tekstu – prawdopodobnie jest to skan bez warstwy tekstowej. Jeśli AI jest skonfigurowane, a rozpoznawanie tekstu włączone, treść zostanie przepisana podczas analizy.",
     "edit": {
       "title": "Edytuj dokument",
-      "saved": "Zmiany zostały zapisane"
+      "saved": "Zmiany zostały zapisane",
+      "areaHint": "Określa, kto widzi dokument.",
+      "areaMoveHint": "Potem będą go widzieć tylko członkowie obszaru „{{area}}” i administratorzy."
     },
     "delete": {
       "title": "Usunąć dokument?",
-      "text": "„{{title}}” zostanie usunięty. W historii możesz to cofnąć przez 30 dni; potem zostanie usunięty na stałe.",
+      "text": "Dokument „{{title}}” zostanie usunięty. W historii możesz to cofnąć przez 30 dni, potem zostanie usunięty na stałe.",
       "confirm": "Usuń"
     },
     "chat": {
       "intro": "Zadaj pytanie o ten dokument – AI odpowie na podstawie jego treści.",
-      "placeholder": "Zapytaj o coś w tym dokumencie …",
+      "placeholder": "Zapytaj o coś w związku z tym dokumentem…",
       "send": "Wyślij",
-      "thinking": "AI czyta dokument …",
+      "thinking": "AI czyta dokument…",
       "notConfigured": "Aby zadawać pytania o dokument, trzeba skonfigurować AI.",
       "restart": "Zacznij od nowa",
       "suggestions": {
@@ -310,7 +365,7 @@
       "download": "Pobierz wersję {{number}}",
       "restore": "Przywróć wersję {{number}}",
       "restoreTitle": "Przywrócić wersję {{number}}?",
-      "restoreText": "Ta wersja stanie się bieżącą. Obecna wersja zostanie zachowana, a krok można cofnąć w historii.",
+      "restoreText": "Ta wersja stanie się bieżącą. Obecna wersja zostanie zachowana, a tę zmianę można cofnąć w historii.",
       "restoreConfirm": "Przywróć",
       "restored": "Przywrócono wersję {{number}}",
       "kinds": {
@@ -318,22 +373,31 @@
         "EDITED": "Edytowano",
         "ORIGINAL_RESTORED": "Przywrócono oryginał",
         "VERSION_RESTORED": "Przywrócono wersję {{from}}",
-        "UNDONE": "Cofnięto zmianę"
+        "UNDONE": "Cofnięto zmianę",
+        "PAGES": "Zmieniono strony",
+        "MERGED": "Dołączono dokumenty"
       }
-    }
+    },
+    "retention": {
+      "label": "Przechowywanie",
+      "until": "do {{date}} – do tego czasu nie można usunąć",
+      "expired": "okres upłynął {{date}}",
+      "locked": "Należy przechowywać do {{date}} – usunąć można dopiero później"
+    },
+    "readOnly": "W tym obszarze możesz tylko wyświetlać ten dokument."
   },
   "settings": {
     "title": "Ustawienia",
     "mailboxes": {
       "title": "Skrzynki pocztowe",
-      "navHint": "Serwery IMAP, z których importowane są załączniki PDF",
-      "intro": "Załączniki PDF są automatycznie importowane z tych skrzynek IMAP. Skrzynki są tylko odczytywane – wiadomości e-mail pozostają niezmienione i nieprzeczytane.",
+      "navHint": "Serwery IMAP, z których importowane są załączniki PDF i zdjęcia",
+      "intro": "Z tych skrzynek pocztowych IMAP automatycznie importowane są załączniki PDF i załączone zdjęcia (jako pliki PDF); treść wiadomości i osadzone logotypy – nie. Skrzynki są tylko odczytywane – wiadomości e-mail pozostają niezmienione i nieprzeczytane.",
       "add": "Dodaj skrzynkę",
       "emptyTitle": "Nie skonfigurowano jeszcze żadnej skrzynki",
-      "emptyText": "Wpisz dane dostępowe skrzynki IMAP – na przykład tej, na którą skaner wysyła dokumenty.",
+      "emptyText": "Wpisz dane dostępowe skrzynki pocztowej IMAP – na przykład tej, na którą Twój skaner wysyła dokumenty.",
       "paused": "Wstrzymana",
       "syncNow": "Sprawdź teraz",
-      "syncing": "Sprawdzanie skrzynki …",
+      "syncing": "Sprawdzanie skrzynki…",
       "neverSynced": "Jeszcze nie sprawdzano.",
       "saved": "Skrzynka została zapisana",
       "added": "Skrzynka została dodana",
@@ -360,7 +424,7 @@
         "since": "Tylko wiadomości od",
         "sinceHint": "Opcjonalnie – starsze wiadomości są pomijane",
         "enabled": "Sprawdzaj automatycznie",
-        "enabledHint": "Skrzynka jest sprawdzana pod kątem nowych plików PDF w ustawionym odstępie czasu.",
+        "enabledHint": "Skrzynka jest sprawdzana pod kątem nowych załączników w ustawionym interwale.",
         "filter": {
           "title": "Filtr",
           "intro": "Przetwarzane są tylko wiadomości spełniające wszystkie warunki. Jedno wyrażenie w wierszu; wielkość liter nie ma znaczenia, wystarczy fragment tekstu. Puste pola niczego nie ograniczają.",
@@ -369,29 +433,30 @@
           "senderIncludes": "Nadawca zawiera jedno z tych wyrażeń",
           "senderExcludes": "Nadawca nie zawiera żadnego z tych wyrażeń",
           "senderHint": "Nazwa lub adres, np. „@example.com”",
-          "newOnly": "Filtr dotyczy wiadomości, które nadejdą po ostatnim pobraniu; już sprawdzone wiadomości nie są przetwarzane ponownie."
+          "newOnly": "Filtr dotyczy wiadomości, które nadejdą po ostatnim sprawdzeniu; już sprawdzone wiadomości nie są przetwarzane ponownie."
         },
-        "interval": "Interwał pobierania w minutach",
-        "intervalHint": "Zostaw puste, aby użyć ogólnego interwału (obecnie {{interval}})."
+        "interval": "Interwał sprawdzania w minutach",
+        "intervalHint": "Pozostaw puste, aby użyć ogólnego interwału (obecnie {{interval}}).",
+        "areaHint": "Do tego obszaru trafiają zaimportowane dokumenty."
       },
       "filterActive": "Filtr aktywny",
-      "schedule": "Pobieranie co {{interval}} · następne {{when}}",
-      "scheduleSoon": "Pobieranie co {{interval}} · następne wkrótce"
+      "schedule": "Sprawdzanie co {{interval}} · następne {{when}}",
+      "scheduleSoon": "Sprawdzanie co {{interval}} · następne wkrótce"
     },
     "import": {
       "title": "Harmonogram i folder importu",
-      "navHint": "Odstęp sprawdzania i obserwowany katalog",
-      "intro": "Określa, jak często aplikacja szuka nowych plików PDF – w skrzynkach pocztowych i w folderze importu.",
+      "navHint": "Interwał sprawdzania i obserwowany katalog",
+      "intro": "Określa, jak często aplikacja szuka nowych dokumentów – w skrzynkach pocztowych i w folderze importu.",
       "saved": "Ustawienia zostały zapisane",
       "interval": {
-        "title": "Odstęp sprawdzania",
-        "text": "Jak często aplikacja sprawdza folder wejściowy i wszystkie skrzynki bez własnego interwału w poszukiwaniu nowych plików PDF.",
+        "title": "Interwał sprawdzania",
+        "text": "Jak często aplikacja sprawdza folder importu i wszystkie skrzynki bez własnego interwału w poszukiwaniu nowych dokumentów.",
         "label": "Co … minut",
         "nextRun": "Następne automatyczne sprawdzenie: {{when}}."
       },
       "folder": {
         "title": "Folder importu",
-        "text": "Katalog na serwerze, który jest obserwowany pod kątem nowych plików PDF – na przykład miejsce docelowe skanera sieciowego. Podfoldery są również przeszukiwane.",
+        "text": "Katalog na serwerze, który jest obserwowany pod kątem nowych plików PDF i zdjęć (JPG, PNG, HEIC) – na przykład miejsce docelowe skanera sieciowego. Podfoldery są również przeszukiwane.",
         "enable": "Obserwuj folder importu",
         "path": "Ścieżka na serwerze",
         "pathHint": "Ścieżka bezwzględna. W kontenerze Docker jest to zamontowany folder, zwykle {{path}}.",
@@ -400,10 +465,11 @@
         "move": "Przenieś do „{{folder}}”",
         "keepHint": "Pliki pozostają niezmienione. Aplikacja zapamiętuje, co już zaimportowała.",
         "moveHint": "Zaimportowane pliki są przenoszone do podfolderu „{{folder}}” – folder importu pozostaje uporządkowany.",
-        "scanning": "Sprawdzanie folderu …",
+        "scanning": "Sprawdzanie folderu…",
         "neverScanned": "Jeszcze nie sprawdzano.",
         "scanNow": "Sprawdź teraz",
-        "scanStarted": "Folder importu jest sprawdzany."
+        "scanStarted": "Folder importu jest sprawdzany.",
+        "areaHint": "Do tego obszaru trafiają dokumenty z folderu."
       }
     },
     "ai": {
@@ -411,7 +477,7 @@
       "navHint": "Serwer LLM, model i rozpoznawanie tekstu",
       "intro": "AI czyta każdy nowy plik PDF, tworzy jego podsumowanie, przypisuje typ dokumentu i tagi oraz wyodrębnia kluczowe dane, takie jak kwoty czy terminy.",
       "configured": "Skonfigurowane",
-      "notConfigured": "Nie skonfigurowane",
+      "notConfigured": "Nieskonfigurowane",
       "saved": "Ustawienia AI zostały zapisane",
       "server": {
         "title": "Serwer LLM",
@@ -529,12 +595,155 @@
       "resetTwoFactorText": "{{name}} będzie się logować tylko hasłem i może ponownie skonfigurować uwierzytelnianie dwuskładnikowe – na przykład po utracie telefonu.",
       "resetTwoFactorConfirm": "Zresetuj",
       "twoFactorReset": "Uwierzytelnianie dwuskładnikowe zresetowane"
+    },
+    "areas": {
+      "title": "Obszary",
+      "navHint": "Kto widzi które dokumenty",
+      "intro": "Każdy dokument należy do dokładnie jednego obszaru. Użytkownicy widzą tylko dokumenty z obszarów, których są członkami, oraz z obszarów dostępnych dla wszystkich.",
+      "add": "Dodaj obszar",
+      "everyone": "Dla wszystkich",
+      "restricted": "Ograniczony",
+      "visibleForAll": "widoczny dla wszystkich zalogowanych",
+      "members": "Członkowie: {{names}}",
+      "adminsOnly": "tylko administratorzy",
+      "adminHint": "Administratorzy widzą wszystkie obszary, nawet jeśli nie są ich członkami.",
+      "edit": "Edytuj {{name}}",
+      "saved": "Obszar został zapisany",
+      "created": "Obszar został utworzony",
+      "deleted": "Obszar został usunięty",
+      "delete": {
+        "label": "Usuń {{name}}",
+        "title": "Usunąć obszar?",
+        "text": "Obszar „{{name}}” zostanie usunięty. Jest to możliwe tylko wtedy, gdy nie używają go żadne dokumenty, skrzynka pocztowa ani folder importu."
+      },
+      "dialog": {
+        "name": "Nazwa",
+        "namePlaceholder": "np. Księgowość",
+        "generalNameHint": "Pozostaw puste, a obszar będzie się nazywał w każdym języku „Ogólny”.",
+        "everyone": "Widoczny dla wszystkich",
+        "everyoneHint": "Wszyscy zalogowani użytkownicy widzą dokumenty z tego obszaru.",
+        "members": "Członkowie",
+        "membersHint": "Dokumenty z tego obszaru widzą tylko członkowie i administratorzy. Dla każdego członka określasz, czy może tylko czytać, także edytować, czy dodatkowo usuwać.",
+        "noUsers": "Nie ma jeszcze użytkowników bez roli administratora.",
+        "create": "Utwórz",
+        "everyoneAccess": "Uprawnienia dla wszystkich",
+        "accessOf": "Uprawnienia użytkownika {{name}}",
+        "membersHintEveryone": "Dokumenty z tego obszaru widzą wszyscy. Dodaj tu członków, jeśli mają mieć większe uprawnienia niż pozostali."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Przechowywanie",
+      "navHint": "Okresy i blokada usuwania",
+      "intro": "Określ, jak długo dokumenty danego typu muszą być przechowywane – na przykład faktury przez dziesięć lat. Okres liczy się od końca roku, z którego pochodzi dokument. Do tego czasu nikt nie może go usunąć.",
+      "permanent": "Blokady nie można zdjąć – nawet administratorzy tego nie mogą. Jeśli reguła zostanie skrócona lub usunięta albo zmieni się typ dokumentu, ustalony już okres pozostaje w mocy.",
+      "add": "Dodaj regułę",
+      "years_one": "{{count, number}} rok",
+      "years_few": "{{count, number}} lata",
+      "years_many": "{{count, number}} lat",
+      "years_other": "{{count, number}} roku",
+      "edit": "Edytuj regułę dla {{category}}",
+      "saved": "Reguła została zapisana",
+      "created": "Reguła została utworzona",
+      "deleted": "Reguła została usunięta",
+      "emptyTitle": "Brak reguł przechowywania",
+      "emptyText": "Bez reguły dokumenty można usuwać w dowolnym momencie.",
+      "delete": {
+        "label": "Usuń regułę dla {{category}}",
+        "title": "Usunąć regułę?",
+        "text": "Nowe dokumenty typu „{{category}}” nie będą już otrzymywać okresu przechowywania. Już zablokowane dokumenty pozostaną zablokowane do końca swojego okresu."
+      },
+      "dialog": {
+        "categoryHint": "Tak, jak widnieje przy dokumencie; wielkość liter nie ma znaczenia.",
+        "years": "Okres przechowywania w latach",
+        "yearsHint": "Liczony od końca roku z daty dokumentu (bez daty: od dnia dodania).",
+        "shorterHint": "Krótszy okres dotyczy tylko dokumentów, które nie mają jeszcze okresu. Już zablokowane pozostają zablokowane do końca dotychczasowego okresu.",
+        "create": "Utwórz"
+      }
+    },
+    "mailOut": {
+      "title": "Wysyłanie e-maili",
+      "navHint": "Powiadomienia e-mail",
+      "intro": "Przez ten serwer SMTP aplikacja wysyła powiadomienia o przypomnieniach do załatwienia – raz na każde przypomnienie, zebrane w jednym e-mailu na osobę. Odbiorcą jest osoba, która zajmuje się przypomnieniem i podała adres w menu użytkownika.",
+      "enabled": "Wysyłaj powiadomienia e-mail",
+      "enabledHint": "Po wyłączeniu przypomnienia są widoczne tylko w aplikacji.",
+      "host": "Serwer SMTP",
+      "port": "Port",
+      "security": "Szyfrowanie",
+      "unencrypted": "Brak",
+      "usernameHint": "Pozostaw puste, jeśli serwer nie wymaga logowania.",
+      "passwordKeepHint": "Pozostaw puste, aby zachować zapisane hasło.",
+      "from": "Adres nadawcy",
+      "fromHint": "Serwer musi zezwalać na niego dla Twojego konta.",
+      "appUrl": "Adres aplikacji",
+      "appUrlHint": "Do linków w e-mailach, np. https://docs.example.com. Puste = bez linków.",
+      "digestHour": "Wysyłka",
+      "fromHour": "od {{hour}}",
+      "saved": "Ustawienia wysyłania e-maili zostały zapisane",
+      "test": "Wiadomość testowa na adres {{address}}",
+      "testNeedsAddress": "Aby wysłać wiadomość testową, podaj w menu użytkownika swój adres e-mail.",
+      "testSavedHint": "Test korzysta z zapisanych ustawień – najpierw zapisz."
+    },
+    "backup": {
+      "title": "Kopia zapasowa i import",
+      "navHint": "Kopia zapasowa wszystkiego naraz, import eksportów",
+      "intro": "Kopia zapasowa zawiera wszystko, czego potrzeba, aby odtworzyć AIDocuments dokładnie w obecnym stanie. Import przejmuje dokumenty z eksportu innej instalacji – wraz z ich danymi.",
+      "backupTitle": "Kopia zapasowa jednym kliknięciem",
+      "backupText": "Plik ZIP z bazą danych, wszystkimi dokumentami wraz z wcześniejszymi wersjami, obrazami podglądu i kluczem do zapisanych haseł. Aplikacja w tym czasie działa dalej.",
+      "size": "Rozmiar",
+      "sizeValue_one": "około {{size}} w {{count, number}} pliku",
+      "sizeValue_few": "około {{size}} w {{count, number}} plikach",
+      "sizeValue_many": "około {{size}} w {{count, number}} plikach",
+      "sizeValue_other": "około {{size}} w {{count, number}} pliku",
+      "last": "Ostatnia kopia",
+      "never": "jeszcze nigdy",
+      "keyWarning": "Kopia zapasowa nie jest zaszyfrowana i zawiera klucz do zapisanych haseł (skrzynki pocztowe, AI, uwierzytelnianie dwuskładnikowe). Przechowuj ją równie bezpiecznie jak same dokumenty.",
+      "restore": "Przywracanie: zatrzymaj AIDocuments, rozpakuj zawartość pliku ZIP do pustego katalogu danych i uruchom aplikację ponownie. Instrukcja znajduje się w pliku ZIP (README.txt).",
+      "download": "Pobierz kopię zapasową",
+      "started": "Kopia zapasowa jest pobierana.",
+      "externalDatabase": "Kopia zapasowa jednym kliknięciem jest dostępna tylko z wbudowaną bazą danych. W przypadku MariaDB utwórz kopię zapasową bazy danych jej własnymi narzędziami (np. mariadb-dump), a do tego także katalogu danych.",
+      "importTitle": "Importuj eksport",
+      "importText": "Plik ZIP utworzony przyciskiem „Eksportuj” na liście dokumentów – także z innej instalacji. Tytuł, typ dokumentu, tagi i pozostałe dane zostają zachowane; AI nie analizuje dokumentów ponownie. Pliki, które już istnieją, są pomijane.",
+      "file": "Plik ZIP",
+      "areaHint": "Tu trafią dokumenty – albo tylko te, których obszaru tutaj nie ma.",
+      "matchAreas": "Umieść w obszarach o tej samej nazwie",
+      "matchAreasHint": "Jeśli istnieje tu obszar o tej samej nazwie co w eksporcie, dokumenty trafią do niego.",
+      "import": "Importuj",
+      "importing": "Importowanie…",
+      "result": "Zaimportowano: {{imported, number}} · już istnieje: {{duplicates, number}} · nie zaimportowano: {{failed, number}}",
+      "auto": {
+        "title": "Automatyczna kopia zapasowa",
+        "text": "Raz dziennie AIDocuments zapisuje pełną kopię zapasową jako plik ZIP w folderze i przechowuje najnowsze z nich. Najlepiej, aby folder znajdował się na innym dysku lub na dysku sieciowym – inaczej w razie awarii dysku z danymi przepadną również kopie zapasowe.",
+        "enable": "Codziennie automatycznie twórz kopię zapasową",
+        "hour": "Godzina",
+        "keep": "Przechowuj",
+        "keepHint": "Liczba kopii zapasowych; starsze są usuwane.",
+        "directory": "Folder",
+        "directoryHint": "Pełna ścieżka na serwerze. Pozostaw puste, aby użyć domyślnej. W kontenerze Docker folder musi być zamontowany.",
+        "warnAfterDays": "Ostrzegaj po (dniach)",
+        "warnAfterDaysHint": "Komunikat na liście dokumentów, gdy przez tyle dni nie utworzono kopii zapasowej – ani ręcznie, ani automatycznie. 0 = nigdy nie ostrzegaj.",
+        "lastRun": "Ostatnie uruchomienie",
+        "nextRun": "Następne uruchomienie",
+        "running": "Tworzenie kopii zapasowej…",
+        "ok": "powiodło się, {{when}}",
+        "failed": "nie powiodło się, {{when}}",
+        "stored_one": "{{count, number}} kopia zapasowa w folderze {{directory}}",
+        "stored_few": "{{count, number}} kopie zapasowe w folderze {{directory}}",
+        "stored_many": "{{count, number}} kopii zapasowych w folderze {{directory}}",
+        "stored_other": "{{count, number}} kopii zapasowej w folderze {{directory}}",
+        "runNow": "Utwórz kopię teraz",
+        "saveFirst": "Najpierw zapisz zmiany.",
+        "runStarted": "Kopia zapasowa jest tworzona w tle.",
+        "done": "Kopia zapasowa została zapisana.",
+        "saved": "Ustawienia zostały zapisane.",
+        "externalDatabase": "Automatyczna kopia zapasowa jest dostępna tylko z wbudowaną bazą danych. W przypadku MariaDB utwórz kopię zapasową bazy danych jej własnymi narzędziami (np. za pomocą mariadb-dump uruchamianego co noc), a do tego także katalogu danych."
+      }
     }
   },
   "history": {
     "nav": "Historia",
     "title": "Historia",
-    "subtitle": "Co się działo z twoimi dokumentami – najnowsze wpisy na górze.",
+    "subtitle": "Co się działo z Twoimi dokumentami – najnowsze wpisy na górze.",
     "empty": "Brak wpisów.",
     "actions": {
       "IMPORTED": "Zaimportowano",
@@ -566,7 +775,7 @@
     "title": "Uwierzytelnianie dwuskładnikowe",
     "on": "Włączone",
     "off": "Wyłączone",
-    "intro": "Chroń konto drugim składnikiem: przy logowaniu wpiszesz dodatkowo kod z aplikacji uwierzytelniającej w telefonie (np. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Chroń swoje konto drugim składnikiem: przy logowaniu wpiszesz dodatkowo kod z aplikacji uwierzytelniającej w telefonie (np. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Skonfiguruj",
     "scan": "Zeskanuj kod QR aplikacją uwierzytelniającą lub wpisz klucz ręcznie. Następnie wpisz kod z aplikacji i swoje hasło.",
     "qrAlt": "Kod QR dla aplikacji uwierzytelniającej",
@@ -587,14 +796,15 @@
   "confirmCode": {
     "title": "Potwierdź zmianę",
     "text": "Zmiany kont, skrzynek pocztowych i ustawień wymagają aktualnego kodu z aplikacji uwierzytelniającej. Potwierdzenie jest ważne 10 minut.",
-    "submit": "Potwierdź"
+    "submit": "Potwierdź",
+    "passkey": "Potwierdź kluczem dostępu"
   },
   "share": {
     "button": "Udostępnij",
     "title": "Udostępnij dokument",
     "intro": "Tworzy link, za pomocą którego osoba bez konta może otworzyć tylko ten dokument.",
     "recipient": "Komu udostępniasz?",
-    "recipientHint": "Imię i nazwisko osoby – żeby później było widać, komu dałeś link.",
+    "recipientHint": "Imię i nazwisko osoby – aby później było wiadomo, komu przekazano link.",
     "permission": "Czy ta osoba może edytować dokument?",
     "viewOnly": "Tylko podgląd",
     "canEdit": "Może edytować",
@@ -619,7 +829,206 @@
     "revoked": "Link cofnięty",
     "page": {
       "for": "Udostępniono dla: {{name}}",
-      "invalid": "Ten link jest nieprawidłowy lub wygasł albo dokument został usunięty. Skontaktuj się z osobą, która ci go dała."
+      "invalid": "Ten link jest nieprawidłowy lub wygasł albo dokument został usunięty. Skontaktuj się z osobą, która Ci go przekazała."
+    }
+  },
+  "areas": {
+    "general": "Ogólny",
+    "unknown": "Inny obszar",
+    "label": "Obszar",
+    "target": "Obszar docelowy",
+    "access": {
+      "READ": "Tylko odczyt",
+      "EDIT": "Odczyt i edycja",
+      "DELETE": "Edycja i usuwanie"
+    }
+  },
+  "reminders": {
+    "title": "Przypomnienia",
+    "cardTitle": "Przypomnienie",
+    "add": "Dodaj przypomnienie",
+    "edit": "Edytuj przypomnienie",
+    "create": "Utwórz",
+    "created": "Dodano przypomnienie",
+    "saved": "Przypomnienie zostało zapisane",
+    "deleted": "Przypomnienie zostało usunięte",
+    "markedDone": "Załatwione",
+    "dueDate": "Termin",
+    "note": "Notatka",
+    "notePlaceholder": "np. sprawdzić płatność",
+    "assignee": "Kto się tym zajmie?",
+    "assigneeHint": "Ta osoba widzi przypomnienie w widoku „Moje” i otrzymuje powiadomienie e-mail. Do wyboru są wszyscy, którzy widzą dokument.",
+    "me": "{{name}} (ja)",
+    "assignedTo": "dla: {{name}}",
+    "doneBy": "załatwione przez: {{name}}",
+    "markDone": "Oznacz jako załatwione",
+    "reopen": "Otwórz ponownie",
+    "delete": {
+      "label": "Usuń przypomnienie",
+      "title": "Usunąć przypomnienie?",
+      "text": "Przypomnienie zostanie usunięte. Dokument pozostanie bez zmian."
+    },
+    "accept": "Dodaj",
+    "dismiss": "Odrzuć sugestię",
+    "suggestionsHint": "AI znalazło w tym dokumencie terminy:",
+    "none": "Brak otwartych przypomnień.",
+    "showDone_one": "Pokaż {{count, number}} załatwione przypomnienie",
+    "showDone_few": "Pokaż {{count, number}} załatwione przypomnienia",
+    "showDone_many": "Pokaż {{count, number}} załatwionych przypomnień",
+    "showDone_other": "Pokaż {{count, number}} załatwionego przypomnienia",
+    "hideDone": "Ukryj załatwione",
+    "scope": {
+      "label": "Które przypomnienia",
+      "mine": "Moje",
+      "all": "Wszystkie"
+    },
+    "dueTitle": "Do załatwienia",
+    "nothingDue": "Dziś nie ma nic do załatwienia.",
+    "upcomingTitle": "Wkrótce",
+    "suggestionsTitle": "Proponowane terminy",
+    "suggestionsPageHint": "Terminy z najbliższych sześciu miesięcy, które AI znalazło w dokumentach. Dodaj je jako przypomnienie albo odrzuć.",
+    "emptyTitle": "Brak przypomnień",
+    "emptyText": "Dodaj przypomnienie do dokumentu – albo przyjmij jedno z zaproponowanych przez AI.",
+    "repeat": {
+      "label": "Powtarzanie",
+      "hint": "Gdy oznaczysz przypomnienie jako załatwione, następne zostanie utworzone w tym samym odstępie.",
+      "none": "Jednorazowo",
+      "m1": "Co miesiąc",
+      "m3": "Co kwartał",
+      "m6": "Co pół roku",
+      "m12": "Co rok",
+      "m24": "Co dwa lata",
+      "months_one": "Co miesiąc",
+      "months_few": "Co {{count}} miesiące",
+      "months_many": "Co {{count}} miesięcy",
+      "months_other": "Co {{count}} miesiąca"
+    },
+    "fromContract": "z umowy"
+  },
+  "pages": {
+    "button": "Strony",
+    "title": "Edytuj strony",
+    "intro": "Przeciągaj strony lub przesuwaj je strzałkami, obracaj albo usuwaj. Zapisanie tworzy nową wersję – poprzednia zostaje zachowana.",
+    "page": "Strona {{number}}",
+    "wasPage": "wcześniej {{number}}",
+    "moveLeft": "Przesuń do przodu",
+    "moveRight": "Przesuń do tyłu",
+    "rotate": "Obróć o 90°",
+    "remove": "Usuń stronę",
+    "keep": "Zachowaj stronę",
+    "noneLeft": "Musi pozostać co najmniej jedna strona.",
+    "saveFirst": "Najpierw zapisz zmiany",
+    "saved": "Strony zostały zapisane",
+    "split": {
+      "here": "Od tej strony osobny dokument",
+      "title": "Podzielić dokument?",
+      "text": "Strona {{page}} i wszystkie następne staną się osobnym dokumentem w tym samym obszarze. Zostanie on przeanalizowany i przyporządkowany jak nowo otrzymany dokument; ten dokument zachowa wcześniejsze strony.",
+      "confirm": "Podziel",
+      "done": "Dokument został podzielony",
+      "open": "Otwórz nowy dokument"
+    },
+    "merge": {
+      "button": "Dołącz dokumenty",
+      "title": "Dołącz dokumenty",
+      "intro": "Strony wybranych dokumentów zostaną dodane w tej kolejności na końcu dokumentu „{{title}}”.",
+      "search": "Szukaj dokumentów…",
+      "none": "Brak pasujących dokumentów.",
+      "noDeleteRight": "Nie możesz go usunąć – dlatego nie możesz go też dołączyć.",
+      "hint": "Dołączone dokumenty trafią następnie do kosza; przez 30 dni można je przywrócić w historii.",
+      "confirm_one": "Dołącz {{count}} dokument",
+      "confirm_few": "Dołącz {{count}} dokumenty",
+      "confirm_many": "Dołącz {{count}} dokumentów",
+      "confirm_other": "Dołącz {{count}} dokumentu",
+      "done_one": "Dołączono {{count}} dokument",
+      "done_few": "Dołączono {{count}} dokumenty",
+      "done_many": "Dołączono {{count}} dokumentów",
+      "done_other": "Dołączono {{count}} dokumentu"
+    }
+  },
+  "contracts": {
+    "nav": "Umowy",
+    "title": "Umowy",
+    "pageIntro": "Okresy obowiązywania i okresy wypowiedzenia wszystkich umów, które możesz widzieć – najpierw te, przy których wkrótce trzeba coś zrobić.",
+    "scope": {
+      "label": "Pokaż",
+      "running": "Obowiązujące",
+      "all": "Wszystkie"
+    },
+    "emptyTitle": "Brak zapisanych umów",
+    "emptyText": "Otwórz dokument, na przykład umowę na prąd lub telefon, i wpisz tam okres obowiązywania i okres wypowiedzenia. Odpowiednio wcześnie przed upływem terminu pojawi się wtedy przypomnienie.",
+    "cardTitle": "Umowa",
+    "none": "Czy to umowa? Jeśli podasz okres obowiązywania i okres wypowiedzenia, AIDocuments w porę przypomni Ci o wypowiedzeniu.",
+    "add": "Zapisz jako umowę",
+    "edit": "Edytuj umowę",
+    "intro": "Z końca okresu obowiązywania i okresu wypowiedzenia wynika, do kiedy trzeba złożyć wypowiedzenie. Wcześniej pojawi się przypomnienie; jeśli okres obowiązywania upłynie bez wypowiedzenia, umowa przedłuży się automatycznie.",
+    "saved": "Umowa została zapisana",
+    "removed": "Usunięto dane umowy",
+    "remove": {
+      "label": "Usuń dane umowy",
+      "title": "Usunąć dane umowy?",
+      "text": "Okres obowiązywania, okres wypowiedzenia i powiązane z nimi otwarte przypomnienie zostaną usunięte. Sam dokument pozostanie."
+    },
+    "openEnded": "na czas nieokreślony",
+    "months_one": "{{count}} miesiąc",
+    "months_few": "{{count}} miesiące",
+    "months_many": "{{count}} miesięcy",
+    "months_other": "{{count}} miesiąca",
+    "amountHint": "np. „49,90 zł miesięcznie”",
+    "endDateHint": "Koniec bieżącego okresu obowiązywania; puste = na czas nieokreślony",
+    "noticeHint": "Liczba miesięcy przed końcem okresu obowiązywania; puste = do końca okresu",
+    "renewalHint": "Bez wypowiedzenia umowa przedłuża się o tyle miesięcy; 0 = wygasa",
+    "cancelledHint": "Wtedy umowa nie będzie się już przedłużać i nie pojawią się kolejne przypomnienia.",
+    "fields": {
+      "partner": "Kontrahent",
+      "amount": "Kwota",
+      "startDate": "Początek umowy",
+      "endDate": "Obowiązuje do",
+      "notice": "Okres wypowiedzenia (miesiące)",
+      "renewal": "Przedłużenie (miesiące)",
+      "deadline": "Wypowiedzieć do",
+      "reminderDays": "Przypomnij (dni wcześniej)",
+      "cancelled": "Wypowiedziana"
+    },
+    "status": {
+      "ACTIVE": "Obowiązuje",
+      "DUE_SOON": "Termin się zbliża",
+      "NOTICE_MISSED": "Termin minął",
+      "CANCELLED": "Wypowiedziana",
+      "ENDED": "Zakończona",
+      "OPEN_ENDED": "Bezterminowa"
+    },
+    "row": {
+      "cancelBy": "wypowiedzieć do {{date}}",
+      "endsOn": "kończy się {{date}}",
+      "term": "obowiązuje do {{date}}",
+      "renews_one": "przedłuża się o {{count}} miesiąc",
+      "renews_few": "przedłuża się o {{count}} miesiące",
+      "renews_many": "przedłuża się o {{count}} miesięcy",
+      "renews_other": "przedłuża się o {{count}} miesiąca"
+    }
+  },
+  "passkeys": {
+    "title": "Klucze dostępu",
+    "intro": "Dzięki kluczowi dostępu logujesz się bez hasła – odblokowujesz go odciskiem palca, skanem twarzy lub kodem PIN urządzenia. Działa tylko dla tego adresu; podrobiona strona nie może go użyć.",
+    "none": "Nie dodano jeszcze żadnego klucza dostępu.",
+    "add": "Dodaj klucz dostępu",
+    "create": "Utwórz klucz dostępu",
+    "name": "Nazwa",
+    "nameHint": "Aby później go rozpoznać, np. „Laptop” lub „Menedżer haseł”.",
+    "password": "Twoje hasło",
+    "passwordHint": "Kto doda klucz dostępu, może odtąd logować się bez hasła – dlatego potwierdź to jednorazowo.",
+    "added": "Dodano klucz dostępu",
+    "removed": "Usunięto klucz dostępu",
+    "synced": "synchronizowany",
+    "lastUsed": "ostatnio użyty {{time}}",
+    "created": "dodany {{time}}, jeszcze nieużywany",
+    "unsupported": "Ta przeglądarka nie może tutaj używać kluczy dostępu. Klucze dostępu działają tylko przez HTTPS (lub na localhost).",
+    "unsupportedIp": "Klucze dostępu działają tylko przez HTTPS i z nazwą w adresie, a nie z adresem IP.",
+    "remove": {
+      "label": "Usuń klucz dostępu",
+      "title": "Usunąć klucz dostępu?",
+      "text": "Za pomocą „{{name}}” nikt nie będzie mógł się już zalogować. Klucz pozostanie zapisany w menedżerze haseł lub na urządzeniu, dopóki go tam nie usuniesz.",
+      "confirm": "Usuń"
     }
   }
 }

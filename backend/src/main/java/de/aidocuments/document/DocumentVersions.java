@@ -44,7 +44,11 @@ public class DocumentVersions {
         /** eine ältere Fassung wiederhergestellt */
         VERSION_RESTORED,
         /** eine Änderung über die Historie zurückgenommen */
-        UNDONE
+        UNDONE,
+        /** Seiten umsortiert, gedreht, entfernt oder abgetrennt */
+        PAGES,
+        /** andere Dokumente angehängt */
+        MERGED
     }
 
     public record Version(String id, String documentId, int number, String storagePath, Long sizeBytes,

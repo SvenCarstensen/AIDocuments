@@ -37,6 +37,7 @@ public final class MailDtos {
             int effectiveIntervalMinutes,
             /* null = pausiert */
             Instant nextSyncAt,
+            String areaId,
             Instant lastSyncAt,
             MailAccount.SyncStatus lastSyncStatus,
             String lastSyncMessage,
@@ -59,7 +60,9 @@ public final class MailDtos {
             /* Minuten; null = das allgemeine Abrufintervall */
             @Min(value = MailSchedule.MIN_INTERVAL_MINUTES, message = "{validation.interval.min}")
             @Max(value = MailSchedule.MAX_INTERVAL_MINUTES, message = "{validation.interval.max}")
-            Integer intervalMinutes) {
+            Integer intervalMinutes,
+            /* null = der allgemeine Bereich */
+            @Size(max = 64, message = SIZE) String areaId) {
     }
 
     /**

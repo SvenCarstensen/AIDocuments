@@ -46,7 +46,9 @@
     "login": {
       "title": "Vitajte späť",
       "subtitle": "Prihláste sa a získajte prístup k svojim dokumentom.",
-      "submit": "Prihlásiť sa"
+      "submit": "Prihlásiť sa",
+      "or": "alebo",
+      "passkey": "Prihlásiť sa prístupovým kľúčom"
     },
     "setup": {
       "title": "Nastavenie AIDocuments",
@@ -64,16 +66,16 @@
     },
     "twoFactor": {
       "title": "Potvrdiť prihlásenie",
-      "subtitle": "Zadaj 6-miestny kód z overovacej aplikácie.",
+      "subtitle": "Zadajte 6-miestny kód z overovacej aplikácie.",
       "code": "Kód",
-      "codeHint": "Nemáš prístup k aplikácii? Zadaj namiesto toho jeden zo svojich záložných kódov.",
+      "codeHint": "Nemáte prístup k aplikácii? Zadajte namiesto toho jeden zo svojich záložných kódov.",
       "submit": "Potvrdiť",
       "back": "Späť na prihlásenie"
     },
     "twoFactorRequired": {
       "title": "Nastaviť dvojfázové overenie",
-      "subtitle": "Pre administrátorov je dvojfázové overenie povinné. Nastav ho teraz, aby si mohol pokračovať.",
-      "intro": "Potrebuješ overovaciu aplikáciu v telefóne (napr. Google Authenticator, Microsoft Authenticator, 1Password alebo Aegis)."
+      "subtitle": "Pre správcov je dvojfázové overenie povinné. Ak chcete pokračovať, nastavte ho teraz.",
+      "intro": "Potrebujete na to overovaciu aplikáciu v telefóne (napr. Google Authenticator, Microsoft Authenticator, 1Password alebo Aegis)."
     }
   },
   "shell": {
@@ -83,8 +85,8 @@
       "dark": "Tmavý motív"
     },
     "search": {
-      "placeholder": "Vyhľadávanie podľa kľúčových slov: dokumenty, štítky, obsah …",
-      "placeholderAi": "Vyhľadávanie AI: pýtaj sa vlastnými slovami – napr. „faktúry od Kia z roku 2024“",
+      "placeholder": "Vyhľadávanie podľa kľúčových slov: dokumenty, štítky, obsah…",
+      "placeholderAi": "Vyhľadávanie AI: pýtajte sa vlastnými slovami – napr. „faktúry od Kia z roku 2024“",
       "labelAi": "AI",
       "label": "Hľadať dokumenty",
       "clear": "Vymazať hľadanie",
@@ -104,17 +106,34 @@
       "changed": "Heslo bolo zmenené"
     },
     "dropzone": {
-      "title": "Presuňte sem súbory PDF",
-      "hint": "Môžete presunúť niekoľko súborov naraz. Uložia sa, analyzujú a opatria štítkami."
+      "title": "Presuňte sem súbory PDF alebo fotografie",
+      "hint": "Môžete presunúť niekoľko súborov naraz. Fotografie (JPG, PNG, HEIC) sa prevedú na PDF. Všetko sa uloží, analyzuje a opatrí štítkami."
+    },
+    "remindersDue_one": "{{count, number}} pripomenutie k vybaveniu",
+    "remindersDue_few": "{{count, number}} pripomenutia k vybaveniu",
+    "remindersDue_many": "{{count, number}} pripomenutia k vybaveniu",
+    "remindersDue_other": "{{count, number}} pripomenutí k vybaveniu",
+    "profile": {
+      "email": "E-mailová adresa",
+      "saved": "Uložené"
+    },
+    "notifications": {
+      "title": "E-mailové upozornenia",
+      "emailHint": "Sem sa posielajú pripomenutia k vybaveniu, ktoré sú vám pridelené, a upozornenia, ktoré zapnete nižšie – v jazyku, v ktorom práve používate aplikáciu. Ak nechcete dostávať žiadne e-maily, nechajte pole prázdne.",
+      "digest": "Nové dokumenty každý deň",
+      "digestHint": "Raz denne zoznam dokumentov, ktoré pribudli vo vašich oblastiach – iba v dňoch, keď nejaké nové dokumenty pribudli.",
+      "admin": "Upozornenia pre správcov",
+      "adminHint": "Keď uplynú lehoty uchovávania (nič sa neodstráni automaticky) a keď sa schránku opakovane nedarí skontrolovať.",
+      "needsEmail": "Bez adresy sa žiadne e-maily neposielajú."
     }
   },
   "upload": {
-    "onlyPdf": "Pridať možno iba súbory PDF.",
-    "uploadingFile": "Nahráva sa „{{name}}“ …",
-    "uploadingFiles_one": "Nahráva sa {{count, number}} súbor PDF …",
-    "uploadingFiles_few": "Nahrávajú sa {{count, number}} súbory PDF …",
-    "uploadingFiles_many": "Nahráva sa {{count, number}} súboru PDF …",
-    "uploadingFiles_other": "Nahráva sa {{count, number}} súborov PDF …",
+    "onlyPdf": "Pridať možno iba súbory PDF a fotografie (JPG, PNG, HEIC).",
+    "uploadingFile": "Nahráva sa „{{name}}“…",
+    "uploadingFiles_one": "Nahráva sa {{count, number}} súbor…",
+    "uploadingFiles_few": "Nahrávajú sa {{count, number}} súbory…",
+    "uploadingFiles_many": "Nahráva sa {{count, number}} súboru…",
+    "uploadingFiles_other": "Nahráva sa {{count, number}} súborov…",
     "created_one": "Pridané: {{count, number}} dokument",
     "created_few": "Pridané: {{count, number}} dokumenty",
     "created_many": "Pridané: {{count, number}} dokumentu",
@@ -124,16 +143,24 @@
     "duplicates_few": "{{count, number}} dokumenty už existujú",
     "duplicates_many": "{{count, number}} dokumentu už existuje",
     "duplicates_other": "{{count, number}} dokumentov už existuje",
-    "rejected_one": "{{count, number}} súbor nie je platný PDF",
-    "rejected_few": "{{count, number}} súbory nie sú platné PDF",
-    "rejected_many": "{{count, number}} súboru nie je platný PDF",
-    "rejected_other": "{{count, number}} súborov nie je platných PDF",
+    "rejected_one": "{{count, number}} súbor nebol pridaný",
+    "rejected_few": "{{count, number}} súbory neboli pridané",
+    "rejected_many": "{{count, number}} súboru nebolo pridané",
+    "rejected_other": "{{count, number}} súborov nebolo pridaných",
     "onlyDuplicates_one": "Tento dokument už existuje.",
     "onlyDuplicates_few": "Tieto dokumenty už existujú.",
     "onlyDuplicates_many": "Tieto dokumenty už existujú.",
     "onlyDuplicates_other": "Tieto dokumenty už existujú.",
-    "noneValid": "Žiadny zo súborov nie je platný PDF.",
-    "failed": "Nahrávanie zlyhalo"
+    "noneValid": "Žiadny zo súborov sa nepodarilo pridať.",
+    "failed": "Nahrávanie zlyhalo",
+    "intoArea": "Oblasť: {{area}}",
+    "combine": {
+      "title": "Spojiť fotografie do jedného dokumentu?",
+      "text": "Vybrali ste niekoľko fotografií. Ak ide o strany jedného dokumentu – napríklad viacstranového listu –, vznikne z nich jedno PDF v poradí názvov súborov; poradie môžete neskôr zmeniť v časti „Strany“. Inak sa z každej fotografie stane samostatný dokument.",
+      "one": "Ako jeden dokument",
+      "separate": "Každú fotografiu zvlášť",
+      "tooMuch": "Na jeden dokument je to príliš veľa alebo príliš veľkých fotografií (najviac 100 fotografií a spolu 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -153,8 +180,8 @@
     "searchResults_many": "<count>{{count, number}} výsledku</count> <query>pre „{{query}}“</query>",
     "searchResults_other": "<count>{{count, number}} výsledkov</count> <query>pre „{{query}}“</query>",
     "progress": {
-      "inProgress": "{{documents, number}} sa spracúva",
-      "inProgressHint": "Čaká na analýzu pomocou AI alebo sa práve analyzuje",
+      "inProgress": "Spracúva sa: {{documents, number}}",
+      "inProgressHint": "Čakajú na analýzu pomocou AI alebo sa práve analyzujú",
       "remaining": "zostáva približne {{duration}}",
       "remainingLessThan": "zostáva menej ako {{duration}}",
       "finishHint": "Predpokladané dokončenie: {{time}} – odhad podľa tempa naposledy spracovaných dokumentov"
@@ -162,7 +189,7 @@
     "sort": {
       "label": "Zoradenie",
       "relevance": "Najlepšia zhoda",
-      "newest": "Najnovšie prvé",
+      "newest": "Od najnovších",
       "date": "Podľa dátumu dokumentu"
     },
     "view": {
@@ -189,23 +216,49 @@
       "activeTo": "do {{date}}",
       "removeOne": "Odobrať filter „{{label}}“",
       "removeAll": "Odobrať všetky filtre",
-      "clear": "Odobrať filtre"
+      "clear": "Odobrať filtre",
+      "retentionExpired": "Lehota uchovávania uplynula"
     },
     "empty": {
       "libraryTitle": "Zatiaľ žiadne dokumenty",
-      "libraryHint": "Stačí presunúť súbory PDF do tohto okna alebo použiť „Nahrať“.",
-      "libraryHintAdmin": "Stačí presunúť súbory PDF do tohto okna alebo použiť „Nahrať“. V nastaveniach môžete nastaviť e-mailovú schránku alebo priečinok na import, z ktorého sa nové súbory PDF importujú automaticky.",
+      "libraryHint": "Stačí presunúť súbory PDF alebo fotografie do tohto okna alebo použiť tlačidlo „Nahrať“.",
+      "libraryHintAdmin": "Stačí presunúť súbory PDF alebo fotografie do tohto okna alebo použiť tlačidlo „Nahrať“. V nastaveniach môžete pridať e-mailovú schránku alebo nastaviť priečinok na import, z ktorého sa nové dokumenty importujú automaticky.",
       "noResultsTitle": "Nič sa nenašlo",
       "noResultsSearch": "Tomuto hľadaniu nezodpovedá žiadny dokument. Hľadanie nájde aj časti slov – skúste kratší výraz alebo menej slov.",
       "noResultsFilters": "Vybraným filtrom nezodpovedá žiadny dokument."
     },
-    "loadingAll_one": "Načítané: {{loaded, number}} z {{count, number}} dokumentu …",
-    "loadingAll_few": "Načítané: {{loaded, number}} z {{count, number}} dokumentov …",
-    "loadingAll_many": "Načítané: {{loaded, number}} z {{count, number}} dokumentu …",
-    "loadingAll_other": "Načítané: {{loaded, number}} z {{count, number}} dokumentov …",
+    "loadingAll_one": "Načítané: {{loaded, number}} z {{count, number}} dokumentu…",
+    "loadingAll_few": "Načítané: {{loaded, number}} z {{count, number}} dokumentov…",
+    "loadingAll_many": "Načítané: {{loaded, number}} z {{count, number}} dokumentu…",
+    "loadingAll_other": "Načítané: {{loaded, number}} z {{count, number}} dokumentov…",
     "loadMore": "Načítať ďalšie ({{remaining, number}})",
     "aiSearch": {
       "notice": "Vyhľadávanie AI: „{{question}}“. Filtre ukazujú, ako bola otázka pochopená."
+    },
+    "export": {
+      "label_one": "Exportovať {{count, number}} dokument ako ZIP",
+      "label_few": "Exportovať všetky {{count, number}} dokumenty tohto zoznamu ako ZIP",
+      "label_many": "Exportovať {{count, number}} dokumentu tohto zoznamu ako ZIP",
+      "label_other": "Exportovať všetkých {{count, number}} dokumentov tohto zoznamu ako ZIP",
+      "started_one": "Export {{count, number}} dokumentu sa začal",
+      "started_few": "Export {{count, number}} dokumentov sa začal",
+      "started_many": "Export {{count, number}} dokumentu sa začal",
+      "started_other": "Export {{count, number}} dokumentov sa začal",
+      "contents": "Súbor ZIP obsahuje súbory PDF a všetky údaje vo forme tabuľky (documents.csv) a ako documents.json.",
+      "failed": "Export zlyhal"
+    },
+    "mailboxNotice": {
+      "text_one": "Schránku „{{names}}“ sa opakovane nedarí skontrolovať – neprichádzajú z nej žiadne dokumenty.",
+      "text_few": "Tieto schránky sa opakovane nedarí skontrolovať: {{names}}. Neprichádzajú z nich žiadne dokumenty.",
+      "text_many": "Tieto schránky sa opakovane nedarí skontrolovať: {{names}}. Neprichádzajú z nich žiadne dokumenty.",
+      "text_other": "Tieto schránky sa opakovane nedarí skontrolovať: {{names}}. Neprichádzajú z nich žiadne dokumenty.",
+      "action": "Zobraziť schránky"
+    },
+    "backupNotice": {
+      "never": "Zatiaľ neexistuje žiadna záloha vašich dokumentov.",
+      "overdue": "Posledná záloha: {{when}}. To je dlhšie, ako je nastavené.",
+      "failed": "Automatická záloha zlyhala: {{reason}}",
+      "action": "Prejsť na zálohu"
     }
   },
   "document": {
@@ -221,7 +274,7 @@
       "discard": "Zahodiť",
       "save": "Uložiť zmeny",
       "saved": "Zmeny uložené – originál zostáva zachovaný.",
-      "modified": "Zmenené {{when}} – originál je uschovaný.",
+      "modified": "Zmenené {{when}} – originál je zachovaný.",
       "downloadOriginal": "Stiahnuť originál",
       "restoreOriginal": "Obnoviť originál",
       "restoreTitle": "Obnoviť originál?",
@@ -254,7 +307,7 @@
       "allWith": "Všetky dokumenty so štítkom „{{tag}}“",
       "none": "Žiadne štítky. <add>Pridať štítky</add>",
       "inputHint": "Potvrďte klávesom Enter alebo čiarkou. Návrhy sú štítky, ktoré sa už používajú.",
-      "inputPlaceholder": "Zadajte štítok …",
+      "inputPlaceholder": "Zadajte štítok…",
       "remove": "Odobrať štítok „{{tag}}“"
     },
     "keyFacts": "Kľúčové údaje",
@@ -282,18 +335,20 @@
     "noText": "Pre tento dokument nie je k dispozícii žiadny text – pravdepodobne ide o sken bez textovej vrstvy. Ak je AI nastavená a rozpoznávanie textu zapnuté, obsah sa pri analýze prepíše.",
     "edit": {
       "title": "Upraviť dokument",
-      "saved": "Zmeny boli uložené"
+      "saved": "Zmeny boli uložené",
+      "areaHint": "Určuje, kto dokument uvidí.",
+      "areaMoveHint": "Potom ho uvidia iba členovia oblasti „{{area}}“ a správcovia."
     },
     "delete": {
       "title": "Odstrániť dokument?",
-      "text": "„{{title}}“ bude vymazaný. V histórii to môžeš 30 dní vrátiť späť; potom bude natrvalo odstránený.",
-      "confirm": "Vymazať"
+      "text": "Dokument „{{title}}“ bude odstránený. V histórii to môžete 30 dní vrátiť späť, potom bude odstránený natrvalo.",
+      "confirm": "Odstrániť"
     },
     "chat": {
-      "intro": "Spýtaj sa na tento dokument – AI odpovie podľa jeho obsahu.",
-      "placeholder": "Spýtaj sa niečo k tomuto dokumentu …",
+      "intro": "Spýtajte sa na tento dokument – AI odpovie podľa jeho obsahu.",
+      "placeholder": "Spýtajte sa niečo k tomuto dokumentu…",
       "send": "Odoslať",
-      "thinking": "AI číta dokument …",
+      "thinking": "AI číta dokument…",
       "notConfigured": "Na otázky k dokumentu musí byť nastavená AI.",
       "restart": "Začať odznova",
       "suggestions": {
@@ -318,22 +373,31 @@
         "EDITED": "Upravené",
         "ORIGINAL_RESTORED": "Originál obnovený",
         "VERSION_RESTORED": "Verzia {{from}} obnovená",
-        "UNDONE": "Zmena vrátená späť"
+        "UNDONE": "Zmena vrátená späť",
+        "PAGES": "Strany zmenené",
+        "MERGED": "Dokumenty pripojené"
       }
-    }
+    },
+    "retention": {
+      "label": "Uchovávanie",
+      "until": "do {{date}} – dovtedy sa nedá odstrániť",
+      "expired": "lehota uplynula {{date}}",
+      "locked": "Treba uchovávať do {{date}} – odstrániť sa dá až potom"
+    },
+    "readOnly": "V tejto oblasti môžete tento dokument iba zobraziť."
   },
   "settings": {
     "title": "Nastavenia",
     "mailboxes": {
       "title": "E-mailové schránky",
-      "navHint": "Servery IMAP, z ktorých sa importujú prílohy PDF",
-      "intro": "Prílohy PDF sa z týchto schránok IMAP importujú automaticky. Schránky sa iba čítajú – e-maily zostávajú bez zmeny a neprečítané.",
+      "navHint": "Servery IMAP, z ktorých sa importujú prílohy PDF a fotografie",
+      "intro": "Z týchto schránok IMAP sa automaticky importujú prílohy PDF a priložené fotografie (ako PDF); text e-mailov a vložené logá nie. Schránky sa iba čítajú – e-maily zostávajú bez zmeny a neprečítané.",
       "add": "Pridať schránku",
       "emptyTitle": "Zatiaľ nie je nastavená žiadna schránka",
       "emptyText": "Zadajte prihlasovacie údaje schránky IMAP – napríklad tej, kam váš skener posiela dokumenty.",
       "paused": "Pozastavené",
       "syncNow": "Skontrolovať teraz",
-      "syncing": "Kontrola schránky …",
+      "syncing": "Kontrola schránky…",
       "neverSynced": "Zatiaľ nekontrolované.",
       "saved": "Schránka bola uložená",
       "added": "Schránka bola pridaná",
@@ -360,7 +424,7 @@
         "since": "Iba e-maily od",
         "sinceHint": "Voliteľné – staršie e-maily sa preskočia",
         "enabled": "Kontrolovať automaticky",
-        "enabledHint": "Schránka sa v nastavenom intervale kontroluje, či neobsahuje nové súbory PDF.",
+        "enabledHint": "Schránka sa v nastavenom intervale kontroluje, či neobsahuje nové prílohy.",
         "filter": {
           "title": "Filter",
           "intro": "Spracujú sa len e-maily, ktoré spĺňajú všetky podmienky. Jeden výraz na riadok; na veľkosti písmen nezáleží, stačí časť textu. Prázdne polia nič neobmedzujú.",
@@ -369,29 +433,30 @@
           "senderIncludes": "Odosielateľ obsahuje jeden z týchto výrazov",
           "senderExcludes": "Odosielateľ neobsahuje žiadny z týchto výrazov",
           "senderHint": "Meno alebo adresa, napr. „@example.com“",
-          "newOnly": "Filter platí pre e-maily, ktoré prídu po poslednom sťahovaní; už skontrolované e-maily sa znova nespracujú."
+          "newOnly": "Filter platí pre e-maily, ktoré prídu po poslednej kontrole; už skontrolované e-maily sa znova nespracujú."
         },
-        "interval": "Interval sťahovania v minútach",
-        "intervalHint": "Nechajte prázdne pre všeobecný interval (teraz {{interval}})."
+        "interval": "Interval kontroly v minútach",
+        "intervalHint": "Nechajte prázdne, ak chcete použiť všeobecný interval (teraz {{interval}}).",
+        "areaHint": "Do tejto oblasti sa ukladajú importované dokumenty."
       },
       "filterActive": "Filter aktívny",
-      "schedule": "Sťahovanie každých {{interval}} · ďalšie {{when}}",
-      "scheduleSoon": "Sťahovanie každých {{interval}} · ďalšie o chvíľu"
+      "schedule": "Kontrola každých {{interval}} · ďalšia {{when}}",
+      "scheduleSoon": "Kontrola každých {{interval}} · ďalšia o chvíľu"
     },
     "import": {
       "title": "Plán a priečinok na import",
       "navHint": "Interval kontroly a sledovaný adresár",
-      "intro": "Určuje, ako často aplikácia hľadá nové súbory PDF – v schránkach aj v priečinku na import.",
+      "intro": "Určuje, ako často aplikácia hľadá nové dokumenty – v schránkach aj v priečinku na import.",
       "saved": "Nastavenia boli uložené",
       "interval": {
         "title": "Interval kontroly",
-        "text": "Ako často aplikácia kontroluje vstupný priečinok a všetky schránky bez vlastného intervalu, či nie sú nové súbory PDF.",
+        "text": "Ako často aplikácia kontroluje priečinok na import a všetky schránky bez vlastného intervalu, či nie sú nové dokumenty.",
         "label": "Každých … minút",
         "nextRun": "Ďalšia automatická kontrola {{when}}."
       },
       "folder": {
         "title": "Priečinok na import",
-        "text": "Adresár na serveri, ktorý sa sleduje kvôli novým súborom PDF – napríklad cieľ sieťového skenera. Prehľadávajú sa aj podpriečinky.",
+        "text": "Adresár na serveri, ktorý sa sleduje kvôli novým súborom PDF a fotografiám (JPG, PNG, HEIC) – napríklad cieľ sieťového skenera. Prehľadávajú sa aj podpriečinky.",
         "enable": "Sledovať priečinok na import",
         "path": "Cesta na serveri",
         "pathHint": "Absolútna cesta. V kontajneri Docker je to pripojený priečinok, zvyčajne {{path}}.",
@@ -400,10 +465,11 @@
         "move": "Presunúť do „{{folder}}“",
         "keepHint": "Súbory zostanú bez zmeny. Aplikácia si pamätá, čo už importovala.",
         "moveHint": "Importované súbory sa presunú do podpriečinka „{{folder}}“ – priečinok na import zostane prehľadný.",
-        "scanning": "Kontrola priečinka …",
+        "scanning": "Kontrola priečinka…",
         "neverScanned": "Zatiaľ nekontrolované.",
         "scanNow": "Skontrolovať teraz",
-        "scanStarted": "Priečinok na import sa kontroluje."
+        "scanStarted": "Priečinok na import sa kontroluje.",
+        "areaHint": "Do tejto oblasti sa ukladajú dokumenty z priečinka."
       }
     },
     "ai": {
@@ -529,17 +595,160 @@
       "resetTwoFactorText": "{{name}} sa potom prihlási iba heslom a môže si dvojfázové overenie nastaviť znova – napríklad po strate telefónu.",
       "resetTwoFactorConfirm": "Resetovať",
       "twoFactorReset": "Dvojfázové overenie resetované"
+    },
+    "areas": {
+      "title": "Oblasti",
+      "navHint": "Kto vidí ktoré dokumenty",
+      "intro": "Každý dokument patrí práve do jednej oblasti. Používatelia vidia iba dokumenty oblastí, ktorých sú členmi, a dokumenty oblastí prístupných všetkým.",
+      "add": "Pridať oblasť",
+      "everyone": "Pre všetkých",
+      "restricted": "Obmedzená",
+      "visibleForAll": "viditeľná pre všetkých prihlásených",
+      "members": "Členovia: {{names}}",
+      "adminsOnly": "iba správcovia",
+      "adminHint": "Správcovia vidia všetky oblasti, aj keď nie sú ich členmi.",
+      "edit": "Upraviť {{name}}",
+      "saved": "Oblasť bola uložená",
+      "created": "Oblasť bola vytvorená",
+      "deleted": "Oblasť bola odstránená",
+      "delete": {
+        "label": "Odstrániť {{name}}",
+        "title": "Odstrániť oblasť?",
+        "text": "Oblasť „{{name}}“ bude odstránená. Je to možné iba vtedy, keď ju nepoužívajú žiadne dokumenty, schránka ani priečinok na import."
+      },
+      "dialog": {
+        "name": "Názov",
+        "namePlaceholder": "napr. Účtovníctvo",
+        "generalNameHint": "Nechajte prázdne a oblasť sa bude v každom jazyku volať „Všeobecná“.",
+        "everyone": "Viditeľná pre všetkých",
+        "everyoneHint": "Dokumenty tejto oblasti vidia všetci prihlásení používatelia.",
+        "members": "Členovia",
+        "membersHint": "Dokumenty tejto oblasti vidia iba členovia a správcovia. Pri každom členovi určíte, či smie iba čítať, aj upravovať, alebo navyše odstraňovať.",
+        "noUsers": "Zatiaľ neexistujú žiadni používatelia bez roly správcu.",
+        "create": "Vytvoriť",
+        "everyoneAccess": "Oprávnenie pre všetkých",
+        "accessOf": "Oprávnenie používateľa {{name}}",
+        "membersHintEveryone": "Dokumenty tejto oblasti vidia všetci. Členov sem pridajte, ak majú mať viac oprávnení ako ostatní."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Uchovávanie",
+      "navHint": "Lehoty a blokovanie odstránenia",
+      "intro": "Nastavte, ako dlho sa musia dokumenty určitého typu uchovávať – napríklad faktúry desať rokov. Lehota sa počíta od konca roka, z ktorého dokument pochádza. Dovtedy ho nikto nemôže odstrániť.",
+      "permanent": "Blokovanie sa nedá zrušiť – nemôžu to urobiť ani správcovia. Ak sa pravidlo skráti alebo odstráni, alebo sa zmení typ dokumentu, už nastavená lehota zostáva v platnosti.",
+      "add": "Pridať pravidlo",
+      "years_one": "{{count, number}} rok",
+      "years_few": "{{count, number}} roky",
+      "years_many": "{{count, number}} roka",
+      "years_other": "{{count, number}} rokov",
+      "edit": "Upraviť pravidlo pre {{category}}",
+      "saved": "Pravidlo bolo uložené",
+      "created": "Pravidlo bolo vytvorené",
+      "deleted": "Pravidlo bolo odstránené",
+      "emptyTitle": "Zatiaľ žiadne pravidlá uchovávania",
+      "emptyText": "Bez pravidla sa dajú dokumenty kedykoľvek odstrániť.",
+      "delete": {
+        "label": "Odstrániť pravidlo pre {{category}}",
+        "title": "Odstrániť pravidlo?",
+        "text": "Nové dokumenty typu „{{category}}“ už nedostanú žiadnu lehotu. Už zablokované dokumenty zostanú zablokované až do konca svojej lehoty."
+      },
+      "dialog": {
+        "categoryHint": "Tak, ako je uvedený pri dokumente; na veľkosti písmen nezáleží.",
+        "years": "Lehota uchovávania v rokoch",
+        "yearsHint": "Počíta sa od konca roka dátumu dokumentu (bez dátumu: dňa pridania).",
+        "shorterHint": "Kratšia lehota platí iba pre dokumenty, ktoré ešte nemajú žiadnu lehotu. Už zablokované zostanú zablokované až do konca svojej doterajšej lehoty.",
+        "create": "Vytvoriť"
+      }
+    },
+    "mailOut": {
+      "title": "Odosielanie e-mailov",
+      "navHint": "Upozornenia e-mailom",
+      "intro": "Cez tento server SMTP posiela aplikácia upozornenia na pripomenutia k vybaveniu – raz za každé pripomenutie, zhromaždené v jednom e-maile pre každú osobu. Príjemcom je ten, kto má pripomenutie na starosti a zadal si adresu v ponuke používateľa.",
+      "enabled": "Posielať upozornenia e-mailom",
+      "enabledHint": "Keď je vypnuté, pripomenutia sa zobrazujú iba v aplikácii.",
+      "host": "Server SMTP",
+      "port": "Port",
+      "security": "Šifrovanie",
+      "unencrypted": "Žiadne",
+      "usernameHint": "Nechajte prázdne, ak server nevyžaduje prihlásenie.",
+      "passwordKeepHint": "Nechajte prázdne, ak chcete ponechať uložené heslo.",
+      "from": "Adresa odosielateľa",
+      "fromHint": "Server ju musí pre váš účet povoliť.",
+      "appUrl": "Adresa aplikácie",
+      "appUrlHint": "Pre odkazy v e-mailoch, napr. https://docs.example.com. Prázdne = bez odkazov.",
+      "digestHour": "Odosielanie",
+      "fromHour": "od {{hour}}",
+      "saved": "Nastavenia odosielania e-mailov boli uložené",
+      "test": "Testovacia správa na {{address}}",
+      "testNeedsAddress": "Pre testovaciu správu zadajte v ponuke používateľa svoju e-mailovú adresu.",
+      "testSavedHint": "Test používa uložené nastavenia – najprv, prosím, uložte."
+    },
+    "backup": {
+      "title": "Záloha a import",
+      "navHint": "Zálohovať všetko naraz, importovať exporty",
+      "intro": "Záloha obsahuje všetko potrebné na obnovenie AIDocuments presne v súčasnom stave. Import prevezme dokumenty z exportu inej inštalácie – aj s ich údajmi.",
+      "backupTitle": "Záloha jedným kliknutím",
+      "backupText": "ZIP s databázou, všetkými dokumentmi vrátane skorších verzií, náhľadovými obrázkami a kľúčom k uloženým heslám. Aplikácia medzitým beží ďalej.",
+      "size": "Veľkosť",
+      "sizeValue_one": "približne {{size}} ({{count, number}} súbor)",
+      "sizeValue_few": "približne {{size}} ({{count, number}} súbory)",
+      "sizeValue_many": "približne {{size}} ({{count, number}} súboru)",
+      "sizeValue_other": "približne {{size}} ({{count, number}} súborov)",
+      "last": "Posledná záloha",
+      "never": "zatiaľ nikdy",
+      "keyWarning": "Záloha nie je šifrovaná a obsahuje kľúč k uloženým heslám (schránky, AI, dvojfázové overenie). Uchovávajte ju rovnako bezpečne ako samotné dokumenty.",
+      "restore": "Obnovenie: ukončite AIDocuments, rozbaľte obsah ZIPu do prázdneho dátového adresára a aplikáciu znova spustite. Návod je súčasťou ZIPu (README.txt).",
+      "download": "Stiahnuť zálohu",
+      "started": "Záloha sa sťahuje.",
+      "externalDatabase": "Záloha jedným kliknutím je k dispozícii iba so vstavanou databázou. Pri MariaDB zálohujte databázu jej vlastnými nástrojmi (napr. mariadb-dump) a k tomu aj dátový adresár.",
+      "importTitle": "Importovať export",
+      "importText": "ZIP vytvorený pomocou „Exportovať“ v zozname dokumentov – aj z inej inštalácie. Názov, typ dokumentu, štítky a ostatné údaje zostanú zachované; AI dokumenty znova nečíta. Už existujúce súbory sa preskočia.",
+      "file": "Súbor ZIP",
+      "areaHint": "Sem sa uložia dokumenty – alebo iba tie, ktorých oblasť tu neexistuje.",
+      "matchAreas": "Uložiť do oblastí s rovnakým názvom",
+      "matchAreasHint": "Ak tu existuje oblasť s rovnakým názvom ako v exporte, dokumenty sa uložia do nej.",
+      "import": "Importovať",
+      "importing": "Importuje sa…",
+      "result": "Importované: {{imported, number}} · už existuje: {{duplicates, number}} · neimportované: {{failed, number}}",
+      "auto": {
+        "title": "Automatická záloha",
+        "text": "Raz denne uloží AIDocuments úplnú zálohu ako ZIP do priečinka a ponechá si najnovšie z nich. Ideálne je, ak je priečinok na inom disku alebo na sieťovom disku – ak disk s dátami zlyhá, prišli by ste inak aj o zálohy.",
+        "enable": "Denne automaticky zálohovať",
+        "hour": "Čas",
+        "keep": "Uchovávať",
+        "keepHint": "Počet záloh; staršie sa odstránia.",
+        "directory": "Priečinok",
+        "directoryHint": "Úplná cesta na serveri. Nechajte prázdne, ak chcete použiť predvolený priečinok. V kontajneri Docker musí byť priečinok pripojený.",
+        "warnAfterDays": "Upozorniť po (dňoch)",
+        "warnAfterDaysHint": "Upozornenie v zozname dokumentov, ak sa toľko dní nezálohovalo – ručne ani automaticky. 0 = nikdy neupozorňovať.",
+        "lastRun": "Posledné spustenie",
+        "nextRun": "Ďalšie spustenie",
+        "running": "Prebieha zálohovanie…",
+        "ok": "úspešne, {{when}}",
+        "failed": "neúspešne, {{when}}",
+        "stored_one": "{{count, number}} záloha v priečinku {{directory}}",
+        "stored_few": "{{count, number}} zálohy v priečinku {{directory}}",
+        "stored_many": "{{count, number}} zálohy v priečinku {{directory}}",
+        "stored_other": "{{count, number}} záloh v priečinku {{directory}}",
+        "runNow": "Zálohovať teraz",
+        "saveFirst": "Najprv uložte zmeny.",
+        "runStarted": "Záloha prebieha na pozadí.",
+        "done": "Záloha bola uložená.",
+        "saved": "Nastavenia boli uložené.",
+        "externalDatabase": "Automatická záloha je k dispozícii iba so vstavanou databázou. Pri MariaDB zálohujte databázu jej vlastnými nástrojmi (napr. nočným spustením mariadb-dump) a k tomu aj dátový adresár."
+      }
     }
   },
   "history": {
     "nav": "História",
     "title": "História",
-    "subtitle": "Čo sa stalo s tvojimi dokumentmi – najnovšie záznamy navrchu.",
+    "subtitle": "Čo sa stalo s vašimi dokumentmi – najnovšie záznamy navrchu.",
     "empty": "Zatiaľ žiadne záznamy.",
     "actions": {
       "IMPORTED": "Importované",
       "EDITED": "Upravené",
-      "DELETED": "Vymazané"
+      "DELETED": "Odstránené"
     },
     "changes": {
       "DETAILS": "Údaje zmenené",
@@ -556,45 +765,46 @@
   },
   "duplicates": {
     "title": "Možný duplikát",
-    "subtitle": "Oba dokumenty majú rovnaký obsah. Jeden si ponechaj a druhý vymaž – alebo zaznamenaj, že nejde o duplikáty.",
+    "subtitle": "Oba dokumenty majú rovnaký obsah. Jeden si ponechajte a druhý odstráňte – alebo zaznamenajte, že nejde o duplikáty.",
     "older": "Prišiel skôr",
     "newer": "Prišiel neskôr",
-    "deleteThis": "Vymazať tento",
+    "deleteThis": "Odstrániť tento",
     "compare": "Porovnať vedľa seba"
   },
   "twoFactor": {
     "title": "Dvojfázové overenie",
     "on": "Zapnuté",
     "off": "Vypnuté",
-    "intro": "Chráň svoj účet druhým faktorom: pri prihlásení potom zadáš aj kód z overovacej aplikácie v telefóne (napr. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
+    "intro": "Chráňte svoj účet druhým faktorom: pri prihlásení potom zadáte aj kód z overovacej aplikácie v telefóne (napr. Google Authenticator, Microsoft Authenticator, 1Password, Aegis).",
     "enable": "Nastaviť",
-    "scan": "Naskenuj QR kód overovacou aplikáciou alebo zadaj kľúč ručne. Potom zadaj kód z aplikácie a svoje heslo.",
+    "scan": "Naskenujte QR kód overovacou aplikáciou alebo zadajte kľúč ručne. Potom zadajte kód z aplikácie a svoje heslo.",
     "qrAlt": "QR kód pre overovaciu aplikáciu",
     "secret": "Kľúč",
     "confirmCode": "Kód z aplikácie",
     "activate": "Aktivovať",
     "recoveryTitle": "Záložné kódy",
-    "recoveryText": "Ulož si tieto záložné kódy na bezpečné miesto. Každý funguje raz, ak nemôžeš použiť aplikáciu – napríklad pri strate telefónu. Zobrazujú sa iba teraz.",
+    "recoveryText": "Uložte si tieto záložné kódy na bezpečné miesto. Každý funguje raz, ak nemôžete použiť aplikáciu – napríklad pri strate telefónu. Zobrazujú sa iba teraz.",
     "download": "Uložiť ako súbor",
     "done": "Hotovo",
     "enabled": "Dvojfázové overenie je zapnuté",
     "disabled": "Dvojfázové overenie je vypnuté",
-    "disableHint": "Na vypnutie zadaj aktuálny kód z aplikácie (alebo záložný kód) a svoje heslo.",
+    "disableHint": "Na vypnutie zadajte aktuálny kód z aplikácie (alebo záložný kód) a svoje heslo.",
     "disable": "Vypnúť",
     "recoveryLeft": "Nepoužité záložné kódy: {{count}}",
-    "adminCannotDisable": "Ako administrátor nemôžeš dvojfázové overenie vypnúť."
+    "adminCannotDisable": "Ako správca nemôžete dvojfázové overenie vypnúť."
   },
   "confirmCode": {
     "title": "Potvrdiť zmenu",
-    "text": "Zmeny účtov, poštových schránok a nastavení vyžadujú aktuálny kód z overovacej aplikácie. Potvrdenie platí 10 minút.",
-    "submit": "Potvrdiť"
+    "text": "Zmeny účtov, e-mailových schránok a nastavení vyžadujú aktuálny kód z overovacej aplikácie. Potvrdenie platí 10 minút.",
+    "submit": "Potvrdiť",
+    "passkey": "Potvrdiť prístupovým kľúčom"
   },
   "share": {
     "button": "Zdieľať",
     "title": "Zdieľať dokument",
     "intro": "Vytvorí odkaz, ktorým môže osoba bez účtu otvoriť práve tento dokument.",
-    "recipient": "S kým zdieľaš?",
-    "recipientHint": "Meno osoby – aby si neskôr vedel, komu si odkaz dal.",
+    "recipient": "S kým zdieľate?",
+    "recipientHint": "Meno osoby – aby ste neskôr vedeli, komu ste odkaz poskytli.",
     "permission": "Smie táto osoba dokument upravovať?",
     "viewOnly": "Len zobraziť",
     "canEdit": "Smie upravovať",
@@ -604,7 +814,7 @@
     "unlimited": "Neobmedzene",
     "create": "Vytvoriť odkaz",
     "link": "Odkaz",
-    "linkHint": "Kto má tento odkaz, môže dokument otvoriť – odovzdaj ho len osobe {{name}}. Kedykoľvek ho môžeš zrušiť v zobrazení dokumentu.",
+    "linkHint": "Kto má tento odkaz, môže dokument otvoriť – odovzdajte ho iba osobe {{name}}. Kedykoľvek ho môžete zrušiť v zobrazení dokumentu.",
     "copy": "Kopírovať odkaz",
     "copied": "Odkaz skopírovaný",
     "listTitle": "Zdieľané externe",
@@ -619,7 +829,206 @@
     "revoked": "Odkaz zrušený",
     "page": {
       "for": "Zdieľané s: {{name}}",
-      "invalid": "Tento odkaz je neplatný alebo vypršal, prípadne bol dokument odstránený. Obráť sa na osobu, ktorá ti ho dala."
+      "invalid": "Tento odkaz je neplatný alebo vypršal, prípadne bol dokument odstránený. Obráťte sa na osobu, ktorá vám ho poskytla."
+    }
+  },
+  "areas": {
+    "general": "Všeobecná",
+    "unknown": "Iná oblasť",
+    "label": "Oblasť",
+    "target": "Cieľová oblasť",
+    "access": {
+      "READ": "Iba čítanie",
+      "EDIT": "Čítanie a úpravy",
+      "DELETE": "Úpravy a odstraňovanie"
+    }
+  },
+  "reminders": {
+    "title": "Pripomenutia",
+    "cardTitle": "Pripomenutie",
+    "add": "Pridať pripomenutie",
+    "edit": "Upraviť pripomenutie",
+    "create": "Vytvoriť",
+    "created": "Pripomenutie bolo pridané",
+    "saved": "Pripomenutie bolo uložené",
+    "deleted": "Pripomenutie bolo odstránené",
+    "markedDone": "Vybavené",
+    "dueDate": "Termín",
+    "note": "Poznámka",
+    "notePlaceholder": "napr. skontrolovať platbu",
+    "assignee": "Kto to má na starosti?",
+    "assigneeHint": "Táto osoba uvidí pripomenutie v časti „Moje“ a dostane upozornenie e-mailom. Vybrať možno každého, kto dokument vidí.",
+    "me": "{{name}} (ja)",
+    "assignedTo": "pre: {{name}}",
+    "doneBy": "vybavil(a): {{name}}",
+    "markDone": "Označiť ako vybavené",
+    "reopen": "Znova otvoriť",
+    "delete": {
+      "label": "Odstrániť pripomenutie",
+      "title": "Odstrániť pripomenutie?",
+      "text": "Pripomenutie bude odstránené. Dokument zostane bez zmeny."
+    },
+    "accept": "Pridať",
+    "dismiss": "Zahodiť návrh",
+    "suggestionsHint": "AI našla v tomto dokumente termíny:",
+    "none": "Žiadne otvorené pripomenutia.",
+    "showDone_one": "Zobraziť {{count, number}} vybavené pripomenutie",
+    "showDone_few": "Zobraziť {{count, number}} vybavené pripomenutia",
+    "showDone_many": "Zobraziť {{count, number}} vybaveného pripomenutia",
+    "showDone_other": "Zobraziť {{count, number}} vybavených pripomenutí",
+    "hideDone": "Skryť vybavené",
+    "scope": {
+      "label": "Ktoré pripomenutia",
+      "mine": "Moje",
+      "all": "Všetky"
+    },
+    "dueTitle": "K vybaveniu",
+    "nothingDue": "Dnes nie je nič k vybaveniu.",
+    "upcomingTitle": "Nadchádzajúce",
+    "suggestionsTitle": "Navrhnuté termíny",
+    "suggestionsPageHint": "Lehoty v najbližších šiestich mesiacoch, ktoré AI našla v dokumentoch. Pridajte ich ako pripomenutie alebo ich zahoďte.",
+    "emptyTitle": "Žiadne pripomenutia",
+    "emptyText": "Pridajte k dokumentu pripomenutie – alebo prevezmite niektoré z tých, ktoré navrhuje AI.",
+    "repeat": {
+      "label": "Opakovanie",
+      "hint": "Keď pripomenutie označíte ako vybavené, vytvorí sa ďalšie v rovnakom intervale.",
+      "none": "Jednorazovo",
+      "m1": "Mesačne",
+      "m3": "Štvrťročne",
+      "m6": "Polročne",
+      "m12": "Ročne",
+      "m24": "Každé dva roky",
+      "months_one": "Každý mesiac",
+      "months_few": "Každé {{count}} mesiace",
+      "months_many": "Každých {{count}} mesiaca",
+      "months_other": "Každých {{count}} mesiacov"
+    },
+    "fromContract": "zo zmluvy"
+  },
+  "pages": {
+    "button": "Strany",
+    "title": "Upraviť strany",
+    "intro": "Strany presuňte myšou alebo šípkami, otočte alebo odoberte. Uložením vznikne nová verzia – predchádzajúca zostane zachovaná.",
+    "page": "Strana {{number}}",
+    "wasPage": "predtým {{number}}",
+    "moveLeft": "Posunúť dopredu",
+    "moveRight": "Posunúť dozadu",
+    "rotate": "Otočiť o 90°",
+    "remove": "Odobrať stranu",
+    "keep": "Ponechať stranu",
+    "noneLeft": "Musí zostať aspoň jedna strana.",
+    "saveFirst": "Najprv uložte zmeny",
+    "saved": "Strany uložené",
+    "split": {
+      "here": "Od tejto strany samostatný dokument",
+      "title": "Rozdeliť dokument?",
+      "text": "Strana {{page}} a všetky nasledujúce sa stanú samostatným dokumentom v rovnakej oblasti. Ten sa spracuje a zaradí ako novoprijatý; tento dokument si ponechá strany pred ňou.",
+      "confirm": "Rozdeliť",
+      "done": "Dokument rozdelený",
+      "open": "Otvoriť nový dokument"
+    },
+    "merge": {
+      "button": "Pripojiť dokumenty",
+      "title": "Pripojiť dokumenty",
+      "intro": "Strany vybraných dokumentov sa v tomto poradí pridajú na koniec dokumentu „{{title}}“.",
+      "search": "Hľadať dokumenty…",
+      "none": "Žiadne zodpovedajúce dokumenty.",
+      "noDeleteRight": "Tento dokument nemôžete odstrániť – preto ho nemožno pripojiť.",
+      "hint": "Pripojené dokumenty sa potom presunú do koša; z histórie ich možno obnoviť počas 30 dní.",
+      "confirm_one": "Pripojiť {{count}} dokument",
+      "confirm_few": "Pripojiť {{count}} dokumenty",
+      "confirm_many": "Pripojiť {{count}} dokumentu",
+      "confirm_other": "Pripojiť {{count}} dokumentov",
+      "done_one": "{{count}} dokument pripojený",
+      "done_few": "{{count}} dokumenty pripojené",
+      "done_many": "{{count}} dokumentu pripojené",
+      "done_other": "{{count}} dokumentov pripojených"
+    }
+  },
+  "contracts": {
+    "nav": "Zmluvy",
+    "title": "Zmluvy",
+    "pageIntro": "Doba trvania a výpovedné lehoty všetkých zmlúv, ktoré smiete vidieť – najprv tie, pri ktorých bude čoskoro treba niečo urobiť.",
+    "scope": {
+      "label": "Zobraziť",
+      "running": "Platné",
+      "all": "Všetky"
+    },
+    "emptyTitle": "Zatiaľ nie sú zadané žiadne zmluvy",
+    "emptyText": "Otvorte dokument, napríklad zmluvu na elektrinu alebo mobilný paušál, a zadajte pri ňom dobu trvania a výpovednú lehotu. Včas pred koncom lehoty sa potom zobrazí pripomenutie.",
+    "cardTitle": "Zmluva",
+    "none": "Je to zmluva? Keď zadáte dobu trvania a výpovednú lehotu, AIDocuments vám včas pripomenie výpoveď.",
+    "add": "Zadať ako zmluvu",
+    "edit": "Upraviť zmluvu",
+    "intro": "Z konca doby trvania a výpovednej lehoty vyplýva, dokedy treba zmluvu vypovedať. Predtým sa zobrazí pripomenutie; ak doba trvania uplynie bez výpovede, zmluva sa automaticky predĺži.",
+    "saved": "Zmluva uložená",
+    "removed": "Údaje o zmluve odobraté",
+    "remove": {
+      "label": "Odobrať údaje o zmluve",
+      "title": "Odobrať údaje o zmluve?",
+      "text": "Doba trvania, výpovedná lehota a súvisiace otvorené pripomenutie budú odobraté. Samotný dokument zostane."
+    },
+    "openEnded": "na dobu neurčitú",
+    "months_one": "{{count}} mesiac",
+    "months_few": "{{count}} mesiace",
+    "months_many": "{{count}} mesiaca",
+    "months_other": "{{count}} mesiacov",
+    "amountHint": "napr. „49,90 € mesačne“",
+    "endDateHint": "Koniec aktuálnej doby trvania; prázdne = na dobu neurčitú",
+    "noticeHint": "Počet mesiacov pred koncom doby trvania; prázdne = do konca doby trvania",
+    "renewalHint": "Bez výpovede sa zmluva predĺži o toľko mesiacov; 0 = skončí",
+    "cancelledHint": "Zmluva sa potom už nepredĺži a nezobrazí sa žiadne ďalšie pripomenutie.",
+    "fields": {
+      "partner": "Zmluvný partner",
+      "amount": "Suma",
+      "startDate": "Začiatok zmluvy",
+      "endDate": "Platnosť do",
+      "notice": "Výpovedná lehota (mesiace)",
+      "renewal": "Predĺženie (mesiace)",
+      "deadline": "Vypovedať do",
+      "reminderDays": "Pripomenúť (dni vopred)",
+      "cancelled": "Vypovedané"
+    },
+    "status": {
+      "ACTIVE": "Platná",
+      "DUE_SOON": "Lehota sa blíži",
+      "NOTICE_MISSED": "Lehota zmeškaná",
+      "CANCELLED": "Vypovedaná",
+      "ENDED": "Ukončená",
+      "OPEN_ENDED": "Na dobu neurčitú"
+    },
+    "row": {
+      "cancelBy": "vypovedať do {{date}}",
+      "endsOn": "končí {{date}}",
+      "term": "platnosť do {{date}}",
+      "renews_one": "predlžuje sa o {{count}} mesiac",
+      "renews_few": "predlžuje sa o {{count}} mesiace",
+      "renews_many": "predlžuje sa o {{count}} mesiaca",
+      "renews_other": "predlžuje sa o {{count}} mesiacov"
+    }
+  },
+  "passkeys": {
+    "title": "Prístupové kľúče",
+    "intro": "S prístupovým kľúčom sa prihlásite bez hesla – odomknete ho odtlačkom prsta, tvárou alebo PIN kódom zariadenia. Platí iba pre túto adresu; podvodná stránka ho nemôže použiť.",
+    "none": "Zatiaľ nemáte žiadny prístupový kľúč.",
+    "add": "Pridať prístupový kľúč",
+    "create": "Vytvoriť prístupový kľúč",
+    "name": "Názov",
+    "nameHint": "Aby ste ho neskôr spoznali, napr. „Notebook“ alebo „Správca hesiel“.",
+    "password": "Vaše heslo",
+    "passwordHint": "Kto pridá prístupový kľúč, môže sa odvtedy prihlasovať bez hesla – preto to raz potvrďte.",
+    "added": "Prístupový kľúč pridaný",
+    "removed": "Prístupový kľúč odobratý",
+    "synced": "synchronizovaný",
+    "lastUsed": "naposledy použitý {{time}}",
+    "created": "pridaný {{time}}, zatiaľ nepoužitý",
+    "unsupported": "Tento prehliadač tu nemôže používať prístupové kľúče. Prístupové kľúče fungujú iba cez HTTPS (alebo na localhost).",
+    "unsupportedIp": "Prístupové kľúče fungujú iba cez HTTPS a s názvom v adrese, nie s IP adresou.",
+    "remove": {
+      "label": "Odobrať prístupový kľúč",
+      "title": "Odobrať prístupový kľúč?",
+      "text": "Pomocou „{{name}}“ sa potom už nikto neprihlási. V správcovi hesiel alebo v zariadení zostane kľúč uložený, kým ho tam neodstránite.",
+      "confirm": "Odobrať"
     }
   }
 }

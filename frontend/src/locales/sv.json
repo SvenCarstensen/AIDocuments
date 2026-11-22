@@ -44,7 +44,9 @@
     "login": {
       "title": "Välkommen tillbaka",
       "subtitle": "Logga in för att komma åt dina dokument.",
-      "submit": "Logga in"
+      "submit": "Logga in",
+      "or": "eller",
+      "passkey": "Logga in med lösennyckel"
     },
     "setup": {
       "title": "Konfigurera AIDocuments",
@@ -56,7 +58,7 @@
       "submit": "Skapa konto och kom igång",
       "features": {
         "import": "PDF-filer från din brevlåda och importmapp",
-        "ai": "AI sammanfattar och taggar dem",
+        "ai": "AI:n sammanfattar och taggar dem",
         "search": "Fulltextsökning ända in i dokumentet"
       }
     },
@@ -102,26 +104,49 @@
       "changed": "Lösenordet har ändrats"
     },
     "dropzone": {
-      "title": "Släpp PDF-filer här",
-      "hint": "Du kan släppa flera filer samtidigt. De sparas, analyseras och taggas."
+      "title": "Släpp PDF-filer eller foton här",
+      "hint": "Du kan släppa flera filer samtidigt. Foton (JPG, PNG, HEIC) blir PDF-filer. Allt sparas, analyseras och taggas."
+    },
+    "remindersDue_one": "{{count, number}} förfallen uppföljning",
+    "remindersDue_other": "{{count, number}} förfallna uppföljningar",
+    "profile": {
+      "email": "E-postadress",
+      "saved": "Sparat"
+    },
+    "notifications": {
+      "title": "E-postaviseringar",
+      "emailHint": "Hit skickas förfallna uppföljningar som är tilldelade dig och de aviseringar du slår på nedan – på det språk du använder programmet på just nu. Lämna tomt om du inte vill få några e-postmeddelanden.",
+      "digest": "Nya dokument varje dag",
+      "digestHint": "En gång om dagen en lista över de dokument som har tillkommit i dina områden – bara de dagar då nya dokument har kommit in.",
+      "admin": "Meddelanden för administratörer",
+      "adminHint": "När lagringstider går ut (inget raderas automatiskt) och när en brevlåda upprepade gånger inte kan kontrolleras.",
+      "needsEmail": "Utan adress skickas inga e-postmeddelanden."
     }
   },
   "upload": {
-    "onlyPdf": "Endast PDF-filer kan läggas till.",
+    "onlyPdf": "Endast PDF-filer och foton (JPG, PNG, HEIC) kan läggas till.",
     "uploadingFile": "Laddar upp ”{{name}}” …",
-    "uploadingFiles_one": "Laddar upp {{count, number}} PDF-fil …",
-    "uploadingFiles_other": "Laddar upp {{count, number}} PDF-filer …",
+    "uploadingFiles_one": "Laddar upp {{count, number}} fil …",
+    "uploadingFiles_other": "Laddar upp {{count, number}} filer …",
     "created_one": "{{count, number}} dokument har lagts till",
     "created_other": "{{count, number}} dokument har lagts till",
     "processingInBackground": "Bearbetningen fortsätter i bakgrunden.",
     "duplicates_one": "{{count, number}} finns redan",
     "duplicates_other": "{{count, number}} finns redan",
-    "rejected_one": "{{count, number}} fil är inte en giltig PDF",
-    "rejected_other": "{{count, number}} filer är inte giltiga PDF-filer",
+    "rejected_one": "{{count, number}} fil lades inte till",
+    "rejected_other": "{{count, number}} filer lades inte till",
     "onlyDuplicates_one": "Det här dokumentet finns redan.",
     "onlyDuplicates_other": "De här dokumenten finns redan.",
-    "noneValid": "Ingen av filerna är en giltig PDF.",
-    "failed": "Uppladdningen misslyckades"
+    "noneValid": "Ingen av filerna kunde läggas till.",
+    "failed": "Uppladdningen misslyckades",
+    "intoArea": "Område: {{area}}",
+    "combine": {
+      "title": "Slå ihop foton till ett dokument?",
+      "text": "Du har valt flera foton. Om de är sidorna i ett och samma dokument – till exempel ett brev på flera sidor – blir de en PDF i filnamnens ordning; ordningen kan ändras efteråt under ”Sidor”. Annars blir varje foto ett eget dokument.",
+      "one": "Som ett dokument",
+      "separate": "Varje foto för sig",
+      "tooMuch": "Det är för många eller för stora foton för ett dokument (högst 100 foton och sammanlagt 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -175,12 +200,13 @@
       "activeTo": "t.o.m. {{date}}",
       "removeOne": "Ta bort filtret ”{{label}}”",
       "removeAll": "Ta bort alla filter",
-      "clear": "Ta bort filter"
+      "clear": "Ta bort filter",
+      "retentionExpired": "Lagringstid utgången"
     },
     "empty": {
       "libraryTitle": "Inga dokument än",
-      "libraryHint": "Dra helt enkelt PDF-filer till det här fönstret eller använd ”Ladda upp”.",
-      "libraryHintAdmin": "Dra helt enkelt PDF-filer till det här fönstret eller använd ”Ladda upp”. I inställningarna kan du konfigurera en brevlåda eller en importmapp som nya PDF-filer importeras från automatiskt.",
+      "libraryHint": "Dra helt enkelt PDF-filer eller foton till det här fönstret eller använd ”Ladda upp”.",
+      "libraryHintAdmin": "Dra helt enkelt PDF-filer eller foton till det här fönstret eller använd ”Ladda upp”. I inställningarna kan du konfigurera en brevlåda eller en importmapp som nya dokument importeras från automatiskt.",
       "noResultsTitle": "Inget hittades",
       "noResultsSearch": "Inget dokument matchar den här sökningen. Sökningen hittar även delar av ord – prova ett kortare sökord eller färre ord.",
       "noResultsFilters": "Inget dokument matchar de valda filtren."
@@ -190,6 +216,25 @@
     "loadMore": "Läs in fler ({{remaining, number}})",
     "aiSearch": {
       "notice": "AI-sökning: ”{{question}}”. Filtren visar hur frågan tolkades."
+    },
+    "export": {
+      "label_one": "Exportera {{count, number}} dokument som ZIP",
+      "label_other": "Exportera alla {{count, number}} dokument i den här listan som ZIP",
+      "started_one": "Export av {{count, number}} dokument har startat",
+      "started_other": "Export av {{count, number}} dokument har startat",
+      "contents": "ZIP-filen innehåller PDF-filerna och alla uppgifter som tabell (documents.csv) och som documents.json.",
+      "failed": "Exporten misslyckades"
+    },
+    "mailboxNotice": {
+      "text_one": "Brevlådan ”{{names}}” har inte kunnat kontrolleras flera gånger i rad – inga dokument kommer in därifrån just nu.",
+      "text_other": "De här brevlådorna har inte kunnat kontrolleras flera gånger i rad: {{names}}. Inga dokument kommer in därifrån just nu.",
+      "action": "Visa brevlådor"
+    },
+    "backupNotice": {
+      "never": "Det finns ingen säkerhetskopia av dina dokument än.",
+      "overdue": "Senaste säkerhetskopia: {{when}}. Det är längre sedan än vad som är inställt.",
+      "failed": "Den automatiska säkerhetskopieringen misslyckades: {{reason}}",
+      "action": "Gå till säkerhetskopiering"
     }
   },
   "document": {
@@ -264,19 +309,21 @@
     "noText": "Det finns ingen text för det här dokumentet – troligen är det en skanning utan textlager. Om AI:n är konfigurerad och textigenkänning är aktiverad transkriberas innehållet vid analysen.",
     "edit": {
       "title": "Redigera dokument",
-      "saved": "Ändringarna har sparats"
+      "saved": "Ändringarna har sparats",
+      "areaHint": "Avgör vem som kan se dokumentet.",
+      "areaMoveHint": "Därefter kan bara medlemmar i ”{{area}}” och administratörer se det."
     },
     "delete": {
       "title": "Radera dokumentet?",
-      "text": "”{{title}}” tas bort. I historiken kan du ångra det i 30 dagar; därefter tas det bort permanent.",
-      "confirm": "Ta bort"
+      "text": "”{{title}}” raderas. I historiken kan du ångra det i 30 dagar; därefter raderas det permanent.",
+      "confirm": "Radera"
     },
     "chat": {
-      "intro": "Ställ en fråga om det här dokumentet – AI svarar utifrån innehållet.",
+      "intro": "Ställ en fråga om det här dokumentet – AI:n svarar utifrån innehållet.",
       "placeholder": "Fråga något om det här dokumentet …",
       "send": "Skicka",
-      "thinking": "AI läser dokumentet …",
-      "notConfigured": "För att ställa frågor om dokumentet måste en AI vara inställd.",
+      "thinking": "AI:n läser dokumentet …",
+      "notConfigured": "För att ställa frågor om dokumentet måste en AI vara konfigurerad.",
       "restart": "Börja om",
       "suggestions": {
         "summary": "Vad handlar det här dokumentet om?",
@@ -300,16 +347,25 @@
         "EDITED": "Redigerad",
         "ORIGINAL_RESTORED": "Original återställt",
         "VERSION_RESTORED": "Version {{from}} återställd",
-        "UNDONE": "Ändring ångrad"
+        "UNDONE": "Ändring ångrad",
+        "PAGES": "Sidor ändrade",
+        "MERGED": "Dokument tillagda"
       }
-    }
+    },
+    "retention": {
+      "label": "Lagringstid",
+      "until": "till {{date}} – kan inte raderas dessförinnan",
+      "expired": "gick ut den {{date}}",
+      "locked": "Ska sparas till {{date}} – kan raderas först därefter"
+    },
+    "readOnly": "I det här området får du bara visa dokumentet."
   },
   "settings": {
     "title": "Inställningar",
     "mailboxes": {
       "title": "Brevlådor",
-      "navHint": "IMAP-servrar som PDF-bilagor importeras från",
-      "intro": "PDF-bilagor importeras automatiskt från de här IMAP-brevlådorna. Brevlådorna läses bara – e-postmeddelandena förblir oförändrade och olästa.",
+      "navHint": "IMAP-servrar som PDF- och fotobilagor importeras från",
+      "intro": "PDF-bilagor och bifogade foton (som PDF) importeras automatiskt från de här IMAP-brevlådorna – men inte själva texten i e-postmeddelandena eller inbäddade logotyper. Brevlådorna läses bara – e-postmeddelandena förblir oförändrade och olästa.",
       "add": "Lägg till brevlåda",
       "emptyTitle": "Ingen brevlåda har konfigurerats än",
       "emptyText": "Ange inloggningsuppgifterna för en IMAP-brevlåda – till exempel den brevlåda som din skanner skickar dokument till.",
@@ -342,7 +398,7 @@
         "since": "Endast e-post från och med",
         "sinceHint": "Valfritt – äldre e-post hoppas över",
         "enabled": "Kontrollera automatiskt",
-        "enabledHint": "Brevlådan kontrolleras efter nya PDF-filer med det inställda intervallet.",
+        "enabledHint": "Brevlådan kontrolleras efter nya bilagor med det inställda intervallet.",
         "filter": {
           "title": "Filter",
           "intro": "Bara e-post som uppfyller alla villkor behandlas. Ett ord per rad; stora och små bokstäver spelar ingen roll och en del av texten räcker. Tomma fält begränsar ingenting.",
@@ -351,29 +407,30 @@
           "senderIncludes": "Avsändaren innehåller något av dessa ord",
           "senderExcludes": "Avsändaren innehåller inget av dessa ord",
           "senderHint": "Namn eller adress, t.ex. ”@example.com”",
-          "newOnly": "Filtret gäller e-post som kommer in efter den senaste hämtningen; redan kontrollerad e-post behandlas inte igen."
+          "newOnly": "Filtret gäller e-post som kommer in efter den senaste kontrollen; redan kontrollerad e-post behandlas inte igen."
         },
-        "interval": "Hämtningsintervall i minuter",
-        "intervalHint": "Lämna tomt för att använda det allmänna intervallet (just nu {{interval}})."
+        "interval": "Kontrollintervall i minuter",
+        "intervalHint": "Lämna tomt för att använda det allmänna intervallet (just nu {{interval}}).",
+        "areaHint": "Importerade dokument hamnar i det här området."
       },
       "filterActive": "Filter aktivt",
-      "schedule": "Hämtas var {{interval}} · nästa {{when}}",
-      "scheduleSoon": "Hämtas var {{interval}} · nästa inom kort"
+      "schedule": "Kontrollintervall: {{interval}} · nästa {{when}}",
+      "scheduleSoon": "Kontrollintervall: {{interval}} · nästa inom kort"
     },
     "import": {
       "title": "Schema & importmapp",
       "navHint": "Kontrollintervall och bevakad mapp",
-      "intro": "Anger hur ofta programmet letar efter nya PDF-filer – i brevlådorna och i importmappen.",
+      "intro": "Anger hur ofta programmet letar efter nya dokument – i brevlådorna och i importmappen.",
       "saved": "Inställningarna har sparats",
       "interval": {
         "title": "Kontrollintervall",
-        "text": "Så ofta kontrollerar programmet inkorgsmappen och alla brevlådor utan eget intervall efter nya PDF-filer.",
+        "text": "Så ofta kontrollerar programmet importmappen och alla brevlådor utan eget intervall efter nya dokument.",
         "label": "Med … minuters mellanrum",
         "nextRun": "Nästa automatiska kontroll {{when}}."
       },
       "folder": {
         "title": "Importmapp",
-        "text": "En mapp på servern som bevakas efter nya PDF-filer – till exempel målmappen för en nätverksskanner. Undermappar genomsöks också.",
+        "text": "En mapp på servern som bevakas efter nya PDF-filer och foton (JPG, PNG, HEIC) – till exempel målmappen för en nätverksskanner. Undermappar genomsöks också.",
         "enable": "Bevaka importmappen",
         "path": "Sökväg på servern",
         "pathHint": "Absolut sökväg. I Docker-containern är det den monterade mappen, vanligtvis {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Kontrollerar mappen …",
         "neverScanned": "Inte kontrollerad än.",
         "scanNow": "Kontrollera nu",
-        "scanStarted": "Importmappen kontrolleras."
+        "scanStarted": "Importmappen kontrolleras.",
+        "areaHint": "Dokument från mappen hamnar i det här området."
       }
     },
     "ai": {
@@ -463,7 +521,7 @@
         "ocr": "Textigenkänning för skanningar",
         "ocrHint": "Programmet låter AI:n transkribera skannade PDF-filer utan textlager – först då kan de hittas med fulltextsökning. Varje skanning tar längre tid och kostar mer.",
         "quickOcrFirst": "Först snabb textigenkänning, sedan förfining med AI",
-        "quickOcrFirstHint": "Nya skanningar läses först av den inbyggda textigenkänningen (Tesseract) – efter några sekunder är de sökbara. Sedan lägger AI till titel, sammanfattning och nyckelord utifrån den texten."
+        "quickOcrFirstHint": "Nya skanningar läses först av den inbyggda textigenkänningen (Tesseract) – efter några sekunder är de sökbara. Sedan lägger AI:n till titel, sammanfattning och taggar utifrån den texten."
       },
       "unanalyzed_one": "{{count, number}} dokument har ännu inte analyserats av AI:n.",
       "unanalyzed_other": "{{count, number}} dokument har ännu inte analyserats av AI:n.",
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} loggar sedan in med bara lösenordet och kan konfigurera tvåfaktorsautentisering igen – till exempel efter att ha tappat bort telefonen.",
       "resetTwoFactorConfirm": "Återställ",
       "twoFactorReset": "Tvåfaktorsautentisering återställd"
+    },
+    "areas": {
+      "title": "Områden",
+      "navHint": "Vem som ser vilka dokument",
+      "intro": "Varje dokument ligger i exakt ett område. Användare ser bara dokumenten i de områden de är medlemmar i, plus dem i områden för alla.",
+      "add": "Skapa område",
+      "everyone": "För alla",
+      "restricted": "Begränsat",
+      "visibleForAll": "synligt för alla inloggade",
+      "members": "Medlemmar: {{names}}",
+      "adminsOnly": "bara administratörer",
+      "adminHint": "Administratörer ser alla områden, även utan att vara medlemmar.",
+      "edit": "Redigera {{name}}",
+      "saved": "Området har sparats",
+      "created": "Området har skapats",
+      "deleted": "Området har raderats",
+      "delete": {
+        "label": "Radera {{name}}",
+        "title": "Radera område?",
+        "text": "Området ”{{name}}” raderas. Det går bara så länge inga dokument, ingen brevlåda och ingen importmapp använder det."
+      },
+      "dialog": {
+        "name": "Namn",
+        "namePlaceholder": "t.ex. Bokföring",
+        "generalNameHint": "Lämna tomt så heter området ”Allmänt” på alla språk.",
+        "everyone": "Synligt för alla",
+        "everyoneHint": "Alla inloggade användare ser dokumenten i det här området.",
+        "members": "Medlemmar",
+        "membersHint": "Bara medlemmar och administratörer ser dokumenten i det här området. För varje medlem väljer du om den bara får läsa, även redigera eller dessutom radera.",
+        "noUsers": "Det finns ännu inga användare utan administratörsroll.",
+        "create": "Skapa",
+        "everyoneAccess": "Alla får",
+        "accessOf": "Behörighet för {{name}}",
+        "membersHintEveryone": "Alla ser dokumenten i det här området. Lägg till medlemmar här om de ska få göra mer än alla andra."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Lagringstider",
+      "navHint": "Tider och raderingsspärr",
+      "intro": "Ange hur länge dokument av en dokumenttyp måste sparas – fakturor till exempel i tio år. Tiden räknas från slutet av det år som dokumentet är från. Fram till dess kan ingen radera det.",
+      "permanent": "En spärr kan inte hävas – inte ens av administratörer. Om en regel förkortas eller raderas, eller om ett dokuments dokumenttyp ändras, gäller den redan fastställda lagringstiden fortfarande.",
+      "add": "Skapa regel",
+      "years_one": "{{count, number}} år",
+      "years_other": "{{count, number}} år",
+      "edit": "Redigera regeln för {{category}}",
+      "saved": "Regeln har sparats",
+      "created": "Regeln har skapats",
+      "deleted": "Regeln har raderats",
+      "emptyTitle": "Inga lagringsregler än",
+      "emptyText": "Utan en regel kan dokument raderas när som helst.",
+      "delete": {
+        "label": "Radera regeln för {{category}}",
+        "title": "Radera regel?",
+        "text": "Nya dokument av typen ”{{category}}” får då ingen lagringstid längre. Dokument som redan är spärrade förblir spärrade tills deras lagringstid har gått ut."
+      },
+      "dialog": {
+        "categoryHint": "Som den står på dokumentet; versaler och gemener spelar ingen roll.",
+        "years": "Lagringstid i år",
+        "yearsHint": "Räknas från slutet av året för dokumentdatumet (utan datum: för dagen då dokumentet lades till).",
+        "shorterHint": "En kortare tid gäller bara dokument som ännu inte har någon lagringstid. Dokument som redan är spärrade förblir spärrade till slutet av sin nuvarande lagringstid.",
+        "create": "Skapa"
+      }
+    },
+    "mailOut": {
+      "title": "Utgående e-post",
+      "navHint": "Påminnelser via e-post",
+      "intro": "Via den här SMTP-servern skickar programmet påminnelser om förfallna uppföljningar – en gång per uppföljning, samlade i ett e-postmeddelande per person. Mottagare är den som tar hand om uppföljningen och har angett en adress i användarmenyn.",
+      "enabled": "Skicka påminnelser via e-post",
+      "enabledHint": "När funktionen är avstängd visas uppföljningar bara i programmet.",
+      "host": "SMTP-server",
+      "port": "Port",
+      "security": "Kryptering",
+      "unencrypted": "Ingen",
+      "usernameHint": "Lämna tomt om servern inte kräver inloggning.",
+      "passwordKeepHint": "Lämna tomt för att behålla det sparade lösenordet.",
+      "from": "Avsändaradress",
+      "fromHint": "Servern måste tillåta den för ditt konto.",
+      "appUrl": "Programmets adress",
+      "appUrlHint": "För länkar i e-postmeddelandena, t.ex. https://docs.example.com. Tomt = inga länkar.",
+      "digestHour": "Utskick",
+      "fromHour": "från kl. {{hour}}",
+      "saved": "E-postinställningarna har sparats",
+      "test": "Testmeddelande till {{address}}",
+      "testNeedsAddress": "Ange din egen e-postadress i användarmenyn för att få testmeddelandet.",
+      "testSavedHint": "Testet använder de sparade inställningarna – spara därför först."
+    },
+    "backup": {
+      "title": "Säkerhetskopiering & import",
+      "navHint": "Säkerhetskopiera allt på en gång, importera exporter",
+      "intro": "En säkerhetskopia innehåller allt som behövs för att återställa AIDocuments precis som det är. En import hämtar in dokument från en export från en annan installation – med deras uppgifter.",
+      "backupTitle": "Säkerhetskopia med ett klick",
+      "backupText": "En ZIP med databasen, alla dokument inklusive tidigare versioner, miniatyrbilderna och nyckeln för sparade lösenord. Programmet fortsätter att köras under tiden.",
+      "size": "Omfattning",
+      "sizeValue_one": "cirka {{size}} i {{count, number}} fil",
+      "sizeValue_other": "cirka {{size}} i {{count, number}} filer",
+      "last": "Senaste säkerhetskopia",
+      "never": "aldrig",
+      "keyWarning": "Säkerhetskopian är inte krypterad och innehåller nyckeln till de sparade lösenorden (brevlådor, AI, tvåfaktorsautentisering). Förvara den lika säkert som själva dokumenten.",
+      "restore": "Så återställer du: stoppa AIDocuments, packa upp innehållet i ZIP-filen i en tom datamapp och starta igen. En instruktion finns i ZIP-filen (README.txt).",
+      "download": "Ladda ned säkerhetskopia",
+      "started": "Säkerhetskopian laddas ned.",
+      "externalDatabase": "Säkerhetskopiering med ett klick finns bara med den inbyggda databasen. Med MariaDB säkerhetskopierar du databasen med dess egna verktyg (till exempel mariadb-dump) och dessutom datamappen.",
+      "importTitle": "Importera en export",
+      "importText": "En ZIP från ”Exportera” i dokumentlistan – även från en annan installation. Titel, dokumenttyp, taggar och övriga uppgifter behålls; AI:n läser inte dokumenten igen. Filer som redan finns hoppas över.",
+      "file": "ZIP-fil",
+      "areaHint": "Hit hamnar dokumenten – eller bara de vars område inte finns här.",
+      "matchAreas": "Lägg i områden med samma namn",
+      "matchAreasHint": "Finns det ett område här med samma namn som i exporten hamnar dokumenten där.",
+      "import": "Importera",
+      "importing": "Importerar …",
+      "result": "Importerade: {{imported, number}} · fanns redan: {{duplicates, number}} · inte importerade: {{failed, number}}",
+      "auto": {
+        "title": "Automatisk säkerhetskopiering",
+        "text": "En gång om dagen sparar AIDocuments en fullständig säkerhetskopia som ZIP i en mapp och behåller de senaste. Helst ligger mappen på en annan disk eller en nätverksenhet – om disken med data går sönder försvinner annars även säkerhetskopiorna.",
+        "enable": "Säkerhetskopiera automatiskt varje dag",
+        "hour": "Klockslag",
+        "keep": "Behåll",
+        "keepHint": "Antal säkerhetskopior; äldre raderas.",
+        "directory": "Mapp",
+        "directoryHint": "Fullständig sökväg på servern. Lämna tomt för standardmappen. I Docker-containern måste mappen vara monterad.",
+        "warnAfterDays": "Varna efter (dagar)",
+        "warnAfterDaysHint": "Meddelande i dokumentlistan när ingen säkerhetskopia har gjorts på så lång tid – manuellt eller automatiskt. 0 = varna aldrig.",
+        "lastRun": "Senaste körning",
+        "nextRun": "Nästa körning",
+        "running": "Säkerhetskopiering pågår …",
+        "ok": "lyckades, {{when}}",
+        "failed": "misslyckades, {{when}}",
+        "stored_one": "{{count, number}} säkerhetskopia i {{directory}}",
+        "stored_other": "{{count, number}} säkerhetskopior i {{directory}}",
+        "runNow": "Säkerhetskopiera nu",
+        "saveFirst": "Spara ändringarna först.",
+        "runStarted": "Säkerhetskopieringen körs i bakgrunden.",
+        "done": "Säkerhetskopian har sparats.",
+        "saved": "Inställningarna har sparats.",
+        "externalDatabase": "Automatisk säkerhetskopiering finns bara med den inbyggda databasen. Med MariaDB säkerhetskopierar du databasen med dess egna verktyg (till exempel en nattlig mariadb-dump) och dessutom datamappen."
+      }
     }
   },
   "history": {
@@ -517,7 +712,7 @@
     "actions": {
       "IMPORTED": "Importerat",
       "EDITED": "Redigerat",
-      "DELETED": "Borttaget"
+      "DELETED": "Raderat"
     },
     "changes": {
       "DETAILS": "Uppgifter ändrade",
@@ -534,10 +729,10 @@
   },
   "duplicates": {
     "title": "Möjlig dubblett",
-    "subtitle": "De två dokumenten har samma innehåll. Behåll det ena och ta bort det andra – eller notera att de inte är dubbletter.",
+    "subtitle": "De två dokumenten har samma innehåll. Behåll det ena och radera det andra – eller notera att de inte är dubbletter.",
     "older": "Kom tidigare",
     "newer": "Kom senare",
-    "deleteThis": "Ta bort det här",
+    "deleteThis": "Radera det här",
     "compare": "Jämför sida vid sida"
   },
   "twoFactor": {
@@ -565,7 +760,8 @@
   "confirmCode": {
     "title": "Bekräfta ändring",
     "text": "Ändringar av konton, brevlådor och inställningar kräver en aktuell kod från din autentiseringsapp. Bekräftelsen gäller i 10 minuter.",
-    "submit": "Bekräfta"
+    "submit": "Bekräfta",
+    "passkey": "Bekräfta med lösennyckel"
   },
   "share": {
     "button": "Dela",
@@ -576,8 +772,8 @@
     "permission": "Får personen redigera dokumentet?",
     "viewOnly": "Endast visa",
     "canEdit": "Får redigera",
-    "viewHint": "Personen kan visa, skriva ut och ladda ner PDF-filen.",
-    "editHint": "Personen kan också markera, skriva i, signera och spara PDF-filen. Varje sparning blir en ny version; titel, taggar och andra uppgifter förblir dolda.",
+    "viewHint": "Personen kan visa, skriva ut och ladda ned PDF-filen.",
+    "editHint": "Personen kan också markera, skriva i, signera och spara PDF-filen. Varje gång den sparas skapas en ny version; titel, taggar och andra uppgifter kan personen inte se.",
     "validity": "Giltig i",
     "unlimited": "Obegränsat",
     "create": "Skapa länk",
@@ -593,11 +789,198 @@
     "neverOpened": "inte öppnad än",
     "revoke": "Återkalla länk",
     "revokeTitle": "Återkalla länken för {{name}}?",
-    "revokeText": "Länken slutar fungera direkt. Kopior som personen redan har laddat ner finns kvar hos personen.",
+    "revokeText": "Länken slutar fungera direkt. Kopior som personen redan har laddat ned finns kvar hos personen.",
     "revoked": "Länken har återkallats",
     "page": {
       "for": "Delat med {{name}}",
       "invalid": "Den här länken är ogiltig eller har gått ut, eller så har dokumentet raderats. Kontakta personen som gav dig den."
+    }
+  },
+  "areas": {
+    "general": "Allmänt",
+    "unknown": "Annat område",
+    "label": "Område",
+    "target": "Målområde",
+    "access": {
+      "READ": "Bara läsa",
+      "EDIT": "Läsa och redigera",
+      "DELETE": "Redigera och radera"
+    }
+  },
+  "reminders": {
+    "title": "Uppföljningar",
+    "cardTitle": "Uppföljning",
+    "add": "Skapa uppföljning",
+    "edit": "Redigera uppföljning",
+    "create": "Skapa",
+    "created": "Uppföljningen har skapats",
+    "saved": "Uppföljningen har sparats",
+    "deleted": "Uppföljningen har raderats",
+    "markedDone": "Utförd",
+    "dueDate": "Förfallodatum",
+    "note": "Anteckning",
+    "notePlaceholder": "t.ex. kontrollera betalning",
+    "assignee": "Vem tar hand om det?",
+    "assigneeHint": "Den här personen ser uppföljningen under ”Mina” och får påminnelsen via e-post. Alla som kan se dokumentet kan väljas.",
+    "me": "{{name}} (jag)",
+    "assignedTo": "för {{name}}",
+    "doneBy": "utförd av {{name}}",
+    "markDone": "Markera som utförd",
+    "reopen": "Öppna igen",
+    "delete": {
+      "label": "Radera uppföljning",
+      "title": "Radera uppföljning?",
+      "text": "Uppföljningen tas bort. Dokumentet förblir oförändrat."
+    },
+    "accept": "Lägg till",
+    "dismiss": "Avvisa förslag",
+    "suggestionsHint": "AI:n hittade datum i det här dokumentet:",
+    "none": "Inga öppna uppföljningar.",
+    "showDone_one": "Visa {{count, number}} utförd uppföljning",
+    "showDone_other": "Visa {{count, number}} utförda uppföljningar",
+    "hideDone": "Dölj utförda",
+    "scope": {
+      "label": "Vilka uppföljningar",
+      "mine": "Mina",
+      "all": "Alla"
+    },
+    "dueTitle": "Förfallna",
+    "nothingDue": "Inget förfaller i dag.",
+    "upcomingTitle": "Kommande",
+    "suggestionsTitle": "Föreslagna datum",
+    "suggestionsPageHint": "Frister inom de närmaste sex månaderna som AI:n har hittat i dokumenten. Lägg till dem som uppföljning eller avvisa dem.",
+    "emptyTitle": "Inga uppföljningar",
+    "emptyText": "Skapa en uppföljning för ett dokument – eller lägg till en som AI:n föreslår.",
+    "repeat": {
+      "label": "Upprepa",
+      "hint": "När du bockar av uppföljningen skapas nästa med samma intervall.",
+      "none": "En gång",
+      "m1": "Varje månad",
+      "m3": "Varje kvartal",
+      "m6": "Varje halvår",
+      "m12": "Varje år",
+      "m24": "Vartannat år",
+      "months_one": "Varje månad",
+      "months_other": "Med {{count}} månaders intervall"
+    },
+    "fromContract": "från avtalet"
+  },
+  "pages": {
+    "button": "Sidor",
+    "title": "Redigera sidor",
+    "intro": "Dra sidorna eller flytta dem med pilarna, rotera eller ta bort dem. När du sparar skapas en ny version – den tidigare behålls.",
+    "page": "Sida {{number}}",
+    "wasPage": "tidigare {{number}}",
+    "moveLeft": "Flytta framåt",
+    "moveRight": "Flytta bakåt",
+    "rotate": "Rotera 90°",
+    "remove": "Ta bort sida",
+    "keep": "Behåll sida",
+    "noneLeft": "Minst en sida måste finnas kvar.",
+    "saveFirst": "Spara ändringarna först",
+    "saved": "Sidorna har sparats",
+    "split": {
+      "here": "Eget dokument härifrån",
+      "title": "Dela upp dokumentet?",
+      "text": "Sida {{page}} och alla följande sidor blir ett eget dokument i samma område. Det läses och sorteras in som ett nyinkommet dokument; det här dokumentet behåller sidorna före.",
+      "confirm": "Dela upp",
+      "done": "Dokumentet har delats upp",
+      "open": "Öppna nytt dokument"
+    },
+    "merge": {
+      "button": "Lägg till dokument",
+      "title": "Lägg till dokument",
+      "intro": "Sidorna i de valda dokumenten läggs till i den här ordningen i slutet av ”{{title}}”.",
+      "search": "Sök dokument …",
+      "none": "Inga matchande dokument.",
+      "noDeleteRight": "Du får inte radera det – därför kan du inte lägga till det.",
+      "hint": "De tillagda dokumenten hamnar sedan i papperskorgen; via historiken kan de återställas i 30 dagar.",
+      "confirm_one": "Lägg till {{count}} dokument",
+      "confirm_other": "Lägg till {{count}} dokument",
+      "done_one": "{{count}} dokument har lagts till",
+      "done_other": "{{count}} dokument har lagts till"
+    }
+  },
+  "contracts": {
+    "nav": "Avtal",
+    "title": "Avtal",
+    "pageIntro": "Avtalstider och uppsägningstider för alla avtal du får se – först de där något snart behöver göras.",
+    "scope": {
+      "label": "Visa",
+      "running": "Löpande",
+      "all": "Alla"
+    },
+    "emptyTitle": "Inga avtal registrerade än",
+    "emptyText": "Öppna ett dokument, till exempel ett el- eller mobilavtal, och registrera avtalstid och uppsägningstid där. I god tid innan fristen går ut visas sedan en uppföljning.",
+    "cardTitle": "Avtal",
+    "none": "Är det här ett avtal? Med avtalstid och uppsägningstid påminner AIDocuments dig i god tid om att säga upp det.",
+    "add": "Registrera som avtal",
+    "edit": "Redigera avtal",
+    "intro": "Av avtalstidens slut och uppsägningstiden framgår när avtalet senast måste sägas upp. Innan dess visas en uppföljning; löper avtalstiden ut utan uppsägning förlängs avtalet automatiskt.",
+    "saved": "Avtalet har sparats",
+    "removed": "Avtalsuppgifterna har tagits bort",
+    "remove": {
+      "label": "Ta bort avtalsuppgifter",
+      "title": "Ta bort avtalsuppgifterna?",
+      "text": "Avtalstid, uppsägningstid och den öppna uppföljningen som hör till tas bort. Själva dokumentet finns kvar."
+    },
+    "openEnded": "tillsvidare",
+    "months_one": "{{count}} månad",
+    "months_other": "{{count}} månader",
+    "amountHint": "t.ex. ”499 kr i månaden”",
+    "endDateHint": "Slutet av nuvarande avtalstid; tomt = tillsvidare",
+    "noticeHint": "Månader före avtalstidens slut; tomt = fram till avtalstidens slut",
+    "renewalHint": "Utan uppsägning förlängs avtalet med så många månader; 0 = det upphör",
+    "cancelledHint": "Då förlängs det inte längre, och inga fler påminnelser skickas.",
+    "fields": {
+      "partner": "Avtalspart",
+      "amount": "Belopp",
+      "startDate": "Avtalsstart",
+      "endDate": "Avtalstid till",
+      "notice": "Uppsägningstid (månader)",
+      "renewal": "Förlängning (månader)",
+      "deadline": "Säg upp senast",
+      "reminderDays": "Påminn (dagar före)",
+      "cancelled": "Uppsagt"
+    },
+    "status": {
+      "ACTIVE": "Löper",
+      "DUE_SOON": "Frist nära",
+      "NOTICE_MISSED": "Frist missad",
+      "CANCELLED": "Uppsagt",
+      "ENDED": "Avslutat",
+      "OPEN_ENDED": "Tillsvidare"
+    },
+    "row": {
+      "cancelBy": "säg upp senast {{date}}",
+      "endsOn": "upphör den {{date}}",
+      "term": "avtalstid till {{date}}",
+      "renews_one": "förlängs med {{count}} månad",
+      "renews_other": "förlängs med {{count}} månader"
+    }
+  },
+  "passkeys": {
+    "title": "Lösennycklar",
+    "intro": "Med en lösennyckel loggar du in utan lösenord – upplåst med fingeravtryck, ansikte eller enhetens pinkod. Den gäller bara för den här adressen; en falsk webbplats kan inte använda den.",
+    "none": "Ingen lösennyckel har lagts till än.",
+    "add": "Lägg till lösennyckel",
+    "create": "Skapa lösennyckel",
+    "name": "Namn",
+    "nameHint": "Så att du känner igen den senare, t.ex. ”Bärbar dator” eller ”Lösenordshanterare”.",
+    "password": "Ditt lösenord",
+    "passwordHint": "Den som lägger till en lösennyckel kan därefter logga in utan lösenord – bekräfta därför en gång.",
+    "added": "Lösennyckeln har lagts till",
+    "removed": "Lösennyckeln har tagits bort",
+    "synced": "synkroniserad",
+    "lastUsed": "senast använd {{time}}",
+    "created": "tillagd {{time}}, inte använd än",
+    "unsupported": "Den här webbläsaren kan inte använda lösennycklar här. Lösennycklar fungerar bara via HTTPS (eller localhost).",
+    "unsupportedIp": "Lösennycklar fungerar bara via HTTPS och med ett namn i adressen, inte med en IP-adress.",
+    "remove": {
+      "label": "Ta bort lösennyckel",
+      "title": "Ta bort lösennyckeln?",
+      "text": "Ingen kan logga in med ”{{name}}” efteråt. Den finns kvar i lösenordshanteraren eller på enheten tills du raderar den där.",
+      "confirm": "Ta bort"
     }
   }
 }

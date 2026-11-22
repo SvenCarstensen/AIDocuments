@@ -40,7 +40,8 @@ public record DocumentAnalysis(
 
         @JsonPropertyDescription("Die wichtigsten konkreten Angaben des Dokuments als Bezeichnung-Wert-Paare, "
                 + "z. B. Rechnungsnummer, Betrag, Fälligkeit, Kundennummer, Vertragslaufzeit, Aktenzeichen, IBAN. "
-                + "Höchstens zehn; leere Liste, wenn es keine gibt.")
+                + "Fristen und Termine (Zahlungsziel, Kündigungsfrist, Abgabe- oder Widerspruchsfrist) mit ihrem "
+                + "Datum. Höchstens zehn; leere Liste, wenn es keine gibt.")
         List<Fact> keyFacts,
 
         @JsonPropertyDescription("Nur befüllen, wenn die Aufgabe eine Transkription verlangt: der vollständige "

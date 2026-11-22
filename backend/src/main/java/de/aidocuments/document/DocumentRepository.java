@@ -38,10 +38,12 @@ public class DocumentRepository {
 
     private final Db db;
     private final JdbcClient jdbc;
+    private final de.aidocuments.retention.RetentionRules retention;
 
-    public DocumentRepository(Db db) {
+    public DocumentRepository(Db db, de.aidocuments.retention.RetentionRules retention) {
         this.db = db;
         this.jdbc = db.jdbc();
+        this.retention = retention;
     }
 
     public Optional<Document> findById(String id) {
@@ -79,6 +81,31 @@ public class DocumentRepository {
                 .param("statuses", names(statuses)).query(Long.class).single();
     }
 
+    /** Zähler für die Oberfläche, beschränkt auf Bereiche ({@code null} = alle). */
+    public long countVisible(Collection<DocumentStatus> statuses, boolean duplicatesOnly, java.util.Set<String> areas) {
+        if (areas != null && areas.isEmpty()) {
+            return 0;
+        }
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM documents WHERE 1 = 1");
+        if (statuses != null) {
+            sql.append(" AND status IN (:statuses)");
+        }
+        if (duplicatesOnly) {
+            sql.append(" AND duplicate_of IS NOT NULL");
+        }
+        if (areas != null) {
+            sql.append(" AND area_id IN (:areas)");
+        }
+        var spec = jdbc.sql(sql.toString());
+        if (statuses != null) {
+            spec = spec.param("statuses", names(statuses));
+        }
+        if (areas != null) {
+            spec = spec.param("areas", areas);
+        }
+        return spec.query(Long.class).single();
+    }
+
     public long countByMailAccountId(String mailAccountId) {
         return jdbc.sql("SELECT COUNT(*) FROM documents WHERE mail_account_id = ?").param(mailAccountId)
                 .query(Long.class).single();
@@ -105,8 +132,81 @@ public class DocumentRepository {
     }
 
     public Document save(Document doc) {
+        applyRetention(TABLE, doc);
         db.upsert(TABLE, columns(doc));
         return doc;
+    }
+
+    /**
+     * Die Aufbewahrungsfrist mitschreiben: der späteste Termin aus dem gespeicherten Stand, dem geladenen Stand und den
+     * geltenden Regeln. So wird sie nie früher – auch nicht über eine veraltete Kopie des Dokuments oder eine
+     * geänderte Kategorie.
+     */
+    private void applyRetention(String table, Document doc) {
+        LocalDate stored = jdbc.sql("SELECT retain_until FROM " + table + " WHERE id = ?").param(doc.getId())
+                .query(String.class).optional().map(LocalDate::parse).orElse(null);
+        LocalDate due = retention.due(doc.getCategory(),
+                de.aidocuments.retention.RetentionRules.baseDate(doc.getDocumentDate(), doc.getCreatedAt()));
+        doc.setRetainUntil(de.aidocuments.retention.RetentionRules.later(
+                de.aidocuments.retention.RetentionRules.later(stored, doc.getRetainUntil()), due));
+    }
+
+    /**
+     * Nach einer neuen oder verlängerten Regel: die Frist aller Dokumente der Kategorie (auch im Papierkorb) neu
+     * bestimmen – nur nach hinten.
+     *
+     * @return wie viele Dokumente (ohne Papierkorb) die Kategorie haben
+     */
+    public int applyRetentionRule(String category) {
+        int count = 0;
+        for (String table : List.of(TABLE, TRASH)) {
+            List<Document> docs = jdbc.sql("SELECT * FROM " + table + " WHERE LOWER(category) = LOWER(?)")
+                    .param(category.strip()).query(DocumentRepository::map).list();
+            for (Document doc : docs) {
+                LocalDate due = retention.due(doc.getCategory(),
+                        de.aidocuments.retention.RetentionRules.baseDate(doc.getDocumentDate(), doc.getCreatedAt()));
+                if (due != null) {
+                    jdbc.sql("UPDATE " + table + " SET retain_until = ? WHERE id = ? AND (retain_until IS NULL OR retain_until < ?)")
+                            .param(due.toString()).param(doc.getId()).param(due.toString()).update();
+                }
+            }
+            if (table.equals(TABLE)) {
+                count = docs.size();
+            }
+        }
+        return count;
+    }
+
+    /** Dokumente mit wichtigen Angaben (für Terminvorschläge) in den sichtbaren Bereichen; {@code null} = alle. */
+    public List<Document> findWithKeyFacts(java.util.Set<String> areas) {
+        if (areas != null && areas.isEmpty()) {
+            return List.of();
+        }
+        String sql = "SELECT * FROM documents WHERE key_facts IS NOT NULL AND key_facts <> '[]'"
+                + (areas != null ? " AND area_id IN (:areas)" : "");
+        var spec = jdbc.sql(sql);
+        if (areas != null) {
+            spec = spec.param("areas", areas);
+        }
+        return spec.query(DocumentRepository::map).list();
+    }
+
+    public long countByCategory(String category) {
+        return jdbc.sql("SELECT COUNT(*) FROM documents WHERE LOWER(category) = LOWER(?)").param(category.strip())
+                .query(Long.class).single();
+    }
+
+    /** Dokumente, deren Frist vor {@code today} endete – sie dürfen jetzt gelöscht werden. */
+    public java.util.Set<String> idsWithRetentionExpired(LocalDate today, java.util.Set<String> areas) {
+        if (areas != null && areas.isEmpty()) {
+            return java.util.Set.of();
+        }
+        var spec = jdbc.sql("SELECT id FROM documents WHERE retain_until IS NOT NULL AND retain_until < :today"
+                + (areas != null ? " AND area_id IN (:areas)" : "")).param("today", today.toString());
+        if (areas != null) {
+            spec = spec.param("areas", areas);
+        }
+        return new java.util.HashSet<>(spec.query(String.class).list());
     }
 
     public void delete(Document doc) {
@@ -121,6 +221,7 @@ public class DocumentRepository {
     // ---- Papierkorb ----
 
     public void saveToTrash(Document doc) {
+        applyRetention(TABLE, doc);
         db.upsert(TRASH, columns(doc));
     }
 
@@ -163,6 +264,8 @@ public class DocumentRepository {
         c.put("language", doc.getLanguage());
         c.put("ocr_used", doc.isOcrUsed());
         c.put("has_thumbnail", doc.isHasThumbnail());
+        c.put("area_id", doc.getAreaId());
+        c.put("retain_until", doc.getRetainUntil() == null ? null : doc.getRetainUntil().toString());
         c.put("mail_account_id", doc.getMailAccountId());
         c.put("mail_subject", doc.getMailSubject());
         c.put("mail_from", doc.getMailFrom());
@@ -198,6 +301,9 @@ public class DocumentRepository {
         doc.setLanguage(rs.getString("language"));
         doc.setOcrUsed(rs.getBoolean("ocr_used"));
         doc.setHasThumbnail(rs.getBoolean("has_thumbnail"));
+        doc.setAreaId(rs.getString("area_id"));
+        String retainUntil = rs.getString("retain_until");
+        doc.setRetainUntil(retainUntil == null ? null : LocalDate.parse(retainUntil));
         doc.setMailOrigin(rs.getString("mail_account_id"), rs.getString("mail_subject"), rs.getString("mail_from"),
                 instant(rs, "mail_received_at"));
         doc.setProcessedAt(instant(rs, "processed_at"));

@@ -57,8 +57,12 @@ public class HistoryService {
         record(Action.DELETED, doc, null, null, asDuplicate ? Change.DUPLICATE : null, null, null);
     }
 
-    public Page<HistoryEntry> page(int page, int size) {
-        return history.findAllByOrderByAtDesc(PageRequest.of(page, size));
+    public Page<HistoryEntry> page(int page, int size, java.util.Set<String> areas) {
+        return history.findAllByOrderByAtDesc(PageRequest.of(page, size), areas);
+    }
+
+    public void moveDocument(String documentId, String areaId) {
+        history.moveDocument(documentId, areaId);
     }
 
     public Optional<HistoryEntry> find(String id) {
@@ -77,7 +81,7 @@ public class HistoryService {
 
     public static Details detailsOf(Document doc) {
         return new Details(doc.getTitle(), doc.getSummary(), doc.getCategory(), doc.getCorrespondent(),
-                doc.getDocumentDate(), List.copyOf(doc.getTags()));
+                doc.getDocumentDate(), List.copyOf(doc.getTags()), doc.getAreaId());
     }
 
     private void record(Action action, Document doc, DocumentSource source, String origin, Change change,
@@ -85,7 +89,7 @@ public class HistoryService {
         try {
             String title = doc.getTitle() != null ? doc.getTitle() : doc.getOriginalFilename();
             history.save(new HistoryEntry(UUID.randomUUID().toString(), Instant.now(), action, doc.getId(), title,
-                    source, origin, change, currentUser(), before, previousFile, null, null));
+                    source, origin, change, currentUser(), before, previousFile, null, null, doc.getAreaId()));
         } catch (RuntimeException e) {
             log.warn("Historie: Eintrag für {} nicht gespeichert: {}", doc.getId(), e.toString());
         }

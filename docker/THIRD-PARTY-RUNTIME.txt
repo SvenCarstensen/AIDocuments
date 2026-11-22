@@ -9,6 +9,9 @@ libraries they depend on:
   Tesseract language data (tesseract-ocr-*) – Apache-2.0 – https://github.com/tesseract-ocr/tessdata_fast
   Leptonica – BSD-2-Clause – http://leptonica.org
   gosu – Apache-2.0 – https://github.com/tianon/gosu
+  libheif with heif-convert – LGPL-3.0 (library), MIT (examples) – https://github.com/strukturag/libheif
+      HEVC decoder plugin libde265 – LGPL-3.0 – https://github.com/strukturag/libde265
+      (used as separate programs to convert HEIC photos; AIDocuments does not link to them)
   fontconfig, FreeType, DejaVu fonts – MIT-style, FreeType License, Bitstream Vera License
 
 Ubuntu and its packages are distributed under various open-source licenses, among them the GNU General Public

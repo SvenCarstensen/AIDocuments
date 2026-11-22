@@ -61,6 +61,9 @@ public record Msg(String key, List<Object> args) {
         if (arg instanceof Collection<?> parts) {
             return parts.stream().map(part -> part instanceof Msg msg ? msg : literal(String.valueOf(part))).toList();
         }
+        if (arg instanceof java.time.LocalDate) {
+            return arg; // für {0,date,…}; siehe Messages.render
+        }
         if (arg instanceof Integer || arg instanceof Long || arg instanceof Short || arg instanceof Byte) {
             return ((Number) arg).longValue();
         }

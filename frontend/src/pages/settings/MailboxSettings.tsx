@@ -4,6 +4,7 @@ import { type FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Alert, Badge, Button, Card, ConfirmDialog, EmptyState, Field, IconButton, Input, Modal, Segmented, Spinner, Switch, Textarea } from '../../components/ui'
+import { AreaSelect } from '../../components/AreaSelect'
 import { api, errorMessage, type MailAccount, type MailAccountInput, type MailFilter, type MailSecurity, type TestResult } from '../../lib/api'
 import { formatDuration, formatRelative } from '../../lib/format'
 import { SectionHeader } from './SectionHeader'
@@ -209,6 +210,7 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
   const [enabled, setEnabled] = useState(account?.enabled ?? true)
   const [filter, setFilter] = useState<FilterTexts>(() => filterTexts(account?.filter))
   const [interval, setIntervalMinutes] = useState(account?.intervalMinutes == null ? '' : String(account.intervalMinutes))
+  const [areaId, setAreaId] = useState(account?.areaId ?? 'general')
   const [test, setTest] = useState<TestResult | null>(null)
   // für den Hinweis, welches Intervall ohne eigene Angabe gilt
   const importSettings = useQuery({ queryKey: ['settings', 'import'], queryFn: api.importSettings })
@@ -225,6 +227,7 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
     enabled,
     filter: parseFilter(filter),
     intervalMinutes: interval.trim() === '' ? null : Number(interval),
+    areaId,
   })
 
   const save = useMutation({
@@ -327,6 +330,7 @@ function MailboxDialog({ account, onClose }: { account: MailAccount | null; onCl
               />
             )}
           </Field>
+          <AreaSelect value={areaId} onChange={setAreaId} hint={t('settings.mailboxes.dialog.areaHint')} />
         </div>
         <MailFilterFields value={filter} onChange={setFilter} />
         <Switch checked={enabled} onChange={setEnabled} label={t('settings.mailboxes.dialog.enabled')} description={t('settings.mailboxes.dialog.enabledHint')} />

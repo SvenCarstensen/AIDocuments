@@ -96,7 +96,8 @@ class BuiltinOcrServiceTest {
 
     private static AppProperties properties(boolean enabled, Path command, String languages, int maxPages) {
         return new AppProperties(Path.of("./data"), null, null,
-                new AppProperties.Ocr(enabled, command.toString(), languages, maxPages, 300, Duration.ofSeconds(30)));
+                new AppProperties.Ocr(enabled, command.toString(), languages, maxPages, 300, Duration.ofSeconds(30)),
+                null);
     }
 
     /** Ein Skript, das sich wie Tesseract verhält: Sprachliste, Aufrufe protokollieren, Eingabe lesen, Text ausgeben. */

@@ -45,7 +45,9 @@
     "login": {
       "title": "Te damos la bienvenida de nuevo",
       "subtitle": "Inicia sesión para acceder a tus documentos.",
-      "submit": "Iniciar sesión"
+      "submit": "Iniciar sesión",
+      "or": "o",
+      "passkey": "Iniciar sesión con una llave de acceso"
     },
     "setup": {
       "title": "Configurar AIDocuments",
@@ -82,8 +84,8 @@
       "dark": "Tema oscuro"
     },
     "search": {
-      "placeholder": "Búsqueda por palabras clave: documentos, etiquetas, contenido …",
-      "placeholderAi": "Búsqueda con IA: pregunta con tus palabras – p. ej. «facturas de Kia de 2024»",
+      "placeholder": "Búsqueda por palabras clave: documentos, etiquetas, contenido…",
+      "placeholderAi": "Búsqueda con IA: pregunta con tus propias palabras, p. ej. «facturas de Kia de 2024»",
       "labelAi": "IA",
       "label": "Buscar documentos",
       "clear": "Borrar la búsqueda",
@@ -103,16 +105,32 @@
       "changed": "Contraseña cambiada"
     },
     "dropzone": {
-      "title": "Suelta los PDF aquí",
-      "hint": "Puedes soltar varios archivos a la vez. Se guardan, se analizan y se etiquetan."
+      "title": "Suelta aquí los PDF o las fotos",
+      "hint": "Puedes soltar varios archivos a la vez. Las fotos (JPG, PNG, HEIC) se convierten en PDF. Todo se guarda, se analiza y se etiqueta."
+    },
+    "remindersDue_one": "{{count, number}} recordatorio pendiente",
+    "remindersDue_many": "{{count, number}} de recordatorios pendientes",
+    "remindersDue_other": "{{count, number}} recordatorios pendientes",
+    "profile": {
+      "email": "Dirección de correo",
+      "saved": "Guardado"
+    },
+    "notifications": {
+      "title": "Notificaciones por correo",
+      "emailHint": "Aquí se envían los recordatorios pendientes que tienes asignados y las notificaciones que actives abajo, en el idioma en el que estás usando la aplicación. Déjalo vacío si no quieres recibir correos.",
+      "digest": "Documentos nuevos cada día",
+      "digestHint": "Una vez al día, una lista de los documentos que han llegado a tus áreas; solo los días en que haya documentos nuevos.",
+      "admin": "Avisos para administradores",
+      "adminHint": "Cuando vencen plazos de conservación (no se elimina nada automáticamente) y cuando un buzón de correo no se puede comprobar varias veces seguidas.",
+      "needsEmail": "Sin dirección no se envía ningún correo."
     }
   },
   "upload": {
-    "onlyPdf": "Solo se pueden añadir archivos PDF.",
-    "uploadingFile": "Subiendo «{{name}}» …",
-    "uploadingFiles_one": "Subiendo {{count, number}} PDF …",
-    "uploadingFiles_many": "Subiendo {{count, number}} de PDF …",
-    "uploadingFiles_other": "Subiendo {{count, number}} PDF …",
+    "onlyPdf": "Solo se pueden añadir PDF y fotos (JPG, PNG, HEIC).",
+    "uploadingFile": "Subiendo «{{name}}»…",
+    "uploadingFiles_one": "Subiendo {{count, number}} archivo…",
+    "uploadingFiles_many": "Subiendo {{count, number}} de archivos…",
+    "uploadingFiles_other": "Subiendo {{count, number}} archivos…",
     "created_one": "{{count, number}} documento añadido",
     "created_many": "{{count, number}} de documentos añadidos",
     "created_other": "{{count, number}} documentos añadidos",
@@ -120,14 +138,22 @@
     "duplicates_one": "{{count, number}} ya existe",
     "duplicates_many": "{{count, number}} ya existen",
     "duplicates_other": "{{count, number}} ya existen",
-    "rejected_one": "{{count, number}} archivo no es un PDF válido",
-    "rejected_many": "{{count, number}} de archivos no son PDF válidos",
-    "rejected_other": "{{count, number}} archivos no son PDF válidos",
+    "rejected_one": "{{count, number}} archivo no añadido",
+    "rejected_many": "{{count, number}} de archivos no añadidos",
+    "rejected_other": "{{count, number}} archivos no añadidos",
     "onlyDuplicates_one": "Este documento ya existe.",
     "onlyDuplicates_many": "Estos documentos ya existen.",
     "onlyDuplicates_other": "Estos documentos ya existen.",
-    "noneValid": "Ninguno de los archivos es un PDF válido.",
-    "failed": "Error al subir"
+    "noneValid": "No se ha podido añadir ninguno de los archivos.",
+    "failed": "Error al subir",
+    "intoArea": "Área: {{area}}",
+    "combine": {
+      "title": "¿Combinar las fotos en un documento?",
+      "text": "Has seleccionado varias fotos. Si son las páginas de un mismo documento (por ejemplo, una carta de varias páginas), se convierten en un único PDF en el orden de sus nombres de archivo; después puedes cambiar el orden en «Páginas». Si no, cada foto se convierte en un documento independiente.",
+      "one": "Como un documento",
+      "separate": "Cada foto por separado",
+      "tooMuch": "Son demasiadas fotos, o demasiado grandes, para un documento (como máximo 100 fotos y 240 MB en total)."
+    }
   },
   "documents": {
     "status": {
@@ -150,7 +176,7 @@
       "inProgressHint": "Esperando el análisis de la IA o analizándose en este momento",
       "remaining": "faltan unos {{duration}}",
       "remainingLessThan": "faltan menos de {{duration}}",
-      "finishHint": "Finalización prevista: {{time}} – estimada según el ritmo de los últimos documentos procesados"
+      "finishHint": "Finalización prevista: {{time}} (estimada según el ritmo de los últimos documentos procesados)"
     },
     "sort": {
       "label": "Orden",
@@ -182,22 +208,45 @@
       "activeTo": "hasta el {{date}}",
       "removeOne": "Quitar el filtro «{{label}}»",
       "removeAll": "Quitar todos los filtros",
-      "clear": "Quitar filtros"
+      "clear": "Quitar filtros",
+      "retentionExpired": "Conservación vencida"
     },
     "empty": {
       "libraryTitle": "Aún no hay documentos",
-      "libraryHint": "Arrastra archivos PDF a esta ventana o usa «Subir».",
-      "libraryHintAdmin": "Arrastra archivos PDF a esta ventana o usa «Subir». En los ajustes puedes configurar un buzón de correo o una carpeta de importación desde los que los PDF nuevos se importan automáticamente.",
+      "libraryHint": "Arrastra archivos PDF o fotos a esta ventana o usa «Subir».",
+      "libraryHintAdmin": "Arrastra archivos PDF o fotos a esta ventana o usa «Subir». En los ajustes puedes configurar un buzón de correo o una carpeta de importación desde los que los documentos nuevos se importan automáticamente.",
       "noResultsTitle": "No se ha encontrado nada",
       "noResultsSearch": "Ningún documento coincide con esta búsqueda. La búsqueda también encuentra partes de palabras: prueba con un término más corto o con menos palabras.",
       "noResultsFilters": "Ningún documento coincide con los filtros seleccionados."
     },
-    "loadingAll_one": "{{loaded, number}} de {{count, number}} documento cargado …",
-    "loadingAll_many": "{{loaded, number}} de {{count, number}} de documentos cargados …",
-    "loadingAll_other": "{{loaded, number}} de {{count, number}} documentos cargados …",
+    "loadingAll_one": "{{loaded, number}} de {{count, number}} documento cargado…",
+    "loadingAll_many": "{{loaded, number}} de {{count, number}} de documentos cargados…",
+    "loadingAll_other": "{{loaded, number}} de {{count, number}} documentos cargados…",
     "loadMore": "Cargar más ({{remaining, number}})",
     "aiSearch": {
       "notice": "Búsqueda con IA: «{{question}}». Los filtros muestran cómo se entendió la pregunta."
+    },
+    "export": {
+      "label_one": "Exportar {{count, number}} documento como ZIP",
+      "label_many": "Exportar los {{count, number}} de documentos de esta lista como ZIP",
+      "label_other": "Exportar los {{count, number}} documentos de esta lista como ZIP",
+      "started_one": "Exportación de {{count, number}} documento iniciada",
+      "started_many": "Exportación de {{count, number}} de documentos iniciada",
+      "started_other": "Exportación de {{count, number}} documentos iniciada",
+      "contents": "El archivo ZIP contiene los PDF y todos los datos en forma de tabla (documents.csv) y como documents.json.",
+      "failed": "Error en la exportación"
+    },
+    "mailboxNotice": {
+      "text_one": "No se ha podido comprobar el buzón «{{names}}» varias veces seguidas: no está llegando ningún documento de él.",
+      "text_many": "No se han podido comprobar estos buzones varias veces seguidas: {{names}}. No está llegando ningún documento de ellos.",
+      "text_other": "No se han podido comprobar estos buzones varias veces seguidas: {{names}}. No está llegando ningún documento de ellos.",
+      "action": "Ver buzones"
+    },
+    "backupNotice": {
+      "never": "Todavía no hay ninguna copia de seguridad de tus documentos.",
+      "overdue": "Última copia: {{when}}. Hace más tiempo del configurado.",
+      "failed": "La copia de seguridad automática ha fallado: {{reason}}",
+      "action": "Ir a la copia de seguridad"
     }
   },
   "document": {
@@ -246,7 +295,7 @@
       "allWith": "Todos los documentos con la etiqueta «{{tag}}»",
       "none": "Sin etiquetas. <add>Añadir</add>",
       "inputHint": "Confirma con Intro o con una coma. Las sugerencias son etiquetas que ya se usan.",
-      "inputPlaceholder": "Escribe una etiqueta …",
+      "inputPlaceholder": "Escribe una etiqueta…",
       "remove": "Quitar la etiqueta «{{tag}}»"
     },
     "keyFacts": "Datos clave",
@@ -273,7 +322,9 @@
     "noText": "Este documento no tiene texto: probablemente sea un escaneo sin capa de texto. Con la IA configurada y el reconocimiento de texto activado, el contenido se transcribe durante el análisis.",
     "edit": {
       "title": "Editar documento",
-      "saved": "Cambios guardados"
+      "saved": "Cambios guardados",
+      "areaHint": "Determina quién puede ver el documento.",
+      "areaMoveHint": "Después solo podrán verlo los miembros de «{{area}}» y los administradores."
     },
     "delete": {
       "title": "¿Eliminar el documento?",
@@ -282,9 +333,9 @@
     },
     "chat": {
       "intro": "Haz una pregunta sobre este documento: la IA responde según su contenido.",
-      "placeholder": "Pregunta algo sobre este documento …",
+      "placeholder": "Pregunta algo sobre este documento…",
       "send": "Enviar",
-      "thinking": "La IA está leyendo el documento …",
+      "thinking": "La IA está leyendo el documento…",
       "notConfigured": "Para hacer preguntas sobre el documento hay que configurar una IA.",
       "restart": "Empezar de nuevo",
       "suggestions": {
@@ -309,22 +360,31 @@
         "EDITED": "Editado",
         "ORIGINAL_RESTORED": "Original restaurado",
         "VERSION_RESTORED": "Versión {{from}} restaurada",
-        "UNDONE": "Cambio deshecho"
+        "UNDONE": "Cambio deshecho",
+        "PAGES": "Páginas modificadas",
+        "MERGED": "Documentos anexados"
       }
-    }
+    },
+    "retention": {
+      "label": "Conservación",
+      "until": "hasta el {{date}}; no se puede eliminar antes",
+      "expired": "plazo vencido el {{date}}",
+      "locked": "Debe conservarse hasta el {{date}}; solo se podrá eliminar después"
+    },
+    "readOnly": "En esta área solo puedes ver este documento."
   },
   "settings": {
     "title": "Ajustes",
     "mailboxes": {
       "title": "Buzones de correo",
-      "navHint": "Servidores IMAP desde los que se importan los PDF adjuntos",
-      "intro": "Los PDF adjuntos se importan automáticamente desde estos buzones IMAP. Los buzones solo se leen: los correos no se modifican y siguen sin leer.",
+      "navHint": "Servidores IMAP desde los que se importan los PDF y las fotos adjuntos",
+      "intro": "Los PDF adjuntos y las fotos adjuntas (como PDF) se importan automáticamente desde estos buzones IMAP; el texto de los correos y los logotipos incrustados, no. Los buzones solo se leen: los correos no se modifican y siguen sin leer.",
       "add": "Añadir buzón de correo",
       "emptyTitle": "Aún no hay ningún buzón configurado",
       "emptyText": "Introduce los datos de acceso de un buzón IMAP, por ejemplo el buzón al que tu escáner envía los documentos.",
       "paused": "En pausa",
       "syncNow": "Comprobar ahora",
-      "syncing": "Comprobando el buzón …",
+      "syncing": "Comprobando el buzón…",
       "neverSynced": "Aún no se ha comprobado.",
       "saved": "Buzón guardado",
       "added": "Buzón añadido",
@@ -344,14 +404,14 @@
         "port": "Puerto",
         "security": "Cifrado",
         "securityNone": "Ninguno",
-        "securityNoneWarning": "Sin cifrado, el nombre de usuario y la contraseña se transmiten en texto sin formato.",
+        "securityNoneWarning": "Sin cifrado, el nombre de usuario y la contraseña se transmiten en texto plano.",
         "passwordKeepHint": "Déjalo vacío para conservar la contraseña guardada",
         "folder": "Carpeta",
         "folderHint": "Normalmente {{folder}} (la bandeja de entrada)",
         "since": "Solo correos desde",
         "sinceHint": "Opcional: los correos más antiguos se omiten",
         "enabled": "Comprobar automáticamente",
-        "enabledHint": "El buzón se comprueba en busca de PDF nuevos con el intervalo configurado.",
+        "enabledHint": "El buzón se comprueba en busca de adjuntos nuevos con el intervalo configurado.",
         "filter": {
           "title": "Filtro",
           "intro": "Solo se procesan los correos que cumplen todas las condiciones. Un término por línea; las mayúsculas y minúsculas no importan y basta con una parte del texto. Los campos vacíos no restringen nada.",
@@ -360,29 +420,30 @@
           "senderIncludes": "El remitente contiene uno de estos términos",
           "senderExcludes": "El remitente no contiene ninguno de estos términos",
           "senderHint": "Nombre o dirección, p. ej. «@example.com»",
-          "newOnly": "El filtro se aplica a los correos que llegan después de la última consulta; los correos ya revisados no se vuelven a procesar."
+          "newOnly": "El filtro se aplica a los correos que llegan después de la última comprobación; los correos ya revisados no se vuelven a procesar."
         },
-        "interval": "Intervalo de consulta en minutos",
-        "intervalHint": "Déjalo vacío para usar el intervalo general (actualmente {{interval}})."
+        "interval": "Intervalo de comprobación en minutos",
+        "intervalHint": "Déjalo vacío para usar el intervalo general (actualmente {{interval}}).",
+        "areaHint": "Los documentos importados van a esta área."
       },
       "filterActive": "Filtro activo",
-      "schedule": "Consulta cada {{interval}} · próxima {{when}}",
-      "scheduleSoon": "Consulta cada {{interval}} · próxima en breve"
+      "schedule": "Comprobación cada {{interval}} · próxima {{when}}",
+      "scheduleSoon": "Comprobación cada {{interval}} · próxima en breve"
     },
     "import": {
       "title": "Programación y carpeta de importación",
       "navHint": "Intervalo de comprobación y carpeta vigilada",
-      "intro": "Define con qué frecuencia busca la aplicación archivos PDF nuevos: en los buzones de correo y en la carpeta de importación.",
+      "intro": "Define con qué frecuencia busca la aplicación documentos nuevos: en los buzones de correo y en la carpeta de importación.",
       "saved": "Ajustes guardados",
       "interval": {
         "title": "Intervalo de comprobación",
-        "text": "Con qué frecuencia la aplicación revisa la carpeta de entrada y todos los buzones sin intervalo propio en busca de PDF nuevos.",
+        "text": "Con qué frecuencia la aplicación revisa la carpeta de importación y todos los buzones sin intervalo propio en busca de documentos nuevos.",
         "label": "Cada … minutos",
         "nextRun": "Próxima comprobación automática {{when}}."
       },
       "folder": {
         "title": "Carpeta de importación",
-        "text": "Un directorio del servidor que se vigila en busca de archivos PDF nuevos, por ejemplo el destino de un escáner de red. También se buscan en las subcarpetas.",
+        "text": "Un directorio del servidor que se vigila en busca de PDF y fotos (JPG, PNG, HEIC) nuevos, por ejemplo el destino de un escáner de red. También se busca en las subcarpetas.",
         "enable": "Vigilar la carpeta de importación",
         "path": "Ruta en el servidor",
         "pathHint": "Ruta absoluta. En el contenedor Docker es la carpeta montada, normalmente {{path}}.",
@@ -391,10 +452,11 @@
         "move": "Mover a «{{folder}}»",
         "keepHint": "Los archivos no se modifican. La aplicación recuerda lo que ya ha importado.",
         "moveHint": "Los archivos importados se mueven a la subcarpeta «{{folder}}»: la carpeta de importación se mantiene ordenada.",
-        "scanning": "Comprobando la carpeta …",
+        "scanning": "Comprobando la carpeta…",
         "neverScanned": "Aún no se ha comprobado.",
         "scanNow": "Comprobar ahora",
-        "scanStarted": "Se está comprobando la carpeta de importación."
+        "scanStarted": "Se está comprobando la carpeta de importación.",
+        "areaHint": "Los documentos de la carpeta van a esta área."
       }
     },
     "ai": {
@@ -450,7 +512,7 @@
         "placeholderIfRequired": "solo si el servidor la exige",
         "hintShown": "Predefinida en la configuración del servidor.",
         "hintRemoving": "La clave guardada se eliminará al guardar.",
-        "hintStored": "Hay una clave guardada de forma cifrada. Déjalo vacío para conservarla – <remove>eliminar clave</remove>",
+        "hintStored": "Hay una clave guardada de forma cifrada. Déjalo vacío para conservarla o <remove>elimina la clave</remove>",
         "hintEnvironment": "La clave procede actualmente de la configuración del servidor (variable de entorno o archivo de configuración). Una clave introducida aquí tiene prioridad.",
         "hintPreset": "En la configuración del servidor hay una clave predefinida para este proveedor. Déjalo vacío para usarla.",
         "hintDiscardedOnSwitch": "La clave guardada hasta ahora pertenece a {{previous}} y se descartará al cambiar.",
@@ -518,6 +580,146 @@
       "resetTwoFactorText": "{{name}} iniciará sesión solo con la contraseña y podrá volver a configurar la autenticación en dos pasos, por ejemplo tras perder el móvil.",
       "resetTwoFactorConfirm": "Restablecer",
       "twoFactorReset": "Autenticación en dos pasos restablecida"
+    },
+    "areas": {
+      "title": "Áreas",
+      "navHint": "Quién ve qué documentos",
+      "intro": "Cada documento está en una sola área. Los usuarios solo ven los documentos de las áreas de las que son miembros y los de las áreas abiertas a todos.",
+      "add": "Crear área",
+      "everyone": "Para todos",
+      "restricted": "Restringida",
+      "visibleForAll": "visible para todos los usuarios que han iniciado sesión",
+      "members": "Miembros: {{names}}",
+      "adminsOnly": "solo administradores",
+      "adminHint": "Los administradores ven todas las áreas, aunque no sean miembros.",
+      "edit": "Editar {{name}}",
+      "saved": "Área guardada",
+      "created": "Área creada",
+      "deleted": "Área eliminada",
+      "delete": {
+        "label": "Eliminar {{name}}",
+        "title": "¿Eliminar el área?",
+        "text": "Se eliminará el área «{{name}}». Solo es posible mientras no la utilice ningún documento, buzón ni carpeta de importación."
+      },
+      "dialog": {
+        "name": "Nombre",
+        "namePlaceholder": "p. ej. Contabilidad",
+        "generalNameHint": "Déjalo vacío para que el área se llame «General» en todos los idiomas.",
+        "everyone": "Visible para todos",
+        "everyoneHint": "Todos los usuarios que han iniciado sesión ven los documentos de esta área.",
+        "members": "Miembros",
+        "membersHint": "Solo los miembros y los administradores ven los documentos de esta área. Para cada miembro, elige si solo puede verlos, también editarlos o, además, eliminarlos.",
+        "noUsers": "Todavía no hay usuarios sin el rol de administrador.",
+        "create": "Crear",
+        "everyoneAccess": "Todos pueden",
+        "accessOf": "Permiso de {{name}}",
+        "membersHintEveryone": "Todos ven los documentos de esta área. Añade aquí miembros si deben poder hacer más que los demás."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Conservación",
+      "navHint": "Plazos y bloqueo de eliminación",
+      "intro": "Define cuánto tiempo deben conservarse los documentos de un tipo; por ejemplo, las facturas, diez años. El plazo se cuenta desde el final del año al que pertenece el documento. Hasta entonces, nadie puede eliminarlo.",
+      "permanent": "Nadie puede levantar un bloqueo, ni siquiera los administradores. Si una regla se acorta o se elimina, o cambia el tipo de un documento, el plazo ya fijado se mantiene.",
+      "add": "Crear regla",
+      "years_one": "{{count, number}} año",
+      "years_many": "{{count, number}} de años",
+      "years_other": "{{count, number}} años",
+      "edit": "Editar la regla de {{category}}",
+      "saved": "Regla guardada",
+      "created": "Regla creada",
+      "deleted": "Regla eliminada",
+      "emptyTitle": "Aún no hay reglas de conservación",
+      "emptyText": "Sin una regla, los documentos se pueden eliminar en cualquier momento.",
+      "delete": {
+        "label": "Eliminar la regla de {{category}}",
+        "title": "¿Eliminar la regla?",
+        "text": "Los documentos nuevos del tipo «{{category}}» ya no recibirán un plazo. Los documentos ya bloqueados siguen bloqueados hasta que termine su plazo."
+      },
+      "dialog": {
+        "categoryHint": "Tal como aparece en el documento; las mayúsculas y minúsculas no importan.",
+        "years": "Plazo de conservación en años",
+        "yearsHint": "Se cuenta desde el final del año de la fecha del documento (sin fecha: del día en que se añadió).",
+        "shorterHint": "Un plazo más corto solo se aplica a los documentos que aún no tienen plazo. Los documentos ya bloqueados siguen bloqueados hasta el final de su plazo actual.",
+        "create": "Crear"
+      }
+    },
+    "mailOut": {
+      "title": "Envío de correo",
+      "navHint": "Avisos por correo",
+      "intro": "La aplicación envía los avisos de recordatorios pendientes a través de este servidor SMTP: una sola vez por recordatorio, agrupados en un correo por persona. El destinatario es quien se ocupa del recordatorio y ha indicado una dirección en el menú de usuario.",
+      "enabled": "Enviar avisos por correo",
+      "enabledHint": "Si se desactiva, los recordatorios solo aparecen en la aplicación.",
+      "host": "Servidor SMTP",
+      "port": "Puerto",
+      "security": "Cifrado",
+      "unencrypted": "Ninguno",
+      "usernameHint": "Déjalo vacío si el servidor no requiere inicio de sesión.",
+      "passwordKeepHint": "Déjalo vacío para conservar la contraseña guardada.",
+      "from": "Dirección del remitente",
+      "fromHint": "Tu servidor debe permitirla para tu cuenta.",
+      "appUrl": "Dirección de la aplicación",
+      "appUrlHint": "Para los enlaces de los correos, p. ej. https://docs.example.com. Vacío = sin enlaces.",
+      "digestHour": "Envío",
+      "fromHour": "desde {{hour}}",
+      "saved": "Ajustes de envío guardados",
+      "test": "Mensaje de prueba a {{address}}",
+      "testNeedsAddress": "Para el mensaje de prueba, indica tu propia dirección de correo en el menú de usuario.",
+      "testSavedHint": "La prueba usa los ajustes guardados: guarda primero."
+    },
+    "backup": {
+      "title": "Copia de seguridad e importación",
+      "navHint": "Guardarlo todo de una vez, importar exportaciones",
+      "intro": "Una copia de seguridad contiene todo lo necesario para restaurar AIDocuments exactamente como está. Una importación incorpora documentos de la exportación de otra instalación, con sus datos.",
+      "backupTitle": "Copia de seguridad con un clic",
+      "backupText": "Un ZIP con la base de datos, todos los documentos con sus versiones anteriores, las miniaturas y la clave de las contraseñas guardadas. Mientras tanto, la aplicación sigue funcionando.",
+      "size": "Tamaño",
+      "sizeValue_one": "unos {{size}} en {{count, number}} archivo",
+      "sizeValue_many": "unos {{size}} en {{count, number}} de archivos",
+      "sizeValue_other": "unos {{size}} en {{count, number}} archivos",
+      "last": "Última copia",
+      "never": "nunca",
+      "keyWarning": "La copia de seguridad no está cifrada y contiene la clave de las contraseñas guardadas (buzones, IA, autenticación en dos pasos). Guárdala tan a salvo como los propios documentos.",
+      "restore": "Para restaurar: detén AIDocuments, extrae el contenido del ZIP en un directorio de datos vacío y vuelve a iniciarlo. El ZIP incluye las instrucciones (README.txt).",
+      "download": "Descargar copia de seguridad",
+      "started": "Se está descargando la copia de seguridad.",
+      "externalDatabase": "La copia de seguridad con un clic solo está disponible con la base de datos integrada. Con MariaDB, haz la copia de la base de datos con sus propias herramientas (como mariadb-dump) y, además, la del directorio de datos.",
+      "importTitle": "Importar una exportación",
+      "importText": "Un ZIP creado con «Exportar» en la lista de documentos, también de otra instalación. Se conservan el título, el tipo de documento, las etiquetas y los demás datos; la IA no vuelve a leer los documentos. Los archivos que ya existen se omiten.",
+      "file": "Archivo ZIP",
+      "areaHint": "Aquí van los documentos, o solo aquellos cuya área no existe aquí.",
+      "matchAreas": "Colocar en áreas con el mismo nombre",
+      "matchAreasHint": "Si aquí hay un área con el mismo nombre que en la exportación, los documentos van a ella.",
+      "import": "Importar",
+      "importing": "Importando…",
+      "result": "Importados: {{imported, number}} · ya existían: {{duplicates, number}} · no importados: {{failed, number}}",
+      "auto": {
+        "title": "Copia de seguridad automática",
+        "text": "Una vez al día, AIDocuments guarda una copia de seguridad completa en formato ZIP en una carpeta y conserva las más recientes. Lo ideal es que la carpeta esté en otro disco o en una unidad de red; si no, cuando falle el disco con los datos, también se perderán las copias.",
+        "enable": "Hacer una copia de seguridad automática cada día",
+        "hour": "Hora",
+        "keep": "Conservar",
+        "keepHint": "Número de copias; las más antiguas se eliminan.",
+        "directory": "Carpeta",
+        "directoryHint": "Ruta completa en el servidor. Déjalo vacío para usar la predeterminada. En el contenedor Docker, la carpeta debe estar montada.",
+        "warnAfterDays": "Avisar después de (días)",
+        "warnAfterDaysHint": "Aviso en la lista de documentos cuando haga tanto tiempo que no se hace ninguna copia, ya sea manual o automática. 0 = no avisar nunca.",
+        "lastRun": "Última ejecución",
+        "nextRun": "Próxima ejecución",
+        "running": "Haciendo la copia de seguridad…",
+        "ok": "correcta, {{when}}",
+        "failed": "con error, {{when}}",
+        "stored_one": "{{count, number}} copia en {{directory}}",
+        "stored_many": "{{count, number}} de copias en {{directory}}",
+        "stored_other": "{{count, number}} copias en {{directory}}",
+        "runNow": "Hacer copia ahora",
+        "saveFirst": "Primero guarda los cambios.",
+        "runStarted": "La copia de seguridad se está haciendo en segundo plano.",
+        "done": "Copia de seguridad guardada.",
+        "saved": "Ajustes guardados.",
+        "externalDatabase": "La copia de seguridad automática solo está disponible con la base de datos integrada. Con MariaDB, haz la copia de la base de datos con sus propias herramientas (por ejemplo, un mariadb-dump cada noche) y, además, la del directorio de datos."
+      }
     }
   },
   "history": {
@@ -576,7 +778,8 @@
   "confirmCode": {
     "title": "Confirmar cambio",
     "text": "Los cambios en cuentas, buzones y ajustes requieren un código actual de tu aplicación de autenticación. La confirmación es válida durante 10 minutos.",
-    "submit": "Confirmar"
+    "submit": "Confirmar",
+    "passkey": "Confirmar con una llave de acceso"
   },
   "share": {
     "button": "Compartir",
@@ -609,6 +812,199 @@
     "page": {
       "for": "Compartido con {{name}}",
       "invalid": "Este enlace no es válido o ha caducado, o el documento se ha eliminado. Ponte en contacto con la persona que te lo dio."
+    }
+  },
+  "areas": {
+    "general": "General",
+    "unknown": "Otra área",
+    "label": "Área",
+    "target": "Área de destino",
+    "access": {
+      "READ": "Solo ver",
+      "EDIT": "Ver y editar",
+      "DELETE": "Editar y eliminar"
+    }
+  },
+  "reminders": {
+    "title": "Recordatorios",
+    "cardTitle": "Recordatorio",
+    "add": "Añadir recordatorio",
+    "edit": "Editar recordatorio",
+    "create": "Crear",
+    "created": "Recordatorio añadido",
+    "saved": "Recordatorio guardado",
+    "deleted": "Recordatorio eliminado",
+    "markedDone": "Completado",
+    "dueDate": "Fecha límite",
+    "note": "Nota",
+    "notePlaceholder": "p. ej. comprobar el pago",
+    "assignee": "¿Quién se encarga?",
+    "assigneeHint": "Esta persona ve el recordatorio en «Míos» y recibe el aviso por correo. Se puede elegir a cualquiera que vea el documento.",
+    "me": "{{name}} (yo)",
+    "assignedTo": "para {{name}}",
+    "doneBy": "completado por {{name}}",
+    "markDone": "Marcar como completado",
+    "reopen": "Reabrir",
+    "delete": {
+      "label": "Eliminar recordatorio",
+      "title": "¿Eliminar el recordatorio?",
+      "text": "Se quitará el recordatorio. El documento no se modifica."
+    },
+    "accept": "Añadir",
+    "dismiss": "Descartar sugerencia",
+    "suggestionsHint": "La IA ha encontrado fechas en este documento:",
+    "none": "No hay recordatorios abiertos.",
+    "showDone_one": "Mostrar {{count, number}} recordatorio completado",
+    "showDone_many": "Mostrar {{count, number}} de recordatorios completados",
+    "showDone_other": "Mostrar {{count, number}} recordatorios completados",
+    "hideDone": "Ocultar completados",
+    "scope": {
+      "label": "Qué recordatorios",
+      "mine": "Míos",
+      "all": "Todos"
+    },
+    "dueTitle": "Pendientes",
+    "nothingDue": "Hoy no hay nada pendiente.",
+    "upcomingTitle": "Próximamente",
+    "suggestionsTitle": "Fechas sugeridas",
+    "suggestionsPageHint": "Plazos de los próximos seis meses que la IA ha encontrado en los documentos. Añádelos como recordatorio o descártalos.",
+    "emptyTitle": "Sin recordatorios",
+    "emptyText": "Añade un recordatorio a un documento o acepta uno que sugiera la IA.",
+    "repeat": {
+      "label": "Repetir",
+      "hint": "Cuando marques el recordatorio como completado, se creará el siguiente con el mismo intervalo.",
+      "none": "Una vez",
+      "m1": "Mensual",
+      "m3": "Trimestral",
+      "m6": "Semestral",
+      "m12": "Anual",
+      "m24": "Cada dos años",
+      "months_one": "Cada mes",
+      "months_many": "Cada {{count}} de meses",
+      "months_other": "Cada {{count}} meses"
+    },
+    "fromContract": "del contrato"
+  },
+  "pages": {
+    "button": "Páginas",
+    "title": "Editar páginas",
+    "intro": "Arrastra las páginas o muévelas con las flechas, gíralas o quítalas. Al guardar se crea una versión nueva; la anterior se conserva.",
+    "page": "Página {{number}}",
+    "wasPage": "antes: {{number}}",
+    "moveLeft": "Mover adelante",
+    "moveRight": "Mover atrás",
+    "rotate": "Girar 90°",
+    "remove": "Quitar página",
+    "keep": "Conservar página",
+    "noneLeft": "Debe quedar al menos una página.",
+    "saveFirst": "Guarda primero los cambios",
+    "saved": "Páginas guardadas",
+    "split": {
+      "here": "Documento aparte desde aquí",
+      "title": "¿Dividir el documento?",
+      "text": "La página {{page}} y todas las siguientes pasan a ser un documento independiente en la misma área. Se lee y se clasifica como uno recién recibido; este documento conserva las páginas anteriores.",
+      "confirm": "Dividir",
+      "done": "Documento dividido",
+      "open": "Abrir el documento nuevo"
+    },
+    "merge": {
+      "button": "Anexar documentos",
+      "title": "Anexar documentos",
+      "intro": "Las páginas de los documentos elegidos se añaden en este orden al final de «{{title}}».",
+      "search": "Buscar documentos…",
+      "none": "No hay documentos que coincidan.",
+      "noDeleteRight": "No puedes eliminarlo, así que tampoco puedes anexarlo.",
+      "hint": "Después, los documentos anexados van a la papelera; se pueden restaurar desde el historial durante 30 días.",
+      "confirm_one": "Anexar {{count}} documento",
+      "confirm_many": "Anexar {{count}} de documentos",
+      "confirm_other": "Anexar {{count}} documentos",
+      "done_one": "{{count}} documento anexado",
+      "done_many": "{{count}} de documentos anexados",
+      "done_other": "{{count}} documentos anexados"
+    }
+  },
+  "contracts": {
+    "nav": "Contratos",
+    "title": "Contratos",
+    "pageIntro": "Duración y plazos de preaviso de todos los contratos que puedes ver; primero, los que requieren atención pronto.",
+    "scope": {
+      "label": "Mostrar",
+      "running": "En vigor",
+      "all": "Todos"
+    },
+    "emptyTitle": "Aún no hay contratos registrados",
+    "emptyText": "Abre un documento, como un contrato de luz o de móvil, y registra allí su duración y su plazo de preaviso. Así aparecerá un recordatorio con tiempo antes de que venza el plazo.",
+    "cardTitle": "Contrato",
+    "none": "¿Es un contrato? Con su duración y su plazo de preaviso, AIDocuments te recuerda a tiempo que lo canceles.",
+    "add": "Registrar como contrato",
+    "edit": "Editar contrato",
+    "intro": "El fin de la duración y el plazo de preaviso determinan hasta cuándo se puede cancelar. Antes aparece un recordatorio; si la duración termina sin cancelación, el contrato se renueva automáticamente.",
+    "saved": "Contrato guardado",
+    "removed": "Datos del contrato quitados",
+    "remove": {
+      "label": "Quitar los datos del contrato",
+      "title": "¿Quitar los datos del contrato?",
+      "text": "Se quitarán la duración, el plazo de preaviso y el recordatorio abierto correspondiente. El documento en sí se conserva."
+    },
+    "openEnded": "indefinido",
+    "months_one": "{{count}} mes",
+    "months_many": "{{count}} de meses",
+    "months_other": "{{count}} meses",
+    "amountHint": "p. ej. «49,90 € al mes»",
+    "endDateHint": "Fin de la duración actual; vacío = indefinido",
+    "noticeHint": "Meses antes del fin de la duración; vacío = hasta el fin de la duración",
+    "renewalHint": "Sin cancelación, el contrato se renueva por este número de meses; 0 = termina",
+    "cancelledHint": "Así ya no se renueva y no aparecen más recordatorios.",
+    "fields": {
+      "partner": "Parte contratante",
+      "amount": "Importe",
+      "startDate": "Inicio del contrato",
+      "endDate": "Vigente hasta",
+      "notice": "Preaviso (meses)",
+      "renewal": "Renovación (meses)",
+      "deadline": "Cancelar a más tardar",
+      "reminderDays": "Avisar (días antes)",
+      "cancelled": "Cancelado"
+    },
+    "status": {
+      "ACTIVE": "En vigor",
+      "DUE_SOON": "Plazo próximo",
+      "NOTICE_MISSED": "Plazo vencido",
+      "CANCELLED": "Cancelado",
+      "ENDED": "Finalizado",
+      "OPEN_ENDED": "Indefinido"
+    },
+    "row": {
+      "cancelBy": "cancelar a más tardar el {{date}}",
+      "endsOn": "termina el {{date}}",
+      "term": "vigente hasta el {{date}}",
+      "renews_one": "se renueva por {{count}} mes",
+      "renews_many": "se renueva por {{count}} de meses",
+      "renews_other": "se renueva por {{count}} meses"
+    }
+  },
+  "passkeys": {
+    "title": "Llaves de acceso",
+    "intro": "Con una llave de acceso inicias sesión sin contraseña: la desbloqueas con tu huella, tu cara o el PIN del dispositivo. Solo funciona para esta dirección; un sitio falso no puede usarla.",
+    "none": "Aún no has añadido ninguna llave de acceso.",
+    "add": "Añadir llave de acceso",
+    "create": "Crear llave de acceso",
+    "name": "Nombre",
+    "nameHint": "Para que la reconozcas después, p. ej. «Portátil» o «Gestor de contraseñas».",
+    "password": "Tu contraseña",
+    "passwordHint": "Quien añade una llave de acceso puede iniciar sesión sin contraseña a partir de entonces; por eso, confírmalo una vez.",
+    "added": "Llave de acceso añadida",
+    "removed": "Llave de acceso quitada",
+    "synced": "sincronizada",
+    "lastUsed": "usada por última vez {{time}}",
+    "created": "añadida {{time}}, aún sin usar",
+    "unsupported": "Este navegador no puede usar llaves de acceso aquí. Las llaves de acceso solo funcionan con HTTPS (o localhost).",
+    "unsupportedIp": "Las llaves de acceso solo funcionan con HTTPS y con un nombre en la dirección, no con una dirección IP.",
+    "remove": {
+      "label": "Quitar llave de acceso",
+      "title": "¿Quitar la llave de acceso?",
+      "text": "Después nadie podrá iniciar sesión con «{{name}}». Seguirá guardada en el gestor de contraseñas o en el dispositivo hasta que la elimines allí.",
+      "confirm": "Quitar"
     }
   }
 }

@@ -67,6 +67,7 @@ export function UserSettings() {
                   </div>
                   <p className="mt-0.5 text-xs text-muted">
                     {user.lastLoginAt ? t('settings.users.lastLogin', { when: formatRelative(user.lastLoginAt) }) : t('settings.users.neverLoggedIn')}
+                    {user.email && <> · {user.email}</>}
                   </p>
                 </div>
                 <IconButton label={t('settings.users.editUser', { name: user.username })} onClick={() => setEditing(user)}>

@@ -1,6 +1,7 @@
 // Schlanke Anbindung an das Backend: fetch mit CSRF-Token, einheitlicher Fehlerbehandlung und allen Typen.
 
 import { currentLanguage, t } from './i18n'
+import type { CreationOptionsJson, RequestOptionsJson } from './passkey'
 
 export class ApiError extends Error {
   status: number
@@ -32,6 +33,23 @@ async function send(path: string, init: RequestInit): Promise<Response> {
  * Fragt einen frischen Code aus der Authenticator-App ab (siehe ConfirmCodeHost); true, sobald der Server ihn
  * angenommen hat, false bei Abbruch.
  */
+/** Die Filter der Dokumentliste als Abfrageparameter – für Liste und Export gleich. */
+function queryParams(query: DocumentQuery): URLSearchParams {
+  const params = new URLSearchParams()
+  if (query.q) params.set('q', query.q)
+  if (query.category) params.set('category', query.category)
+  if (query.correspondent) params.set('correspondent', query.correspondent)
+  query.tags.forEach((tag) => params.append('tag', tag))
+  if (query.status) params.set('status', query.status)
+  if (query.duplicates) params.set('duplicates', 'true')
+  if (query.from) params.set('from', query.from)
+  if (query.to) params.set('to', query.to)
+  if (query.area) params.set('area', query.area)
+  if (query.retentionExpired) params.set('retention', 'expired')
+  params.set('sort', query.sort)
+  return params
+}
+
 let confirmHandler: (() => Promise<boolean>) | null = null
 export function setConfirmHandler(handler: (() => Promise<boolean>) | null) {
   confirmHandler = handler
@@ -92,6 +110,17 @@ export interface User {
   createdAt: string
   lastLoginAt: string | null
   twoFactorEnabled: boolean
+  /** für Erinnerungen und Benachrichtigungen per E-Mail; null = keine */
+  email: string | null
+  /** täglich eine Übersicht neuer Dokumente */
+  notifyNewDocuments: boolean
+  /** für Admins: abgelaufene Fristen, Postfächer mit Fehlern */
+  notifyAdmin: boolean
+}
+export interface ProfileInput {
+  email: string | null
+  notifyNewDocuments: boolean
+  notifyAdmin: boolean
 }
 /** Antwort der Anmeldung: angemeldet, oder es fehlt noch der Code aus der Authenticator-App. */
 export type LoginResult = User | { twoFactorRequired: true }
@@ -186,6 +215,14 @@ export interface Doc {
   /** Das frühere Dokument, dem dieses inhaltlich gleicht; null = kein Duplikat bekannt. */
   duplicateOf: string | null
   snippet: string | null
+  /** In welchem Bereich das Dokument liegt (bestimmt, wer es sieht). */
+  areaId: string
+  /** Bis zu diesem Tag aufzubewahren (Regel der Kategorie); null = keine Frist. */
+  retainUntil: string | null
+  /** Die Frist verbietet das Löschen heute noch – für alle, auch Administratoren. */
+  retentionLocked: boolean
+  /** was der Angemeldete mit dem Dokument darf – das Recht in dessen Bereich */
+  access: Permission
 }
 export interface Page<T> {
   items: T[]
@@ -237,6 +274,11 @@ export interface AskResult {
   from: string | null
   to: string | null
 }
+/** Eine Seite der neuen Fassung: welche bisherige (ab 1), um wie viel Grad im Uhrzeigersinn gedreht. */
+export interface PageSpec {
+  page: number
+  rotate: number
+}
 export interface DocumentQuery {
   q: string
   category: string
@@ -248,6 +290,10 @@ export interface DocumentQuery {
   from: string
   to: string
   sort: SortOrder
+  /** leer = alle sichtbaren Bereiche */
+  area: string
+  /** nur Dokumente, deren Aufbewahrungsfrist abgelaufen ist */
+  retentionExpired: boolean
 }
 export interface DocumentUpdate {
   title: string
@@ -256,10 +302,103 @@ export interface DocumentUpdate {
   correspondent: string | null
   documentDate: string | null
   tags: string[]
+  /** undefined/null = Bereich unverändert */
+  areaId?: string | null
+}
+/** Rechte in einem Bereich; jede Stufe schließt die vorige ein. */
+export type Permission = 'READ' | 'EDIT' | 'DELETE'
+export const PERMISSIONS: Permission[] = ['READ', 'EDIT', 'DELETE']
+export const canEdit = (doc: { access: Permission }) => doc.access !== 'READ'
+export const canDelete = (doc: { access: Permission }) => doc.access === 'DELETE'
+export interface AreaMember {
+  userId: string
+  access: Permission
+}
+/** Ein Bereich: wer Mitglied ist, sieht dessen Dokumente; „für alle“ sehen alle Angemeldeten. */
+export interface PasskeyInfo {
+  id: string
+  name: string
+  createdAt: string
+  lastUsedAt: string | null
+  /** im Passwortmanager bzw. in der Cloud des Geräts gesichert – auch auf anderen Geräten verfügbar */
+  synced: boolean
+}
+export interface BackupStatus {
+  /** nur mit der eingebauten Datenbank */
+  available: boolean
+  lastBackupAt: string | null
+  dataBytes: number
+  files: number
+}
+export interface StoredBackup {
+  name: string
+  bytes: number
+  createdAt: string
+}
+export interface AutoBackupStatus {
+  /** nur mit der eingebauten Datenbank */
+  available: boolean
+  enabled: boolean
+  /** volle Stunde, ab der täglich gesichert wird */
+  hour: number
+  /** so viele Stände bleiben liegen */
+  keep: number
+  /** der Ordner, in den gesichert wird */
+  directory: string
+  defaultDirectory: string
+  /** 0 = nie warnen */
+  warnAfterDays: number
+  running: boolean
+  lastRunAt: string | null
+  lastRunOk: boolean | null
+  lastRunError: string | null
+  nextRunAt: string | null
+  backups: StoredBackup[]
+}
+export interface AutoBackupInput {
+  enabled: boolean
+  hour: number
+  keep: number
+  /** leer = die Vorgabe */
+  directory: string
+  warnAfterDays: number
+}
+export interface BackupNotice {
+  lastBackupAt: string | null
+  /** länger nicht gesichert als eingestellt */
+  overdue: boolean
+  /** warum die automatische Sicherung zuletzt fehlschlug */
+  failure: string | null
+}
+export interface ArchiveImportResult {
+  imported: number
+  duplicates: number
+  failed: number
+  problems: string[]
+}
+export interface Area {
+  id: string
+  /** null nur beim allgemeinen Bereich – dann gilt der übersetzte Name */
+  name: string | null
+  everyone: boolean
+  /** was alle dürfen, wenn der Bereich für alle freigegeben ist */
+  everyoneAccess: Permission
+  /** nur für Admins gefüllt */
+  memberIds: string[]
+  members: AreaMember[]
+  documentCount: number
+  /** was der Angemeldete im Bereich darf */
+  myAccess: Permission
+}
+export interface AreaInput {
+  name: string
+  everyone: boolean
+  everyoneAccess: Permission
+  members: AreaMember[]
 }
 export interface UploadResult {
   filename: string
-  outcome: 'CREATED' | 'DUPLICATE' | 'REJECTED'
+  outcome: 'CREATED' | 'DUPLICATE' | 'REJECTED' | 'IGNORED'
   documentId: string | null
   message: string | null
 }
@@ -278,6 +417,112 @@ export interface SystemInfo {
   duplicates: number
   /** Geschätzte Sekunden, bis alle Dokumente bearbeitet sind; null = (noch) keine Schätzung. */
   estimatedSecondsRemaining: number | null
+  /** Dokumente, deren Aufbewahrungsfrist abgelaufen ist (sie dürfen jetzt gelöscht werden) */
+  retentionExpired: number
+  /** nur für Admins: Postfächer, die sich wiederholt nicht abrufen lassen */
+  failingMailboxes: string[]
+  /** nur für Admins: zu lange nicht gesichert oder die automatische Sicherung schlug fehl */
+  backup: BackupNotice | null
+}
+export type ReminderStatus = 'OPEN' | 'DONE'
+/** Ein Termin (Wiedervorlage) an einem Dokument. */
+export interface Reminder {
+  id: string
+  documentId: string
+  documentTitle: string
+  dueDate: string
+  note: string | null
+  assigneeId: string | null
+  assigneeName: string | null
+  status: ReminderStatus
+  /** CONTRACT: aus den Vertragsangaben angelegt (vor Ablauf der Kündigungsfrist) */
+  source: 'USER' | 'SUGGESTION' | 'CONTRACT'
+  createdBy: string | null
+  createdAt: string
+  doneAt: string | null
+  doneBy: string | null
+  /** wiederholt sich alle so viele Monate; null = einmalig */
+  repeatMonths: number | null
+}
+/** Ein Termin, den die KI in den Angaben des Dokuments gefunden hat – wird erst durch Übernehmen zur Wiedervorlage. */
+export interface ReminderSuggestion {
+  documentId: string
+  documentTitle: string
+  date: string
+  label: string
+}
+export interface ReminderInput {
+  dueDate: string
+  note: string | null
+  /** null = man selbst */
+  assigneeId: string | null
+  fromSuggestion?: boolean
+  repeatMonths?: number | null
+}
+export type ContractStatus = 'ACTIVE' | 'DUE_SOON' | 'NOTICE_MISSED' | 'CANCELLED' | 'ENDED' | 'OPEN_ENDED'
+/** Vertragsangaben eines Dokuments: Laufzeit, Kündigungsfrist, Verlängerung. */
+export interface Contract {
+  documentId: string
+  documentTitle: string
+  areaId: string
+  /** ohne eigene Angabe: der Absender des Dokuments */
+  partner: string | null
+  startDate: string | null
+  /** Ende der laufenden Laufzeit; null = unbefristet */
+  endDate: string | null
+  noticeMonths: number | null
+  /** verlängert sich ohne Kündigung um so viele Monate; null = endet */
+  renewalMonths: number | null
+  amount: string | null
+  reminderDays: number
+  cancelled: boolean
+  /** bis wann gekündigt sein muss; null = verlängert sich nicht */
+  noticeDeadline: string | null
+  /** der Tag, an dem etwas zu tun ist (Kündigungsfrist oder Laufzeitende) */
+  keyDate: string | null
+  status: ContractStatus
+  assigneeId: string | null
+  reminderId: string | null
+  access: Permission
+}
+export interface ContractInput {
+  partner: string | null
+  startDate: string | null
+  endDate: string | null
+  noticeMonths: number | null
+  renewalMonths: number | null
+  amount: string | null
+  reminderDays: number
+  cancelled: boolean
+  assigneeId: string | null
+}
+export interface Person {
+  id: string
+  username: string
+}
+export interface MailOutSettings {
+  enabled: boolean
+  host: string
+  port: number
+  security: MailSecurity
+  username: string
+  passwordSet: boolean
+  from: string
+  /** für Links in den E-Mails; leer = keine */
+  appUrl: string
+  /** ab dieser Stunde gehen die Erinnerungen des Tages hinaus */
+  digestHour: number
+}
+export interface MailOutInput extends Omit<MailOutSettings, 'passwordSet'> {
+  /** null = gespeichertes behalten */
+  password: string | null
+}
+/** Dokumente dieser Kategorie werden so viele Jahre aufbewahrt, gezählt ab dem Ende des Jahres ihres Datums. */
+export interface RetentionRule {
+  id: string
+  category: string
+  years: number
+  documentCount: number
 }
 
 export type MailSecurity = 'SSL' | 'STARTTLS' | 'NONE'
@@ -298,6 +543,8 @@ export interface MailAccount {
   effectiveIntervalMinutes: number
   /** null = pausiert */
   nextSyncAt: string | null
+  /** Zielbereich der übernommenen Dokumente */
+  areaId: string
   lastSyncAt: string | null
   lastSyncStatus: 'RUNNING' | 'OK' | 'ERROR' | null
   lastSyncMessage: string | null
@@ -316,6 +563,7 @@ export interface MailAccountInput {
   filter: MailFilter
   /** null = das allgemeine Abrufintervall */
   intervalMinutes: number | null
+  areaId: string
 }
 /** Nur E-Mails, deren Betreff und Absender passen, werden ausgewertet; leere Listen schränken nicht ein. */
 export interface MailFilter {
@@ -380,12 +628,15 @@ export interface ImportSettings {
   folderMode: FolderMode
   folderStatus: { lastScanAt: string | null; ok: boolean; message: string | null; running: boolean }
   nextRunAt: string
+  /** Zielbereich der Dokumente aus dem Eingangsordner */
+  folderAreaId: string
 }
 export interface ImportSettingsInput {
   intervalMinutes: number
   folderEnabled: boolean
   folderPath: string
   folderMode: FolderMode
+  folderAreaId: string
 }
 
 // ---------- Aufrufe ----------
@@ -399,6 +650,15 @@ export const api = {
     request<User>('/api/auth/setup', json('POST', { username, password, setupCode })),
   login: (username: string, password: string) =>
     request<LoginResult>('/api/auth/login', json('POST', { username, password })),
+  passkeyLoginOptions: () => request<RequestOptionsJson>('/api/auth/passkey/options', { method: 'POST' }),
+  passkeyLogin: (credential: string) => request<User>('/api/auth/passkey/login', { method: 'POST', body: credential }),
+  passkeyConfirm: (credential: string) => request<void>('/api/auth/passkey/confirm', { method: 'POST', body: credential }),
+  passkeys: () => request<PasskeyInfo[]>('/api/auth/passkeys'),
+  passkeyRegistrationOptions: (password: string | null) =>
+    request<CreationOptionsJson>('/api/auth/passkeys/options', json('POST', { password })),
+  registerPasskey: (name: string, credential: Record<string, unknown>) =>
+    request<PasskeyInfo>('/api/auth/passkeys', json('POST', { name, credential })),
+  deletePasskey: (id: string) => request<void>(`/api/auth/passkeys/${encodeURIComponent(id)}`, { method: 'DELETE' }),
   loginTwoFactor: (code: string) => request<User>('/api/auth/login/two-factor', json('POST', { code })),
   confirmCode: (code: string) => request<void>('/api/auth/confirm', json('POST', { code })),
   twoFactorStatus: () => request<TwoFactorStatus>('/api/auth/two-factor'),
@@ -408,26 +668,23 @@ export const api = {
   twoFactorDisable: (password: string, code: string) =>
     request<void>('/api/auth/two-factor/disable', json('POST', { password, code })),
   logout: () => request<void>('/api/auth/logout', { method: 'POST' }),
+  updateProfile: (profile: ProfileInput) => request<User>('/api/auth/profile', json('PUT', profile)),
   changePassword: (currentPassword: string, newPassword: string) =>
     request<void>('/api/auth/password', json('POST', { currentPassword, newPassword })),
 
   system: () => request<SystemInfo>('/api/system'),
 
   documents: (query: DocumentQuery, page: number, size: number) => {
-    const params = new URLSearchParams()
-    if (query.q) params.set('q', query.q)
-    if (query.category) params.set('category', query.category)
-    if (query.correspondent) params.set('correspondent', query.correspondent)
-    query.tags.forEach((tag) => params.append('tag', tag))
-    if (query.status) params.set('status', query.status)
-    if (query.duplicates) params.set('duplicates', 'true')
-    if (query.from) params.set('from', query.from)
-    if (query.to) params.set('to', query.to)
-    params.set('sort', query.sort)
+    const params = queryParams(query)
     params.set('page', String(page))
     params.set('size', String(size))
     return request<Page<Doc>>(`/api/documents?${params}`)
   },
+  /** Export, Schritt 1: merkt sich alle Treffer (kann eine Bestätigung per App-Code verlangen). */
+  prepareExport: (query: DocumentQuery) =>
+    request<{ token: string; count: number }>(`/api/documents/export?${queryParams(query)}`, { method: 'POST' }),
+  /** Export, Schritt 2: Download-Adresse, einmal gültig. */
+  exportUrl: (token: string) => `/api/documents/export/${encodeURIComponent(token)}`,
   facets: () => request<Facets>('/api/documents/facets'),
   document: (id: string) => request<Doc>(`/api/documents/${id}`),
   documentText: (id: string) => request<{ content: string }>(`/api/documents/${id}/text`),
@@ -446,9 +703,15 @@ export const api = {
   /** Der Anwender bestätigt: kein Duplikat. */
   notDuplicate: (id: string) => request<Doc>(`/api/documents/${id}/not-duplicate`, { method: 'POST' }),
   reprocessUnanalyzed: () => request<{ count: number }>('/api/documents/reprocess-unanalyzed', { method: 'POST' }),
-  upload: (files: File[]) => {
+  /**
+   * @param area Zielbereich; leer = der allgemeine (bzw. der erste sichtbare)
+   * @param combine die Fotos zu einem Dokument mit je einer Seite zusammenfassen
+   */
+  upload: (files: File[], area = '', combine = false) => {
     const body = new FormData()
     files.forEach((file) => body.append('files', file))
+    if (area) body.append('area', area)
+    if (combine) body.append('combine', 'true')
     return request<UploadResult[]>('/api/documents', { method: 'POST', body })
   },
 
@@ -469,6 +732,12 @@ export const api = {
   updateImportSettings: (body: ImportSettingsInput) =>
     request<ImportSettings>('/api/settings/import', json('PUT', body)),
   scanFolder: () => request<void>('/api/settings/import/scan', { method: 'POST' }),
+  retentionRules: () => request<RetentionRule[]>('/api/settings/retention'),
+  createRetentionRule: (body: { category: string; years: number }) =>
+    request<RetentionRule>('/api/settings/retention', json('POST', body)),
+  updateRetentionRule: (id: string, body: { category: string; years: number }) =>
+    request<RetentionRule>(`/api/settings/retention/${id}`, json('PUT', body)),
+  deleteRetentionRule: (id: string) => request<void>(`/api/settings/retention/${id}`, { method: 'DELETE' }),
 
   /** Speichert eine geänderte Fassung des PDFs; das Original bewahrt der Server auf. */
   replaceFile: (id: string, pdf: Uint8Array) =>
@@ -477,6 +746,14 @@ export const api = {
       headers: { 'Content-Type': 'application/pdf' },
       body: new Blob([pdf as BlobPart], { type: 'application/pdf' }),
     }),
+  /** Eine Seite (ab 1) als kleines Bild; {@code stamp} sorgt dafür, dass nach einer Änderung kein altes erscheint. */
+  pageImageUrl: (id: string, page: number, stamp: string | null) =>
+    `/api/documents/${id}/pages/${page}/image?width=240&v=${encodeURIComponent(stamp ?? 'original')}`,
+  rearrangePages: (id: string, pages: PageSpec[]) => request<Doc>(`/api/documents/${id}/pages`, json('POST', { pages })),
+  splitDocument: (id: string, fromPage: number) =>
+    request<{ original: Doc; createdId: string }>(`/api/documents/${id}/split`, json('POST', { fromPage })),
+  mergeDocuments: (id: string, documentIds: string[]) =>
+    request<Doc>(`/api/documents/${id}/merge`, json('POST', { documentIds })),
   restoreOriginal: (id: string) => request<Doc>(`/api/documents/${id}/restore-original`, { method: 'POST' }),
   versions: (id: string) => request<DocVersion[]>(`/api/documents/${id}/versions`),
   restoreVersion: (id: string, number: number) =>
@@ -494,6 +771,51 @@ export const api = {
       headers: { 'Content-Type': 'application/pdf' },
       body: new Blob([pdf as BlobPart], { type: 'application/pdf' }),
     }),
+
+  reminders: (mine: boolean) =>
+    request<{ due: Reminder[]; upcoming: Reminder[]; suggestions: ReminderSuggestion[] }>(`/api/reminders?mine=${mine}`),
+  reminderCount: () => request<{ due: number }>('/api/reminders/count'),
+  documentReminders: (id: string) =>
+    request<{ reminders: Reminder[]; suggestions: ReminderSuggestion[] }>(`/api/documents/${id}/reminders`),
+  createReminder: (documentId: string, body: ReminderInput) =>
+    request<Reminder>(`/api/documents/${documentId}/reminders`, json('POST', body)),
+  dismissSuggestion: (documentId: string, date: string, label: string) =>
+    request<void>(`/api/documents/${documentId}/reminders/dismiss`, json('POST', { date, label })),
+  reminderAssignees: (documentId: string) => request<Person[]>(`/api/documents/${documentId}/reminders/assignees`),
+  updateReminder: (id: string, body: ReminderInput) => request<Reminder>(`/api/reminders/${id}`, json('PUT', body)),
+  setReminderDone: (id: string, done: boolean) =>
+    request<Reminder>(`/api/reminders/${id}/${done ? 'done' : 'reopen'}`, { method: 'POST' }),
+  deleteReminder: (id: string) => request<void>(`/api/reminders/${id}`, { method: 'DELETE' }),
+
+  contracts: () => request<Contract[]>('/api/contracts'),
+  /** undefined = zum Dokument sind keine Vertragsangaben erfasst */
+  /** null, wenn keine Vertragsangaben erfasst sind (204) – undefined nimmt TanStack Query nicht als Ergebnis an. */
+  documentContract: async (id: string) =>
+    (await request<Contract | undefined>(`/api/documents/${id}/contract`)) ?? null,
+  saveContract: (id: string, body: ContractInput) => request<Contract>(`/api/documents/${id}/contract`, json('PUT', body)),
+  deleteContract: (id: string) => request<void>(`/api/documents/${id}/contract`, { method: 'DELETE' }),
+  mailOutSettings: () => request<MailOutSettings>('/api/settings/mail-out'),
+  updateMailOutSettings: (body: MailOutInput) => request<MailOutSettings>('/api/settings/mail-out', json('PUT', body)),
+  testMailOut: () => request<TestResult>('/api/settings/mail-out/test', { method: 'POST' }),
+
+  areas: () => request<Area[]>('/api/areas'),
+  backupStatus: () => request<BackupStatus>('/api/settings/backup'),
+  prepareBackup: () => request<{ token: string }>('/api/settings/backup', { method: 'POST' }),
+  autoBackup: () => request<AutoBackupStatus>('/api/settings/backup/auto'),
+  updateAutoBackup: (input: AutoBackupInput) =>
+    request<AutoBackupStatus>('/api/settings/backup/auto', { method: 'PUT', body: JSON.stringify(input) }),
+  runAutoBackup: () => request<void>('/api/settings/backup/auto/run', { method: 'POST' }),
+  backupUrl: (token: string) => `/api/settings/backup/${encodeURIComponent(token)}`,
+  /** Das ZIP geht als Rohdaten hinaus – ein Archiv ist oft größer als die Grenze für Formular-Uploads. */
+  importArchive: (file: File, area: string, matchAreas: boolean) =>
+    request<ArchiveImportResult>(`/api/settings/backup/import?${new URLSearchParams({ area, matchAreas: String(matchAreas) })}`, {
+      method: 'POST',
+      body: file,
+      headers: { 'Content-Type': 'application/zip' },
+    }),
+  createArea: (body: AreaInput) => request<Area>('/api/areas', json('POST', body)),
+  updateArea: (id: string, body: AreaInput) => request<Area>(`/api/areas/${id}`, json('PUT', body)),
+  deleteArea: (id: string) => request<void>(`/api/areas/${id}`, { method: 'DELETE' }),
 
   users: () => request<User[]>('/api/users'),
   createUser: (body: { username: string; password: string; role: Role }) =>
@@ -518,5 +840,7 @@ export const thumbnailUrl = (doc: Pick<Doc, 'id' | 'processedAt' | 'modifiedAt' 
 export function errorMessage(error: unknown): string {
   if (error instanceof ApiError) return error.message
   if (error instanceof TypeError) return t('errors.unreachable')
+  // Passkey: der Browser lehnt die Adresse ab (falscher Name hinter einem Proxy, IP-Adresse, kein HTTPS)
+  if (error instanceof DOMException && error.name === 'SecurityError') return t('passkeys.unsupported')
   return t('errors.unexpected')
 }

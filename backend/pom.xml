@@ -80,6 +80,12 @@
         </dependency>
 
         <!-- PDF-Text, Seitenzahl und Vorschaubilder -->
+        <!-- Anmeldung per Passkey (WebAuthn): Prüfung von Registrierung und Anmeldung -->
+        <dependency>
+            <groupId>com.webauthn4j</groupId>
+            <artifactId>webauthn4j-core</artifactId>
+            <version>0.31.11.RELEASE</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>

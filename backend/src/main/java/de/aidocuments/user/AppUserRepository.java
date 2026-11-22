@@ -63,6 +63,10 @@ public class AppUserRepository {
         c.put("last_login_at", millis(user.getLastLoginAt()));
         c.put("totp_secret", user.getTotpSecretEncrypted());
         c.put("totp_last_step", user.getTotpLastStep());
+        c.put("email", user.getEmail());
+        c.put("locale", user.getLocale());
+        c.put("notify_new_documents", user.isNotifyNewDocuments());
+        c.put("notify_admin", user.isNotifyAdmin());
         c.put("recovery_codes", user.isTwoFactorEnabled() ? Db.toJson(user.getRecoveryCodeHashes()) : null);
         db.upsert("users", c);
         return user;
@@ -78,6 +82,10 @@ public class AppUserRepository {
         user.setEnabled(rs.getBoolean("enabled"));
         user.restoreCreatedAt(instant(rs, "created_at"));
         user.setLastLoginAt(instant(rs, "last_login_at"));
+        user.setEmail(rs.getString("email"));
+        user.setLocale(rs.getString("locale"));
+        user.setNotifyNewDocuments(rs.getBoolean("notify_new_documents"));
+        user.setNotifyAdmin(rs.getBoolean("notify_admin"));
         String recovery = rs.getString("recovery_codes");
         user.setTwoFactor(rs.getString("totp_secret"), nullableLong(rs, "totp_last_step"),
                 recovery == null ? List.of() : Db.fromJson(recovery, new TypeReference<List<String>>() { }));

@@ -16,6 +16,16 @@ public class ImportSettings {
     private boolean folderEnabled;
     private String folderPath;
     private FolderMode folderMode = FolderMode.KEEP;
+    /** In welchen Bereich Dateien aus dem Eingangsordner kommen; fehlt bei älteren Datensätzen. */
+    private String folderAreaId;
+
+    public String getFolderAreaId() {
+        return folderAreaId;
+    }
+
+    public void setFolderAreaId(String folderAreaId) {
+        this.folderAreaId = folderAreaId;
+    }
 
     public int getIntervalMinutes() {
         return intervalMinutes;

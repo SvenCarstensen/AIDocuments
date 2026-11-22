@@ -1,10 +1,11 @@
-import { FileSearch, Inbox, ShieldCheck, Sparkles } from 'lucide-react'
+import { FileSearch, Fingerprint, Inbox, ShieldCheck, Sparkles } from 'lucide-react'
 import { type FormEvent, type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
 import { TwoFactorSetupFlow } from '../components/TwoFactorDialog'
 import { Alert, Button, Field, Input, Logo } from '../components/ui'
 import { api, errorMessage, type User } from '../lib/api'
+import { getPasskey, isCancelled, passkeysSupported } from '../lib/passkey'
 
 function AuthLayout({ title, subtitle, children, aside }: { title: string; subtitle: string; children: ReactNode; aside?: ReactNode }) {
   return (
@@ -37,6 +38,23 @@ export function LoginPage({ onDone }: { onDone: (user: User) => void }) {
   const [busy, setBusy] = useState(false)
   // Passwort geprüft, es fehlt noch der Code aus der Authenticator-App
   const [needsCode, setNeedsCode] = useState(false)
+
+  const [passkeyBusy, setPasskeyBusy] = useState(false)
+
+  async function signInWithPasskey() {
+    setPasskeyBusy(true)
+    setError(null)
+    try {
+      const credential = await getPasskey(await api.passkeyLoginOptions())
+      if (credential) {
+        onDone(await api.passkeyLogin(credential))
+        return
+      }
+    } catch (e) {
+      if (!isCancelled(e)) setError(errorMessage(e))
+    }
+    setPasskeyBusy(false)
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault()
@@ -101,6 +119,18 @@ export function LoginPage({ onDone }: { onDone: (user: User) => void }) {
         <Button type="submit" variant="primary" loading={busy} className="mt-1 w-full">
           {t('auth.login.submit')}
         </Button>
+        {passkeysSupported() && (
+          <>
+            <div className="flex items-center gap-3 text-xs text-muted" aria-hidden>
+              <span className="h-px flex-1 bg-line" />
+              {t('auth.login.or')}
+              <span className="h-px flex-1 bg-line" />
+            </div>
+            <Button className="w-full" icon={<Fingerprint className="size-4" aria-hidden />} loading={passkeyBusy} onClick={() => void signInWithPasskey()}>
+              {t('auth.login.passkey')}
+            </Button>
+          </>
+        )}
       </form>
     </AuthLayout>
   )

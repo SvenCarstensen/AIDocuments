@@ -44,7 +44,9 @@
     "login": {
       "title": "Welcome back",
       "subtitle": "Sign in to access your documents.",
-      "submit": "Sign in"
+      "submit": "Sign in",
+      "or": "or",
+      "passkey": "Sign in with a passkey"
     },
     "setup": {
       "title": "Set up AIDocuments",
@@ -102,26 +104,49 @@
       "changed": "Password changed"
     },
     "dropzone": {
-      "title": "Drop PDFs here",
-      "hint": "You can drop several files at once. They are stored, analyzed and tagged."
+      "title": "Drop PDFs or photos here",
+      "hint": "You can drop several files at once. Photos (JPG, PNG, HEIC) become PDFs. Everything is saved, analyzed and tagged."
+    },
+    "remindersDue_one": "{{count, number}} follow-up due",
+    "remindersDue_other": "{{count, number}} follow-ups due",
+    "profile": {
+      "email": "E-mail address",
+      "saved": "Saved"
+    },
+    "notifications": {
+      "title": "Email notifications",
+      "emailHint": "Due reminders assigned to you and the notifications you turn on below are sent here – in the language you are currently using the app in. Leave empty if you do not want any emails.",
+      "digest": "New documents every day",
+      "digestHint": "Once a day, a list of the documents that arrived in your areas – only on days with new documents.",
+      "admin": "Notices for administrators",
+      "adminHint": "When retention periods end (nothing is deleted automatically) and when a mailbox repeatedly cannot be checked.",
+      "needsEmail": "Without an address, no emails are sent."
     }
   },
   "upload": {
-    "onlyPdf": "Only PDF files can be added.",
+    "onlyPdf": "Only PDFs and photos (JPG, PNG, HEIC) can be added.",
     "uploadingFile": "Uploading “{{name}}” …",
-    "uploadingFiles_one": "Uploading {{count, number}} PDF …",
-    "uploadingFiles_other": "Uploading {{count, number}} PDFs …",
+    "uploadingFiles_one": "Uploading {{count, number}} file …",
+    "uploadingFiles_other": "Uploading {{count, number}} files …",
     "created_one": "{{count, number}} document added",
     "created_other": "{{count, number}} documents added",
     "processingInBackground": "Processing continues in the background.",
     "duplicates_one": "{{count, number}} already exists",
     "duplicates_other": "{{count, number}} already exist",
-    "rejected_one": "{{count, number}} file is not a valid PDF",
-    "rejected_other": "{{count, number}} files are not valid PDFs",
+    "rejected_one": "{{count, number}} file not added",
+    "rejected_other": "{{count, number}} files not added",
     "onlyDuplicates_one": "This document already exists.",
     "onlyDuplicates_other": "These documents already exist.",
-    "noneValid": "None of the files is a valid PDF.",
-    "failed": "Upload failed"
+    "noneValid": "None of the files could be added.",
+    "failed": "Upload failed",
+    "intoArea": "Area: {{area}}",
+    "combine": {
+      "title": "Combine photos into one document?",
+      "text": "You selected several photos. If they are the pages of one document – a letter with several pages, say – they become one PDF in the order of their file names; you can change the order afterwards under “Pages”. Otherwise each photo becomes a document of its own.",
+      "one": "As one document",
+      "separate": "Each photo separately",
+      "tooMuch": "These are too many or too large photos for one document (at most 100 photos and 240 MB in total)."
+    }
   },
   "documents": {
     "status": {
@@ -175,12 +200,13 @@
       "activeTo": "until {{date}}",
       "removeOne": "Remove filter “{{label}}”",
       "removeAll": "Remove all filters",
-      "clear": "Remove filters"
+      "clear": "Remove filters",
+      "retentionExpired": "Retention expired"
     },
     "empty": {
       "libraryTitle": "No documents yet",
-      "libraryHint": "Simply drag PDF files into this window or use “Upload”.",
-      "libraryHintAdmin": "Simply drag PDF files into this window or use “Upload”. In the settings you can set up a mailbox or an import folder from which new PDFs are imported automatically.",
+      "libraryHint": "Simply drag PDFs or photos into this window or use “Upload”.",
+      "libraryHintAdmin": "Simply drag PDFs or photos into this window or use “Upload”. In the settings you can set up a mailbox or an import folder from which new documents are imported automatically.",
       "noResultsTitle": "Nothing found",
       "noResultsSearch": "No document matches this search. The search also finds parts of words – try a shorter term or fewer words.",
       "noResultsFilters": "No document matches the selected filters."
@@ -190,6 +216,25 @@
     "loadMore": "Load more ({{remaining, number}})",
     "aiSearch": {
       "notice": "AI search: “{{question}}”. The filters show how the question was understood."
+    },
+    "export": {
+      "label_one": "Export {{count, number}} document as ZIP",
+      "label_other": "Export all {{count, number}} documents of this list as ZIP",
+      "started_one": "Export of {{count, number}} document started",
+      "started_other": "Export of {{count, number}} documents started",
+      "contents": "The ZIP file contains the PDFs and all details as a table (documents.csv) and as documents.json.",
+      "failed": "Export failed"
+    },
+    "mailboxNotice": {
+      "text_one": "The mailbox “{{names}}” has failed to be checked several times in a row – no documents are arriving from it.",
+      "text_other": "These mailboxes have failed to be checked several times in a row: {{names}}. No documents are arriving from them.",
+      "action": "View mailboxes"
+    },
+    "backupNotice": {
+      "never": "There is no backup of your documents yet.",
+      "overdue": "Last backup: {{when}}. That is longer ago than configured.",
+      "failed": "The automatic backup failed: {{reason}}",
+      "action": "Go to backup"
     }
   },
   "document": {
@@ -264,7 +309,9 @@
     "noText": "There is no text for this document – it is probably a scan without a text layer. With the AI set up and text recognition enabled, the content is transcribed during analysis.",
     "edit": {
       "title": "Edit document",
-      "saved": "Changes saved"
+      "saved": "Changes saved",
+      "areaHint": "Determines who can see the document.",
+      "areaMoveHint": "Afterwards only members of “{{area}}” and administrators can see it."
     },
     "delete": {
       "title": "Delete document?",
@@ -300,16 +347,25 @@
         "EDITED": "Edited",
         "ORIGINAL_RESTORED": "Original restored",
         "VERSION_RESTORED": "Version {{from}} restored",
-        "UNDONE": "Change undone"
+        "UNDONE": "Change undone",
+        "PAGES": "Pages changed",
+        "MERGED": "Documents appended"
       }
-    }
+    },
+    "retention": {
+      "label": "Retention",
+      "until": "until {{date}} – cannot be deleted before then",
+      "expired": "period ended on {{date}}",
+      "locked": "Must be retained until {{date}} – can only be deleted afterwards"
+    },
+    "readOnly": "In this area you may only view this document."
   },
   "settings": {
     "title": "Settings",
     "mailboxes": {
       "title": "Mailboxes",
-      "navHint": "IMAP servers from which PDF attachments are imported",
-      "intro": "PDF attachments are imported automatically from these IMAP mailboxes. The mailboxes are only read – emails stay unchanged and unread.",
+      "navHint": "IMAP servers from which PDF and photo attachments are imported",
+      "intro": "PDF attachments and attached photos (as PDFs) are imported automatically from these IMAP mailboxes; the text of the e-mails and embedded logos are not. The mailboxes are only read – e-mails stay unchanged and unread.",
       "add": "Add mailbox",
       "emptyTitle": "No mailbox set up yet",
       "emptyText": "Enter the credentials of an IMAP mailbox – for example the mailbox your scanner sends documents to.",
@@ -342,7 +398,7 @@
         "since": "Only emails from",
         "sinceHint": "Optional – older emails are skipped",
         "enabled": "Check automatically",
-        "enabledHint": "The mailbox is checked for new PDFs at the configured interval.",
+        "enabledHint": "The mailbox is checked for new attachments at the configured interval.",
         "filter": {
           "title": "Filter",
           "intro": "Only e-mails that meet all conditions are evaluated. One term per line; upper and lower case do not matter, part of the text is enough. Empty fields do not restrict anything.",
@@ -354,7 +410,8 @@
           "newOnly": "The filter applies to e-mails that arrive after the last check; e-mails already checked are not evaluated again."
         },
         "interval": "Check interval in minutes",
-        "intervalHint": "Leave empty to use the general interval (currently {{interval}})."
+        "intervalHint": "Leave empty to use the general interval (currently {{interval}}).",
+        "areaHint": "Imported documents go into this area."
       },
       "filterActive": "Filter active",
       "schedule": "Checked every {{interval}} · next {{when}}",
@@ -363,17 +420,17 @@
     "import": {
       "title": "Schedule & import folder",
       "navHint": "Check interval and watched directory",
-      "intro": "Defines how often the application looks for new PDF files – in the mailboxes and in the import folder.",
+      "intro": "Defines how often the application looks for new documents – in the mailboxes and in the import folder.",
       "saved": "Settings saved",
       "interval": {
         "title": "Check interval",
-        "text": "How often the application checks the inbox folder and all mailboxes without their own interval for new PDFs.",
+        "text": "How often the application checks the import folder and all mailboxes without their own interval for new documents.",
         "label": "Every … minutes",
         "nextRun": "Next automatic check {{when}}."
       },
       "folder": {
         "title": "Import folder",
-        "text": "A directory on the server that is watched for new PDF files – for example the target of a network scanner. Subfolders are searched as well.",
+        "text": "A directory on the server that is watched for new PDFs and photos (JPG, PNG, HEIC) – for example the target of a network scanner. Subfolders are searched as well.",
         "enable": "Watch import folder",
         "path": "Path on the server",
         "pathHint": "Absolute path. In the Docker container this is the mounted folder, usually {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Checking folder …",
         "neverScanned": "Not checked yet.",
         "scanNow": "Check now",
-        "scanStarted": "The import folder is being checked."
+        "scanStarted": "The import folder is being checked.",
+        "areaHint": "Documents from the folder go into this area."
       }
     },
     "ai": {
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} will then sign in with the password only and can set up two-factor authentication again – for example after losing the phone with the app.",
       "resetTwoFactorConfirm": "Reset",
       "twoFactorReset": "Two-factor authentication reset"
+    },
+    "areas": {
+      "title": "Areas",
+      "navHint": "Who sees which documents",
+      "intro": "Every document is in exactly one area. Users see only the documents of the areas they are a member of, plus those of areas open to everyone.",
+      "add": "Add area",
+      "everyone": "Everyone",
+      "restricted": "Restricted",
+      "visibleForAll": "visible to everyone signed in",
+      "members": "Members: {{names}}",
+      "adminsOnly": "administrators only",
+      "adminHint": "Administrators see all areas, even without being a member.",
+      "edit": "Edit {{name}}",
+      "saved": "Area saved",
+      "created": "Area created",
+      "deleted": "Area deleted",
+      "delete": {
+        "label": "Delete {{name}}",
+        "title": "Delete area?",
+        "text": "The area “{{name}}” will be deleted. This is only possible while no documents, mailbox or inbox folder use it."
+      },
+      "dialog": {
+        "name": "Name",
+        "namePlaceholder": "e.g. Accounting",
+        "generalNameHint": "Leave empty to call the area “General” in every language.",
+        "everyone": "Visible to everyone",
+        "everyoneHint": "All signed-in users see the documents in this area.",
+        "members": "Members",
+        "membersHint": "Only members and administrators see the documents of this area. For each member, choose whether they may only read, also edit, or also delete.",
+        "noUsers": "There are no users without the administrator role yet.",
+        "create": "Create",
+        "everyoneAccess": "Everyone may",
+        "accessOf": "Permission of {{name}}",
+        "membersHintEveryone": "Everyone sees the documents of this area. Add members here if they should be allowed more than everyone else."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Retention",
+      "navHint": "Periods and deletion lock",
+      "intro": "Set how long documents of a category must be kept – invoices for ten years, for example. The period counts from the end of the year the document is from. Until then nobody can delete it.",
+      "permanent": "A lock cannot be lifted – not even by administrators. If a rule is shortened or deleted, or a document's category changes, the period already set remains.",
+      "add": "Add rule",
+      "years_one": "{{count, number}} year",
+      "years_other": "{{count, number}} years",
+      "edit": "Edit rule for {{category}}",
+      "saved": "Rule saved",
+      "created": "Rule created",
+      "deleted": "Rule deleted",
+      "emptyTitle": "No retention rules yet",
+      "emptyText": "Without a rule documents can be deleted at any time.",
+      "delete": {
+        "label": "Delete rule for {{category}}",
+        "title": "Delete rule?",
+        "text": "New documents of the category “{{category}}” will no longer get a period. Documents already locked stay locked until their period ends."
+      },
+      "dialog": {
+        "categoryHint": "As shown on the document; upper and lower case do not matter.",
+        "years": "Retention period in years",
+        "yearsHint": "Counted from the end of the year of the document date (without a date: of the day it was added).",
+        "shorterHint": "A shorter period only applies to documents without a period yet. Documents already locked stay locked until the end of their current period.",
+        "create": "Create"
+      }
+    },
+    "mailOut": {
+      "title": "Sending e-mail",
+      "navHint": "Reminders by e-mail",
+      "intro": "The application sends reminders for due follow-ups through this SMTP server – once per follow-up, collected in one e-mail per person. The recipient is whoever takes care of the follow-up and has entered an address in the user menu.",
+      "enabled": "Send reminders by e-mail",
+      "enabledHint": "When switched off, follow-ups only appear in the application.",
+      "host": "SMTP server",
+      "port": "Port",
+      "security": "Encryption",
+      "unencrypted": "None",
+      "usernameHint": "Leave empty if the server does not require a login.",
+      "passwordKeepHint": "Leave empty to keep the saved password.",
+      "from": "Sender address",
+      "fromHint": "Your server must allow it for your account.",
+      "appUrl": "Address of the application",
+      "appUrlHint": "For links in the e-mails, e.g. https://docs.example.com. Empty = no links.",
+      "digestHour": "Sending",
+      "fromHour": "from {{hour}}",
+      "saved": "E-mail settings saved",
+      "test": "Test message to {{address}}",
+      "testNeedsAddress": "For the test message, enter your own e-mail address in the user menu.",
+      "testSavedHint": "The test uses the saved settings – please save first."
+    },
+    "backup": {
+      "title": "Backup & import",
+      "navHint": "Back up everything at once, take over exports",
+      "intro": "A backup contains everything needed to restore AIDocuments exactly as it is. An import takes over documents from the export of another installation – with their details.",
+      "backupTitle": "One-click backup",
+      "backupText": "A ZIP with the database, all documents including earlier versions, the thumbnails and the key for stored passwords. The app keeps running meanwhile.",
+      "size": "Size",
+      "sizeValue_one": "about {{size}} in {{count, number}} file",
+      "sizeValue_other": "about {{size}} in {{count, number}} files",
+      "last": "Last backup",
+      "never": "never",
+      "keyWarning": "The backup is not encrypted and contains the key to the stored passwords (mailboxes, AI, two-factor sign-in). Keep it as safe as the documents themselves.",
+      "restore": "To restore: stop AIDocuments, extract the contents of the ZIP into an empty data directory and start it again. Instructions are included in the ZIP (README.txt).",
+      "download": "Download backup",
+      "started": "The backup is being downloaded.",
+      "externalDatabase": "One-click backups are only available with the built-in database. With MariaDB, back up the database with its own tools (such as mariadb-dump) and the data directory as well.",
+      "importTitle": "Import an export",
+      "importText": "A ZIP from “Export” in the document list – also from another installation. Title, category, tags and other details are kept; the AI does not read the documents again. Files that already exist are skipped.",
+      "file": "ZIP file",
+      "areaHint": "The documents go here – or only those whose area does not exist here.",
+      "matchAreas": "Put into areas with the same name",
+      "matchAreasHint": "If an area here has the same name as in the export, the documents go there.",
+      "import": "Import",
+      "importing": "Importing …",
+      "result": "Imported: {{imported, number}} · already there: {{duplicates, number}} · not imported: {{failed, number}}",
+      "auto": {
+        "title": "Automatic backup",
+        "text": "Once a day AIDocuments writes a complete backup as a ZIP to a folder and keeps the most recent ones. Ideally the folder is on another disk or a network drive – if the disk with the data fails, the backups would otherwise be lost too.",
+        "enable": "Back up automatically every day",
+        "hour": "Time",
+        "keep": "Keep",
+        "keepHint": "Number of backups; older ones are deleted.",
+        "directory": "Folder",
+        "directoryHint": "Full path on the server. Leave empty for the default. In the Docker container the folder must be mounted.",
+        "warnAfterDays": "Warn after (days)",
+        "warnAfterDaysHint": "Notice in the document list when there has been no backup for this long – manual or automatic. 0 = never warn.",
+        "lastRun": "Last run",
+        "nextRun": "Next run",
+        "running": "Backup in progress …",
+        "ok": "succeeded, {{when}}",
+        "failed": "failed, {{when}}",
+        "stored_one": "{{count, number}} backup in {{directory}}",
+        "stored_other": "{{count, number}} backups in {{directory}}",
+        "runNow": "Back up now",
+        "saveFirst": "Save the changes first.",
+        "runStarted": "The backup is running in the background.",
+        "done": "Backup written.",
+        "saved": "Settings saved.",
+        "externalDatabase": "Automatic backup is only available with the built-in database. With MariaDB, back up the database with its own tools (for example a nightly mariadb-dump) together with the data directory."
+      }
     }
   },
   "history": {
@@ -565,7 +760,8 @@
   "confirmCode": {
     "title": "Confirm change",
     "text": "Changes to accounts, mailboxes and settings need a current code from your authenticator app. The confirmation is valid for 10 minutes.",
-    "submit": "Confirm"
+    "submit": "Confirm",
+    "passkey": "Confirm with a passkey"
   },
   "share": {
     "button": "Share",
@@ -598,6 +794,193 @@
     "page": {
       "for": "Shared with {{name}}",
       "invalid": "This link is invalid or has expired, or the document was deleted. Please contact the person who gave it to you."
+    }
+  },
+  "areas": {
+    "general": "General",
+    "unknown": "Other area",
+    "label": "Area",
+    "target": "Target area",
+    "access": {
+      "READ": "Read only",
+      "EDIT": "Read and edit",
+      "DELETE": "Edit and delete"
+    }
+  },
+  "reminders": {
+    "title": "Follow-ups",
+    "cardTitle": "Follow-up",
+    "add": "Add follow-up",
+    "edit": "Edit follow-up",
+    "create": "Create",
+    "created": "Follow-up added",
+    "saved": "Follow-up saved",
+    "deleted": "Follow-up deleted",
+    "markedDone": "Done",
+    "dueDate": "Due on",
+    "note": "Note",
+    "notePlaceholder": "e.g. check payment",
+    "assignee": "Who takes care of it?",
+    "assigneeHint": "This person sees the follow-up under “Mine” and gets the reminder by e-mail. Everyone who can see the document can be chosen.",
+    "me": "{{name}} (me)",
+    "assignedTo": "for {{name}}",
+    "doneBy": "done by {{name}}",
+    "markDone": "Mark as done",
+    "reopen": "Reopen",
+    "delete": {
+      "label": "Delete follow-up",
+      "title": "Delete follow-up?",
+      "text": "The follow-up will be removed. The document stays unchanged."
+    },
+    "accept": "Add",
+    "dismiss": "Dismiss suggestion",
+    "suggestionsHint": "The AI found dates in this document:",
+    "none": "No open follow-ups.",
+    "showDone_one": "Show {{count, number}} completed follow-up",
+    "showDone_other": "Show {{count, number}} completed follow-ups",
+    "hideDone": "Hide completed",
+    "scope": {
+      "label": "Which follow-ups",
+      "mine": "Mine",
+      "all": "All"
+    },
+    "dueTitle": "Due",
+    "nothingDue": "Nothing is due today.",
+    "upcomingTitle": "Coming up",
+    "suggestionsTitle": "Suggested dates",
+    "suggestionsPageHint": "Deadlines in the next six months that the AI found in the documents. Add them as a follow-up or dismiss them.",
+    "emptyTitle": "No follow-ups",
+    "emptyText": "Add a follow-up to a document – or take one the AI suggests.",
+    "repeat": {
+      "label": "Repeat",
+      "hint": "When you tick off the reminder, the next one is created at the same interval.",
+      "none": "Once",
+      "m1": "Monthly",
+      "m3": "Quarterly",
+      "m6": "Every six months",
+      "m12": "Yearly",
+      "m24": "Every two years",
+      "months_one": "Every month",
+      "months_other": "Every {{count}} months"
+    },
+    "fromContract": "from the contract"
+  },
+  "pages": {
+    "button": "Pages",
+    "title": "Edit pages",
+    "intro": "Drag pages or move them with the arrows, rotate or remove them. Saving creates a new version – the previous one is kept.",
+    "page": "Page {{number}}",
+    "wasPage": "was {{number}}",
+    "moveLeft": "Move forward",
+    "moveRight": "Move back",
+    "rotate": "Rotate by 90°",
+    "remove": "Remove page",
+    "keep": "Keep page",
+    "noneLeft": "At least one page must remain.",
+    "saveFirst": "Save the changes first",
+    "saved": "Pages saved",
+    "split": {
+      "here": "Separate document from here",
+      "title": "Split document?",
+      "text": "Page {{page}} and all following pages become a separate document in the same area. It is read and filed like a newly received one; this document keeps the pages before.",
+      "confirm": "Split",
+      "done": "Document split",
+      "open": "Open new document"
+    },
+    "merge": {
+      "button": "Append documents",
+      "title": "Append documents",
+      "intro": "The pages of the chosen documents are added in this order to the end of “{{title}}”.",
+      "search": "Search documents …",
+      "none": "No matching documents.",
+      "noDeleteRight": "You may not delete it – so you cannot append it.",
+      "hint": "The appended documents then go to the trash; they can be restored from the history for 30 days.",
+      "confirm_one": "Append {{count}} document",
+      "confirm_other": "Append {{count}} documents",
+      "done_one": "{{count}} document appended",
+      "done_other": "{{count}} documents appended"
+    }
+  },
+  "contracts": {
+    "nav": "Contracts",
+    "title": "Contracts",
+    "pageIntro": "Terms and notice periods of all contracts you may see – those needing action soon first.",
+    "scope": {
+      "label": "Show",
+      "running": "Running",
+      "all": "All"
+    },
+    "emptyTitle": "No contracts recorded yet",
+    "emptyText": "Open a document, such as an electricity or phone contract, and record its term and notice period there. A reminder then appears in good time before the deadline.",
+    "cardTitle": "Contract",
+    "none": "Is this a contract? With its term and notice period, AIDocuments reminds you in good time to cancel.",
+    "add": "Record as contract",
+    "edit": "Edit contract",
+    "intro": "The end of the term and the notice period give the date by which notice must be given. A reminder appears before it; if the term ends without notice, it renews automatically.",
+    "saved": "Contract saved",
+    "removed": "Contract details removed",
+    "remove": {
+      "label": "Remove contract details",
+      "title": "Remove contract details?",
+      "text": "The term, notice period and the open reminder for it are removed. The document itself stays."
+    },
+    "openEnded": "open-ended",
+    "months_one": "{{count}} month",
+    "months_other": "{{count}} months",
+    "amountHint": "e.g. “€49.90 per month”",
+    "endDateHint": "End of the current term; empty = open-ended",
+    "noticeHint": "Months before the end of the term; empty = until the end of the term",
+    "renewalHint": "Without notice, the contract renews by this many months; 0 = it ends",
+    "cancelledHint": "It then no longer renews, and no more reminders appear.",
+    "fields": {
+      "partner": "Contract partner",
+      "amount": "Amount",
+      "startDate": "Start of contract",
+      "endDate": "Term until",
+      "notice": "Notice period (months)",
+      "renewal": "Renewal (months)",
+      "deadline": "Cancel by",
+      "reminderDays": "Remind (days before)",
+      "cancelled": "Cancelled"
+    },
+    "status": {
+      "ACTIVE": "Running",
+      "DUE_SOON": "Deadline near",
+      "NOTICE_MISSED": "Deadline missed",
+      "CANCELLED": "Cancelled",
+      "ENDED": "Ended",
+      "OPEN_ENDED": "Open-ended"
+    },
+    "row": {
+      "cancelBy": "cancel by {{date}}",
+      "endsOn": "ends on {{date}}",
+      "term": "term until {{date}}",
+      "renews_one": "renews by {{count}} month",
+      "renews_other": "renews by {{count}} months"
+    }
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "intro": "With a passkey you sign in without a password – unlocked with your fingerprint, face or device PIN. It only works for this address; a fake site cannot use it.",
+    "none": "No passkey added yet.",
+    "add": "Add passkey",
+    "create": "Create passkey",
+    "name": "Name",
+    "nameHint": "So you can recognize it later, e.g. “Laptop” or “Password manager”.",
+    "password": "Your password",
+    "passwordHint": "Whoever adds a passkey can sign in without a password from then on – so please confirm once.",
+    "added": "Passkey added",
+    "removed": "Passkey removed",
+    "synced": "synced",
+    "lastUsed": "last used {{time}}",
+    "created": "added {{time}}, not used yet",
+    "unsupported": "This browser cannot use passkeys here. Passkeys only work over HTTPS (or localhost).",
+    "unsupportedIp": "Passkeys only work over HTTPS and with a name in the address, not with an IP address.",
+    "remove": {
+      "label": "Remove passkey",
+      "title": "Remove passkey?",
+      "text": "Nobody can sign in with “{{name}}” afterwards. It stays stored in the password manager or on the device until you delete it there.",
+      "confirm": "Remove"
     }
   }
 }

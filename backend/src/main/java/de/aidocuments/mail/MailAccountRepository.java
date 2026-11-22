@@ -63,6 +63,7 @@ public class MailAccountRepository {
         c.put("sender_include", MailFilter.join(filter.senderIncludes()));
         c.put("sender_exclude", MailFilter.join(filter.senderExcludes()));
         c.put("interval_minutes", account.getIntervalMinutes());
+        c.put("area_id", account.getAreaId());
         c.put("uid_validity", account.getUidValidity());
         c.put("last_uid", account.getLastUid());
         c.put("checked_until", millis(account.getCheckedUntil()));
@@ -101,6 +102,36 @@ public class MailAccountRepository {
                 .param(status.name()).param(message).param(at.toEpochMilli()).param(id).update();
     }
 
+    /** Zählt einen fehlgeschlagenen Abruf. @return wie viele in Folge, mit diesem */
+    int recordFailure(String id) {
+        jdbc.sql("UPDATE mail_accounts SET failures = failures + 1 WHERE id = ?").param(id).update();
+        return jdbc.sql("SELECT failures FROM mail_accounts WHERE id = ?").param(id).query(Integer.class).optional()
+                .orElse(0);
+    }
+
+    /** Nach einem erfolgreichen Abruf: Fehlerserie vorbei, ein neuer Fehler wird wieder gemeldet. */
+    void resetFailures(String id) {
+        jdbc.sql("UPDATE mail_accounts SET failures = 0, failure_notified_at = NULL WHERE id = ? "
+                + "AND (failures <> 0 OR failure_notified_at IS NOT NULL)").param(id).update();
+    }
+
+    /** Ob über die laufende Fehlerserie schon benachrichtigt wurde. */
+    boolean failureNotified(String id) {
+        return jdbc.sql("SELECT COUNT(*) FROM mail_accounts WHERE id = ? AND failure_notified_at IS NOT NULL")
+                .param(id).query(Long.class).single() > 0;
+    }
+
+    /** Namen der aktiven Postfächer, die sich mindestens {@code failures}-mal in Folge nicht abrufen ließen. */
+    public List<String> failingNames(int failures) {
+        return jdbc.sql("SELECT name FROM mail_accounts WHERE enabled = ? AND failures >= ? ORDER BY name")
+                .param(true).param(failures).query(String.class).list();
+    }
+
+    void markFailureNotified(String id, Instant at) {
+        jdbc.sql("UPDATE mail_accounts SET failure_notified_at = ? WHERE id = ?").param(at.toEpochMilli()).param(id)
+                .update();
+    }
+
     private static MailAccount map(ResultSet rs, int row) throws SQLException {
         MailAccount account = new MailAccount(rs.getString("id"));
         account.setName(rs.getString("name"));
@@ -117,6 +148,7 @@ public class MailAccountRepository {
                 MailFilter.split(rs.getString("subject_exclude")), MailFilter.split(rs.getString("sender_include")),
                 MailFilter.split(rs.getString("sender_exclude"))));
         account.setIntervalMinutes(nullableInt(rs, "interval_minutes"));
+        account.setAreaId(rs.getString("area_id"));
         account.restoreState(nullableLong(rs, "uid_validity"), nullableLong(rs, "last_uid"),
                 instant(rs, "checked_until"), instant(rs, "last_sync_at"), enumValue(rs, "last_sync_status", MailAccount.SyncStatus.class),
                 rs.getString("last_sync_message"), instant(rs, "created_at"));

@@ -36,7 +36,7 @@ class MessageBundlesTest {
     private static final Pattern PLACEHOLDER = Pattern.compile("\\{([A-Za-z0-9_]+)(?:,[^}]*)?}");
     /** Ein Schlüssel als Zeichenkette im Quelltext: "error.user.notFound" oder "{validation.password}". */
     private static final Pattern KEY_IN_SOURCE = Pattern.compile(
-            "\"\\{?((?:error|validation|upload|document|mailbox|folder|ai)(?:\\.[A-Za-z][A-Za-z0-9]*)+)}?\"");
+            "\"\\{?((?:error|validation|upload|document|mailbox|folder|ai|mailOut|mail\\.reminders|mail\\.notify|contract|notify|backup|import)(?:\\.[A-Za-z][A-Za-z0-9]*)+)}?\"");
     private static final Pattern CONSTRAINT = Pattern.compile(
             "@(NotBlank|NotNull|NotEmpty|Size|Min|Max|Pattern|Email|Positive|PositiveOrZero|Negative|NegativeOrZero"
                     + "|Past|PastOrPresent|Future|FutureOrPresent|Digits|DecimalMin|DecimalMax|AssertTrue|AssertFalse)"

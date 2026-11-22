@@ -45,10 +45,17 @@ public final class DocumentDtos {
             /* das frühere Dokument, dem dieses inhaltlich gleicht; null = kein Duplikat bekannt */
             String duplicateOf,
             /* Trefferausschnitt aus dem Volltext; U+E000/U+E001 markieren Anfang und Ende eines Treffers. */
-            String snippet) {
+            String snippet,
+            String areaId,
+            /* bis wann das Dokument aufzubewahren ist; null = keine Frist */
+            java.time.LocalDate retainUntil,
+            /* ob die Frist das Löschen heute noch verbietet */
+            boolean retentionLocked,
+            /* was der Anfragende mit dem Dokument darf (Recht in seinem Bereich) */
+            de.aidocuments.area.Permission access) {
 
         /** Die am Dokument gespeicherte Meldung wird hier in die Sprache des Lesers übersetzt. */
-        static DocumentDto of(Document d, String snippet, Messages messages) {
+        static DocumentDto of(Document d, String snippet, Messages messages, de.aidocuments.area.Permission access) {
             return new DocumentDto(
                     d.getId(),
                     d.getTitle() != null ? d.getTitle() : d.getOriginalFilename(),
@@ -76,7 +83,11 @@ public final class DocumentDtos {
                     d.getModifiedAt(),
                     d.getOriginalStoragePath() != null,
                     d.getDuplicateOf(),
-                    snippet);
+                    snippet,
+                    d.getAreaId(),
+                    d.getRetainUntil(),
+                    d.isRetentionLocked(),
+                    access);
         }
     }
 
@@ -89,7 +100,9 @@ public final class DocumentDtos {
             @Size(max = 100, message = SIZE) String category,
             @Size(max = 255, message = SIZE) String correspondent,
             LocalDate documentDate,
-            @Size(max = 30, message = SIZE) List<@Size(min = 1, max = 100, message = SIZE) String> tags) {
+            @Size(max = 30, message = SIZE) List<@Size(min = 1, max = 100, message = SIZE) String> tags,
+            /* null = Bereich unverändert */
+            @Size(max = 64, message = SIZE) String areaId) {
     }
 
     public record FacetsDto(

@@ -44,7 +44,9 @@
     "login": {
       "title": "Willkommen zurück",
       "subtitle": "Melde dich an, um auf deine Dokumente zuzugreifen.",
-      "submit": "Anmelden"
+      "submit": "Anmelden",
+      "or": "oder",
+      "passkey": "Mit Passkey anmelden"
     },
     "setup": {
       "title": "AIDocuments einrichten",
@@ -102,26 +104,49 @@
       "changed": "Passwort geändert"
     },
     "dropzone": {
-      "title": "PDFs hier ablegen",
-      "hint": "Mehrere Dateien auf einmal sind möglich. Sie werden gespeichert, analysiert und verschlagwortet."
+      "title": "PDFs oder Fotos hier ablegen",
+      "hint": "Mehrere Dateien auf einmal sind möglich. Fotos (JPG, PNG, HEIC) werden zu PDFs. Alles wird gespeichert, analysiert und verschlagwortet."
+    },
+    "remindersDue_one": "{{count, number}} Wiedervorlage fällig",
+    "remindersDue_other": "{{count, number}} Wiedervorlagen fällig",
+    "profile": {
+      "email": "E-Mail-Adresse",
+      "saved": "Gespeichert"
+    },
+    "notifications": {
+      "title": "E-Mail-Benachrichtigungen",
+      "emailHint": "Hierher gehen fällige Wiedervorlagen, die dir zugewiesen sind, und die Benachrichtigungen, die du unten einschaltest – in der Sprache, in der du die Anwendung gerade nutzt. Leer lassen, wenn du keine E-Mails möchtest.",
+      "digest": "Täglich neue Dokumente",
+      "digestHint": "Einmal am Tag eine Liste der Dokumente, die in deinen Bereichen hinzugekommen sind – nur an Tagen mit neuen Dokumenten.",
+      "admin": "Hinweise für Admins",
+      "adminHint": "Wenn Aufbewahrungsfristen ablaufen (gelöscht wird nichts von selbst) und wenn sich ein Postfach wiederholt nicht abrufen lässt.",
+      "needsEmail": "Ohne Adresse gehen keine E-Mails hinaus."
     }
   },
   "upload": {
-    "onlyPdf": "Es können nur PDF-Dateien hinzugefügt werden.",
+    "onlyPdf": "Es können nur PDFs und Fotos (JPG, PNG, HEIC) hinzugefügt werden.",
     "uploadingFile": "„{{name}}“ wird hochgeladen …",
-    "uploadingFiles_one": "{{count, number}} PDF wird hochgeladen …",
-    "uploadingFiles_other": "{{count, number}} PDFs werden hochgeladen …",
+    "uploadingFiles_one": "{{count, number}} Datei wird hochgeladen …",
+    "uploadingFiles_other": "{{count, number}} Dateien werden hochgeladen …",
     "created_one": "{{count, number}} Dokument hinzugefügt",
     "created_other": "{{count, number}} Dokumente hinzugefügt",
     "processingInBackground": "Die Verarbeitung läuft im Hintergrund.",
     "duplicates_one": "{{count, number}} bereits vorhanden",
     "duplicates_other": "{{count, number}} bereits vorhanden",
-    "rejected_one": "{{count, number}} Datei kein gültiges PDF",
-    "rejected_other": "{{count, number}} Dateien kein gültiges PDF",
+    "rejected_one": "{{count, number}} Datei nicht übernommen",
+    "rejected_other": "{{count, number}} Dateien nicht übernommen",
     "onlyDuplicates_one": "Dieses Dokument ist bereits vorhanden.",
     "onlyDuplicates_other": "Diese Dokumente sind bereits vorhanden.",
-    "noneValid": "Keine der Dateien ist ein gültiges PDF.",
-    "failed": "Hochladen fehlgeschlagen"
+    "noneValid": "Keine der Dateien konnte übernommen werden.",
+    "failed": "Hochladen fehlgeschlagen",
+    "intoArea": "Bereich: {{area}}",
+    "combine": {
+      "title": "Fotos zu einem Dokument zusammenfassen?",
+      "text": "Du hast mehrere Fotos ausgewählt. Sind es die Seiten eines Dokuments – etwa eines mehrseitigen Briefs –, werden sie in der Reihenfolge ihrer Dateinamen zu einem PDF; die Reihenfolge lässt sich danach unter „Seiten“ ändern. Sonst wird jedes Foto ein eigenes Dokument.",
+      "one": "Als ein Dokument",
+      "separate": "Jedes Foto einzeln",
+      "tooMuch": "Für ein Dokument sind es zu viele oder zu große Fotos (höchstens 100 Fotos und zusammen 240 MB)."
+    }
   },
   "documents": {
     "status": {
@@ -175,12 +200,13 @@
       "activeTo": "bis {{date}}",
       "removeOne": "Filter „{{label}}“ entfernen",
       "removeAll": "Alle Filter entfernen",
-      "clear": "Filter entfernen"
+      "clear": "Filter entfernen",
+      "retentionExpired": "Frist abgelaufen"
     },
     "empty": {
       "libraryTitle": "Noch keine Dokumente",
-      "libraryHint": "Ziehe PDF-Dateien einfach in dieses Fenster oder nutze „Hochladen“.",
-      "libraryHintAdmin": "Ziehe PDF-Dateien einfach in dieses Fenster oder nutze „Hochladen“. Unter Einstellungen richtest du ein Postfach oder einen Eingangsordner ein, aus dem neue PDFs automatisch übernommen werden.",
+      "libraryHint": "Ziehe PDFs oder Fotos einfach in dieses Fenster oder nutze „Hochladen“.",
+      "libraryHintAdmin": "Ziehe PDFs oder Fotos einfach in dieses Fenster oder nutze „Hochladen“. Unter Einstellungen richtest du ein Postfach oder einen Eingangsordner ein, aus dem neue Dokumente automatisch übernommen werden.",
       "noResultsTitle": "Nichts gefunden",
       "noResultsSearch": "Kein Dokument passt zu dieser Suche. Die Suche findet auch Wortteile – versuche es mit einem kürzeren Begriff oder weniger Wörtern.",
       "noResultsFilters": "Kein Dokument passt zu den gewählten Filtern."
@@ -190,6 +216,25 @@
     "loadMore": "Weitere laden ({{remaining, number}})",
     "aiSearch": {
       "notice": "KI-Suche: „{{question}}“. Die Filter zeigen, wie die Frage verstanden wurde."
+    },
+    "export": {
+      "label_one": "{{count, number}} Dokument als ZIP exportieren",
+      "label_other": "Alle {{count, number}} Dokumente dieser Liste als ZIP exportieren",
+      "started_one": "Export von {{count, number}} Dokument gestartet",
+      "started_other": "Export von {{count, number}} Dokumenten gestartet",
+      "contents": "Die ZIP-Datei enthält die PDFs sowie alle Angaben als Tabelle (documents.csv) und als documents.json.",
+      "failed": "Export fehlgeschlagen"
+    },
+    "mailboxNotice": {
+      "text_one": "Das Postfach „{{names}}“ lässt sich seit mehreren Versuchen nicht abrufen – von dort kommen gerade keine Dokumente an.",
+      "text_other": "Diese Postfächer lassen sich seit mehreren Versuchen nicht abrufen: {{names}}. Von dort kommen gerade keine Dokumente an.",
+      "action": "Postfächer ansehen"
+    },
+    "backupNotice": {
+      "never": "Es gibt noch keine Sicherung deiner Dokumente.",
+      "overdue": "Zuletzt gesichert: {{when}}. Das ist länger her als eingestellt.",
+      "failed": "Die automatische Sicherung ist fehlgeschlagen: {{reason}}",
+      "action": "Zur Sicherung"
     }
   },
   "document": {
@@ -264,7 +309,9 @@
     "noText": "Für dieses Dokument liegt kein Text vor – vermutlich ein Scan ohne Textebene. Mit eingerichteter KI und aktivierter Texterkennung wird der Inhalt beim Analysieren transkribiert.",
     "edit": {
       "title": "Dokument bearbeiten",
-      "saved": "Änderungen gespeichert"
+      "saved": "Änderungen gespeichert",
+      "areaHint": "Bestimmt, wer das Dokument sieht.",
+      "areaMoveHint": "Danach sehen es nur noch Mitglieder von „{{area}}“ und Administratoren."
     },
     "delete": {
       "title": "Dokument löschen?",
@@ -300,16 +347,25 @@
         "EDITED": "Bearbeitet",
         "ORIGINAL_RESTORED": "Original wiederhergestellt",
         "VERSION_RESTORED": "Fassung {{from}} wiederhergestellt",
-        "UNDONE": "Änderung rückgängig gemacht"
+        "UNDONE": "Änderung rückgängig gemacht",
+        "PAGES": "Seiten geändert",
+        "MERGED": "Dokumente angehängt"
       }
-    }
+    },
+    "retention": {
+      "label": "Aufbewahrung",
+      "until": "bis {{date}} – bis dahin nicht löschbar",
+      "expired": "Frist am {{date}} abgelaufen",
+      "locked": "Aufzubewahren bis {{date}} – erst danach löschbar"
+    },
+    "readOnly": "In diesem Bereich darfst du das Dokument nur ansehen."
   },
   "settings": {
     "title": "Einstellungen",
     "mailboxes": {
       "title": "Postfächer",
-      "navHint": "IMAP-Server, aus denen PDF-Anhänge übernommen werden",
-      "intro": "Aus diesen IMAP-Postfächern werden PDF-Anhänge automatisch übernommen. Die Postfächer werden nur gelesen – E-Mails bleiben unverändert und ungelesen.",
+      "navHint": "IMAP-Server, aus denen PDF- und Foto-Anhänge übernommen werden",
+      "intro": "Aus diesen IMAP-Postfächern werden PDF-Anhänge und angehängte Fotos (als PDF) automatisch übernommen; der Text der E-Mails und eingebettete Logos nicht. Die Postfächer werden nur gelesen – E-Mails bleiben unverändert und ungelesen.",
       "add": "Postfach hinzufügen",
       "emptyTitle": "Noch kein Postfach eingerichtet",
       "emptyText": "Trage die Zugangsdaten eines IMAP-Postfachs ein – zum Beispiel das Postfach, an das dein Scanner Dokumente schickt.",
@@ -342,7 +398,7 @@
         "since": "Nur E-Mails ab",
         "sinceHint": "Optional – ältere E-Mails werden übersprungen",
         "enabled": "Automatisch abrufen",
-        "enabledHint": "Das Postfach wird im eingestellten Intervall auf neue PDFs geprüft.",
+        "enabledHint": "Das Postfach wird im eingestellten Intervall auf neue Anhänge geprüft.",
         "filter": {
           "title": "Filter",
           "intro": "Ausgewertet werden nur E-Mails, die alle Bedingungen erfüllen. Ein Begriff pro Zeile; Groß- und Kleinschreibung spielen keine Rolle, ein Teil des Textes genügt. Leere Felder schränken nichts ein.",
@@ -354,7 +410,8 @@
           "newOnly": "Der Filter gilt für E-Mails, die nach dem letzten Abruf eingehen; schon geprüfte E-Mails werden nicht erneut ausgewertet."
         },
         "interval": "Abrufintervall in Minuten",
-        "intervalHint": "Leer lassen für das allgemeine Intervall (zurzeit {{interval}})."
+        "intervalHint": "Leer lassen für das allgemeine Intervall (zurzeit {{interval}}).",
+        "areaHint": "In diesen Bereich kommen die übernommenen Dokumente."
       },
       "filterActive": "Filter aktiv",
       "schedule": "Abruf alle {{interval}} · nächster {{when}}",
@@ -363,17 +420,17 @@
     "import": {
       "title": "Abruf & Eingangsordner",
       "navHint": "Abrufintervall und überwachtes Verzeichnis",
-      "intro": "Legt fest, wie oft nach neuen PDF-Dateien gesucht wird – in den Postfächern und im Eingangsordner.",
+      "intro": "Legt fest, wie oft nach neuen Dokumenten gesucht wird – in den Postfächern und im Eingangsordner.",
       "saved": "Einstellungen gespeichert",
       "interval": {
         "title": "Abrufintervall",
-        "text": "So oft prüft die Anwendung den Eingangsordner und alle Postfächer ohne eigenes Intervall auf neue PDFs.",
+        "text": "So oft prüft die Anwendung den Eingangsordner und alle Postfächer ohne eigenes Intervall auf neue Dokumente.",
         "label": "Alle … Minuten",
         "nextRun": "Nächster automatischer Abruf {{when}}."
       },
       "folder": {
         "title": "Eingangsordner",
-        "text": "Ein Verzeichnis auf dem Server, das auf neue PDF-Dateien überwacht wird – etwa das Ziel eines Netzwerkscanners. Unterordner werden mit durchsucht.",
+        "text": "Ein Verzeichnis auf dem Server, das auf neue PDFs und Fotos (JPG, PNG, HEIC) überwacht wird – etwa das Ziel eines Netzwerkscanners. Unterordner werden mit durchsucht.",
         "enable": "Eingangsordner überwachen",
         "path": "Pfad auf dem Server",
         "pathHint": "Absoluter Pfad. Im Docker-Container ist das der eingebundene Ordner, üblicherweise {{path}}.",
@@ -385,7 +442,8 @@
         "scanning": "Ordner wird geprüft …",
         "neverScanned": "Noch nicht geprüft.",
         "scanNow": "Jetzt prüfen",
-        "scanStarted": "Der Eingangsordner wird geprüft."
+        "scanStarted": "Der Eingangsordner wird geprüft.",
+        "areaHint": "In diesen Bereich kommen die Dokumente aus dem Ordner."
       }
     },
     "ai": {
@@ -507,6 +565,143 @@
       "resetTwoFactorText": "{{name}} meldet sich danach nur mit dem Passwort an und kann die Zwei-Faktor-Anmeldung neu einrichten – etwa nach dem Verlust des Handys mit der App.",
       "resetTwoFactorConfirm": "Zurücksetzen",
       "twoFactorReset": "Zwei-Faktor-Anmeldung zurückgesetzt"
+    },
+    "areas": {
+      "title": "Bereiche",
+      "navHint": "Wer welche Dokumente sieht",
+      "intro": "Jedes Dokument liegt in genau einem Bereich. Benutzer sehen nur die Dokumente der Bereiche, in denen sie Mitglied sind, und die der Bereiche für alle.",
+      "add": "Bereich anlegen",
+      "everyone": "Für alle",
+      "restricted": "Eingeschränkt",
+      "visibleForAll": "sichtbar für alle Angemeldeten",
+      "members": "Mitglieder: {{names}}",
+      "adminsOnly": "nur Administratoren",
+      "adminHint": "Administratoren sehen alle Bereiche, auch ohne Mitgliedschaft.",
+      "edit": "{{name}} bearbeiten",
+      "saved": "Bereich gespeichert",
+      "created": "Bereich angelegt",
+      "deleted": "Bereich gelöscht",
+      "delete": {
+        "label": "{{name}} löschen",
+        "title": "Bereich löschen?",
+        "text": "Der Bereich „{{name}}“ wird gelöscht. Das geht nur, solange keine Dokumente, kein Postfach und kein Eingangsordner ihn verwenden."
+      },
+      "dialog": {
+        "name": "Name",
+        "namePlaceholder": "z. B. Buchhaltung",
+        "generalNameHint": "Leer lassen, dann heißt der Bereich in jeder Sprache „Allgemein“.",
+        "everyone": "Für alle sichtbar",
+        "everyoneHint": "Alle angemeldeten Benutzer sehen die Dokumente dieses Bereichs.",
+        "members": "Mitglieder",
+        "membersHint": "Nur Mitglieder und Administratoren sehen die Dokumente dieses Bereichs. Je Mitglied legst du fest, ob es nur lesen, auch bearbeiten oder zusätzlich löschen darf.",
+        "noUsers": "Es gibt noch keine Benutzer ohne Administratorrolle.",
+        "create": "Anlegen",
+        "everyoneAccess": "Alle dürfen",
+        "accessOf": "Recht von {{name}}",
+        "membersHintEveryone": "Alle sehen die Dokumente dieses Bereichs. Mitglieder kannst du hier eintragen, wenn sie mehr dürfen sollen als alle anderen."
+      },
+      "memberWithAccess": "{{name}} ({{access}})"
+    },
+    "retention": {
+      "title": "Aufbewahrung",
+      "navHint": "Fristen und Löschsperre",
+      "intro": "Lege fest, wie lange Dokumente einer Kategorie aufbewahrt werden müssen – etwa Rechnungen zehn Jahre. Gezählt wird ab dem Ende des Jahres, aus dem das Dokument stammt. Bis dahin kann es niemand löschen.",
+      "permanent": "Eine Sperre lässt sich nicht aufheben – auch nicht von Administratoren. Wird eine Regel verkürzt oder gelöscht oder ändert sich die Kategorie eines Dokuments, bleibt die bereits gesetzte Frist bestehen.",
+      "add": "Regel anlegen",
+      "years_one": "{{count, number}} Jahr",
+      "years_other": "{{count, number}} Jahre",
+      "edit": "Regel für {{category}} bearbeiten",
+      "saved": "Regel gespeichert",
+      "created": "Regel angelegt",
+      "deleted": "Regel gelöscht",
+      "emptyTitle": "Noch keine Aufbewahrungsregeln",
+      "emptyText": "Ohne Regel lassen sich Dokumente jederzeit löschen.",
+      "delete": {
+        "label": "Regel für {{category}} löschen",
+        "title": "Regel löschen?",
+        "text": "Neue Dokumente der Kategorie „{{category}}“ bekommen danach keine Frist mehr. Bereits gesperrte Dokumente bleiben bis zum Ende ihrer Frist gesperrt."
+      },
+      "dialog": {
+        "categoryHint": "So, wie sie am Dokument steht; Groß- und Kleinschreibung spielt keine Rolle.",
+        "years": "Aufbewahrungsdauer in Jahren",
+        "yearsHint": "Gezählt ab dem Ende des Jahres des Dokumentdatums (ohne Datum: des Tages der Übernahme).",
+        "shorterHint": "Kürzer gilt nur für Dokumente, die noch keine Frist haben. Bereits gesperrte bleiben es bis zum Ende ihrer bisherigen Frist.",
+        "create": "Anlegen"
+      }
+    },
+    "mailOut": {
+      "title": "E-Mail-Versand",
+      "navHint": "Erinnerungen per E-Mail",
+      "intro": "Über diesen SMTP-Server verschickt die Anwendung Erinnerungen an fällige Wiedervorlagen – einmal je Termin, gesammelt in einer E-Mail je Person. Empfänger ist, wer sich um den Termin kümmert und im Benutzermenü eine Adresse hinterlegt hat.",
+      "enabled": "Erinnerungen per E-Mail verschicken",
+      "enabledHint": "Ausgeschaltet gibt es die Wiedervorlage nur in der Anwendung.",
+      "host": "SMTP-Server",
+      "port": "Port",
+      "security": "Verschlüsselung",
+      "unencrypted": "Keine",
+      "usernameHint": "Leer lassen, wenn der Server keine Anmeldung verlangt.",
+      "passwordKeepHint": "Leer lassen, um das gespeicherte Passwort zu behalten.",
+      "from": "Absenderadresse",
+      "fromHint": "Muss der Server für dein Konto zulassen.",
+      "appUrl": "Adresse der Anwendung",
+      "appUrlHint": "Für Links in den E-Mails, z. B. https://docs.example.com. Leer = ohne Links.",
+      "digestHour": "Versand",
+      "fromHour": "ab {{hour}} Uhr",
+      "saved": "E-Mail-Versand gespeichert",
+      "test": "Testnachricht an {{address}}",
+      "testNeedsAddress": "Für die Testnachricht hinterlege im Benutzermenü deine eigene E-Mail-Adresse.",
+      "testSavedHint": "Der Test verwendet die gespeicherten Einstellungen – bitte vorher speichern."
+    },
+    "backup": {
+      "title": "Sicherung & Import",
+      "navHint": "Alles auf einmal sichern, Exporte übernehmen",
+      "intro": "Eine Sicherung enthält alles, um AIDocuments genau so wiederherzustellen. Ein Import übernimmt Dokumente aus dem Export einer anderen Installation – mit ihren Angaben.",
+      "backupTitle": "Sicherung per Knopfdruck",
+      "backupText": "Ein ZIP mit der Datenbank, allen Dokumenten samt früheren Fassungen, den Vorschaubildern und dem Schlüssel für gespeicherte Kennwörter. Die Anwendung läuft währenddessen weiter.",
+      "size": "Umfang",
+      "sizeValue_one": "etwa {{size}} in {{count, number}} Datei",
+      "sizeValue_other": "etwa {{size}} in {{count, number}} Dateien",
+      "last": "Zuletzt gesichert",
+      "never": "noch nie",
+      "keyWarning": "Die Sicherung ist nicht verschlüsselt und enthält den Schlüssel zu den gespeicherten Kennwörtern (Postfächer, KI, Zwei-Faktor-Anmeldung). Bewahre sie so sicher auf wie die Dokumente selbst.",
+      "restore": "Wiederherstellen: AIDocuments beenden, den Inhalt des ZIPs in ein leeres Datenverzeichnis entpacken und neu starten. Eine Anleitung liegt im ZIP (README.txt).",
+      "download": "Sicherung herunterladen",
+      "started": "Die Sicherung wird heruntergeladen.",
+      "externalDatabase": "Die Sicherung per Knopfdruck gibt es nur mit der eingebauten Datenbank. Mit MariaDB sicherst du die Datenbank mit deren Werkzeugen (etwa mariadb-dump) und dazu das Datenverzeichnis.",
+      "importTitle": "Export importieren",
+      "importText": "Ein ZIP aus „Exportieren“ in der Dokumentliste – auch aus einer anderen Installation. Titel, Kategorie, Schlagworte und übrige Angaben bleiben, die KI liest die Dokumente nicht noch einmal. Schon vorhandene Dateien werden übersprungen.",
+      "file": "ZIP-Datei",
+      "areaHint": "Hierhin kommen die Dokumente – oder nur die, deren Bereich es hier nicht gibt.",
+      "matchAreas": "In gleichnamige Bereiche legen",
+      "matchAreasHint": "Gibt es hier einen Bereich mit demselben Namen wie im Export, kommen die Dokumente dorthin.",
+      "import": "Importieren",
+      "importing": "Wird importiert …",
+      "result": "Übernommen: {{imported, number}} · schon vorhanden: {{duplicates, number}} · nicht übernommen: {{failed, number}}",
+      "auto": {
+        "title": "Automatische Sicherung",
+        "text": "Einmal am Tag legt AIDocuments eine vollständige Sicherung als ZIP in einen Ordner und behält davon die neuesten Stände. Am besten liegt der Ordner auf einer anderen Platte oder einem Netzlaufwerk – fällt die Platte mit den Daten aus, sind sonst auch die Sicherungen weg.",
+        "enable": "Täglich automatisch sichern",
+        "hour": "Uhrzeit",
+        "keep": "Aufbewahren",
+        "keepHint": "Anzahl der Stände; ältere werden gelöscht.",
+        "directory": "Ordner",
+        "directoryHint": "Vollständiger Pfad auf dem Server. Leer lassen für die Vorgabe. Im Docker-Container muss der Ordner eingebunden sein.",
+        "warnAfterDays": "Warnen nach (Tagen)",
+        "warnAfterDaysHint": "Hinweis in der Dokumentliste, wenn so lange nicht gesichert wurde – von Hand oder automatisch. 0 = nie warnen.",
+        "lastRun": "Letzter Lauf",
+        "nextRun": "Nächster Lauf",
+        "running": "Sicherung läuft …",
+        "ok": "gelungen, {{when}}",
+        "failed": "fehlgeschlagen, {{when}}",
+        "stored_one": "{{count, number}} Stand in {{directory}}",
+        "stored_other": "{{count, number}} Stände in {{directory}}",
+        "runNow": "Jetzt sichern",
+        "saveFirst": "Erst die Änderungen speichern.",
+        "runStarted": "Die Sicherung läuft im Hintergrund.",
+        "done": "Sicherung geschrieben.",
+        "saved": "Einstellungen gespeichert.",
+        "externalDatabase": "Die automatische Sicherung gibt es nur mit der eingebauten Datenbank. Mit MariaDB sicherst du die Datenbank mit deren Werkzeugen (etwa ein nächtliches mariadb-dump) und dazu das Datenverzeichnis."
+      }
     }
   },
   "history": {
@@ -565,7 +760,8 @@
   "confirmCode": {
     "title": "Änderung bestätigen",
     "text": "Änderungen an Konten, Postfächern und Einstellungen brauchen einen aktuellen Code aus deiner Authenticator-App. Die Bestätigung gilt 10 Minuten.",
-    "submit": "Bestätigen"
+    "submit": "Bestätigen",
+    "passkey": "Mit Passkey bestätigen"
   },
   "share": {
     "button": "Teilen",
@@ -598,6 +794,193 @@
     "page": {
       "for": "Geteilt mit {{name}}",
       "invalid": "Dieser Link ist ungültig oder abgelaufen, oder das Dokument wurde gelöscht. Bitte wende dich an die Person, die ihn dir gegeben hat."
+    }
+  },
+  "areas": {
+    "general": "Allgemein",
+    "unknown": "Anderer Bereich",
+    "label": "Bereich",
+    "target": "Zielbereich",
+    "access": {
+      "READ": "Nur lesen",
+      "EDIT": "Lesen und bearbeiten",
+      "DELETE": "Bearbeiten und löschen"
+    }
+  },
+  "reminders": {
+    "title": "Wiedervorlage",
+    "cardTitle": "Wiedervorlage",
+    "add": "Termin anlegen",
+    "edit": "Termin bearbeiten",
+    "create": "Anlegen",
+    "created": "Termin angelegt",
+    "saved": "Termin gespeichert",
+    "deleted": "Termin gelöscht",
+    "markedDone": "Erledigt",
+    "dueDate": "Fällig am",
+    "note": "Notiz",
+    "notePlaceholder": "z. B. Zahlung prüfen",
+    "assignee": "Wer kümmert sich?",
+    "assigneeHint": "Diese Person sieht den Termin unter „Meine“ und bekommt die Erinnerung per E-Mail. Zur Wahl stehen alle, die das Dokument sehen.",
+    "me": "{{name}} (ich)",
+    "assignedTo": "für {{name}}",
+    "doneBy": "erledigt von {{name}}",
+    "markDone": "Als erledigt markieren",
+    "reopen": "Wieder öffnen",
+    "delete": {
+      "label": "Termin löschen",
+      "title": "Termin löschen?",
+      "text": "Der Termin wird entfernt. Das Dokument bleibt unverändert."
+    },
+    "accept": "Übernehmen",
+    "dismiss": "Vorschlag verwerfen",
+    "suggestionsHint": "Die KI hat in diesem Dokument Termine gefunden:",
+    "none": "Keine offenen Termine.",
+    "showDone_one": "{{count, number}} erledigter Termin anzeigen",
+    "showDone_other": "{{count, number}} erledigte Termine anzeigen",
+    "hideDone": "Erledigte ausblenden",
+    "scope": {
+      "label": "Welche Termine",
+      "mine": "Meine",
+      "all": "Alle"
+    },
+    "dueTitle": "Fällig",
+    "nothingDue": "Heute ist nichts fällig.",
+    "upcomingTitle": "Demnächst",
+    "suggestionsTitle": "Vorgeschlagene Termine",
+    "suggestionsPageHint": "Fristen, die die KI in den Dokumenten der nächsten sechs Monate gefunden hat. Übernimm sie als Termin oder verwirf sie.",
+    "emptyTitle": "Keine Wiedervorlagen",
+    "emptyText": "Lege an einem Dokument einen Termin an – oder übernimm einen, den die KI vorschlägt.",
+    "repeat": {
+      "label": "Wiederholen",
+      "hint": "Hakst du den Termin ab, entsteht der nächste im selben Abstand.",
+      "none": "Einmalig",
+      "m1": "Monatlich",
+      "m3": "Vierteljährlich",
+      "m6": "Halbjährlich",
+      "m12": "Jährlich",
+      "m24": "Alle zwei Jahre",
+      "months_one": "Jeden Monat",
+      "months_other": "Alle {{count}} Monate"
+    },
+    "fromContract": "aus dem Vertrag"
+  },
+  "pages": {
+    "button": "Seiten",
+    "title": "Seiten bearbeiten",
+    "intro": "Seiten ziehen oder mit den Pfeilen verschieben, drehen oder entfernen. Gespeichert wird als neue Fassung – die bisherige bleibt erhalten.",
+    "page": "Seite {{number}}",
+    "wasPage": "bisher {{number}}",
+    "moveLeft": "Nach vorn",
+    "moveRight": "Nach hinten",
+    "rotate": "Um 90° drehen",
+    "remove": "Seite entfernen",
+    "keep": "Seite behalten",
+    "noneLeft": "Mindestens eine Seite muss bleiben.",
+    "saveFirst": "Erst die Änderungen speichern",
+    "saved": "Seiten gespeichert",
+    "split": {
+      "here": "Ab hier ein eigenes Dokument",
+      "title": "Dokument trennen?",
+      "text": "Seite {{page}} und alle folgenden werden ein eigenes Dokument im selben Bereich. Es wird wie ein neu eingegangenes gelesen und eingeordnet; dieses Dokument behält die Seiten davor.",
+      "confirm": "Trennen",
+      "done": "Dokument getrennt",
+      "open": "Neues Dokument öffnen"
+    },
+    "merge": {
+      "button": "Dokumente anhängen",
+      "title": "Dokumente anhängen",
+      "intro": "Die Seiten der gewählten Dokumente kommen in dieser Reihenfolge ans Ende von „{{title}}“.",
+      "search": "Dokumente suchen …",
+      "none": "Keine passenden Dokumente.",
+      "noDeleteRight": "Du darfst es nicht löschen – daher nicht anhängen.",
+      "hint": "Die angehängten Dokumente kommen danach in den Papierkorb; über die Historie lassen sie sich 30 Tage lang zurückholen.",
+      "confirm_one": "{{count}} Dokument anhängen",
+      "confirm_other": "{{count}} Dokumente anhängen",
+      "done_one": "{{count}} Dokument angehängt",
+      "done_other": "{{count}} Dokumente angehängt"
+    }
+  },
+  "contracts": {
+    "nav": "Verträge",
+    "title": "Verträge",
+    "pageIntro": "Laufzeiten und Kündigungsfristen aller Verträge, die du sehen darfst – zuerst die, bei denen bald etwas zu tun ist.",
+    "scope": {
+      "label": "Anzeigen",
+      "running": "Laufende",
+      "all": "Alle"
+    },
+    "emptyTitle": "Noch keine Verträge erfasst",
+    "emptyText": "Öffne ein Dokument, etwa einen Strom- oder Handyvertrag, und erfasse dort Laufzeit und Kündigungsfrist. Rechtzeitig vor Fristende erscheint dann eine Wiedervorlage.",
+    "cardTitle": "Vertrag",
+    "none": "Ist das ein Vertrag? Mit Laufzeit und Kündigungsfrist erinnert AIDocuments rechtzeitig ans Kündigen.",
+    "add": "Als Vertrag erfassen",
+    "edit": "Vertrag bearbeiten",
+    "intro": "Aus Laufzeitende und Kündigungsfrist ergibt sich, bis wann gekündigt sein muss. Davor erscheint eine Wiedervorlage; läuft die Laufzeit ohne Kündigung ab, verlängert sie sich von selbst.",
+    "saved": "Vertrag gespeichert",
+    "removed": "Vertragsangaben entfernt",
+    "remove": {
+      "label": "Vertragsangaben entfernen",
+      "title": "Vertragsangaben entfernen?",
+      "text": "Laufzeit, Kündigungsfrist und die offene Wiedervorlage dazu werden entfernt. Das Dokument selbst bleibt."
+    },
+    "openEnded": "unbefristet",
+    "months_one": "{{count}} Monat",
+    "months_other": "{{count}} Monate",
+    "amountHint": "z. B. „49,90 € im Monat“",
+    "endDateHint": "Ende der aktuellen Laufzeit; leer = unbefristet",
+    "noticeHint": "Monate vor dem Laufzeitende; leer = bis zum Laufzeitende",
+    "renewalHint": "Ohne Kündigung verlängert sich der Vertrag um so viele Monate; 0 = er endet",
+    "cancelledHint": "Dann verlängert er sich nicht mehr, und es kommt keine Erinnerung mehr.",
+    "fields": {
+      "partner": "Vertragspartner",
+      "amount": "Betrag",
+      "startDate": "Vertragsbeginn",
+      "endDate": "Laufzeit bis",
+      "notice": "Kündigungsfrist (Monate)",
+      "renewal": "Verlängerung (Monate)",
+      "deadline": "Kündigen bis",
+      "reminderDays": "Erinnern (Tage vorher)",
+      "cancelled": "Gekündigt"
+    },
+    "status": {
+      "ACTIVE": "Läuft",
+      "DUE_SOON": "Frist naht",
+      "NOTICE_MISSED": "Frist verpasst",
+      "CANCELLED": "Gekündigt",
+      "ENDED": "Beendet",
+      "OPEN_ENDED": "Unbefristet"
+    },
+    "row": {
+      "cancelBy": "kündigen bis {{date}}",
+      "endsOn": "endet am {{date}}",
+      "term": "Laufzeit bis {{date}}",
+      "renews_one": "verlängert sich um {{count}} Monat",
+      "renews_other": "verlängert sich um {{count}} Monate"
+    }
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "intro": "Mit einem Passkey meldest du dich ohne Passwort an – freigegeben per Fingerabdruck, Gesicht oder Geräte-PIN. Er gilt nur für diese Adresse; eine nachgemachte Seite kann ihn nicht verwenden.",
+    "none": "Noch kein Passkey angelegt.",
+    "add": "Passkey hinzufügen",
+    "create": "Passkey anlegen",
+    "name": "Name",
+    "nameHint": "Damit du ihn später wiedererkennst, etwa „Laptop“ oder „Passwortmanager“.",
+    "password": "Dein Passwort",
+    "passwordHint": "Wer einen Passkey anlegt, kommt künftig ohne Passwort herein – deshalb einmal zur Bestätigung.",
+    "added": "Passkey angelegt",
+    "removed": "Passkey entfernt",
+    "synced": "synchronisiert",
+    "lastUsed": "zuletzt verwendet {{time}}",
+    "created": "angelegt {{time}}, noch nicht verwendet",
+    "unsupported": "Dieser Browser kann hier keine Passkeys verwenden. Passkeys gehen nur über HTTPS (oder localhost).",
+    "unsupportedIp": "Passkeys gehen nur über HTTPS und mit einem Namen in der Adresse, nicht mit einer IP-Adresse.",
+    "remove": {
+      "label": "Passkey entfernen",
+      "title": "Passkey entfernen?",
+      "text": "Mit „{{name}}“ kann sich danach niemand mehr anmelden. Im Passwortmanager bzw. auf dem Gerät bleibt er gespeichert, bis du ihn dort löschst.",
+      "confirm": "Entfernen"
     }
   }
 }
