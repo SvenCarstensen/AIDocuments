@@ -66,11 +66,11 @@ permission in that area (*read*, *edit* or *delete*); administrators see all are
 
 | Input | finds |
 |---|---|
-| `rechnung strom` | documents containing both words (also “Rechnungen”, “Stromrechnung”) |
-| `versicherung` | also “Haftpflichtversicherung” – parts of words count |
-| `"zahlbar bis"` | exactly this sequence of words |
-| `miete -kaution` | “Miete”, but not “Kaution” |
-| `strom \| gas` | either of the two |
+| `invoice electricity` | documents containing both words (also “invoices”) |
+| `insurance` | also “reinsurance” – parts of words count |
+| `"payable by"` | exactly this sequence of words |
+| `rent -deposit` | “rent”, but not “deposit” |
+| `electricity \| gas` | either of the two |
 
 ### AI search
 
