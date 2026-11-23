@@ -74,7 +74,7 @@ test('documents-dark', async ({ page }) => {
 test('ai-search', async ({ page }) => {
   await page.goto('/documents')
   const search = page.getByRole('textbox', { name: t('shell.search.label') })
-  await search.fill('everything from Brightwave this year')
+  await search.fill('all invoices from this year')
   await search.press('Enter')
   await expect(page).toHaveURL(/ai=/)
   await expect(page.getByText('Electricity invoice', { exact: false }).first()).toBeVisible()

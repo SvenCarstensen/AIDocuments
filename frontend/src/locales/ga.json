@@ -108,7 +108,7 @@
     },
     "dropzone": {
       "title": "Scaoil PDFanna nó grianghraif anseo",
-      "hint": "Is féidir roinnt comhad a scaoileadh in éineacht. Déantar PDFanna de ghrianghraif (JPG, PNG, HEIC). Stóráiltear gach rud, déantar anailís air agus cuirtear clibeanna leis."
+      "hint": "Is féidir roinnt comhad a scaoileadh in éineacht. Déantar PDFanna de ghrianghraif (JPG, PNG, HEIC) agus de ríomhshonraisc (XML). Stóráiltear gach rud, déantar anailís air agus cuirtear clibeanna leis."
     },
     "remindersDue_one": "{{count, number}} mheabhrúchán dlite",
     "remindersDue_two": "{{count, number}} mheabhrúchán dlite",
@@ -130,7 +130,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Ní féidir ach comhaid PDF agus grianghraif (JPG, PNG, HEIC) a chur leis.",
+    "onlyPdf": "Ní féidir ach comhaid PDF, grianghraif (JPG, PNG, HEIC) agus ríomhshonraisc (XML) a chur leis.",
     "uploadingFile": "“{{name}}” á uaslódáil…",
     "uploadingFiles_one": "{{count, number}} chomhad á uaslódáil…",
     "uploadingFiles_two": "{{count, number}} chomhad á n-uaslódáil…",
@@ -404,7 +404,7 @@
     "mailboxes": {
       "title": "Boscaí poist",
       "navHint": "Freastalaithe IMAP a n-iompórtáiltear ceangaltáin PDF agus grianghraf uathu",
-      "intro": "Iompórtáiltear ceangaltáin PDF agus grianghraif cheangailte (mar PDFanna) go huathoibríoch ó na boscaí poist IMAP seo; ní iompórtáiltear téacs na ríomhphost ná lógónna leabaithe. Ní dhéantar ach na boscaí poist a léamh – fanann na ríomhphoist gan athrú agus gan léamh.",
+      "intro": "Iompórtáiltear ceangaltáin PDF, grianghraif cheangailte (mar PDFanna) agus ríomhshonraisc (XRechnung mar XML) go huathoibríoch ó na boscaí poist IMAP seo; ní iompórtáiltear téacs na ríomhphost ná lógónna leabaithe. Ní dhéantar ach na boscaí poist a léamh – fanann na ríomhphoist gan athrú agus gan léamh.",
       "add": "Cuir bosca poist leis",
       "emptyTitle": "Níl aon bhosca poist socraithe fós",
       "emptyText": "Cuir isteach sonraí logála isteach bosca poist IMAP – mar shampla an bosca poist a seolann do scanóir doiciméid chuige.",
@@ -469,7 +469,7 @@
       },
       "folder": {
         "title": "Fillteán iompórtála",
-        "text": "Eolaire ar an bhfreastalaí a choinnítear faoi fhaire le haghaidh PDFanna agus grianghraf nua (JPG, PNG, HEIC) – mar shampla sprioc scanóra líonra. Cuardaítear na fofhillteáin freisin.",
+        "text": "Eolaire ar an bhfreastalaí a choinnítear faoi fhaire le haghaidh PDFanna, grianghraf (JPG, PNG, HEIC) agus ríomhshonrasc (XML) nua – mar shampla sprioc scanóra líonra. Cuardaítear na fofhillteáin freisin.",
         "enable": "Déan faire ar an bhfillteán iompórtála",
         "path": "Conair ar an bhfreastalaí",
         "pathHint": "Conair iomlán. Sa choimeádán Docker, is é seo an fillteán feistithe, {{path}} de ghnáth.",
@@ -1053,6 +1053,65 @@
       "title": "An eochair rochtana a bhaint?",
       "text": "Ní bheidh aon duine in ann logáil isteach le “{{name}}” ina dhiaidh sin. Fanann sí stóráilte sa bhainisteoir pasfhocal nó ar an ngléas go dtí go scriosann tú ansin í.",
       "confirm": "Bain"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Sonrasc",
+    "quote": "Meastachán",
+    "order": "Ordú",
+    "deliveryNote": "Nóta seachadta",
+    "paymentReminder": "Meabhrúchán íocaíochta",
+    "contract": "Conradh",
+    "cancellation": "Cealú",
+    "bankStatement": "Ráiteas bainc",
+    "insurance": "Árachas",
+    "tax": "Cáin",
+    "payslip": "Duillín pá",
+    "officialLetter": "Litir oifigiúil",
+    "certificate": "Teastas",
+    "reference": "Teistiméireacht",
+    "medicalLetter": "Litir leighis",
+    "letter": "Litir",
+    "report": "Tuarascáil",
+    "manual": "Lámhleabhar",
+    "form": "Foirm",
+    "other": "Eile"
+  },
+  "einvoice": {
+    "title": "Ríomhshonrasc",
+    "creditNoteTitle": "Nóta creidmheasa (ríomhshonrasc)",
+    "amountDue": "Méid le híoc",
+    "creditAmount": "Méid an chreidmheasa",
+    "dueOn": "dlite ar {{date}}",
+    "exact": "Léite go beacht ón gcomhad XML, gan IS · {{format}}",
+    "downloadXml": "Íoslódáil an XML",
+    "copy": "Cóipeáil {{label}}",
+    "copied": "Cóipeáladh {{label}}",
+    "copyFailed": "Ní féidir cóipeáil anseo.",
+    "fields": {
+      "number": "Uimhir an tsonraisc",
+      "issueDate": "Dáta an tsonraisc",
+      "seller": "Díoltóir",
+      "buyer": "Ceannaitheoir",
+      "vatId": "Uimhir CBL",
+      "buyerReference": "Tagairt an cheannaitheora",
+      "net": "Glan",
+      "tax": "CBL {{rate}}",
+      "gross": "Comhlán",
+      "reference": "Tagairt íocaíochta",
+      "terms": "Téarmaí íocaíochta"
+    },
+    "lines": {
+      "show_one": "Taispeáin {{count, number}} líne",
+      "show_two": "Taispeáin {{count, number}} líne",
+      "show_few": "Taispeáin {{count, number}} líne",
+      "show_many": "Taispeáin {{count, number}} líne",
+      "show_other": "Taispeáin {{count, number}} líne",
+      "hide": "Folaigh na línte",
+      "description": "Cur síos",
+      "quantity": "Cainníocht",
+      "unitPrice": "Praghas aonaid",
+      "amount": "Méid"
     }
   }
 }

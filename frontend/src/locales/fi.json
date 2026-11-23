@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Pudota PDF-tiedostot tai valokuvat tähän",
-      "hint": "Voit pudottaa useita tiedostoja kerralla. Valokuvat (JPG, PNG, HEIC) muunnetaan PDF-tiedostoiksi. Kaikki tallennetaan ja analysoidaan, ja niille lisätään tunnisteet."
+      "hint": "Voit pudottaa useita tiedostoja kerralla. Valokuvat (JPG, PNG, HEIC) ja verkkolaskut (XML) muunnetaan PDF-tiedostoiksi. Kaikki tallennetaan ja analysoidaan, ja niille lisätään tunnisteet."
     },
     "remindersDue_one": "{{count, number}} erääntynyt muistutus",
     "remindersDue_other": "{{count, number}} erääntynyttä muistutusta",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Vain PDF-tiedostoja ja valokuvia (JPG, PNG, HEIC) voi lisätä.",
+    "onlyPdf": "Vain PDF-tiedostoja, valokuvia (JPG, PNG, HEIC) ja verkkolaskuja (XML) voi lisätä.",
     "uploadingFile": "Lähetetään ”{{name}}”…",
     "uploadingFiles_one": "Lähetetään {{count, number}} tiedosto…",
     "uploadingFiles_other": "Lähetetään {{count, number}} tiedostoa…",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Postilaatikot",
       "navHint": "IMAP-palvelimet, joilta PDF- ja valokuvaliitteet tuodaan",
-      "intro": "Näistä IMAP-postilaatikoista tuodaan automaattisesti PDF-liitteet ja liitetyt valokuvat (PDF-tiedostoina); viestien tekstiä ja upotettuja logoja ei tuoda. Postilaatikoita vain luetaan – viestit säilyvät muuttumattomina ja lukemattomina.",
+      "intro": "Näistä IMAP-postilaatikoista tuodaan automaattisesti PDF-liitteet, liitetyt valokuvat (PDF-tiedostoina) ja verkkolaskut (XRechnung XML-muodossa); viestien tekstiä ja upotettuja logoja ei tuoda. Postilaatikoita vain luetaan – viestit säilyvät muuttumattomina ja lukemattomina.",
       "add": "Lisää postilaatikko",
       "emptyTitle": "Postilaatikoita ei ole vielä määritetty",
       "emptyText": "Anna IMAP-postilaatikon kirjautumistiedot – esimerkiksi sen postilaatikon, johon skannerisi lähettää asiakirjat.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Tuontikansio",
-        "text": "Palvelimella oleva kansio, jota valvotaan uusien PDF-tiedostojen ja valokuvien (JPG, PNG, HEIC) varalta – esimerkiksi verkkoskannerin kohdekansio. Myös alikansiot käydään läpi.",
+        "text": "Palvelimella oleva kansio, jota valvotaan uusien PDF-tiedostojen, valokuvien (JPG, PNG, HEIC) ja verkkolaskujen (XML) varalta – esimerkiksi verkkoskannerin kohdekansio. Myös alikansiot käydään läpi.",
         "enable": "Valvo tuontikansiota",
         "path": "Polku palvelimella",
         "pathHint": "Absoluuttinen polku. Docker-kontissa tämä on liitetty kansio, yleensä {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Poistetaanko pääsyavain?",
       "text": "Pääsyavaimella ”{{name}}” ei voi sen jälkeen enää kirjautua sisään. Se säilyy salasanojen hallinnassa tai laitteella, kunnes poistat sen sieltä.",
       "confirm": "Poista"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Lasku",
+    "quote": "Tarjous",
+    "order": "Tilaus",
+    "deliveryNote": "Lähetysluettelo",
+    "paymentReminder": "Maksumuistutus",
+    "contract": "Sopimus",
+    "cancellation": "Irtisanominen",
+    "bankStatement": "Tiliote",
+    "insurance": "Vakuutus",
+    "tax": "Vero",
+    "payslip": "Palkkalaskelma",
+    "officialLetter": "Viranomaiskirje",
+    "certificate": "Todistus",
+    "reference": "Työ- tai koulutodistus",
+    "medicalLetter": "Lääkärinlausunto",
+    "letter": "Kirje",
+    "report": "Raportti",
+    "manual": "Käyttöohje",
+    "form": "Lomake",
+    "other": "Muu"
+  },
+  "einvoice": {
+    "title": "Verkkolasku",
+    "creditNoteTitle": "Hyvityslasku (verkkolasku)",
+    "amountDue": "Maksettava",
+    "creditAmount": "Hyvityksen määrä",
+    "dueOn": "eräpäivä {{date}}",
+    "exact": "Luettu tarkasti XML-tiedostosta ilman tekoälyä · {{format}}",
+    "downloadXml": "Lataa XML",
+    "copy": "Kopioi {{label}}",
+    "copied": "{{label}} kopioitu",
+    "copyFailed": "Kopioiminen ei ole mahdollista tässä.",
+    "fields": {
+      "number": "Laskun numero",
+      "issueDate": "Laskun päivämäärä",
+      "seller": "Myyjä",
+      "buyer": "Ostaja",
+      "vatId": "ALV-numero",
+      "buyerReference": "Ostajan viite",
+      "net": "Veroton",
+      "tax": "ALV {{rate}}",
+      "gross": "Verollinen",
+      "reference": "Maksun viite",
+      "terms": "Maksuehdot"
+    },
+    "lines": {
+      "show_one": "Näytä {{count, number}} rivi",
+      "show_other": "Näytä {{count, number}} riviä",
+      "hide": "Piilota rivit",
+      "description": "Kuvaus",
+      "quantity": "Määrä",
+      "unitPrice": "Yksikköhinta",
+      "amount": "Summa"
     }
   }
 }

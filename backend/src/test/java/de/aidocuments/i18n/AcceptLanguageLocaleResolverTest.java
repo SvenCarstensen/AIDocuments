@@ -37,9 +37,12 @@ class AcceptLanguageLocaleResolverTest {
         assertThat(resolver.bestMatch(null)).isEqualTo(Locale.ENGLISH);
         assertThat(resolver.bestMatch("")).isEqualTo(Locale.ENGLISH);
         assertThat(resolver.bestMatch("de")).isEqualTo(Locale.GERMAN);
-        assertThat(resolver.bestMatch("DE-ch")).isEqualTo(Locale.GERMAN);
-        assertThat(resolver.bestMatch("de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7")).isEqualTo(Locale.GERMAN);
-        assertThat(resolver.bestMatch("en-GB,de;q=0.9")).isEqualTo(Locale.ENGLISH);
+        // die Region bleibt erhalten – für die Schreibweise von Datum und Zahlen; die Texte sind die deutschen
+        assertThat(resolver.bestMatch("DE-ch")).isEqualTo(Locale.of("de", "CH"));
+        assertThat(resolver.bestMatch("de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7")).isEqualTo(Locale.GERMANY);
+        assertThat(resolver.bestMatch("en-GB,de;q=0.9")).isEqualTo(Locale.UK);
+        assertThat(resolver.bestMatch("en,en-IE;q=0.5")).isEqualTo(Locale.of("en", "IE"));
+        assertThat(resolver.bestMatch("de-419")).isEqualTo(Locale.GERMAN); // Regionen nur als Ländercode
         assertThat(resolver.bestMatch("de;q=0.3,en;q=0.9")).isEqualTo(Locale.ENGLISH);
         assertThat(resolver.bestMatch("pt-BR")).isEqualTo(Locale.forLanguageTag("pt-BR"));
         // keine Übersetzung vorhanden
@@ -54,6 +57,6 @@ class AcceptLanguageLocaleResolverTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         assertThat(resolver.resolveLocale(request)).isEqualTo(Locale.ENGLISH);
         request.addHeader("Accept-Language", "de-AT");
-        assertThat(resolver.resolveLocale(request)).isEqualTo(Locale.GERMAN);
+        assertThat(resolver.resolveLocale(request)).isEqualTo(Locale.of("de", "AT"));
     }
 }

@@ -6,12 +6,13 @@ import { api, errorMessage } from './api'
 import { areaNameById, useAreas } from './areas'
 import { t } from './i18n'
 
-/** Was die Dateiauswahl anbietet: PDFs und Fotos (der Server macht aus Fotos PDFs). */
-export const UPLOAD_ACCEPT = 'application/pdf,.pdf,image/jpeg,image/png,image/heic,image/heif,.jpg,.jpeg,.png,.heic,.heif'
+/** Was die Dateiauswahl anbietet: PDFs, Fotos und E-Rechnungen als XML (der Server macht aus beiden PDFs). */
+export const UPLOAD_ACCEPT =
+  'application/pdf,.pdf,image/jpeg,image/png,image/heic,image/heif,.jpg,.jpeg,.png,.heic,.heif,application/xml,text/xml,.xml'
 
-const SUPPORTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/heic', 'image/heif']
+const SUPPORTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/heic', 'image/heif', 'application/xml', 'text/xml']
 // HEIC hat in manchen Browsern keinen Typ – dann entscheidet die Endung
-const isSupported = (file: File) => SUPPORTED_TYPES.includes(file.type) || /\.(pdf|jpe?g|png|hei[cf])$/i.test(file.name)
+const isSupported = (file: File) => SUPPORTED_TYPES.includes(file.type) || /\.(pdf|jpe?g|png|hei[cf]|xml)$/i.test(file.name)
 const isImage = (file: File) => file.type.startsWith('image/') || /\.(jpe?g|png|hei[cf])$/i.test(file.name)
 
 /** Die Fotos unter den Dateien – ab zwei fragt die Oberfläche, ob sie ein Dokument ergeben. */

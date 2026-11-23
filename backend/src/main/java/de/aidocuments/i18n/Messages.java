@@ -66,10 +66,18 @@ public class Messages {
             });
         }
         try {
-            return new MessageFormat(pattern, locale).format(args.toArray());
+            return new MessageFormat(pattern, formatLocale(locale)).format(args.toArray());
         } catch (IllegalArgumentException e) {
             return pattern; // fehlerhaftes Muster in einer Übersetzung: lieber roh als gar nicht
         }
+    }
+
+    /**
+     * Die Schreibweise für Datum und Zahlen: Englisch ohne Region europäisch (Tag vor Monat) wie in der Oberfläche,
+     * weil es hier als Rückfallsprache für ganz Europa dient – sonst „December 14, 2026“ neben „30 November 2026“.
+     */
+    public static Locale formatLocale(Locale locale) {
+        return "en".equals(locale.getLanguage()) && locale.getCountry().isEmpty() ? Locale.UK : locale;
     }
 
     /** Mehrere Sätze hintereinander. */

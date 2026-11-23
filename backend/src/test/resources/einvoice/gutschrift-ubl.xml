@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0</cbc:CustomizationID>
+  <cbc:ID>GS-2026-12</cbc:ID>
+  <cbc:IssueDate>2026-11-21</cbc:IssueDate>
+  <cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+  <cac:AccountingSupplierParty><cac:Party>
+    <cac:PartyName><cbc:Name>Kontorbedarf Schmidt e.K.</cbc:Name></cac:PartyName>
+  </cac:Party></cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty><cac:Party>
+    <cac:PartyName><cbc:Name>Stadt Flensburg</cbc:Name></cac:PartyName>
+  </cac:Party></cac:AccountingCustomerParty>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode>30</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2026-11-30</cbc:PaymentDueDate>
+  </cac:PaymentMeans>
+  <cac:TaxTotal><cbc:TaxAmount currencyID="EUR">15.01</cbc:TaxAmount></cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:TaxExclusiveAmount currencyID="EUR">79.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">94.01</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="EUR">94.01</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:CreditNoteLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:CreditedQuantity unitCode="C62">1</cbc:CreditedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">79.00</cbc:LineExtensionAmount>
+    <cac:Item><cbc:Name>Rücknahme Toner schwarz (beschädigt)</cbc:Name></cac:Item>
+    <cac:Price><cbc:PriceAmount currencyID="EUR">79.00</cbc:PriceAmount></cac:Price>
+  </cac:CreditNoteLine>
+</CreditNote>

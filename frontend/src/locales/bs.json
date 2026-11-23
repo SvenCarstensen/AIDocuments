@@ -106,7 +106,7 @@
     },
     "dropzone": {
       "title": "Ovdje prevucite PDF-ove ili fotografije",
-      "hint": "Možete prevući više datoteka odjednom. Fotografije (JPG, PNG, HEIC) pretvaraju se u PDF. Sve će biti sačuvano, analizirano i označeno."
+      "hint": "Možete prevući više datoteka odjednom. Fotografije (JPG, PNG, HEIC) i e-fakture (XML) pretvaraju se u PDF. Sve će biti sačuvano, analizirano i označeno."
     },
     "remindersDue_one": "{{count, number}} dospjeli podsjetnik",
     "remindersDue_few": "{{count, number}} dospjela podsjetnika",
@@ -126,7 +126,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Mogu se dodati samo PDF datoteke i fotografije (JPG, PNG, HEIC).",
+    "onlyPdf": "Mogu se dodati samo PDF datoteke, fotografije (JPG, PNG, HEIC) i e-fakture (XML).",
     "uploadingFile": "Otprema se „{{name}}“…",
     "uploadingFiles_one": "Otprema se {{count, number}} datoteka…",
     "uploadingFiles_few": "Otpremaju se {{count, number}} datoteke…",
@@ -378,7 +378,7 @@
     "mailboxes": {
       "title": "Poštanski sandučići",
       "navHint": "IMAP serveri s kojih se uvoze PDF prilozi i fotografije",
-      "intro": "Iz ovih IMAP sandučića automatski se uvoze PDF prilozi i priložene fotografije (kao PDF), ali ne i tekst poruka e-pošte ni ugrađeni logotipi. Sandučići se samo čitaju – poruke e-pošte ostaju nepromijenjene i nepročitane.",
+      "intro": "Iz ovih IMAP sandučića automatski se uvoze PDF prilozi, priložene fotografije (kao PDF) i e-fakture (XRechnung kao XML), ali ne i tekst poruka e-pošte ni ugrađeni logotipi. Sandučići se samo čitaju – poruke e-pošte ostaju nepromijenjene i nepročitane.",
       "add": "Dodaj sandučić",
       "emptyTitle": "Još nije postavljen nijedan sandučić",
       "emptyText": "Unesite pristupne podatke IMAP sandučića – na primjer onog na koji vaš skener šalje dokumente.",
@@ -443,7 +443,7 @@
       },
       "folder": {
         "title": "Folder za uvoz",
-        "text": "Direktorij na serveru koji se nadzire radi novih PDF datoteka i fotografija (JPG, PNG, HEIC) – na primjer odredište mrežnog skenera. Pretražuju se i podfolderi.",
+        "text": "Direktorij na serveru koji se nadzire radi novih PDF datoteka, fotografija (JPG, PNG, HEIC) i e-faktura (XML) – na primjer odredište mrežnog skenera. Pretražuju se i podfolderi.",
         "enable": "Nadziri folder za uvoz",
         "path": "Putanja na serveru",
         "pathHint": "Apsolutna putanja. U Docker kontejneru to je montirani folder, obično {{path}}.",
@@ -1005,6 +1005,63 @@
       "title": "Ukloniti pristupni ključ?",
       "text": "Nakon toga se niko više ne može prijaviti pomoću „{{name}}“. On ostaje sačuvan u menadžeru lozinki ili na uređaju dok ga tamo ne izbrišete.",
       "confirm": "Ukloni"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Račun",
+    "quote": "Ponuda",
+    "order": "Narudžba",
+    "deliveryNote": "Otpremnica",
+    "paymentReminder": "Opomena",
+    "contract": "Ugovor",
+    "cancellation": "Otkaz",
+    "bankStatement": "Izvod sa računa",
+    "insurance": "Osiguranje",
+    "tax": "Porez",
+    "payslip": "Platna lista",
+    "officialLetter": "Službeni dopis",
+    "certificate": "Potvrda",
+    "reference": "Svjedočanstvo",
+    "medicalLetter": "Ljekarski nalaz",
+    "letter": "Pismo",
+    "report": "Izvještaj",
+    "manual": "Uputstvo",
+    "form": "Obrazac",
+    "other": "Ostalo"
+  },
+  "einvoice": {
+    "title": "E-faktura",
+    "creditNoteTitle": "Knjižno odobrenje (e-faktura)",
+    "amountDue": "Za plaćanje",
+    "creditAmount": "Iznos odobrenja",
+    "dueOn": "dospijeva {{date}}",
+    "exact": "Tačno očitano iz XML datoteke, bez AI-ja · {{format}}",
+    "downloadXml": "Preuzmi XML",
+    "copy": "Kopiraj: {{label}}",
+    "copied": "Kopirano: {{label}}",
+    "copyFailed": "Kopiranje ovdje nije moguće.",
+    "fields": {
+      "number": "Broj fakture",
+      "issueDate": "Datum fakture",
+      "seller": "Prodavac",
+      "buyer": "Kupac",
+      "vatId": "PDV broj",
+      "buyerReference": "Referenca kupca",
+      "net": "Neto",
+      "tax": "PDV {{rate}}",
+      "gross": "Bruto",
+      "reference": "Svrha uplate",
+      "terms": "Uslovi plaćanja"
+    },
+    "lines": {
+      "show_one": "Prikaži {{count, number}} stavku",
+      "show_few": "Prikaži {{count, number}} stavke",
+      "show_other": "Prikaži {{count, number}} stavki",
+      "hide": "Sakrij stavke",
+      "description": "Opis",
+      "quantity": "Količina",
+      "unitPrice": "Jedinična cijena",
+      "amount": "Iznos"
     }
   }
 }

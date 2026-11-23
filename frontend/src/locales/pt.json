@@ -106,7 +106,7 @@
     },
     "dropzone": {
       "title": "Largue aqui PDF ou fotos",
-      "hint": "Pode largar vários ficheiros de uma só vez. As fotos (JPG, PNG, HEIC) são convertidas em PDF. Tudo é guardado, analisado e etiquetado."
+      "hint": "Pode largar vários ficheiros de uma só vez. As fotos (JPG, PNG, HEIC) e as faturas eletrónicas (XML) são convertidas em PDF. Tudo é guardado, analisado e etiquetado."
     },
     "remindersDue_one": "{{count, number}} lembrete pendente",
     "remindersDue_many": "{{count, number}} de lembretes pendentes",
@@ -126,7 +126,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Só é possível adicionar PDF e fotos (JPG, PNG, HEIC).",
+    "onlyPdf": "Só é possível adicionar PDF, fotos (JPG, PNG, HEIC) e faturas eletrónicas (XML).",
     "uploadingFile": "A carregar «{{name}}»…",
     "uploadingFiles_one": "A carregar {{count, number}} ficheiro…",
     "uploadingFiles_many": "A carregar {{count, number}} de ficheiros…",
@@ -378,7 +378,7 @@
     "mailboxes": {
       "title": "Caixas de correio",
       "navHint": "Servidores IMAP a partir dos quais são importados anexos PDF e fotos",
-      "intro": "Os anexos PDF e as fotos anexadas (como PDF) são importados automaticamente destas caixas de correio IMAP; o texto dos e-mails e os logótipos incorporados, não. As caixas de correio são apenas lidas – os e-mails ficam inalterados e por ler.",
+      "intro": "Os anexos PDF, as fotos anexadas (como PDF) e as faturas eletrónicas (XRechnung como XML) são importados automaticamente destas caixas de correio IMAP; o texto dos e-mails e os logótipos incorporados, não. As caixas de correio são apenas lidas – os e-mails ficam inalterados e por ler.",
       "add": "Adicionar caixa de correio",
       "emptyTitle": "Ainda não há nenhuma caixa de correio configurada",
       "emptyText": "Introduza as credenciais de uma caixa de correio IMAP – por exemplo, aquela para a qual o seu scanner envia os documentos.",
@@ -443,7 +443,7 @@
       },
       "folder": {
         "title": "Pasta de importação",
-        "text": "Um diretório no servidor que é monitorizado à procura de novos PDF e fotos (JPG, PNG, HEIC) – por exemplo, o destino de um scanner de rede. As subpastas também são pesquisadas.",
+        "text": "Um diretório no servidor que é monitorizado à procura de novos PDF, fotos (JPG, PNG, HEIC) e faturas eletrónicas (XML) – por exemplo, o destino de um scanner de rede. As subpastas também são pesquisadas.",
         "enable": "Monitorizar a pasta de importação",
         "path": "Caminho no servidor",
         "pathHint": "Caminho absoluto. No contentor Docker, é a pasta montada, normalmente {{path}}.",
@@ -1005,6 +1005,63 @@
       "title": "Remover a chave de acesso?",
       "text": "Depois disso, ninguém poderá iniciar sessão com «{{name}}». A chave continua guardada no gestor de palavras-passe ou no dispositivo até a eliminar lá.",
       "confirm": "Remover"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Fatura",
+    "quote": "Orçamento",
+    "order": "Encomenda",
+    "deliveryNote": "Guia de remessa",
+    "paymentReminder": "Aviso de pagamento",
+    "contract": "Contrato",
+    "cancellation": "Rescisão",
+    "bankStatement": "Extrato bancário",
+    "insurance": "Seguro",
+    "tax": "Impostos",
+    "payslip": "Recibo de vencimento",
+    "officialLetter": "Carta oficial",
+    "certificate": "Declaração",
+    "reference": "Referência",
+    "medicalLetter": "Relatório médico",
+    "letter": "Carta",
+    "report": "Relatório",
+    "manual": "Manual",
+    "form": "Formulário",
+    "other": "Outros"
+  },
+  "einvoice": {
+    "title": "Fatura eletrónica",
+    "creditNoteTitle": "Nota de crédito (fatura eletrónica)",
+    "amountDue": "Valor a pagar",
+    "creditAmount": "Valor creditado",
+    "dueOn": "vence a {{date}}",
+    "exact": "Lido com exatidão a partir do ficheiro XML, sem IA · {{format}}",
+    "downloadXml": "Transferir XML",
+    "copy": "Copiar {{label}}",
+    "copied": "Copiado: {{label}}",
+    "copyFailed": "Não é possível copiar aqui.",
+    "fields": {
+      "number": "Número da fatura",
+      "issueDate": "Data da fatura",
+      "seller": "Fornecedor",
+      "buyer": "Cliente",
+      "vatId": "N.º de IVA",
+      "buyerReference": "Referência do comprador",
+      "net": "Valor líquido",
+      "tax": "IVA {{rate}}",
+      "gross": "Total",
+      "reference": "Referência de pagamento",
+      "terms": "Condições de pagamento"
+    },
+    "lines": {
+      "show_one": "Mostrar {{count, number}} linha",
+      "show_many": "Mostrar {{count, number}} linhas",
+      "show_other": "Mostrar {{count, number}} linhas",
+      "hide": "Ocultar linhas",
+      "description": "Descrição",
+      "quantity": "Quantidade",
+      "unitPrice": "Preço unitário",
+      "amount": "Valor"
     }
   }
 }

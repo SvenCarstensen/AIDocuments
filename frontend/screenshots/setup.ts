@@ -26,8 +26,8 @@ export default async function setup() {
   const thisYear = new Date().getFullYear()
   const mock = await startMockAi(MOCK_AI_PORT, {
     analyses: new Map<string, Analysis>(list.map((s) => [s.file, s.analysis])),
-    // „Everything from Brightwave this year“ – Dokumentarten nimmt die KI-Suche nur aus der deutschen Liste
-    search: { text: '', category: '', correspondent: 'Brightwave Energy', tags: [], from: `${thisYear}-01-01`, to: '' },
+    // „All invoices from this year“ – die KI-Suche liefert den gespeicherten (deutschen) Namen der Dokumentart
+    search: { text: '', category: 'Rechnung', correspondent: '', tags: [], from: `${thisYear}-01-01`, to: '' },
     chat: (question) => /deadline|date|due/i.test(question)
       ? `Yes. The invoice of **€142.60** is due by **${day(9).long}**. It is collected by direct debit from the `
         + 'account ending in 8817, so there is nothing you need to pay by hand.\n\nThe next meter reading is taken '
@@ -101,15 +101,10 @@ async function seed(base: string, setupCode: string): Promise<ShotState> {
     await new Promise((done) => setTimeout(done, 500))
   }
 
-  // Die KI wählt Dokumentarten aus einer deutschen Liste – für die englischen Bilder stehen englische Namen dort
+  // Gespeichert bleibt der deutsche Name der Dokumentart – die Oberfläche zeigt ihn übersetzt
   for (const sample of list) {
-    const id = documents[sample.file]
-    const doc = await admin.call<{ status: string; title: string; summary: string; correspondent: string; documentDate: string; tags: string[] }>('GET', `/api/documents/${id}`)
+    const doc = await admin.call<{ status: string }>('GET', `/api/documents/${documents[sample.file]}`)
     if (doc.status !== 'INDEXED') throw new Error(`${sample.file}: Status ${doc.status}`)
-    await admin.call('PUT', `/api/documents/${id}`, {
-      title: doc.title, summary: doc.summary, category: sample.type, correspondent: doc.correspondent,
-      documentDate: doc.documentDate, tags: doc.tags,
-    })
   }
 
   // Verträge

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { expect, t, test } from './support/fixtures.ts'
 
 const isoInMonths = (months: number) => {
@@ -61,6 +62,45 @@ test.describe('Dokumentansicht als Admin', () => {
     await expect(page.getByText(t('pages.split.done'))).toBeVisible()
     const after = await (await page.request.get(`/api/documents/${id}`)).json()
     expect(after.pageCount).toBe(2)
+  })
+})
+
+test.describe('E-Rechnung', () => {
+  test('XRechnung hochladen: exakte Angaben in der Karte, die XML-Datei unverändert zurück', async ({ page }) => {
+    const xml = readFileSync(new URL('../../backend/src/test/resources/einvoice/xrechnung-cii.xml', import.meta.url))
+    await page.goto('/documents')
+    const uploaded = page.waitForResponse((response) => response.url().endsWith('/api/documents') && response.request().method() === 'POST')
+    // über die Dateiauswahl der Oberfläche – sie muss XML anbieten
+    await page.locator('input[type=file]').setInputFiles({ name: 'xrechnung-cii.xml', mimeType: 'application/xml', buffer: xml })
+    const [result] = await (await uploaded).json()
+    expect(result.outcome).toBe('CREATED')
+    await expect
+      .poll(async () => (await (await page.request.get(`/api/documents/${result.documentId}`)).json()).status, { timeout: 30_000 })
+      .not.toMatch(/PENDING|PROCESSING/)
+
+    await page.goto(`/documents/${result.documentId}`)
+    const card = page.getByRole('heading', { name: t('einvoice.title'), exact: true }).locator('xpath=../..')
+    await expect(card.getByText(/^144,78\s€$/)).toBeVisible()
+    await expect(card.getByText(t('einvoice.dueOn', { date: '15.12.2026' }))).toBeVisible()
+    await expect(card.getByText('Stadtwerke Musterstadt GmbH')).toBeVisible()
+    await expect(card.getByText(`${t('einvoice.fields.vatId')} DE123456789`)).toBeVisible()
+    await expect(card.getByText('DE02120300000000202051')).toBeVisible()
+    await expect(card.getByText(new RegExp(`^${t('einvoice.fields.tax', { rate: '19\\s%' })}$`))).toBeVisible()
+    await expect(card.getByText(t('einvoice.exact', { format: 'XRechnung 3.0 (CII)' }))).toBeVisible()
+
+    await card.getByRole('button', { name: t('einvoice.copy', { label: 'IBAN' }) }).click()
+    await expect(page.getByText(t('einvoice.copied', { label: 'IBAN' }))).toBeVisible()
+
+    await card.getByRole('button', { name: t('einvoice.lines.show_other', { count: 3 }) }).click()
+    await expect(card.getByRole('cell', { name: 'Ratgeber „Energie sparen im Haushalt“' })).toBeVisible()
+    await expect(card.getByRole('cell', { name: '412,5 kWh' })).toBeVisible()
+    await expect(card.getByRole('cell', { name: /^0,312\s€$/ })).toBeVisible()
+
+    const download = page.waitForEvent('download')
+    await card.getByRole('link', { name: t('einvoice.downloadXml') }).click()
+    const file = await download
+    expect(file.suggestedFilename()).toBe('xrechnung-cii.xml')
+    expect(readFileSync(await file.path())).toEqual(xml)
   })
 })
 

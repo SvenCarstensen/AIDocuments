@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "PDFs oder Fotos hier ablegen",
-      "hint": "Mehrere Dateien auf einmal sind möglich. Fotos (JPG, PNG, HEIC) werden zu PDFs. Alles wird gespeichert, analysiert und verschlagwortet."
+      "hint": "Mehrere Dateien auf einmal sind möglich. Fotos (JPG, PNG, HEIC) und E-Rechnungen (XML) werden zu PDFs. Alles wird gespeichert, analysiert und verschlagwortet."
     },
     "remindersDue_one": "{{count, number}} Wiedervorlage fällig",
     "remindersDue_other": "{{count, number}} Wiedervorlagen fällig",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Es können nur PDFs und Fotos (JPG, PNG, HEIC) hinzugefügt werden.",
+    "onlyPdf": "Es können nur PDFs, Fotos (JPG, PNG, HEIC) und E-Rechnungen (XML) hinzugefügt werden.",
     "uploadingFile": "„{{name}}“ wird hochgeladen …",
     "uploadingFiles_one": "{{count, number}} Datei wird hochgeladen …",
     "uploadingFiles_other": "{{count, number}} Dateien werden hochgeladen …",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Postfächer",
       "navHint": "IMAP-Server, aus denen PDF- und Foto-Anhänge übernommen werden",
-      "intro": "Aus diesen IMAP-Postfächern werden PDF-Anhänge und angehängte Fotos (als PDF) automatisch übernommen; der Text der E-Mails und eingebettete Logos nicht. Die Postfächer werden nur gelesen – E-Mails bleiben unverändert und ungelesen.",
+      "intro": "Aus diesen IMAP-Postfächern werden PDF-Anhänge, angehängte Fotos (als PDF) und E-Rechnungen (XRechnung als XML) automatisch übernommen; der Text der E-Mails und eingebettete Logos nicht. Die Postfächer werden nur gelesen – E-Mails bleiben unverändert und ungelesen.",
       "add": "Postfach hinzufügen",
       "emptyTitle": "Noch kein Postfach eingerichtet",
       "emptyText": "Trage die Zugangsdaten eines IMAP-Postfachs ein – zum Beispiel das Postfach, an das dein Scanner Dokumente schickt.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Eingangsordner",
-        "text": "Ein Verzeichnis auf dem Server, das auf neue PDFs und Fotos (JPG, PNG, HEIC) überwacht wird – etwa das Ziel eines Netzwerkscanners. Unterordner werden mit durchsucht.",
+        "text": "Ein Verzeichnis auf dem Server, das auf neue PDFs, Fotos (JPG, PNG, HEIC) und E-Rechnungen (XML) überwacht wird – etwa das Ziel eines Netzwerkscanners. Unterordner werden mit durchsucht.",
         "enable": "Eingangsordner überwachen",
         "path": "Pfad auf dem Server",
         "pathHint": "Absoluter Pfad. Im Docker-Container ist das der eingebundene Ordner, üblicherweise {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Passkey entfernen?",
       "text": "Mit „{{name}}“ kann sich danach niemand mehr anmelden. Im Passwortmanager bzw. auf dem Gerät bleibt er gespeichert, bis du ihn dort löschst.",
       "confirm": "Entfernen"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Rechnung",
+    "quote": "Angebot",
+    "order": "Bestellung",
+    "deliveryNote": "Lieferschein",
+    "paymentReminder": "Mahnung",
+    "contract": "Vertrag",
+    "cancellation": "Kündigung",
+    "bankStatement": "Kontoauszug",
+    "insurance": "Versicherung",
+    "tax": "Steuer",
+    "payslip": "Gehaltsabrechnung",
+    "officialLetter": "Behördenschreiben",
+    "certificate": "Bescheinigung",
+    "reference": "Zeugnis",
+    "medicalLetter": "Arztbrief",
+    "letter": "Brief",
+    "report": "Bericht",
+    "manual": "Anleitung",
+    "form": "Formular",
+    "other": "Sonstiges"
+  },
+  "einvoice": {
+    "title": "E-Rechnung",
+    "creditNoteTitle": "Gutschrift (E-Rechnung)",
+    "amountDue": "Zu zahlen",
+    "creditAmount": "Gutschriftbetrag",
+    "dueOn": "fällig am {{date}}",
+    "exact": "Exakt aus der XML-Datei gelesen, ohne KI · {{format}}",
+    "downloadXml": "XML herunterladen",
+    "copy": "{{label}} kopieren",
+    "copied": "{{label}} kopiert",
+    "copyFailed": "Kopieren ist hier nicht möglich.",
+    "fields": {
+      "number": "Rechnungsnummer",
+      "issueDate": "Rechnungsdatum",
+      "seller": "Rechnungssteller",
+      "buyer": "Empfänger",
+      "vatId": "USt-IdNr.",
+      "buyerReference": "Käuferreferenz",
+      "net": "Netto",
+      "tax": "Umsatzsteuer {{rate}}",
+      "gross": "Brutto",
+      "reference": "Verwendungszweck",
+      "terms": "Zahlungsbedingungen"
+    },
+    "lines": {
+      "show_one": "{{count, number}} Position anzeigen",
+      "show_other": "{{count, number}} Positionen anzeigen",
+      "hide": "Positionen ausblenden",
+      "description": "Bezeichnung",
+      "quantity": "Menge",
+      "unitPrice": "Einzelpreis",
+      "amount": "Betrag"
     }
   }
 }

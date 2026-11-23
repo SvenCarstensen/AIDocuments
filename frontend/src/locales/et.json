@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Lohista PDF-id või fotod siia",
-      "hint": "Korraga võib lisada mitu faili. Fotod (JPG, PNG, HEIC) teisendatakse PDF-ideks. Kõik salvestatakse, analüüsitakse ja varustatakse märksõnadega."
+      "hint": "Korraga võib lisada mitu faili. Fotod (JPG, PNG, HEIC) ja e-arved (XML) teisendatakse PDF-ideks. Kõik salvestatakse, analüüsitakse ja varustatakse märksõnadega."
     },
     "remindersDue_one": "Tähtaeg käes: {{count, number}} meeldetuletus",
     "remindersDue_other": "Tähtaeg käes: {{count, number}} meeldetuletust",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Lisada saab ainult PDF-faile ja fotosid (JPG, PNG, HEIC).",
+    "onlyPdf": "Lisada saab ainult PDF-faile, fotosid (JPG, PNG, HEIC) ja e-arveid (XML).",
     "uploadingFile": "Faili „{{name}}“ üleslaadimine…",
     "uploadingFiles_one": "{{count, number}} faili üleslaadimine…",
     "uploadingFiles_other": "{{count, number}} faili üleslaadimine…",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Postkastid",
       "navHint": "IMAP-serverid, kust imporditakse PDF-manused ja fotod",
-      "intro": "Nendest IMAP-postkastidest imporditakse automaatselt PDF-manused ja manustatud fotod (PDF-ina); e-kirjade teksti ja põimitud logosid mitte. Postkaste ainult loetakse – e-kirjad jäävad muutmata ja lugemata.",
+      "intro": "Nendest IMAP-postkastidest imporditakse automaatselt PDF-manused, manustatud fotod (PDF-ina) ja e-arved (XRechnung XML-failina); e-kirjade teksti ja põimitud logosid mitte. Postkaste ainult loetakse – e-kirjad jäävad muutmata ja lugemata.",
       "add": "Lisa postkast",
       "emptyTitle": "Ühtegi postkasti pole veel seadistatud",
       "emptyText": "Sisesta IMAP-postkasti juurdepääsuandmed – näiteks selle postkasti omad, kuhu sinu skanner dokumente saadab.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Impordikaust",
-        "text": "Serveris asuv kaust, mida jälgitakse uute PDF-failide ja fotode (JPG, PNG, HEIC) leidmiseks – näiteks võrguskanneri sihtkaust. Otsitakse ka alamkaustadest.",
+        "text": "Serveris asuv kaust, mida jälgitakse uute PDF-failide, fotode (JPG, PNG, HEIC) ja e-arvete (XML) leidmiseks – näiteks võrguskanneri sihtkaust. Otsitakse ka alamkaustadest.",
         "enable": "Jälgi impordikausta",
         "path": "Tee serveris",
         "pathHint": "Absoluutne tee. Dockeri konteineris on see ühendatud kaust, tavaliselt {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Kas eemaldada pääsuvõti?",
       "text": "Pääsuvõtmega „{{name}}“ ei saa pärast seda keegi enam sisse logida. See jääb paroolihaldurisse või seadmesse salvestatuks, kuni sa selle sealt kustutad.",
       "confirm": "Eemalda"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Arve",
+    "quote": "Pakkumine",
+    "order": "Tellimus",
+    "deliveryNote": "Saateleht",
+    "paymentReminder": "Maksemeeldetuletus",
+    "contract": "Leping",
+    "cancellation": "Ülesütlemine",
+    "bankStatement": "Kontoväljavõte",
+    "insurance": "Kindlustus",
+    "tax": "Maks",
+    "payslip": "Palgateatis",
+    "officialLetter": "Ametlik kiri",
+    "certificate": "Tõend",
+    "reference": "Tunnistus",
+    "medicalLetter": "Arsti kiri",
+    "letter": "Kiri",
+    "report": "Aruanne",
+    "manual": "Juhend",
+    "form": "Vorm",
+    "other": "Muu"
+  },
+  "einvoice": {
+    "title": "E-arve",
+    "creditNoteTitle": "Kreeditarve (e-arve)",
+    "amountDue": "Tasuda",
+    "creditAmount": "Kreediteeritud summa",
+    "dueOn": "tähtaeg {{date}}",
+    "exact": "Loetud täpselt XML-failist, ilma TI-ta · {{format}}",
+    "downloadXml": "Laadi alla XML",
+    "copy": "Kopeeri {{label}}",
+    "copied": "{{label}} kopeeritud",
+    "copyFailed": "Siin ei saa kopeerida.",
+    "fields": {
+      "number": "Arve number",
+      "issueDate": "Arve kuupäev",
+      "seller": "Müüja",
+      "buyer": "Ostja",
+      "vatId": "KMKR nr",
+      "buyerReference": "Ostja viide",
+      "net": "Neto",
+      "tax": "Käibemaks {{rate}}",
+      "gross": "Bruto",
+      "reference": "Makse selgitus",
+      "terms": "Maksetingimused"
+    },
+    "lines": {
+      "show_one": "Näita {{count, number}} rida",
+      "show_other": "Näita {{count, number}} rida",
+      "hide": "Peida read",
+      "description": "Kirjeldus",
+      "quantity": "Kogus",
+      "unitPrice": "Ühiku hind",
+      "amount": "Summa"
     }
   }
 }

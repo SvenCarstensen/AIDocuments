@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { isBusy, OcrHint, sourceInfo, StatusBadge } from '../components/documents'
 import { Alert, Badge, Button, Card, ConfirmDialog, Field, Input, Modal, Select, Spinner, Textarea } from '../components/ui'
 import { ContractCard } from '../components/Contracts'
+import { EInvoiceCard } from '../components/EInvoiceCard'
 import { PagesButton } from '../components/PagesDialog'
 import { PdfViewer } from '../components/PdfViewer'
 import { RemindersCard } from '../components/Reminders'
@@ -16,6 +17,7 @@ import { api, ApiError, canDelete, canEdit, type ChatMessage, type Doc, errorMes
 import { areaName, areaNameById, useAreas } from '../lib/areas'
 import { useAuth } from '../lib/auth'
 import { cx, formatBytes, formatDateTime, formatLongDate } from '../lib/format'
+import { documentTypeLabel, documentTypeOptions, documentTypeValue } from '../lib/documentTypes'
 
 export function DocumentPage() {
   const { t } = useTranslation()
@@ -89,7 +91,7 @@ export function DocumentPage() {
         <div className="min-w-0 flex-1 basis-72">
           <h1 className="text-xl leading-tight font-semibold tracking-tight [overflow-wrap:anywhere]">{doc.title}</h1>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
-            {doc.category && <Badge tone="brand">{doc.category}</Badge>}
+            {doc.category && <Badge tone="brand">{documentTypeLabel(doc.category)}</Badge>}
             <StatusBadge doc={doc} />
             {doc.correspondent && <span>{doc.correspondent}</span>}
             {doc.correspondent && doc.documentDate && <span aria-hidden>·</span>}
@@ -148,6 +150,7 @@ export function DocumentPage() {
           {doc.status === 'TEXT_ONLY' && doc.errorMessage && <Alert tone="warn">{doc.errorMessage}</Alert>}
           {doc.access === 'READ' && <Alert tone="brand">{t('document.readOnly')}</Alert>}
           {doc.duplicateOf && <DuplicateNotice doc={doc} />}
+          <EInvoiceCard doc={doc} />
           {editable && <SharesCard doc={doc} />}
           <RemindersCard doc={doc} />
           <ContractCard doc={doc} />
@@ -678,7 +681,7 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
   const facets = useQuery({ queryKey: ['documents', 'facets'], queryFn: api.facets })
   const [title, setTitle] = useState(doc.title)
   const [summary, setSummary] = useState(doc.summary ?? '')
-  const [category, setCategory] = useState(doc.category ?? '')
+  const [category, setCategory] = useState(doc.category ? documentTypeLabel(doc.category) : '')
   const [correspondent, setCorrespondent] = useState(doc.correspondent ?? '')
   const [documentDate, setDocumentDate] = useState(doc.documentDate ?? '')
   const [tags, setTags] = useState<string[]>(doc.tags)
@@ -691,7 +694,7 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
       api.updateDocument(doc.id, {
         title: title.trim(),
         summary: summary.trim() || null,
-        category: category.trim() || null,
+        category: documentTypeValue(category) || null,
         correspondent: correspondent.trim() || null,
         documentDate: documentDate || null,
         tags,
@@ -727,7 +730,7 @@ function EditDialog({ doc, onClose }: { doc: Doc; onClose: () => void }) {
               <>
                 <Input id={id} value={category} onChange={(e) => setCategory(e.target.value)} list={`${id}-list`} maxLength={100} />
                 <datalist id={`${id}-list`}>
-                  {facets.data?.categories.map((facet) => <option key={facet.name} value={facet.name} />)}
+                  {documentTypeOptions(facets.data?.categories.map((facet) => facet.name)).map((label) => <option key={label} value={label} />)}
                 </datalist>
               </>
             )}

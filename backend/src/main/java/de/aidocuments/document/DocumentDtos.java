@@ -26,6 +26,8 @@ public final class DocumentDtos {
             String language,
             List<String> tags,
             List<KeyFact> keyFacts,
+            /* die exakt gelesenen Angaben der E-Rechnung (ZUGFeRD/Factur-X, XRechnung); null = keine E-Rechnung */
+            de.aidocuments.einvoice.EInvoice eInvoice,
             Integer pageCount,
             long sizeBytes,
             boolean ocrUsed,
@@ -69,6 +71,7 @@ public final class DocumentDtos {
                     d.getLanguage(),
                     d.getTags().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList(),
                     List.copyOf(d.getKeyFacts()),
+                    d.getEInvoice(),
                     d.getPageCount(),
                     d.getSizeBytes(),
                     d.isOcrUsed(),

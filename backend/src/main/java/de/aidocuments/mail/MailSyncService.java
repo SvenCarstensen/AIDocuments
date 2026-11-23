@@ -253,6 +253,8 @@ public class MailSyncService {
         }
         List<Part> pdfParts = new ArrayList<>();
         collectDocumentParts(message, pdfParts, 0, false);
+        // XML-Rechnungen zuletzt: Liegt dieselbe Rechnung auch als ZUGFeRD-PDF bei, gilt die XML-Datei als Duplikat
+        pdfParts.sort(java.util.Comparator.comparing(part -> isXmlUnchecked(part)));
         if (pdfParts.isEmpty()) {
             return;
         }
@@ -302,6 +304,24 @@ public class MailSyncService {
             result.add(part);
         } else if (isImage(part) && (!inRelated || Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition()))) {
             result.add(part);
+        } else if (isXml(part)) {
+            result.add(part); // vielleicht eine E-Rechnung (XRechnung) – ob ja, entscheidet die Aufnahme
+        }
+    }
+
+    private static boolean isXml(Part part) throws MessagingException {
+        if (part.isMimeType("application/xml") || part.isMimeType("text/xml")) {
+            return true;
+        }
+        String name = part.getFileName();
+        return name != null && decode(name).toLowerCase(Locale.ROOT).endsWith(".xml");
+    }
+
+    private static boolean isXmlUnchecked(Part part) {
+        try {
+            return !isPdf(part) && isXml(part);
+        } catch (MessagingException e) {
+            return false;
         }
     }
 
@@ -329,11 +349,12 @@ public class MailSyncService {
     private static String filename(Part part) throws MessagingException {
         String name = part.getFileName();
         if (name == null || name.isBlank()) {
-            return isPdf(part) ? "Dokument.pdf" : "Foto.jpg";
+            return isPdf(part) ? "Dokument.pdf" : isXml(part) ? "Rechnung.xml" : "Foto.jpg";
         }
         String decoded = decode(name);
         // Bilder behalten ihre Endung – die Aufnahme macht daraus "<Name>.pdf"
-        return decoded.toLowerCase(Locale.ROOT).endsWith(".pdf") || IMAGE_NAME.matcher(decoded).matches()
+        String lower = decoded.toLowerCase(Locale.ROOT);
+        return lower.endsWith(".pdf") || lower.endsWith(".xml") || IMAGE_NAME.matcher(decoded).matches()
                 ? decoded : decoded + ".pdf";
     }
 

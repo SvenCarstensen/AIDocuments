@@ -57,6 +57,8 @@ public class Document {
     private Set<String> notDuplicateOf = new LinkedHashSet<>();
     private Set<String> tags = new LinkedHashSet<>();
     private List<KeyFact> keyFacts = new ArrayList<>();
+    /** die Angaben der eingebetteten E-Rechnung (ZUGFeRD/XRechnung); null = keine */
+    private de.aidocuments.einvoice.EInvoice eInvoice;
 
     /** Für {@link DocumentRepository}: ein leeres Dokument, das anschließend aus einer Tabellenzeile gefüllt wird. */
     Document() {
@@ -324,6 +326,14 @@ public class Document {
 
     public void replaceKeyFacts(List<KeyFact> newFacts) {
         keyFacts = new ArrayList<>(newFacts);
+    }
+
+    public de.aidocuments.einvoice.EInvoice getEInvoice() {
+        return eInvoice;
+    }
+
+    public void setEInvoice(de.aidocuments.einvoice.EInvoice eInvoice) {
+        this.eInvoice = eInvoice;
     }
 
     public String getAreaId() {

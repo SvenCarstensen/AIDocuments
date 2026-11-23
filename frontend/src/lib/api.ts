@@ -1,6 +1,6 @@
 // Schlanke Anbindung an das Backend: fetch mit CSRF-Token, einheitlicher Fehlerbehandlung und allen Typen.
 
-import { currentLanguage, t } from './i18n'
+import { currentLanguage, formatLocale, t } from './i18n'
 import type { CreationOptionsJson, RequestOptionsJson } from './passkey'
 
 export class ApiError extends Error {
@@ -24,8 +24,11 @@ async function send(path: string, init: RequestInit): Promise<Response> {
     if (token) headers.set('X-XSRF-TOKEN', token)
   }
   if (typeof init.body === 'string') headers.set('Content-Type', 'application/json')
-  // Der Server antwortet in der Sprache der Oberfläche (Fehlertexte, Statusmeldungen).
-  headers.set('Accept-Language', currentLanguage())
+  // Der Server antwortet in der Sprache der Oberfläche (Fehlertexte, Statusmeldungen) – Datum und Zahlen in deren
+  // Schreibweise, deshalb mit Region ("en-GB, en;q=0.9")
+  const language = currentLanguage()
+  const locale = formatLocale()
+  headers.set('Accept-Language', locale.toLowerCase() === language.toLowerCase() ? language : `${locale}, ${language};q=0.9`)
   return fetch(path, { ...init, headers, credentials: 'same-origin' })
 }
 
@@ -183,6 +186,53 @@ export interface KeyFact {
   label: string
   value: string
 }
+/** Angaben einer E-Rechnung (ZUGFeRD/Factur-X, XRechnung) – exakt aus der XML-Datei, ohne KI. */
+export interface EInvoiceParty {
+  name: string | null
+  vatId: string | null
+  taxNumber: string | null
+  street: string | null
+  postcode: string | null
+  city: string | null
+  country: string | null
+}
+export interface EInvoiceTax {
+  category: string | null
+  rate: number | null
+  base: number | null
+  amount: number | null
+}
+export interface EInvoiceLine {
+  id: string | null
+  name: string | null
+  quantity: number | null
+  unit: string | null
+  netPrice: number | null
+  netAmount: number | null
+  taxRate: number | null
+}
+export interface EInvoice {
+  syntax: 'CII' | 'UBL'
+  profile: string | null
+  typeCode: string | null
+  number: string | null
+  issueDate: string | null
+  dueDate: string | null
+  currency: string | null
+  seller: EInvoiceParty | null
+  buyer: EInvoiceParty | null
+  buyerReference: string | null
+  netAmount: number | null
+  taxAmount: number | null
+  grossAmount: number | null
+  amountDue: number | null
+  iban: string | null
+  bic: string | null
+  paymentReference: string | null
+  paymentTerms: string | null
+  taxes: EInvoiceTax[]
+  lines: EInvoiceLine[]
+}
 export interface Doc {
   id: string
   title: string
@@ -196,6 +246,7 @@ export interface Doc {
   language: string | null
   tags: string[]
   keyFacts: KeyFact[]
+  eInvoice: EInvoice | null
   pageCount: number | null
   sizeBytes: number
   ocrUsed: boolean
@@ -828,6 +879,8 @@ export const api = {
 
 export const fileUrl = (id: string, download = false) => `/api/documents/${id}/file${download ? '?download=true' : ''}`
 export const originalUrl = (id: string) => `/api/documents/${id}/original`
+/** Die XML-Datei einer E-Rechnung, unverändert – immer als Download. */
+export const eInvoiceXmlUrl = (id: string) => `/api/documents/${id}/e-invoice`
 export const sharedFileUrl = (token: string) => `/api/share/${encodeURIComponent(token)}/file`
 /** Der Link zum Weitergeben – vollständig, mit der Adresse, unter der die Anwendung gerade läuft. */
 export const shareLink = (token: string) => `${window.location.origin}/s/${token}`

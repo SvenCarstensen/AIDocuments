@@ -807,10 +807,10 @@ class ApplicationFlowTest {
         // Ergebnis eines Uploads
         MockMultipartFile noPdf = new MockMultipartFile("files", "brief.pdf", "application/pdf", "kein PDF".getBytes());
         mvc.perform(multipart("/api/documents").file(noPdf).with(csrf()).session(adminSession))
-                .andExpect(jsonPath("$[0].message").value("The file is neither a PDF nor a photo (JPG, PNG, HEIC)."));
+                .andExpect(jsonPath("$[0].message").value("The file is neither a PDF nor a photo (JPG, PNG, HEIC) nor an e-invoice (XML)."));
         mvc.perform(multipart("/api/documents").file(noPdf).with(csrf()).session(adminSession)
                         .header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
-                .andExpect(jsonPath("$[0].message").value("Die Datei ist weder ein PDF noch ein Foto (JPG, PNG, HEIC)."));
+                .andExpect(jsonPath("$[0].message").value("Die Datei ist weder ein PDF noch ein Foto (JPG, PNG, HEIC) noch eine E-Rechnung (XML)."));
 
         // Übersetzbare Bezeichnung in den Einstellungen
         mvc.perform(get("/api/settings/ai").session(adminSession))
@@ -1833,7 +1833,7 @@ class ApplicationFlowTest {
                         .file(new MockMultipartFile("files", "notiz.txt", "text/plain", "nur Text".getBytes()))
                         .with(csrf()).session(adminSession).header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
                 .andExpect(jsonPath("$[0].outcome").value("REJECTED"))
-                .andExpect(jsonPath("$[0].message").value("Die Datei ist weder ein PDF noch ein Foto (JPG, PNG, HEIC)."));
+                .andExpect(jsonPath("$[0].message").value("Die Datei ist weder ein PDF noch ein Foto (JPG, PNG, HEIC) noch eine E-Rechnung (XML)."));
 
         // E-Mail: das angehängte Foto wird übernommen, das im HTML eingebettete Logo nicht
         GreenMailUser mailbox = greenMail.setUser("fotos@example.test", "fotos@example.test", "imap-test-secret");
@@ -2582,6 +2582,101 @@ class ApplicationFlowTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.enabled").value(false))
                 .andExpect(jsonPath("$.directory").value(dataDir.resolve("backups").toString()));
+    }
+
+    /** Jede Seite der Oberfläche lässt sich direkt aufrufen oder neu laden – der Server liefert dafür die App aus. */
+    @Test
+    @Order(29)
+    void everyPageOfTheInterfaceCanBeReloaded() throws Exception {
+        for (String page : List.of("/documents", "/documents/abc", "/history", "/reminders", "/contracts",
+                "/duplicates/abc", "/settings", "/settings/backup", "/s/token")) {
+            mvc.perform(get(page)).andExpect(status().isOk())
+                    .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                            .forwardedUrl("/index.html"));
+        }
+    }
+
+    @Test
+    @Order(30)
+    void eInvoicesAreReadExactlyWithoutAi() throws Exception {
+        byte[] cii = einvoice("xrechnung-cii.xml");
+        long before = documents.count();
+        String id = jsonValue(mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files",
+                        "RE-2026-004711.xml", "application/xml", cii)).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed((int) before + 1);
+
+        // die exakten Angaben stehen am Dokument – Dokumentart, Absender und Datum stammen aus der XML-Datei
+        mvc.perform(get("/api/documents/" + id).session(adminSession))
+                .andExpect(jsonPath("$.originalFilename").value("RE-2026-004711.pdf"))
+                .andExpect(jsonPath("$.category").value("Rechnung"))
+                .andExpect(jsonPath("$.correspondent").value("Stadtwerke Musterstadt GmbH"))
+                .andExpect(jsonPath("$.documentDate").value("2026-11-15"))
+                .andExpect(jsonPath("$.hasThumbnail").value(true))
+                .andExpect(jsonPath("$.eInvoice.number").value("RE-2026-004711"))
+                .andExpect(jsonPath("$.eInvoice.syntax").value("CII"))
+                .andExpect(jsonPath("$.eInvoice.dueDate").value("2026-12-15"))
+                .andExpect(jsonPath("$.eInvoice.seller.vatId").value("DE123456789"))
+                .andExpect(jsonPath("$.eInvoice.grossAmount").value(194.78))
+                .andExpect(jsonPath("$.eInvoice.amountDue").value(144.78))
+                .andExpect(jsonPath("$.eInvoice.iban").value("DE02120300000000202051"))
+                .andExpect(jsonPath("$.eInvoice.lines.length()").value(3));
+        // das PDF ist die lesbare Darstellung; die XML-Datei bekommt man unverändert zurück
+        assertThat(new String(file("/api/documents/" + id + "/file"), java.nio.charset.StandardCharsets.ISO_8859_1)).startsWith("%PDF-");
+        MvcResult xml = mvc.perform(get("/api/documents/" + id + "/e-invoice").session(adminSession))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+                        org.hamcrest.Matchers.startsWith("attachment")))
+                .andReturn();
+        assertThat(xml.getResponse().getContentAsByteArray()).isEqualTo(cii);
+        assertThat(xml.getResponse().getContentType()).startsWith("application/xml");
+
+        // dieselbe Rechnung noch einmal, anders formatiert (andere Prüfsumme): erkannt an Verkäufer, Nummer, Datum
+        byte[] reformatted = new String(cii, java.nio.charset.StandardCharsets.UTF_8).replace("  ", "\t").getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files", "kopie.xml", "text/xml",
+                        reformatted)).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("DUPLICATE"))
+                .andExpect(jsonPath("$[0].documentId").value(id));
+
+        // ZUGFeRD: ein PDF mit eingebetteter Rechnung; kommt die XML-Datei gleich danach, ist sie ein Duplikat –
+        // auch wenn das PDF noch gar nicht verarbeitet ist
+        byte[] ubl = einvoice("xrechnung-ubl.xml");
+        Path zugferd = Files.createTempFile(dataDir, "zugferd", ".pdf");
+        new de.aidocuments.einvoice.EInvoicePdf(de.aidocuments.i18n.TestMessages.create()).render(
+                de.aidocuments.einvoice.EInvoiceReader.parse(ubl), ubl, "factur-x.xml", Locale.GERMAN, zugferd);
+        String pdfId = jsonValue(mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files",
+                        "schmidt.pdf", "application/pdf", Files.readAllBytes(zugferd))).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files", "2026-0815.xml",
+                        "application/xml", ubl)).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("DUPLICATE"))
+                .andExpect(jsonPath("$[0].documentId").value(pdfId));
+        awaitProcessed((int) before + 2);
+        mvc.perform(get("/api/documents/" + pdfId).session(adminSession))
+                .andExpect(jsonPath("$.originalFilename").value("schmidt.pdf"))
+                .andExpect(jsonPath("$.correspondent").value("Kontorbedarf Schmidt e.K."))
+                .andExpect(jsonPath("$.eInvoice.syntax").value("UBL"))
+                .andExpect(jsonPath("$.eInvoice.taxAmount").value(39.50));
+
+        // andere XML-Dateien sind keine Dokumente; ein gewöhnliches PDF hat keine E-Rechnung
+        mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files", "daten.xml", "application/xml",
+                        "<daten><wert>1</wert></daten>".getBytes())).with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de"))
+                .andExpect(jsonPath("$[0].outcome").value("REJECTED"))
+                .andExpect(jsonPath("$[0].message")
+                        .value("Die XML-Datei ist keine E-Rechnung (XRechnung, ZUGFeRD oder Factur-X)."));
+        String plainId = documents.findAll().stream().filter(d -> d.getEInvoice() == null).findFirst()
+                .orElseThrow().getId();
+        mvc.perform(get("/api/documents/" + plainId + "/e-invoice").session(adminSession))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").value("This document does not contain an e-invoice."));
+
+    }
+
+    private static byte[] einvoice(String name) throws IOException {
+        try (java.io.InputStream in = ApplicationFlowTest.class.getResourceAsStream("/einvoice/" + name)) {
+            return in.readAllBytes();
+        }
     }
 
     private Boolean lastRunOk() throws Exception {

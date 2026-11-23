@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Släpp PDF-filer eller foton här",
-      "hint": "Du kan släppa flera filer samtidigt. Foton (JPG, PNG, HEIC) blir PDF-filer. Allt sparas, analyseras och taggas."
+      "hint": "Du kan släppa flera filer samtidigt. Foton (JPG, PNG, HEIC) och e-fakturor (XML) blir PDF-filer. Allt sparas, analyseras och taggas."
     },
     "remindersDue_one": "{{count, number}} förfallen uppföljning",
     "remindersDue_other": "{{count, number}} förfallna uppföljningar",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Endast PDF-filer och foton (JPG, PNG, HEIC) kan läggas till.",
+    "onlyPdf": "Endast PDF-filer, foton (JPG, PNG, HEIC) och e-fakturor (XML) kan läggas till.",
     "uploadingFile": "Laddar upp ”{{name}}” …",
     "uploadingFiles_one": "Laddar upp {{count, number}} fil …",
     "uploadingFiles_other": "Laddar upp {{count, number}} filer …",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Brevlådor",
       "navHint": "IMAP-servrar som PDF- och fotobilagor importeras från",
-      "intro": "PDF-bilagor och bifogade foton (som PDF) importeras automatiskt från de här IMAP-brevlådorna – men inte själva texten i e-postmeddelandena eller inbäddade logotyper. Brevlådorna läses bara – e-postmeddelandena förblir oförändrade och olästa.",
+      "intro": "PDF-bilagor, bifogade foton (som PDF) och e-fakturor (XRechnung som XML) importeras automatiskt från de här IMAP-brevlådorna – men inte själva texten i e-postmeddelandena eller inbäddade logotyper. Brevlådorna läses bara – e-postmeddelandena förblir oförändrade och olästa.",
       "add": "Lägg till brevlåda",
       "emptyTitle": "Ingen brevlåda har konfigurerats än",
       "emptyText": "Ange inloggningsuppgifterna för en IMAP-brevlåda – till exempel den brevlåda som din skanner skickar dokument till.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Importmapp",
-        "text": "En mapp på servern som bevakas efter nya PDF-filer och foton (JPG, PNG, HEIC) – till exempel målmappen för en nätverksskanner. Undermappar genomsöks också.",
+        "text": "En mapp på servern som bevakas efter nya PDF-filer, foton (JPG, PNG, HEIC) och e-fakturor (XML) – till exempel målmappen för en nätverksskanner. Undermappar genomsöks också.",
         "enable": "Bevaka importmappen",
         "path": "Sökväg på servern",
         "pathHint": "Absolut sökväg. I Docker-containern är det den monterade mappen, vanligtvis {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Ta bort lösennyckeln?",
       "text": "Ingen kan logga in med ”{{name}}” efteråt. Den finns kvar i lösenordshanteraren eller på enheten tills du raderar den där.",
       "confirm": "Ta bort"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Faktura",
+    "quote": "Offert",
+    "order": "Beställning",
+    "deliveryNote": "Följesedel",
+    "paymentReminder": "Betalningspåminnelse",
+    "contract": "Avtal",
+    "cancellation": "Uppsägning",
+    "bankStatement": "Kontoutdrag",
+    "insurance": "Försäkring",
+    "tax": "Skatt",
+    "payslip": "Lönespecifikation",
+    "officialLetter": "Myndighetsbrev",
+    "certificate": "Intyg",
+    "reference": "Betyg",
+    "medicalLetter": "Läkarintyg",
+    "letter": "Brev",
+    "report": "Rapport",
+    "manual": "Bruksanvisning",
+    "form": "Blankett",
+    "other": "Övrigt"
+  },
+  "einvoice": {
+    "title": "E-faktura",
+    "creditNoteTitle": "Kreditnota (e-faktura)",
+    "amountDue": "Att betala",
+    "creditAmount": "Krediterat belopp",
+    "dueOn": "förfaller {{date}}",
+    "exact": "Läst exakt från XML-filen, utan AI · {{format}}",
+    "downloadXml": "Ladda ned XML",
+    "copy": "Kopiera {{label}}",
+    "copied": "{{label}} har kopierats",
+    "copyFailed": "Det går inte att kopiera här.",
+    "fields": {
+      "number": "Fakturanummer",
+      "issueDate": "Fakturadatum",
+      "seller": "Säljare",
+      "buyer": "Köpare",
+      "vatId": "Momsreg.nr",
+      "buyerReference": "Köparens referens",
+      "net": "Netto",
+      "tax": "Moms {{rate}}",
+      "gross": "Brutto",
+      "reference": "Betalningsreferens",
+      "terms": "Betalningsvillkor"
+    },
+    "lines": {
+      "show_one": "Visa {{count, number}} rad",
+      "show_other": "Visa {{count, number}} rader",
+      "hide": "Dölj rader",
+      "description": "Beskrivning",
+      "quantity": "Antal",
+      "unitPrice": "À-pris",
+      "amount": "Belopp"
     }
   }
 }

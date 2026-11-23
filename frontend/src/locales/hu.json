@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Húzd ide a PDF-eket vagy a fotókat",
-      "hint": "Egyszerre több fájlt is ide húzhatsz. A fotókból (JPG, PNG, HEIC) PDF lesz. A rendszer mindent eltárol, elemez és címkéz."
+      "hint": "Egyszerre több fájlt is ide húzhatsz. A fotókból (JPG, PNG, HEIC) és az e-számlákból (XML) PDF lesz. A rendszer mindent eltárol, elemez és címkéz."
     },
     "remindersDue_one": "{{count, number}} esedékes emlékeztető",
     "remindersDue_other": "{{count, number}} esedékes emlékeztető",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Csak PDF-fájlok és fotók (JPG, PNG, HEIC) adhatók hozzá.",
+    "onlyPdf": "Csak PDF-fájlok, fotók (JPG, PNG, HEIC) és e-számlák (XML) adhatók hozzá.",
     "uploadingFile": "„{{name}}” feltöltése…",
     "uploadingFiles_one": "{{count, number}} fájl feltöltése…",
     "uploadingFiles_other": "{{count, number}} fájl feltöltése…",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Postafiókok",
       "navHint": "IMAP-szerverek, amelyekről a rendszer PDF- és fotómellékleteket importál",
-      "intro": "Ezekből az IMAP-postafiókokból a rendszer automatikusan importálja a PDF-mellékleteket és a csatolt fotókat (PDF-ként); az e-mailek szövegét és a beágyazott logókat nem. A postafiókokat csak olvassa – az e-mailek változatlanok és olvasatlanok maradnak.",
+      "intro": "Ezekből az IMAP-postafiókokból a rendszer automatikusan importálja a PDF-mellékleteket, a csatolt fotókat (PDF-ként) és az e-számlákat (XRechnung XML-ként); az e-mailek szövegét és a beágyazott logókat nem. A postafiókokat csak olvassa – az e-mailek változatlanok és olvasatlanok maradnak.",
       "add": "Postafiók hozzáadása",
       "emptyTitle": "Még nincs beállított postafiók",
       "emptyText": "Add meg egy IMAP-postafiók hozzáférési adatait – például azét a postafiókét, amelyre a szkennered a dokumentumokat küldi.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Importmappa",
-        "text": "Egy mappa a szerveren, amelyet a rendszer új PDF-ek és fotók (JPG, PNG, HEIC) után figyel – például egy hálózati szkenner célmappája. Az almappákat is átvizsgálja.",
+        "text": "Egy mappa a szerveren, amelyet a rendszer új PDF-ek, fotók (JPG, PNG, HEIC) és e-számlák (XML) után figyel – például egy hálózati szkenner célmappája. Az almappákat is átvizsgálja.",
         "enable": "Importmappa figyelése",
         "path": "Elérési út a szerveren",
         "pathHint": "Abszolút elérési út. Docker-konténerben ez a csatolt mappa, általában {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Eltávolítod az azonosítókulcsot?",
       "text": "A(z) „{{name}}” kulccsal ezután senki sem tud bejelentkezni. A jelszókezelőben, illetve az eszközön tárolva marad, amíg ott nem törlöd.",
       "confirm": "Eltávolítás"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Számla",
+    "quote": "Árajánlat",
+    "order": "Megrendelés",
+    "deliveryNote": "Szállítólevél",
+    "paymentReminder": "Fizetési felszólítás",
+    "contract": "Szerződés",
+    "cancellation": "Felmondás",
+    "bankStatement": "Számlakivonat",
+    "insurance": "Biztosítás",
+    "tax": "Adó",
+    "payslip": "Bérjegyzék",
+    "officialLetter": "Hivatalos levél",
+    "certificate": "Igazolás",
+    "reference": "Bizonyítvány",
+    "medicalLetter": "Orvosi lelet",
+    "letter": "Levél",
+    "report": "Jelentés",
+    "manual": "Útmutató",
+    "form": "Űrlap",
+    "other": "Egyéb"
+  },
+  "einvoice": {
+    "title": "E-számla",
+    "creditNoteTitle": "Jóváírás (e-számla)",
+    "amountDue": "Fizetendő",
+    "creditAmount": "Jóváírt összeg",
+    "dueOn": "esedékes: {{date}}",
+    "exact": "Pontosan az XML-fájlból kiolvasva, MI nélkül · {{format}}",
+    "downloadXml": "XML letöltése",
+    "copy": "{{label}} másolása",
+    "copied": "{{label}} másolva",
+    "copyFailed": "Itt nem lehet másolni.",
+    "fields": {
+      "number": "Számlaszám",
+      "issueDate": "Számla kelte",
+      "seller": "Eladó",
+      "buyer": "Vevő",
+      "vatId": "Közösségi adószám",
+      "buyerReference": "Vevői hivatkozás",
+      "net": "Nettó",
+      "tax": "ÁFA {{rate}}",
+      "gross": "Bruttó",
+      "reference": "Közlemény",
+      "terms": "Fizetési feltételek"
+    },
+    "lines": {
+      "show_one": "{{count, number}} tétel megjelenítése",
+      "show_other": "{{count, number}} tétel megjelenítése",
+      "hide": "Tételek elrejtése",
+      "description": "Megnevezés",
+      "quantity": "Mennyiség",
+      "unitPrice": "Egységár",
+      "amount": "Összeg"
     }
   }
 }

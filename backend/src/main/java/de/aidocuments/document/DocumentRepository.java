@@ -191,6 +191,12 @@ public class DocumentRepository {
         return spec.query(DocumentRepository::map).list();
     }
 
+    /** Ein Dokument mit derselben E-Rechnung (Verkäufer, Nummer, Datum – siehe {@code EInvoice.identity}). */
+    public Optional<Document> findByEInvoiceKey(String key) {
+        return jdbc.sql("SELECT * FROM documents WHERE e_invoice_key = ? ORDER BY created_at LIMIT 1").param(key)
+                .query(DocumentRepository::map).optional();
+    }
+
     public long countByCategory(String category) {
         return jdbc.sql("SELECT COUNT(*) FROM documents WHERE LOWER(category) = LOWER(?)").param(category.strip())
                 .query(Long.class).single();
@@ -281,6 +287,8 @@ public class DocumentRepository {
         c.put("not_duplicate_of", doc.getNotDuplicateOf().isEmpty() ? null : toJson(doc.getNotDuplicateOf()));
         c.put("tags", toJson(doc.getTags()));
         c.put("key_facts", toJson(doc.getKeyFacts()));
+        c.put("e_invoice", doc.getEInvoice() == null ? null : toJson(doc.getEInvoice()));
+        c.put("e_invoice_key", doc.getEInvoice() == null ? null : doc.getEInvoice().identity());
         return c;
     }
 
@@ -318,6 +326,7 @@ public class DocumentRepository {
         doc.replaceTags(tags == null ? List.of() : tags);
         List<KeyFact> facts = fromJson(rs.getString("key_facts"), KEY_FACTS);
         doc.replaceKeyFacts(facts == null ? new ArrayList<>() : facts);
+        doc.setEInvoice(fromJson(rs.getString("e_invoice"), de.aidocuments.einvoice.EInvoice.class));
         return doc;
     }
 }

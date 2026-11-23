@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Drop PDFs or photos here",
-      "hint": "You can drop several files at once. Photos (JPG, PNG, HEIC) become PDFs. Everything is saved, analyzed and tagged."
+      "hint": "You can drop several files at once. Photos (JPG, PNG, HEIC) and e-invoices (XML) become PDFs. Everything is saved, analyzed and tagged."
     },
     "remindersDue_one": "{{count, number}} follow-up due",
     "remindersDue_other": "{{count, number}} follow-ups due",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Only PDFs and photos (JPG, PNG, HEIC) can be added.",
+    "onlyPdf": "Only PDFs, photos (JPG, PNG, HEIC) and e-invoices (XML) can be added.",
     "uploadingFile": "Uploading “{{name}}” …",
     "uploadingFiles_one": "Uploading {{count, number}} file …",
     "uploadingFiles_other": "Uploading {{count, number}} files …",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Mailboxes",
       "navHint": "IMAP servers from which PDF and photo attachments are imported",
-      "intro": "PDF attachments and attached photos (as PDFs) are imported automatically from these IMAP mailboxes; the text of the e-mails and embedded logos are not. The mailboxes are only read – e-mails stay unchanged and unread.",
+      "intro": "PDF attachments, attached photos (as PDFs) and e-invoices (XRechnung as XML) are imported automatically from these IMAP mailboxes; the text of the e-mails and embedded logos are not. The mailboxes are only read – e-mails stay unchanged and unread.",
       "add": "Add mailbox",
       "emptyTitle": "No mailbox set up yet",
       "emptyText": "Enter the credentials of an IMAP mailbox – for example the mailbox your scanner sends documents to.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Import folder",
-        "text": "A directory on the server that is watched for new PDFs and photos (JPG, PNG, HEIC) – for example the target of a network scanner. Subfolders are searched as well.",
+        "text": "A directory on the server that is watched for new PDFs, photos (JPG, PNG, HEIC) and e-invoices (XML) – for example the target of a network scanner. Subfolders are searched as well.",
         "enable": "Watch import folder",
         "path": "Path on the server",
         "pathHint": "Absolute path. In the Docker container this is the mounted folder, usually {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Remove passkey?",
       "text": "Nobody can sign in with “{{name}}” afterwards. It stays stored in the password manager or on the device until you delete it there.",
       "confirm": "Remove"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Invoice",
+    "quote": "Quote",
+    "order": "Order",
+    "deliveryNote": "Delivery note",
+    "paymentReminder": "Payment reminder",
+    "contract": "Contract",
+    "cancellation": "Cancellation",
+    "bankStatement": "Bank statement",
+    "insurance": "Insurance",
+    "tax": "Tax",
+    "payslip": "Payslip",
+    "officialLetter": "Official letter",
+    "certificate": "Certificate",
+    "reference": "Reference",
+    "medicalLetter": "Medical letter",
+    "letter": "Letter",
+    "report": "Report",
+    "manual": "Manual",
+    "form": "Form",
+    "other": "Other"
+  },
+  "einvoice": {
+    "title": "E-invoice",
+    "creditNoteTitle": "Credit note (e-invoice)",
+    "amountDue": "Amount due",
+    "creditAmount": "Amount credited",
+    "dueOn": "due on {{date}}",
+    "exact": "Read exactly from the XML file, without AI · {{format}}",
+    "downloadXml": "Download XML",
+    "copy": "Copy {{label}}",
+    "copied": "{{label}} copied",
+    "copyFailed": "Copying is not possible here.",
+    "fields": {
+      "number": "Invoice number",
+      "issueDate": "Invoice date",
+      "seller": "Seller",
+      "buyer": "Buyer",
+      "vatId": "VAT ID",
+      "buyerReference": "Buyer reference",
+      "net": "Net",
+      "tax": "VAT {{rate}}",
+      "gross": "Gross",
+      "reference": "Payment reference",
+      "terms": "Payment terms"
+    },
+    "lines": {
+      "show_one": "Show {{count, number}} line item",
+      "show_other": "Show {{count, number}} line items",
+      "hide": "Hide line items",
+      "description": "Description",
+      "quantity": "Quantity",
+      "unitPrice": "Unit price",
+      "amount": "Amount"
     }
   }
 }

@@ -100,7 +100,9 @@ class MessagesTest {
         String stored = MsgCodec.encode(notice);
         assertThat(MsgCodec.decode(stored)).containsExactly(notice);
         assertThat(messages.localize(stored, Locale.GERMAN)).contains("30. November 2026").doesNotContain("{0");
-        assertThat(messages.localize(stored, Locale.ENGLISH)).contains("November 30, 2026");
+        // Englisch ohne Region europäisch wie in der Oberfläche; eine genannte Region gilt
+        assertThat(messages.localize(stored, Locale.ENGLISH)).contains("30 November 2026");
+        assertThat(messages.localize(stored, Locale.US)).contains("November 30, 2026");
     }
 
     @Test

@@ -227,6 +227,28 @@ public class DocumentController {
                 .body(new FileSystemResource(path));
     }
 
+    /**
+     * Die XML-Datei der E-Rechnung, so wie sie im PDF liegt (bei XRechnungen: die empfangene Datei, unverändert) –
+     * immer als Download, nie im Browser dargestellt.
+     */
+    @GetMapping("/{id}/e-invoice")
+    public ResponseEntity<byte[]> eInvoiceXml(@PathVariable String id) throws java.io.IOException {
+        Document doc = service.require(id);
+        Path path = storage.resolve(doc.getStoragePath());
+        de.aidocuments.einvoice.EInvoiceReader.Read read = Files.exists(path)
+                ? de.aidocuments.einvoice.EInvoiceReader.fromPdf(path) : null;
+        if (read == null) {
+            throw ApiException.notFound("error.einvoice.notFound");
+        }
+        String name = read.xml().filename().replaceAll("[\\\\/\\p{Cntrl}]", "_");
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_XML)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.attachment().filename(name, StandardCharsets.UTF_8).build().toString())
+                .cacheControl(CacheControl.noCache().cachePrivate())
+                .body(read.xml().content());
+    }
+
     public record ChatMessage(
             @jakarta.validation.constraints.NotNull boolean fromUser,
             @jakarta.validation.constraints.NotBlank @jakarta.validation.constraints.Size(max = 8000) String text) {

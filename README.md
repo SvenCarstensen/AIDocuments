@@ -45,12 +45,13 @@ All documents shown are fictional samples (see [Development](#development)). Cli
 
 | Area | What the application does |
 |---|---|
-| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread; optionally only e-mails whose subject and sender match a filter, see [Mailbox filter](#mailbox-filter)), new files from a watched folder, upload by button or drag & drop (several files at once). Photos (JPG, PNG, HEIC) become one-page PDFs – see [Photos](#photos). Files with identical content are recognised and not stored twice; the same letter scanned twice is marked as a possible duplicate (see [Duplicates](#duplicates)). |
+| Intake | PDF attachments from IMAP mailboxes (read-only – e-mails stay unchanged and unread; optionally only e-mails whose subject and sender match a filter, see [Mailbox filter](#mailbox-filter)), new files from a watched folder, upload by button or drag & drop (several files at once). Photos (JPG, PNG, HEIC) become one-page PDFs – see [Photos](#photos). E-invoices (ZUGFeRD/Factur-X, XRechnung) are read exactly from their XML – see [E-invoices](#e-invoices). Files with identical content are recognised and not stored twice; the same letter scanned twice is marked as a possible duplicate (see [Duplicates](#duplicates)). |
 | AI | Summary, document type, correspondent, document date, tags and key facts (amounts, deadlines, numbers …). Existing tags and correspondents are reused. Scans without a text layer are transcribed and thus become full-text searchable – by the built-in text recognition as long as no AI is set up. |
 | Search | Full text across content, title, tags, correspondent and key facts – with German stemming, results while typing and partial matches in the middle of a word. Filters for document type, tags, correspondent and period (collapsible). With an AI set up, the search box also understands questions in natural language – see [AI search](#ai-search). |
 | View | Grid and list view with thumbnails, detail page with PDF viewer, light and dark theme. Metadata can be edited by hand; tags can be removed and added directly on the document. |
 | Edit | Highlight, add text, draw, insert images or sign directly in the PDF viewer and save the changes. Reorder, rotate and remove pages, split a document in two or append others to it. The original is always kept and can be downloaded or restored at any time. |
 | Areas | Admins group documents into areas and decide who may read, edit or delete in which one; mailboxes and the import folder file into an area of their own. See [Areas](#areas). |
+| E-invoices | Invoice number, date, seller, amounts, tax, bank details and line items read exactly from the XML of ZUGFeRD/Factur-X and XRechnung invoices – without AI. Pure XML invoices get a readable PDF. See [E-invoices](#e-invoices). |
 | Retention | Retention periods per document type: until the period has ended nobody can delete the document, not even an administrator. See [Retention periods](#retention-periods). |
 | Reminders | Follow-up dates on documents – suggested by the AI from deadlines in the document, confirmed or set by hand, assigned to a person, once or recurring. A *Due* list with a counter in the header, and an e-mail to the assignee when a reminder is due. See [Reminders](#reminders). |
 | Contracts | Term, notice period and automatic renewal of a contract – a reminder in good time before the notice deadline, and an overview of all contracts. See [Contracts](#contracts). |
@@ -495,6 +496,33 @@ with more than 60 megapixels are refused.
 
 From e-mails only photos that were really attached are imported – not logos and banners embedded in the HTML text,
 and no image shorter than 500 pixels on its short side. The text of the e-mail itself is not imported.
+
+## E-invoices
+
+Electronic invoices carry their data as structured XML – AIDocuments reads it directly instead of asking the AI, so
+the values are exact to the cent:
+
+- **Formats:** ZUGFeRD / Factur-X (a PDF with the XML embedded), XRechnung and other EN 16931 invoices in both
+  syntaxes, CII (`CrossIndustryInvoice`) and UBL (`Invoice` and `CreditNote`). Credit notes are recognised by their
+  type code.
+- **What is read:** invoice number, issue and due date, seller and buyer (name, address, VAT ID), buyer reference,
+  net amount, tax per rate, total, amount due, IBAN, BIC, payment reference, payment terms and up to 500 line items.
+- **Where:** uploads, the import folder and e-mail attachments (`.xml` files are accepted next to PDFs and photos).
+- **What happens:** the document page shows a card with the invoice details (copy buttons for number, IBAN and
+  reference, line items on request, the original XML as a download). Document type, correspondent, document date and –
+  if it still is the file name – the title are taken from the invoice and override what the AI suggested.
+- **Pure XML invoices** (XRechnung without PDF) are turned into a readable PDF with all details; the original XML is
+  embedded in it unchanged and can be downloaded at any time. The labels are in the uploader's language; for e-mail and
+  the import folder German when seller or buyer is in Germany, Austria, Switzerland, Liechtenstein or Luxembourg,
+  otherwise English.
+- **Duplicates:** an invoice is recognised by seller, number and date. An e-mail with the PDF and the same invoice as
+  XML yields one document; the same XML sent twice is stored once.
+- **Export:** CSV and JSON contain the invoice details in columns of their own (`invoiceNumber`, `invoiceGross`,
+  `invoiceAmountDue`, `invoiceIban` …).
+
+The invoice is not validated against the XRechnung rules (Schematron): what the XML says is shown as it is. XML
+files that are not invoices are refused on upload and skipped in e-mails. External entities and DTDs are never
+resolved.
 
 ## Export
 

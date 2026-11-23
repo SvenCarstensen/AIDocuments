@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "PDFen oder Fotoen hei ofleeën",
-      "hint": "Dir kënnt e puer Fichieren op eemol ofleeën. Fotoen (JPG, PNG, HEIC) ginn zu PDFen. Alles gëtt gespäichert, analyséiert a mat Stéchwierder versinn."
+      "hint": "Dir kënnt e puer Fichieren op eemol ofleeën. Fotoen (JPG, PNG, HEIC) an E-Rechnungen (XML) ginn zu PDFen. Alles gëtt gespäichert, analyséiert a mat Stéchwierder versinn."
     },
     "remindersDue_one": "{{count, number}} Erënnerung fälleg",
     "remindersDue_other": "{{count, number}} Erënnerunge fälleg",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Et kënnen nëmme PDFen a Fotoen (JPG, PNG, HEIC) derbäigesat ginn.",
+    "onlyPdf": "Et kënnen nëmme PDFen, Fotoen (JPG, PNG, HEIC) an E-Rechnungen (XML) derbäigesat ginn.",
     "uploadingFile": "„{{name}}“ gëtt eropgelueden …",
     "uploadingFiles_one": "{{count, number}} Fichier gëtt eropgelueden …",
     "uploadingFiles_other": "{{count, number}} Fichiere ginn eropgelueden …",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Mailboxen",
       "navHint": "IMAP-Serveren, aus deene PDF- a Foto-Unhäng importéiert ginn",
-      "intro": "Aus dësen IMAP-Mailboxe gi PDF-Unhäng an ugehaange Fotoen (als PDF) automatesch importéiert; den Text vun den E-Mailen an agebett Logoen net. D’Mailboxe ginn nëmme gelies – E-Maile bleiwen onverännert an ongelies.",
+      "intro": "Aus dësen IMAP-Mailboxe gi PDF-Unhäng, ugehaange Fotoen (als PDF) an E-Rechnungen (XRechnung als XML) automatesch importéiert; den Text vun den E-Mailen an agebett Logoen net. D’Mailboxe ginn nëmme gelies – E-Maile bleiwen onverännert an ongelies.",
       "add": "Mailbox derbäisetzen",
       "emptyTitle": "Nach keng Mailbox ageriicht",
       "emptyText": "Gitt d’Zougangsdate vun enger IMAP-Mailbox an – zum Beispill déi Mailbox, un déi Äre Scanner Dokumenter schéckt.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Importdossier",
-        "text": "En Dossier um Server, deen op nei PDFen a Fotoen (JPG, PNG, HEIC) iwwerwaacht gëtt – zum Beispill d’Zil vun engem Netzwierkscanner. Ënnerdossiere ginn och duerchsicht.",
+        "text": "En Dossier um Server, deen op nei PDFen, Fotoen (JPG, PNG, HEIC) an E-Rechnungen (XML) iwwerwaacht gëtt – zum Beispill d’Zil vun engem Netzwierkscanner. Ënnerdossiere ginn och duerchsicht.",
         "enable": "Importdossier iwwerwaachen",
         "path": "Pad um Server",
         "pathHint": "Absolutte Pad. Am Docker-Container ass dat den agebonnenen Dossier, normalerweis {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Passkey ewechhuelen?",
       "text": "Mat „{{name}}“ kann sech duerno kee méi umellen. Am Passwuertmanager respektiv um Apparat bleift e gespäichert, bis Dir en do läscht.",
       "confirm": "Ewechhuelen"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Rechnung",
+    "quote": "Offer",
+    "order": "Bestellung",
+    "deliveryNote": "Liwwerschäin",
+    "paymentReminder": "Mahnung",
+    "contract": "Kontrakt",
+    "cancellation": "Kënnegung",
+    "bankStatement": "Kontoauszuch",
+    "insurance": "Versécherung",
+    "tax": "Steier",
+    "payslip": "Lounziedel",
+    "officialLetter": "Bréif vun der Administratioun",
+    "certificate": "Bescheinegung",
+    "reference": "Zeegnis",
+    "medicalLetter": "Dokterbréif",
+    "letter": "Bréif",
+    "report": "Rapport",
+    "manual": "Uleedung",
+    "form": "Formulaire",
+    "other": "Aneres"
+  },
+  "einvoice": {
+    "title": "E-Rechnung",
+    "creditNoteTitle": "Gutschrëft (E-Rechnung)",
+    "amountDue": "Ze bezuelen",
+    "creditAmount": "Gutschrëftbetrag",
+    "dueOn": "fälleg den {{date}}",
+    "exact": "Exakt aus dem XML-Fichier gelies, ouni KI · {{format}}",
+    "downloadXml": "XML eroflueden",
+    "copy": "{{label}} kopéieren",
+    "copied": "{{label}} kopéiert",
+    "copyFailed": "Kopéieren ass hei net méiglech.",
+    "fields": {
+      "number": "Rechnungsnummer",
+      "issueDate": "Rechnungsdatum",
+      "seller": "Rechnungssteller",
+      "buyer": "Empfänger",
+      "vatId": "TVA-Nr.",
+      "buyerReference": "Keeferreferenz",
+      "net": "Netto",
+      "tax": "TVA {{rate}}",
+      "gross": "Brutto",
+      "reference": "Verwendungszweck",
+      "terms": "Bezuelkonditiounen"
+    },
+    "lines": {
+      "show_one": "{{count, number}} Positioun weisen",
+      "show_other": "{{count, number}} Positioune weisen",
+      "hide": "Positioune verstoppen",
+      "description": "Bezeechnung",
+      "quantity": "Quantitéit",
+      "unitPrice": "Eenzelpräis",
+      "amount": "Betrag"
     }
   }
 }

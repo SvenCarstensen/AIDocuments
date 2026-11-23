@@ -55,11 +55,29 @@ public class AcceptLanguageLocaleResolver implements LocaleResolver {
         }
         try {
             // "de-AT" passt auf "de"; unter mehreren Angaben gewinnt die mit dem höchsten Gewicht, die es gibt
-            Locale match = Locale.lookup(Locale.LanguageRange.parse(acceptLanguage), supported);
-            return match != null ? match : Messages.DEFAULT_LOCALE;
+            List<Locale.LanguageRange> ranges = Locale.LanguageRange.parse(acceptLanguage);
+            Locale match = Locale.lookup(ranges, supported);
+            return match != null ? withRegion(match, ranges) : Messages.DEFAULT_LOCALE;
         } catch (IllegalArgumentException e) {
             return Messages.DEFAULT_LOCALE;
         }
+    }
+
+    /**
+     * Die Region der gewählten Sprache, wenn die Anfrage sie nennt ("en-GB" → en_GB): Die Texte bleiben dieselben,
+     * aber Datum und Zahlen folgen der Schreibweise der Region – wie in der Oberfläche.
+     */
+    private static Locale withRegion(Locale match, List<Locale.LanguageRange> ranges) {
+        if (!match.getCountry().isEmpty() || !match.getScript().isEmpty() || !match.getVariant().isEmpty()) {
+            return match;
+        }
+        for (Locale.LanguageRange range : ranges) {
+            Locale requested = Locale.forLanguageTag(range.getRange());
+            if (requested.getLanguage().equals(match.getLanguage()) && requested.getCountry().matches("[A-Z]{2}")) {
+                return Locale.of(match.getLanguage(), requested.getCountry());
+            }
+        }
+        return match;
     }
 
     @Override

@@ -108,7 +108,7 @@
     },
     "dropzone": {
       "title": "Itlaq il-PDFs jew ir-ritratti hawn",
-      "hint": "Tista’ titlaq diversi fajls f’daqqa. Ir-ritratti (JPG, PNG, HEIC) isiru PDFs. Kollox jinħażen, jiġi analizzat u jingħata tikketti."
+      "hint": "Tista’ titlaq diversi fajls f’daqqa. Ir-ritratti (JPG, PNG, HEIC) u l-fatturi elettroniċi (XML) isiru PDFs. Kollox jinħażen, jiġi analizzat u jingħata tikketti."
     },
     "remindersDue_one": "{{count, number}} tfakkira dovuta",
     "remindersDue_two": "{{count, number}} tfakkiriet dovuti",
@@ -130,7 +130,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Jistgħu jiżdiedu biss PDFs u ritratti (JPG, PNG, HEIC).",
+    "onlyPdf": "Jistgħu jiżdiedu biss PDFs, ritratti (JPG, PNG, HEIC) u fatturi elettroniċi (XML).",
     "uploadingFile": "Qed jittella’ “{{name}}”…",
     "uploadingFiles_one": "Qed jittella’ {{count, number}} fajl…",
     "uploadingFiles_two": "Qed jittellgħu {{count, number}} fajls…",
@@ -404,7 +404,7 @@
     "mailboxes": {
       "title": "Kaxex postali",
       "navHint": "Servers IMAP li minnhom jiġu importati annessi PDF u ritratti",
-      "intro": "L-annessi PDF u r-ritratti mehmuża (bħala PDFs) jiġu importati awtomatikament minn dawn il-kaxex postali IMAP; it-test tal-emails u l-logos inkorporati le. Il-kaxex postali jinqraw biss – l-emails jibqgħu mhux mibdula u mhux moqrija.",
+      "intro": "L-annessi PDF, ir-ritratti mehmuża (bħala PDFs) u l-fatturi elettroniċi (XRechnung bħala XML) jiġu importati awtomatikament minn dawn il-kaxex postali IMAP; it-test tal-emails u l-logos inkorporati le. Il-kaxex postali jinqraw biss – l-emails jibqgħu mhux mibdula u mhux moqrija.",
       "add": "Żid kaxxa postali",
       "emptyTitle": "Għad m’hemm l-ebda kaxxa postali ssettjata",
       "emptyText": "Daħħal il-kredenzjali ta’ kaxxa postali IMAP – pereżempju l-kaxxa postali li l-iskaner tiegħek jibgħatilha d-dokumenti.",
@@ -469,7 +469,7 @@
       },
       "folder": {
         "title": "Folder tal-importazzjoni",
-        "text": "Direttorju fuq is-server li jiġi ssorveljat għal PDFs u ritratti ġodda (JPG, PNG, HEIC) – pereżempju d-destinazzjoni ta’ skaner tan-netwerk. Jiġu mfittxija wkoll is-subfolders.",
+        "text": "Direttorju fuq is-server li jiġi ssorveljat għal PDFs, ritratti (JPG, PNG, HEIC) u fatturi elettroniċi (XML) ġodda – pereżempju d-destinazzjoni ta’ skaner tan-netwerk. Jiġu mfittxija wkoll is-subfolders.",
         "enable": "Issorvelja l-folder tal-importazzjoni",
         "path": "Mogħdija fuq is-server",
         "pathHint": "Mogħdija assoluta. Fil-kontenitur Docker dan huwa l-folder immuntat, normalment {{path}}.",
@@ -1053,6 +1053,65 @@
       "title": "Tneħħi l-passkey?",
       "text": "Ħadd ma jkun jista’ jidħol b’“{{name}}” wara dan. Tibqa’ maħżuna fil-maniġer tal-passwords jew fuq l-apparat sakemm tħassarha hemmhekk.",
       "confirm": "Neħħi"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Fattura",
+    "quote": "Kwotazzjoni",
+    "order": "Ordni",
+    "deliveryNote": "Nota tal-kunsinna",
+    "paymentReminder": "Tfakkira tal-ħlas",
+    "contract": "Kuntratt",
+    "cancellation": "Kanċellazzjoni",
+    "bankStatement": "Rendikont tal-bank",
+    "insurance": "Assigurazzjoni",
+    "tax": "Taxxa",
+    "payslip": "Slip tal-paga",
+    "officialLetter": "Ittra uffiċjali",
+    "certificate": "Ċertifikat",
+    "reference": "Referenza",
+    "medicalLetter": "Ittra medika",
+    "letter": "Ittra",
+    "report": "Rapport",
+    "manual": "Manwal",
+    "form": "Formola",
+    "other": "Oħrajn"
+  },
+  "einvoice": {
+    "title": "Fattura elettronika",
+    "creditNoteTitle": "Nota ta’ kreditu (fattura elettronika)",
+    "amountDue": "Ammont dovut",
+    "creditAmount": "Ammont ikkreditat",
+    "dueOn": "dovuta fl-{{date}}",
+    "exact": "Moqri eżatt mill-fajl XML, mingħajr IA · {{format}}",
+    "downloadXml": "Niżżel l-XML",
+    "copy": "Ikkopja {{label}}",
+    "copied": "Ikkupjat: {{label}}",
+    "copyFailed": "L-ikkupjar mhuwiex possibbli hawn.",
+    "fields": {
+      "number": "Numru tal-fattura",
+      "issueDate": "Data tal-fattura",
+      "seller": "Fornitur",
+      "buyer": "Klijent",
+      "vatId": "Nru tal-VAT",
+      "buyerReference": "Referenza tax-xerrej",
+      "net": "Nett",
+      "tax": "VAT {{rate}}",
+      "gross": "Gross",
+      "reference": "Referenza tal-ħlas",
+      "terms": "Kundizzjonijiet tal-ħlas"
+    },
+    "lines": {
+      "show_one": "Uri {{count, number}} linja",
+      "show_two": "Uri {{count, number}} linji",
+      "show_few": "Uri {{count, number}} linji",
+      "show_many": "Uri {{count, number}} linja",
+      "show_other": "Uri {{count, number}} linja",
+      "hide": "Aħbi l-linji",
+      "description": "Deskrizzjoni",
+      "quantity": "Kwantità",
+      "unitPrice": "Prezz unitarju",
+      "amount": "Ammont"
     }
   }
 }

@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Sleep PDF’s of foto’s hierheen",
-      "hint": "Je kunt meerdere bestanden tegelijk neerzetten. Foto’s (JPG, PNG, HEIC) worden PDF’s. Alles wordt opgeslagen, geanalyseerd en van tags voorzien."
+      "hint": "Je kunt meerdere bestanden tegelijk neerzetten. Foto’s (JPG, PNG, HEIC) en e-facturen (XML) worden PDF’s. Alles wordt opgeslagen, geanalyseerd en van tags voorzien."
     },
     "remindersDue_one": "{{count, number}} opvolging te doen",
     "remindersDue_other": "{{count, number}} opvolgingen te doen",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Alleen PDF’s en foto’s (JPG, PNG, HEIC) kunnen worden toegevoegd.",
+    "onlyPdf": "Alleen PDF’s, foto’s (JPG, PNG, HEIC) en e-facturen (XML) kunnen worden toegevoegd.",
     "uploadingFile": "“{{name}}” wordt geüpload …",
     "uploadingFiles_one": "{{count, number}} bestand wordt geüpload …",
     "uploadingFiles_other": "{{count, number}} bestanden worden geüpload …",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Mailboxen",
       "navHint": "IMAP-servers waaruit PDF- en fotobijlagen worden geïmporteerd",
-      "intro": "Uit deze IMAP-mailboxen worden PDF-bijlagen en bijgevoegde foto’s (als PDF) automatisch geïmporteerd, maar niet de tekst van de e-mails en ingesloten logo’s. De mailboxen worden alleen gelezen – e-mails blijven ongewijzigd en ongelezen.",
+      "intro": "Uit deze IMAP-mailboxen worden PDF-bijlagen, bijgevoegde foto’s (als PDF) en e-facturen (XRechnung als XML) automatisch geïmporteerd, maar niet de tekst van de e-mails en ingesloten logo’s. De mailboxen worden alleen gelezen – e-mails blijven ongewijzigd en ongelezen.",
       "add": "Mailbox toevoegen",
       "emptyTitle": "Nog geen mailbox ingesteld",
       "emptyText": "Vul de inloggegevens van een IMAP-mailbox in – bijvoorbeeld de mailbox waar je scanner documenten naartoe stuurt.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Importmap",
-        "text": "Een map op de server die op nieuwe PDF’s en foto’s (JPG, PNG, HEIC) wordt bewaakt – bijvoorbeeld de doelmap van een netwerkscanner. Submappen worden ook doorzocht.",
+        "text": "Een map op de server die op nieuwe PDF’s, foto’s (JPG, PNG, HEIC) en e-facturen (XML) wordt bewaakt – bijvoorbeeld de doelmap van een netwerkscanner. Submappen worden ook doorzocht.",
         "enable": "Importmap bewaken",
         "path": "Pad op de server",
         "pathHint": "Absoluut pad. In de Docker-container is dit de gekoppelde map, meestal {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Toegangssleutel verwijderen?",
       "text": "Met “{{name}}” kan daarna niemand meer inloggen. In de wachtwoordmanager of op het apparaat blijft hij opgeslagen tot je hem daar verwijdert.",
       "confirm": "Verwijderen"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Factuur",
+    "quote": "Offerte",
+    "order": "Bestelling",
+    "deliveryNote": "Pakbon",
+    "paymentReminder": "Aanmaning",
+    "contract": "Contract",
+    "cancellation": "Opzegging",
+    "bankStatement": "Rekeningafschrift",
+    "insurance": "Verzekering",
+    "tax": "Belasting",
+    "payslip": "Loonstrook",
+    "officialLetter": "Brief van de overheid",
+    "certificate": "Verklaring",
+    "reference": "Getuigschrift",
+    "medicalLetter": "Medische brief",
+    "letter": "Brief",
+    "report": "Rapport",
+    "manual": "Handleiding",
+    "form": "Formulier",
+    "other": "Overig"
+  },
+  "einvoice": {
+    "title": "E-factuur",
+    "creditNoteTitle": "Creditnota (e-factuur)",
+    "amountDue": "Te betalen",
+    "creditAmount": "Gecrediteerd bedrag",
+    "dueOn": "vervalt op {{date}}",
+    "exact": "Exact uit het XML-bestand gelezen, zonder AI · {{format}}",
+    "downloadXml": "XML downloaden",
+    "copy": "{{label}} kopiëren",
+    "copied": "{{label}} gekopieerd",
+    "copyFailed": "Kopiëren is hier niet mogelijk.",
+    "fields": {
+      "number": "Factuurnummer",
+      "issueDate": "Factuurdatum",
+      "seller": "Leverancier",
+      "buyer": "Klant",
+      "vatId": "Btw-nummer",
+      "buyerReference": "Referentie koper",
+      "net": "Netto",
+      "tax": "Btw {{rate}}",
+      "gross": "Bruto",
+      "reference": "Betalingskenmerk",
+      "terms": "Betalingsvoorwaarden"
+    },
+    "lines": {
+      "show_one": "{{count, number}} regel tonen",
+      "show_other": "{{count, number}} regels tonen",
+      "hide": "Regels verbergen",
+      "description": "Omschrijving",
+      "quantity": "Aantal",
+      "unitPrice": "Stukprijs",
+      "amount": "Bedrag"
     }
   }
 }

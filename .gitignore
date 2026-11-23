@@ -12,6 +12,7 @@ frontend/node_modules/
 frontend/dist/
 # Oberflächentests (npm run test:e2e)
 frontend/test-results/
+frontend/screenshots/test-results/
 frontend/playwright-report/
 
 # IDE / OS

@@ -51,7 +51,8 @@ public class DocumentExport {
     private static final String SESSION_ATTRIBUTE = "aidocuments.exports";
     private static final Duration VALID_FOR = Duration.ofMinutes(5);
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final ObjectMapper JSON = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    private static final ObjectMapper JSON = new ObjectMapper().findAndRegisterModules()
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).enable(SerializationFeature.INDENT_OUTPUT);
     private static final int MAX_NAME = 120;
 
     record Ticket(List<String> ids, Instant expiresAt) implements java.io.Serializable {
@@ -178,6 +179,19 @@ public class DocumentExport {
         row.put("summary", doc.getSummary());
         row.put("keyFacts", doc.getKeyFacts().stream()
                 .map(f -> Map.of("label", nz(f.label()), "value", nz(f.value()))).toList());
+        de.aidocuments.einvoice.EInvoice invoice = doc.getEInvoice();
+        row.put("eInvoice", invoice);
+        row.put("invoiceNumber", invoice == null ? null : invoice.number());
+        row.put("invoiceDate", invoice == null ? null : text(invoice.issueDate()));
+        row.put("invoiceDue", invoice == null ? null : text(invoice.dueDate()));
+        row.put("invoiceSeller", invoice == null || invoice.seller() == null ? null : invoice.seller().name());
+        row.put("invoiceSellerVatId", invoice == null || invoice.seller() == null ? null : invoice.seller().vatId());
+        row.put("invoiceNet", invoice == null ? null : plain(invoice.netAmount()));
+        row.put("invoiceTax", invoice == null ? null : plain(invoice.taxAmount()));
+        row.put("invoiceGross", invoice == null ? null : plain(invoice.grossAmount()));
+        row.put("invoiceAmountDue", invoice == null ? null : plain(invoice.amountDue()));
+        row.put("invoiceCurrency", invoice == null ? null : invoice.currency());
+        row.put("invoiceIban", invoice == null ? null : invoice.iban());
         row.put("language", doc.getLanguage());
         row.put("pages", doc.getPageCount());
         row.put("source", doc.getSource() == null ? null : doc.getSource().name());
@@ -192,7 +206,14 @@ public class DocumentExport {
     }
 
     private static final List<String> CSV_COLUMNS = List.of("file", "title", "documentDate", "category",
-            "correspondent", "tags", "area", "summary", "source", "originalFilename", "added", "retainUntil", "id");
+            "correspondent", "tags", "area", "summary", "source", "originalFilename", "added", "retainUntil", "id",
+            // E-Rechnungen: exakt aus der XML-Datei, Beträge mit Punkt als Dezimaltrennzeichen
+            "invoiceNumber", "invoiceDate", "invoiceDue", "invoiceSeller", "invoiceSellerVatId", "invoiceNet",
+            "invoiceTax", "invoiceGross", "invoiceAmountDue", "invoiceCurrency", "invoiceIban");
+
+    private static String plain(java.math.BigDecimal amount) {
+        return amount == null ? null : amount.toPlainString();
+    }
 
     /** Semikolon und BOM: so öffnet Excel die Datei auch in deutschsprachigen Einstellungen richtig. */
     static String csv(List<Map<String, Object>> rows) {

@@ -39,7 +39,9 @@ public class PdfExtractor {
     private static final Logger log = LoggerFactory.getLogger(PdfExtractor.class);
     private static final float THUMBNAIL_WIDTH_PX = 560f;
 
-    public record PdfContent(int pageCount, String text, boolean thumbnailCreated) {
+    /** @param eInvoice die eingebettete E-Rechnung (ZUGFeRD/Factur-X, XRechnung); {@code null} = keine */
+    public record PdfContent(int pageCount, String text, boolean thumbnailCreated,
+                             de.aidocuments.einvoice.EInvoice eInvoice) {
 
         /** Scans haben keine oder nur eine bruchstückhafte Textebene. */
         public boolean textIsSparse() {
@@ -68,11 +70,21 @@ public class PdfExtractor {
             int pages = pdf.getNumberOfPages();
             String text = extractText(pdf);
             boolean thumbnail = pages > 0 && renderThumbnail(pdf, thumbnailTarget);
-            return new PdfContent(pages, text, thumbnail);
+            return new PdfContent(pages, text, thumbnail, eInvoice(pdf, file));
         } catch (InvalidPasswordException e) {
             throw new PdfReadException(Msg.of("document.error.passwordProtected"), e);
         } catch (IOException e) {
             throw new PdfReadException(Msg.of("document.error.corrupt", Msg.detailOf(e)), e);
+        }
+    }
+
+    private static de.aidocuments.einvoice.EInvoice eInvoice(PDDocument pdf, Path file) {
+        try {
+            de.aidocuments.einvoice.EInvoiceReader.Read read = de.aidocuments.einvoice.EInvoiceReader.fromPdf(pdf);
+            return read == null ? null : read.invoice();
+        } catch (RuntimeException e) {
+            log.warn("E-Rechnung in {} nicht lesbar: {}", file.getFileName(), e.toString());
+            return null;
         }
     }
 

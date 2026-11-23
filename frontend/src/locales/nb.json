@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Slipp PDF-er eller bilder her",
-      "hint": "Du kan slippe flere filer samtidig. Bilder (JPG, PNG, HEIC) blir gjort om til PDF-er. Alt blir lagret, analysert og merket med stikkord."
+      "hint": "Du kan slippe flere filer samtidig. Bilder (JPG, PNG, HEIC) og e-fakturaer (XML) blir gjort om til PDF-er. Alt blir lagret, analysert og merket med stikkord."
     },
     "remindersDue_one": "{{count, number}} forfalt oppfølging",
     "remindersDue_other": "{{count, number}} forfalte oppfølginger",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Bare PDF-er og bilder (JPG, PNG, HEIC) kan legges til.",
+    "onlyPdf": "Bare PDF-er, bilder (JPG, PNG, HEIC) og e-fakturaer (XML) kan legges til.",
     "uploadingFile": "Laster opp «{{name}}» …",
     "uploadingFiles_one": "Laster opp {{count, number}} fil …",
     "uploadingFiles_other": "Laster opp {{count, number}} filer …",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Postkasser",
       "navHint": "IMAP-servere som PDF- og bildevedlegg importeres fra",
-      "intro": "PDF-vedlegg og vedlagte bilder (som PDF) importeres automatisk fra disse IMAP-postkassene – men ikke selve teksten i e-postene eller innebygde logoer. Postkassene blir bare lest – e-postene forblir uendret og uleste.",
+      "intro": "PDF-vedlegg, vedlagte bilder (som PDF) og e-fakturaer (XRechnung som XML) importeres automatisk fra disse IMAP-postkassene – men ikke selve teksten i e-postene eller innebygde logoer. Postkassene blir bare lest – e-postene forblir uendret og uleste.",
       "add": "Legg til postkasse",
       "emptyTitle": "Ingen postkasse er satt opp ennå",
       "emptyText": "Skriv inn innloggingsopplysningene for en IMAP-postkasse – for eksempel postkassen skanneren din sender dokumenter til.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Importmappe",
-        "text": "En mappe på serveren som overvåkes for nye PDF-er og bilder (JPG, PNG, HEIC) – for eksempel målmappen til en nettverksskanner. Undermapper blir også gjennomsøkt.",
+        "text": "En mappe på serveren som overvåkes for nye PDF-er, bilder (JPG, PNG, HEIC) og e-fakturaer (XML) – for eksempel målmappen til en nettverksskanner. Undermapper blir også gjennomsøkt.",
         "enable": "Overvåk importmappen",
         "path": "Sti på serveren",
         "pathHint": "Absolutt sti. I Docker-containeren er dette den monterte mappen, vanligvis {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Fjerne passnøkkelen?",
       "text": "Ingen kan logge inn med «{{name}}» etterpå. Den forblir lagret i passordbehandleren eller på enheten til du sletter den der.",
       "confirm": "Fjern"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Faktura",
+    "quote": "Tilbud",
+    "order": "Bestilling",
+    "deliveryNote": "Følgeseddel",
+    "paymentReminder": "Purring",
+    "contract": "Kontrakt",
+    "cancellation": "Oppsigelse",
+    "bankStatement": "Kontoutskrift",
+    "insurance": "Forsikring",
+    "tax": "Skatt",
+    "payslip": "Lønnsslipp",
+    "officialLetter": "Brev fra myndighet",
+    "certificate": "Bekreftelse",
+    "reference": "Attest",
+    "medicalLetter": "Legeerklæring",
+    "letter": "Brev",
+    "report": "Rapport",
+    "manual": "Bruksanvisning",
+    "form": "Skjema",
+    "other": "Annet"
+  },
+  "einvoice": {
+    "title": "E-faktura",
+    "creditNoteTitle": "Kreditnota (e-faktura)",
+    "amountDue": "Å betale",
+    "creditAmount": "Kreditert beløp",
+    "dueOn": "forfaller {{date}}",
+    "exact": "Lest nøyaktig fra XML-filen, uten KI · {{format}}",
+    "downloadXml": "Last ned XML",
+    "copy": "Kopier {{label}}",
+    "copied": "{{label}} er kopiert",
+    "copyFailed": "Kopiering er ikke mulig her.",
+    "fields": {
+      "number": "Fakturanummer",
+      "issueDate": "Fakturadato",
+      "seller": "Selger",
+      "buyer": "Kjøper",
+      "vatId": "MVA-nr.",
+      "buyerReference": "Kjøpers referanse",
+      "net": "Netto",
+      "tax": "MVA {{rate}}",
+      "gross": "Brutto",
+      "reference": "Betalingsreferanse",
+      "terms": "Betalingsbetingelser"
+    },
+    "lines": {
+      "show_one": "Vis {{count, number}} linje",
+      "show_other": "Vis {{count, number}} linjer",
+      "hide": "Skjul linjer",
+      "description": "Beskrivelse",
+      "quantity": "Antall",
+      "unitPrice": "Enhetspris",
+      "amount": "Beløp"
     }
   }
 }

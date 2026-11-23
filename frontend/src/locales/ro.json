@@ -106,7 +106,7 @@
     },
     "dropzone": {
       "title": "Trageți aici PDF-uri sau fotografii",
-      "hint": "Puteți trage mai multe fișiere deodată. Fotografiile (JPG, PNG, HEIC) sunt transformate în PDF-uri. Totul este salvat, analizat și etichetat."
+      "hint": "Puteți trage mai multe fișiere deodată. Fotografiile (JPG, PNG, HEIC) și facturile electronice (XML) sunt transformate în PDF-uri. Totul este salvat, analizat și etichetat."
     },
     "remindersDue_one": "{{count, number}} memento scadent",
     "remindersDue_few": "{{count, number}} mementouri scadente",
@@ -126,7 +126,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Se pot adăuga doar PDF-uri și fotografii (JPG, PNG, HEIC).",
+    "onlyPdf": "Se pot adăuga doar PDF-uri, fotografii (JPG, PNG, HEIC) și facturi electronice (XML).",
     "uploadingFile": "Se încarcă „{{name}}”…",
     "uploadingFiles_one": "Se încarcă {{count, number}} fișier…",
     "uploadingFiles_few": "Se încarcă {{count, number}} fișiere…",
@@ -378,7 +378,7 @@
     "mailboxes": {
       "title": "Căsuțe de e-mail",
       "navHint": "Servere IMAP din care se importă atașamentele PDF și fotografiile",
-      "intro": "Atașamentele PDF și fotografiile atașate (ca PDF) sunt importate automat din aceste căsuțe de e-mail IMAP; textul e-mailurilor și siglele încorporate nu. Căsuțele sunt doar citite – e-mailurile rămân neschimbate și necitite.",
+      "intro": "Atașamentele PDF, fotografiile atașate (ca PDF) și facturile electronice (XRechnung ca XML) sunt importate automat din aceste căsuțe de e-mail IMAP; textul e-mailurilor și siglele încorporate nu. Căsuțele sunt doar citite – e-mailurile rămân neschimbate și necitite.",
       "add": "Adăugați o căsuță de e-mail",
       "emptyTitle": "Nicio căsuță de e-mail configurată încă",
       "emptyText": "Introduceți datele de acces ale unei căsuțe de e-mail IMAP – de exemplu cea la care scannerul dvs. trimite documentele.",
@@ -443,7 +443,7 @@
       },
       "folder": {
         "title": "Folder de import",
-        "text": "Un director de pe server care este monitorizat pentru PDF-uri și fotografii noi (JPG, PNG, HEIC) – de exemplu destinația unui scanner de rețea. Sunt căutate și subfolderele.",
+        "text": "Un director de pe server care este monitorizat pentru PDF-uri, fotografii (JPG, PNG, HEIC) și facturi electronice (XML) noi – de exemplu destinația unui scanner de rețea. Sunt căutate și subfolderele.",
         "enable": "Monitorizarea folderului de import",
         "path": "Calea de pe server",
         "pathHint": "Cale absolută. În containerul Docker este folderul montat, de obicei {{path}}.",
@@ -1005,6 +1005,63 @@
       "title": "Eliminați cheia de acces?",
       "text": "După aceea, nimeni nu se mai poate autentifica cu „{{name}}”. Cheia rămâne salvată în managerul de parole sau pe dispozitiv până când o ștergeți acolo.",
       "confirm": "Eliminați"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Factură",
+    "quote": "Ofertă",
+    "order": "Comandă",
+    "deliveryNote": "Aviz de însoțire",
+    "paymentReminder": "Somație de plată",
+    "contract": "Contract",
+    "cancellation": "Reziliere",
+    "bankStatement": "Extras de cont",
+    "insurance": "Asigurare",
+    "tax": "Impozit",
+    "payslip": "Fluturaș de salariu",
+    "officialLetter": "Scrisoare oficială",
+    "certificate": "Adeverință",
+    "reference": "Certificat",
+    "medicalLetter": "Scrisoare medicală",
+    "letter": "Scrisoare",
+    "report": "Raport",
+    "manual": "Manual",
+    "form": "Formular",
+    "other": "Altele"
+  },
+  "einvoice": {
+    "title": "Factură electronică",
+    "creditNoteTitle": "Notă de credit (factură electronică)",
+    "amountDue": "De plată",
+    "creditAmount": "Sumă creditată",
+    "dueOn": "scadentă la {{date}}",
+    "exact": "Citit exact din fișierul XML, fără IA · {{format}}",
+    "downloadXml": "Descărcați XML-ul",
+    "copy": "Copiați: {{label}}",
+    "copied": "S-a copiat: {{label}}",
+    "copyFailed": "Copierea nu este posibilă aici.",
+    "fields": {
+      "number": "Număr factură",
+      "issueDate": "Data facturii",
+      "seller": "Furnizor",
+      "buyer": "Cumpărător",
+      "vatId": "Cod TVA",
+      "buyerReference": "Referința cumpărătorului",
+      "net": "Net",
+      "tax": "TVA {{rate}}",
+      "gross": "Brut",
+      "reference": "Detalii plată",
+      "terms": "Condiții de plată"
+    },
+    "lines": {
+      "show_one": "Afișați {{count, number}} articol",
+      "show_few": "Afișați {{count, number}} articole",
+      "show_other": "Afișați {{count, number}} de articole",
+      "hide": "Ascundeți articolele",
+      "description": "Denumire",
+      "quantity": "Cantitate",
+      "unitPrice": "Preț unitar",
+      "amount": "Valoare"
     }
   }
 }

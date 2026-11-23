@@ -107,7 +107,7 @@
     },
     "dropzone": {
       "title": "Nutempkite PDF failus ar nuotraukas čia",
-      "hint": "Vienu metu galima nutempti kelis failus. Nuotraukos (JPG, PNG, HEIC) paverčiamos PDF failais. Viskas išsaugoma, analizuojama ir pažymima žymomis."
+      "hint": "Vienu metu galima nutempti kelis failus. Nuotraukos (JPG, PNG, HEIC) ir e. sąskaitos faktūros (XML) paverčiamos PDF failais. Viskas išsaugoma, analizuojama ir pažymima žymomis."
     },
     "remindersDue_one": "{{count, number}} aktualus priminimas",
     "remindersDue_few": "{{count, number}} aktualūs priminimai",
@@ -128,7 +128,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Galima pridėti tik PDF failus ir nuotraukas (JPG, PNG, HEIC).",
+    "onlyPdf": "Galima pridėti tik PDF failus, nuotraukas (JPG, PNG, HEIC) ir e. sąskaitas faktūras (XML).",
     "uploadingFile": "Įkeliama „{{name}}“…",
     "uploadingFiles_one": "Įkeliamas {{count, number}} failas…",
     "uploadingFiles_few": "Įkeliami {{count, number}} failai…",
@@ -391,7 +391,7 @@
     "mailboxes": {
       "title": "Pašto dėžutės",
       "navHint": "IMAP serveriai, iš kurių importuojami PDF priedai ir nuotraukos",
-      "intro": "Iš šių IMAP pašto dėžučių automatiškai importuojami PDF priedai ir pridėtos nuotraukos (kaip PDF); el. laiškų tekstas ir įterpti logotipai – ne. Pašto dėžutės tik skaitomos – el. laiškai lieka nepakeisti ir neskaityti.",
+      "intro": "Iš šių IMAP pašto dėžučių automatiškai importuojami PDF priedai, pridėtos nuotraukos (kaip PDF) ir e. sąskaitos faktūros (XRechnung kaip XML); el. laiškų tekstas ir įterpti logotipai – ne. Pašto dėžutės tik skaitomos – el. laiškai lieka nepakeisti ir neskaityti.",
       "add": "Pridėti pašto dėžutę",
       "emptyTitle": "Dar nesukonfigūruota nė viena pašto dėžutė",
       "emptyText": "Įveskite IMAP pašto dėžutės prisijungimo duomenis – pavyzdžiui, dėžutės, į kurią jūsų skeneris siunčia dokumentus.",
@@ -456,7 +456,7 @@
       },
       "folder": {
         "title": "Importavimo aplankas",
-        "text": "Serverio aplankas, kuriame stebima, ar atsirado naujų PDF failų ir nuotraukų (JPG, PNG, HEIC) – pavyzdžiui, tinklo skenerio paskirties aplankas. Ieškoma ir poaplankiuose.",
+        "text": "Serverio aplankas, kuriame stebima, ar atsirado naujų PDF failų, nuotraukų (JPG, PNG, HEIC) ir e. sąskaitų faktūrų (XML) – pavyzdžiui, tinklo skenerio paskirties aplankas. Ieškoma ir poaplankiuose.",
         "enable": "Stebėti importavimo aplanką",
         "path": "Kelias serveryje",
         "pathHint": "Absoliutusis kelias. Docker konteineryje tai prijungtas aplankas, dažniausiai {{path}}.",
@@ -1029,6 +1029,64 @@
       "title": "Pašalinti slaptaraktį?",
       "text": "Po to niekas nebegalės prisijungti su „{{name}}“. Jis liks išsaugotas slaptažodžių tvarkyklėje arba įrenginyje, kol jo ten neištrinsite.",
       "confirm": "Pašalinti"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Sąskaita faktūra",
+    "quote": "Pasiūlymas",
+    "order": "Užsakymas",
+    "deliveryNote": "Važtaraštis",
+    "paymentReminder": "Priminimas apie mokėjimą",
+    "contract": "Sutartis",
+    "cancellation": "Nutraukimas",
+    "bankStatement": "Sąskaitos išrašas",
+    "insurance": "Draudimas",
+    "tax": "Mokestis",
+    "payslip": "Atlyginimo lapelis",
+    "officialLetter": "Oficialus raštas",
+    "certificate": "Pažyma",
+    "reference": "Rekomendacija",
+    "medicalLetter": "Gydytojo išrašas",
+    "letter": "Laiškas",
+    "report": "Ataskaita",
+    "manual": "Instrukcija",
+    "form": "Forma",
+    "other": "Kita"
+  },
+  "einvoice": {
+    "title": "E. sąskaita faktūra",
+    "creditNoteTitle": "Kreditinė sąskaita faktūra (e. sąskaita)",
+    "amountDue": "Mokėtina suma",
+    "creditAmount": "Kredituojama suma",
+    "dueOn": "apmokėti iki {{date}}",
+    "exact": "Tiksliai nuskaityta iš XML failo, be DI · {{format}}",
+    "downloadXml": "Atsisiųsti XML",
+    "copy": "Kopijuoti: {{label}}",
+    "copied": "Nukopijuota: {{label}}",
+    "copyFailed": "Čia kopijuoti negalima.",
+    "fields": {
+      "number": "Sąskaitos numeris",
+      "issueDate": "Sąskaitos data",
+      "seller": "Pardavėjas",
+      "buyer": "Pirkėjas",
+      "vatId": "PVM kodas",
+      "buyerReference": "Pirkėjo nuoroda",
+      "net": "Neto",
+      "tax": "PVM {{rate}}",
+      "gross": "Bruto",
+      "reference": "Mokėjimo paskirtis",
+      "terms": "Mokėjimo sąlygos"
+    },
+    "lines": {
+      "show_one": "Rodyti {{count, number}} eilutę",
+      "show_few": "Rodyti {{count, number}} eilutes",
+      "show_many": "Rodyti {{count, number}} eilutės",
+      "show_other": "Rodyti {{count, number}} eilučių",
+      "hide": "Slėpti eilutes",
+      "description": "Aprašymas",
+      "quantity": "Kiekis",
+      "unitPrice": "Vieneto kaina",
+      "amount": "Suma"
     }
   }
 }

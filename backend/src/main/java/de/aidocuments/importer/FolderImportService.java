@@ -171,9 +171,9 @@ public class FolderImportService {
         return relative.getNameCount() == 1 || !relative.getName(0).toString().equals(IMPORTED_DIR);
     }
 
-    /** PDFs und Fotos (werden bei der Aufnahme zu PDFs) */
+    /** PDFs, Fotos und XML-Rechnungen (beide werden bei der Aufnahme zu PDFs) */
     private static final java.util.regex.Pattern IMPORTABLE =
-            java.util.regex.Pattern.compile("(?i).+\\.(pdf|jpe?g|png|hei[cf])$");
+            java.util.regex.Pattern.compile("(?i).+\\.(pdf|jpe?g|png|hei[cf]|xml)$");
 
     /** Verschiebt eine übernommene Datei nach "importiert/…"; bei Namensgleichheit wird durchnummeriert. */
     private static void moveAside(Path root, Path file) throws IOException {

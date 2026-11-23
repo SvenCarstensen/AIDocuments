@@ -107,7 +107,7 @@
     },
     "dropzone": {
       "title": "Přetáhněte sem soubory PDF nebo fotografie",
-      "hint": "Můžete přetáhnout několik souborů najednou. Fotografie (JPG, PNG, HEIC) se převedou na PDF. Vše se uloží, analyzuje a opatří štítky."
+      "hint": "Můžete přetáhnout několik souborů najednou. Fotografie (JPG, PNG, HEIC) a e-faktury (XML) se převedou na PDF. Vše se uloží, analyzuje a opatří štítky."
     },
     "remindersDue_one": "{{count, number}} připomenutí k vyřízení",
     "remindersDue_few": "{{count, number}} připomenutí k vyřízení",
@@ -128,7 +128,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Přidat lze pouze soubory PDF a fotografie (JPG, PNG, HEIC).",
+    "onlyPdf": "Přidat lze pouze soubory PDF, fotografie (JPG, PNG, HEIC) a e-faktury (XML).",
     "uploadingFile": "Nahrávání „{{name}}“…",
     "uploadingFiles_one": "Nahrává se {{count, number}} soubor…",
     "uploadingFiles_few": "Nahrávají se {{count, number}} soubory…",
@@ -391,7 +391,7 @@
     "mailboxes": {
       "title": "E-mailové schránky",
       "navHint": "Servery IMAP, ze kterých se importují přílohy PDF a fotografie",
-      "intro": "Z těchto schránek IMAP se automaticky importují přílohy PDF a přiložené fotografie (jako PDF); text e-mailů a vložená loga nikoli. Schránky se pouze čtou – e-maily zůstávají beze změny a nepřečtené.",
+      "intro": "Z těchto schránek IMAP se automaticky importují přílohy PDF, přiložené fotografie (jako PDF) a e-faktury (XRechnung jako XML); text e-mailů a vložená loga nikoli. Schránky se pouze čtou – e-maily zůstávají beze změny a nepřečtené.",
       "add": "Přidat schránku",
       "emptyTitle": "Zatím není nastavena žádná schránka",
       "emptyText": "Zadejte přihlašovací údaje schránky IMAP – například té, kam váš skener posílá dokumenty.",
@@ -456,7 +456,7 @@
       },
       "folder": {
         "title": "Složka pro import",
-        "text": "Adresář na serveru, který se sleduje kvůli novým souborům PDF a fotografiím (JPG, PNG, HEIC) – například cíl síťového skeneru. Prohledávají se i podsložky.",
+        "text": "Adresář na serveru, který se sleduje kvůli novým souborům PDF, fotografiím (JPG, PNG, HEIC) a e-fakturám (XML) – například cíl síťového skeneru. Prohledávají se i podsložky.",
         "enable": "Sledovat složku pro import",
         "path": "Cesta na serveru",
         "pathHint": "Absolutní cesta. V kontejneru Docker je to připojená složka, obvykle {{path}}.",
@@ -1029,6 +1029,64 @@
       "title": "Odebrat přístupový klíč?",
       "text": "Pomocí „{{name}}“ se pak už nikdo nepřihlásí. Ve správci hesel nebo v zařízení zůstane klíč uložen, dokud ho tam nesmažete.",
       "confirm": "Odebrat"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Faktura",
+    "quote": "Nabídka",
+    "order": "Objednávka",
+    "deliveryNote": "Dodací list",
+    "paymentReminder": "Upomínka",
+    "contract": "Smlouva",
+    "cancellation": "Výpověď",
+    "bankStatement": "Výpis z účtu",
+    "insurance": "Pojištění",
+    "tax": "Daň",
+    "payslip": "Výplatní páska",
+    "officialLetter": "Úřední dopis",
+    "certificate": "Potvrzení",
+    "reference": "Vysvědčení",
+    "medicalLetter": "Lékařská zpráva",
+    "letter": "Dopis",
+    "report": "Zpráva",
+    "manual": "Návod",
+    "form": "Formulář",
+    "other": "Ostatní"
+  },
+  "einvoice": {
+    "title": "E-faktura",
+    "creditNoteTitle": "Dobropis (e-faktura)",
+    "amountDue": "K úhradě",
+    "creditAmount": "Dobropisovaná částka",
+    "dueOn": "splatné {{date}}",
+    "exact": "Přesně načteno ze souboru XML, bez AI · {{format}}",
+    "downloadXml": "Stáhnout XML",
+    "copy": "Kopírovat: {{label}}",
+    "copied": "Zkopírováno: {{label}}",
+    "copyFailed": "Kopírování zde není možné.",
+    "fields": {
+      "number": "Číslo faktury",
+      "issueDate": "Datum vystavení",
+      "seller": "Dodavatel",
+      "buyer": "Odběratel",
+      "vatId": "DIČ",
+      "buyerReference": "Reference odběratele",
+      "net": "Bez DPH",
+      "tax": "DPH {{rate}}",
+      "gross": "S DPH",
+      "reference": "Účel platby",
+      "terms": "Platební podmínky"
+    },
+    "lines": {
+      "show_one": "Zobrazit {{count, number}} položku",
+      "show_few": "Zobrazit {{count, number}} položky",
+      "show_many": "Zobrazit {{count, number}} položky",
+      "show_other": "Zobrazit {{count, number}} položek",
+      "hide": "Skrýt položky",
+      "description": "Popis",
+      "quantity": "Množství",
+      "unitPrice": "Jednotková cena",
+      "amount": "Částka"
     }
   }
 }

@@ -106,7 +106,7 @@
     },
     "dropzone": {
       "title": "Trascina qui PDF o foto",
-      "hint": "Puoi trascinare più file contemporaneamente. Le foto (JPG, PNG, HEIC) diventano PDF. Tutto viene salvato, analizzato e provvisto di tag."
+      "hint": "Puoi trascinare più file contemporaneamente. Le foto (JPG, PNG, HEIC) e le fatture elettroniche (XML) diventano PDF. Tutto viene salvato, analizzato e provvisto di tag."
     },
     "remindersDue_one": "{{count, number}} promemoria in scadenza",
     "remindersDue_many": "{{count, number}} di promemoria in scadenza",
@@ -126,7 +126,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Si possono aggiungere solo PDF e foto (JPG, PNG, HEIC).",
+    "onlyPdf": "Si possono aggiungere solo PDF, foto (JPG, PNG, HEIC) e fatture elettroniche (XML).",
     "uploadingFile": "Caricamento di “{{name}}”…",
     "uploadingFiles_one": "Caricamento di {{count, number}} file…",
     "uploadingFiles_many": "Caricamento di {{count, number}} di file…",
@@ -378,7 +378,7 @@
     "mailboxes": {
       "title": "Caselle di posta",
       "navHint": "Server IMAP da cui vengono importati gli allegati PDF e le foto",
-      "intro": "Da queste caselle di posta IMAP vengono importati automaticamente gli allegati PDF e le foto allegate (come PDF); il testo delle e-mail e i loghi incorporati no. Le caselle vengono solo lette: le e-mail restano invariate e non lette.",
+      "intro": "Da queste caselle di posta IMAP vengono importati automaticamente gli allegati PDF, le foto allegate (come PDF) e le fatture elettroniche (XRechnung come XML); il testo delle e-mail e i loghi incorporati no. Le caselle vengono solo lette: le e-mail restano invariate e non lette.",
       "add": "Aggiungi casella di posta",
       "emptyTitle": "Nessuna casella di posta ancora configurata",
       "emptyText": "Inserisci le credenziali di una casella di posta IMAP, ad esempio quella a cui il tuo scanner invia i documenti.",
@@ -443,7 +443,7 @@
       },
       "folder": {
         "title": "Cartella di importazione",
-        "text": "Una directory sul server che viene monitorata per rilevare nuovi PDF e foto (JPG, PNG, HEIC), ad esempio la destinazione di uno scanner di rete. Vengono esaminate anche le sottocartelle.",
+        "text": "Una directory sul server che viene monitorata per rilevare nuovi PDF, foto (JPG, PNG, HEIC) e fatture elettroniche (XML), ad esempio la destinazione di uno scanner di rete. Vengono esaminate anche le sottocartelle.",
         "enable": "Monitora la cartella di importazione",
         "path": "Percorso sul server",
         "pathHint": "Percorso assoluto. Nel container Docker è la cartella montata, di solito {{path}}.",
@@ -1005,6 +1005,63 @@
       "title": "Rimuovere la passkey?",
       "text": "Dopo nessuno potrà più accedere con “{{name}}”. Resta salvata nel gestore di password o sul dispositivo finché non la elimini lì.",
       "confirm": "Rimuovi"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Fattura",
+    "quote": "Preventivo",
+    "order": "Ordine",
+    "deliveryNote": "Bolla di consegna",
+    "paymentReminder": "Sollecito",
+    "contract": "Contratto",
+    "cancellation": "Disdetta",
+    "bankStatement": "Estratto conto",
+    "insurance": "Assicurazione",
+    "tax": "Tasse",
+    "payslip": "Busta paga",
+    "officialLetter": "Lettera ufficiale",
+    "certificate": "Attestato",
+    "reference": "Referenza",
+    "medicalLetter": "Referto medico",
+    "letter": "Lettera",
+    "report": "Relazione",
+    "manual": "Istruzioni",
+    "form": "Modulo",
+    "other": "Altro"
+  },
+  "einvoice": {
+    "title": "Fattura elettronica",
+    "creditNoteTitle": "Nota di credito (fattura elettronica)",
+    "amountDue": "Importo da pagare",
+    "creditAmount": "Importo accreditato",
+    "dueOn": "in scadenza il {{date}}",
+    "exact": "Letto esattamente dal file XML, senza IA · {{format}}",
+    "downloadXml": "Scarica XML",
+    "copy": "Copia {{label}}",
+    "copied": "Copiato: {{label}}",
+    "copyFailed": "Qui non è possibile copiare.",
+    "fields": {
+      "number": "Numero fattura",
+      "issueDate": "Data fattura",
+      "seller": "Fornitore",
+      "buyer": "Cliente",
+      "vatId": "Partita IVA",
+      "buyerReference": "Riferimento acquirente",
+      "net": "Imponibile",
+      "tax": "IVA {{rate}}",
+      "gross": "Totale",
+      "reference": "Causale",
+      "terms": "Condizioni di pagamento"
+    },
+    "lines": {
+      "show_one": "Mostra {{count, number}} riga",
+      "show_many": "Mostra {{count, number}} righe",
+      "show_other": "Mostra {{count, number}} righe",
+      "hide": "Nascondi righe",
+      "description": "Descrizione",
+      "quantity": "Quantità",
+      "unitPrice": "Prezzo unitario",
+      "amount": "Importo"
     }
   }
 }

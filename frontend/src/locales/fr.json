@@ -106,7 +106,7 @@
     },
     "dropzone": {
       "title": "Déposez des PDF ou des photos ici",
-      "hint": "Vous pouvez déposer plusieurs fichiers à la fois. Les photos (JPG, PNG, HEIC) sont converties en PDF. Tout est enregistré, analysé et doté de mots-clés."
+      "hint": "Vous pouvez déposer plusieurs fichiers à la fois. Les photos (JPG, PNG, HEIC) et les factures électroniques (XML) sont converties en PDF. Tout est enregistré, analysé et doté de mots-clés."
     },
     "remindersDue_one": "{{count, number}} relance à traiter",
     "remindersDue_many": "{{count, number}} de relances à traiter",
@@ -126,7 +126,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Seuls des PDF et des photos (JPG, PNG, HEIC) peuvent être ajoutés.",
+    "onlyPdf": "Seuls des PDF, des photos (JPG, PNG, HEIC) et des factures électroniques (XML) peuvent être ajoutés.",
     "uploadingFile": "Téléversement de « {{name}} »…",
     "uploadingFiles_one": "Téléversement de {{count, number}} fichier…",
     "uploadingFiles_many": "Téléversement de {{count, number}} de fichiers…",
@@ -378,7 +378,7 @@
     "mailboxes": {
       "title": "Boîtes mail",
       "navHint": "Serveurs IMAP depuis lesquels les pièces jointes PDF et les photos sont importées",
-      "intro": "Les pièces jointes PDF et les photos jointes (converties en PDF) sont importées automatiquement depuis ces boîtes mail IMAP ; le texte des e-mails et les logos intégrés ne le sont pas. Les boîtes mail sont uniquement lues – les e-mails restent inchangés et non lus.",
+      "intro": "Les pièces jointes PDF, les photos jointes (converties en PDF) et les factures électroniques (XRechnung au format XML) sont importées automatiquement depuis ces boîtes mail IMAP ; le texte des e-mails et les logos intégrés ne le sont pas. Les boîtes mail sont uniquement lues – les e-mails restent inchangés et non lus.",
       "add": "Ajouter une boîte mail",
       "emptyTitle": "Aucune boîte mail configurée pour l’instant",
       "emptyText": "Saisissez les identifiants d’une boîte mail IMAP – par exemple celle à laquelle votre scanner envoie les documents.",
@@ -443,7 +443,7 @@
       },
       "folder": {
         "title": "Dossier d’import",
-        "text": "Un répertoire du serveur qui est surveillé pour détecter de nouveaux PDF et de nouvelles photos (JPG, PNG, HEIC) – par exemple la destination d’un scanner réseau. Les sous-dossiers sont également parcourus.",
+        "text": "Un répertoire du serveur qui est surveillé pour détecter de nouveaux PDF, de nouvelles photos (JPG, PNG, HEIC) et de nouvelles factures électroniques (XML) – par exemple la destination d’un scanner réseau. Les sous-dossiers sont également parcourus.",
         "enable": "Surveiller le dossier d’import",
         "path": "Chemin sur le serveur",
         "pathHint": "Chemin absolu. Dans le conteneur Docker, il s’agit du dossier monté, en général {{path}}.",
@@ -1005,6 +1005,63 @@
       "title": "Supprimer la clé d’accès ?",
       "text": "Plus personne ne pourra se connecter avec « {{name}} ». Elle reste enregistrée dans le gestionnaire de mots de passe ou sur l’appareil jusqu’à ce que vous l’y supprimiez.",
       "confirm": "Supprimer"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Facture",
+    "quote": "Devis",
+    "order": "Commande",
+    "deliveryNote": "Bon de livraison",
+    "paymentReminder": "Relance",
+    "contract": "Contrat",
+    "cancellation": "Résiliation",
+    "bankStatement": "Relevé de compte",
+    "insurance": "Assurance",
+    "tax": "Impôts",
+    "payslip": "Bulletin de paie",
+    "officialLetter": "Courrier administratif",
+    "certificate": "Attestation",
+    "reference": "Certificat",
+    "medicalLetter": "Courrier médical",
+    "letter": "Lettre",
+    "report": "Rapport",
+    "manual": "Mode d'emploi",
+    "form": "Formulaire",
+    "other": "Autre"
+  },
+  "einvoice": {
+    "title": "Facture électronique",
+    "creditNoteTitle": "Avoir (facture électronique)",
+    "amountDue": "Montant à payer",
+    "creditAmount": "Montant de l’avoir",
+    "dueOn": "échéance le {{date}}",
+    "exact": "Lu avec exactitude dans le fichier XML, sans IA · {{format}}",
+    "downloadXml": "Télécharger le XML",
+    "copy": "Copier : {{label}}",
+    "copied": "Copié : {{label}}",
+    "copyFailed": "La copie n’est pas possible ici.",
+    "fields": {
+      "number": "Numéro de facture",
+      "issueDate": "Date de facture",
+      "seller": "Fournisseur",
+      "buyer": "Client",
+      "vatId": "N° TVA",
+      "buyerReference": "Référence acheteur",
+      "net": "Montant HT",
+      "tax": "TVA {{rate}}",
+      "gross": "Montant TTC",
+      "reference": "Référence de paiement",
+      "terms": "Conditions de paiement"
+    },
+    "lines": {
+      "show_one": "Afficher {{count, number}} ligne",
+      "show_many": "Afficher {{count, number}} lignes",
+      "show_other": "Afficher {{count, number}} lignes",
+      "hide": "Masquer les lignes",
+      "description": "Désignation",
+      "quantity": "Quantité",
+      "unitPrice": "Prix unitaire",
+      "amount": "Montant"
     }
   }
 }

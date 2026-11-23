@@ -9,7 +9,8 @@ import { Alert, Badge, Button, EmptyState, IconButton, Input, Modal, Select, Spi
 import { api, type Area, type Doc, type DocumentQuery, errorMessage, type Facets, MAX_PAGE_SIZE, type SortOrder } from '../lib/api'
 import { areaName, areaNameById, useAreas } from '../lib/areas'
 import { useAuth } from '../lib/auth'
-import { cx, formatFinishTime, formatRelative, formatRemaining } from '../lib/format'
+import { cx, formatDate, formatFinishTime, formatRelative, formatRemaining } from '../lib/format'
+import { documentTypeLabel } from '../lib/documentTypes'
 
 type View = 'grid' | 'list'
 
@@ -329,7 +330,7 @@ export function DocumentsPage() {
         {activeCount > 0 && (
           <div className="mb-4 flex flex-wrap items-center gap-2">
             {filters.area && <ActiveFilter label={areaNameById(areas.data, filters.area)} onRemove={() => set('area', '')} />}
-            {filters.category && <ActiveFilter label={filters.category} onRemove={() => set('category', '')} />}
+            {filters.category && <ActiveFilter label={documentTypeLabel(filters.category)} onRemove={() => set('category', '')} />}
             {filters.correspondent && (
               <ActiveFilter label={filters.correspondent} onRemove={() => set('correspondent', '')} />
             )}
@@ -339,8 +340,8 @@ export function DocumentsPage() {
             {filters.status === 'FAILED' && <ActiveFilter label={t('documents.filters.failed')} onRemove={() => set('status', '')} />}
             {filters.duplicates && <ActiveFilter label={t('documents.filters.duplicates')} onRemove={() => set('duplicates', '')} />}
             {filters.retentionExpired && <ActiveFilter label={t('documents.filters.retentionExpired')} onRemove={() => set('retention', '')} />}
-            {filters.from && <ActiveFilter label={t('documents.filters.activeFrom', { date: filters.from })} onRemove={() => set('from', '')} />}
-            {filters.to && <ActiveFilter label={t('documents.filters.activeTo', { date: filters.to })} onRemove={() => set('to', '')} />}
+            {filters.from && <ActiveFilter label={t('documents.filters.activeFrom', { date: formatDate(filters.from) })} onRemove={() => set('from', '')} />}
+            {filters.to && <ActiveFilter label={t('documents.filters.activeTo', { date: formatDate(filters.to) })} onRemove={() => set('to', '')} />}
             <button type="button" onClick={clearFilters} className="text-[13px] font-medium text-muted hover:text-ink">
               {t('documents.filters.removeAll')}
             </button>
@@ -487,7 +488,7 @@ function FilterPanel({ facets, areas, filters, failed, duplicates, retentionExpi
           {facets.categories.map((facet) => (
             <FacetRow
               key={facet.name}
-              label={facet.name}
+              label={documentTypeLabel(facet.name)}
               count={facet.count}
               active={filters.category === facet.name}
               onClick={() => onSet('category', filters.category === facet.name ? '' : facet.name)}
@@ -707,7 +708,7 @@ function DocumentCard({ doc, activeTags, onTag, compareDuplicates }: DocItemProp
       <div className="relative aspect-[5/4] overflow-hidden border-b border-line bg-raised">
         <Thumbnail doc={doc} className={cx(isBusy(doc) && 'opacity-50')} />
         <div className="absolute inset-x-2.5 top-2.5 flex items-start justify-between gap-2">
-          {doc.category ? <Badge className="!border-line !bg-surface/95 !text-ink shadow-sm backdrop-blur">{doc.category}</Badge> : <span />}
+          {doc.category ? <Badge className="!border-line !bg-surface/95 !text-ink shadow-sm backdrop-blur">{documentTypeLabel(doc.category)}</Badge> : <span />}
           <StatusBadge doc={doc} />
         </div>
       </div>
@@ -749,7 +750,7 @@ function DocumentRow({ doc, activeTags, onTag, compareDuplicates }: DocItemProps
               {doc.title}
             </Link>
           </h3>
-          {doc.category && <Badge>{doc.category}</Badge>}
+          {doc.category && <Badge>{documentTypeLabel(doc.category)}</Badge>}
           <StatusBadge doc={doc} />
         </div>
         <p className="truncate text-xs text-muted">{metaLine(doc)}</p>

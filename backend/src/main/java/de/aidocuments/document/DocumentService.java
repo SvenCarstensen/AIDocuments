@@ -68,14 +68,17 @@ public class DocumentService {
 
     private final de.aidocuments.reminder.ReminderRepository reminders;
     private final de.aidocuments.contract.ContractRepository contracts;
+    private final de.aidocuments.einvoice.EInvoicePdf eInvoicePdf;
 
     public DocumentService(DocumentRepository documents, DocumentTextRepository texts, FileStorage storage,
                            DocumentProcessor processor, SearchIndex searchIndex, Messages messages,
                            PdfExtractor pdfExtractor, DuplicateDetector duplicates, HistoryService history,
                            DocumentVersions versions, DocumentShares shares, AreaAccess access,
                            de.aidocuments.reminder.ReminderRepository reminders, ImageToPdf imageToPdf,
-                           de.aidocuments.contract.ContractRepository contracts) {
+                           de.aidocuments.contract.ContractRepository contracts,
+                           de.aidocuments.einvoice.EInvoicePdf eInvoicePdf) {
         this.contracts = contracts;
+        this.eInvoicePdf = eInvoicePdf;
         this.imageToPdf = imageToPdf;
         this.reminders = reminders;
         this.access = access;
@@ -115,14 +118,38 @@ public class DocumentService {
             }
             boolean isPdf = storage.looksLikePdf(received);
             ImageToPdf.Kind image = isPdf ? null : ImageToPdf.detect(received.tempFile());
-            if (!isPdf && image == null) {
+            boolean xml = !isPdf && image == null && de.aidocuments.einvoice.EInvoiceReader.looksLikeXml(
+                    received.tempFile());
+            if (!isPdf && image == null && !xml) {
                 return new IngestResult(Outcome.REJECTED, null, Msg.of("upload.notSupported"));
             }
             Document existing = documents.findBySha256(received.sha256()).orElse(null);
             if (existing != null) {
                 return new IngestResult(Outcome.DUPLICATE, existing, Msg.of("upload.duplicate"));
             }
-            if (image != null) {
+            de.aidocuments.einvoice.EInvoice early = isPdf ? embeddedInvoice(received.tempFile()) : null;
+            if (xml) {
+                de.aidocuments.einvoice.EInvoice invoice = de.aidocuments.einvoice.EInvoiceReader.fromXml(
+                        received.tempFile());
+                if (invoice == null) {
+                    // andere XML-Dateien in E-Mails (Signaturen, Formulardaten …) sind kein Fehler
+                    return source == DocumentSource.MAIL ? new IngestResult(Outcome.IGNORED, null, null)
+                            : new IngestResult(Outcome.REJECTED, null, Msg.of("upload.xmlNotEInvoice"));
+                }
+                String key = invoice.identity();
+                Document same = key == null ? null : documents.findByEInvoiceKey(key).orElse(null);
+                if (same != null) {
+                    // dieselbe Rechnung kam schon – meist als ZUGFeRD-PDF in derselben E-Mail
+                    return new IngestResult(Outcome.DUPLICATE, same, Msg.of("upload.duplicate"));
+                }
+                early = invoice;
+                Path converted = storage.tempSibling(received, ".pdf");
+                eInvoicePdf.render(invoice, Files.readAllBytes(received.tempFile()), xmlName(cleanName),
+                        source == DocumentSource.UPLOAD ? messages.locale() : labelLocale(invoice), converted);
+                pdf = storage.converted(received, converted);
+                cleanName = asPdfName(cleanName);
+                log.info("E-Rechnung {} ({}) als PDF dargestellt", cleanName, invoice.syntax());
+            } else if (image != null) {
                 Path converted = storage.tempSibling(received, ".pdf");
                 try {
                     imageToPdf.convert(received.tempFile(), image, converted,
@@ -138,7 +165,7 @@ public class DocumentService {
                 cleanName = asPdfName(cleanName);
                 log.info("Bild {} ({}) in ein PDF umgewandelt", cleanName, image);
             }
-            return store(pdf != null ? pdf : received, cleanName, source, origin, areaId);
+            return store(pdf != null ? pdf : received, cleanName, source, origin, areaId, null, early);
         } finally {
             storage.discard(received);
             if (pdf != null) {
@@ -173,7 +200,7 @@ public class DocumentService {
             if (existing != null) {
                 return new IngestResult(Outcome.DUPLICATE, existing, Msg.of("upload.duplicate"));
             }
-            IngestResult result = store(received, cleanName, source, origin, areaId, details);
+            IngestResult result = store(received, cleanName, source, origin, areaId, details, null);
             if (result.outcome() == Outcome.CREATED) {
                 processor.processImported(result.document().getId(), knownText, ocrUsed);
             }
@@ -248,17 +275,23 @@ public class DocumentService {
     /** Legt eine empfangene (oder umgewandelte) PDF-Datei als neues Dokument ab und reiht es zur Verarbeitung ein. */
     private IngestResult store(FileStorage.Received stored, String cleanName, DocumentSource source, MailOrigin origin,
                                String areaId) throws IOException {
-        return store(stored, cleanName, source, origin, areaId, null);
+        return store(stored, cleanName, source, origin, areaId, null, null);
     }
 
-    /** @param details mitgebrachte Angaben (Import) – dann keine Analyse, sondern {@link DocumentProcessor#processImported} */
+    /**
+     * @param details mitgebrachte Angaben (Import) – dann keine Analyse, sondern {@link DocumentProcessor#processImported}
+     * @param invoice die E-Rechnung, schon beim Ablegen gelesen: So erkennt eine gleich danach eintreffende XML-Datei
+     *                derselben Rechnung (oft im selben E-Mail) sie, bevor die Verarbeitung fertig ist
+     */
     private IngestResult store(FileStorage.Received stored, String cleanName, DocumentSource source, MailOrigin origin,
-                               String areaId, java.util.function.Consumer<Document> details) throws IOException {
+                               String areaId, java.util.function.Consumer<Document> details,
+                               de.aidocuments.einvoice.EInvoice invoice) throws IOException {
         String id = UUID.randomUUID().toString();
         Document doc = new Document(id, cleanName, storage.commit(stored, id), stored.sha256(),
                 stored.size(), source);
         doc.setTitle(DocumentProcessor.titleFromFilename(cleanName));
         doc.setAreaId(areaId);
+        doc.setEInvoice(invoice);
         if (origin != null) {
             doc.setMailOrigin(origin.accountId(), origin.subject(), origin.from(), origin.receivedAt());
         }
@@ -771,13 +804,43 @@ public class DocumentService {
         return candidates.size();
     }
 
+    /** Die eingebettete E-Rechnung eines PDFs; {@code null}, wenn keine darin ist oder das PDF nicht lesbar ist. */
+    private static de.aidocuments.einvoice.EInvoice embeddedInvoice(Path pdf) {
+        try {
+            de.aidocuments.einvoice.EInvoiceReader.Read read = de.aidocuments.einvoice.EInvoiceReader.fromPdf(pdf);
+            return read == null ? null : read.invoice();
+        } catch (IOException | RuntimeException e) {
+            return null; // die Verarbeitung meldet, was mit dem PDF nicht stimmt
+        }
+    }
+
+    /** Der Name der XML-Datei im PDF: der empfangene, mit Endung .xml. */
+    static String xmlName(String name) {
+        return name.toLowerCase(java.util.Locale.ROOT).endsWith(".xml") ? name : name + ".xml";
+    }
+
+    /**
+     * Sprache der lesbaren Darstellung, wenn niemand Bestimmtes fragt (E-Mail, Eingangsordner): Deutsch für Rechnungen
+     * aus dem deutschen Sprachraum, sonst Englisch.
+     */
+    static java.util.Locale labelLocale(de.aidocuments.einvoice.EInvoice invoice) {
+        java.util.Set<String> german = java.util.Set.of("DE", "AT", "CH", "LI", "LU");
+        for (de.aidocuments.einvoice.EInvoice.Party party : java.util.Arrays.asList(invoice.seller(), invoice.buyer())) {
+            if (party != null && party.country() != null
+                    && german.contains(party.country().strip().toUpperCase(java.util.Locale.ROOT))) {
+                return java.util.Locale.GERMAN;
+            }
+        }
+        return java.util.Locale.ENGLISH;
+    }
+
     private static String blankToNull(String value) {
         return value == null || value.isBlank() ? null : value.strip();
     }
 
-    /** "Quittung.HEIC" → "Quittung.pdf" */
+    /** "Quittung.HEIC" → "Quittung.pdf", "xrechnung-4711.xml" → "xrechnung-4711.pdf" */
     static String asPdfName(String name) {
-        String base = name.replaceFirst("(?i)\\.(jpe?g|png|hei[cf])$", "");
+        String base = name.replaceFirst("(?i)\\.(jpe?g|png|hei[cf]|xml)$", "");
         return (base.isBlank() ? "Foto" : base) + ".pdf";
     }
 

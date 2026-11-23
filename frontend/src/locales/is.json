@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Slepptu PDF-skrám eða myndum hér",
-      "hint": "Þú getur sleppt mörgum skrám í einu. Myndum (JPG, PNG, HEIC) er breytt í PDF-skrár. Allt er vistað, greint og fær efnisorð."
+      "hint": "Þú getur sleppt mörgum skrám í einu. Myndum (JPG, PNG, HEIC) og rafrænum reikningum (XML) er breytt í PDF-skrár. Allt er vistað, greint og fær efnisorð."
     },
     "remindersDue_one": "{{count, number}} áminning komin á tíma",
     "remindersDue_other": "{{count, number}} áminningar komnar á tíma",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Aðeins er hægt að bæta við PDF-skrám og myndum (JPG, PNG, HEIC).",
+    "onlyPdf": "Aðeins er hægt að bæta við PDF-skrám, myndum (JPG, PNG, HEIC) og rafrænum reikningum (XML).",
     "uploadingFile": "Hleð upp „{{name}}“ …",
     "uploadingFiles_one": "Hleð upp {{count, number}} skrá …",
     "uploadingFiles_other": "Hleð upp {{count, number}} skrám …",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Pósthólf",
       "navHint": "IMAP-þjónar sem PDF- og myndviðhengi eru flutt inn úr",
-      "intro": "PDF-viðhengi og meðfylgjandi myndir (sem PDF) eru flutt sjálfkrafa inn úr þessum IMAP-pósthólfum, en ekki texti tölvupóstanna eða innfelld merki. Pósthólfin eru aðeins lesin – tölvupóstar haldast óbreyttir og ólesnir.",
+      "intro": "PDF-viðhengi, meðfylgjandi myndir (sem PDF) og rafrænir reikningar (XRechnung sem XML) eru flutt sjálfkrafa inn úr þessum IMAP-pósthólfum, en ekki texti tölvupóstanna eða innfelld merki. Pósthólfin eru aðeins lesin – tölvupóstar haldast óbreyttir og ólesnir.",
       "add": "Bæta við pósthólfi",
       "emptyTitle": "Ekkert pósthólf hefur verið sett upp enn",
       "emptyText": "Sláðu inn aðgangsupplýsingar IMAP-pósthólfs – til dæmis pósthólfsins sem skanninn þinn sendir skjöl í.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Innflutningsmappa",
-        "text": "Mappa á þjóninum þar sem fylgst er með nýjum PDF-skrám og myndum (JPG, PNG, HEIC) – til dæmis mappan sem netskanni vistar í. Einnig er leitað í undirmöppum.",
+        "text": "Mappa á þjóninum þar sem fylgst er með nýjum PDF-skrám, myndum (JPG, PNG, HEIC) og rafrænum reikningum (XML) – til dæmis mappan sem netskanni vistar í. Einnig er leitað í undirmöppum.",
         "enable": "Vakta innflutningsmöppu",
         "path": "Slóð á þjóninum",
         "pathHint": "Algild slóð. Í Docker-gámnum er þetta tengda mappan, yfirleitt {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Fjarlægja aðgangslykil?",
       "text": "Eftir það getur enginn skráð sig inn með „{{name}}“. Hann verður áfram vistaður í lykilorðastjóranum eða á tækinu þar til þú eyðir honum þar.",
       "confirm": "Fjarlægja"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Reikningur",
+    "quote": "Tilboð",
+    "order": "Pöntun",
+    "deliveryNote": "Fylgiseðill",
+    "paymentReminder": "Greiðsluáminning",
+    "contract": "Samningur",
+    "cancellation": "Uppsögn",
+    "bankStatement": "Reikningsyfirlit",
+    "insurance": "Trygging",
+    "tax": "Skattur",
+    "payslip": "Launaseðill",
+    "officialLetter": "Bréf frá stjórnvöldum",
+    "certificate": "Vottorð",
+    "reference": "Meðmæli",
+    "medicalLetter": "Læknisvottorð",
+    "letter": "Bréf",
+    "report": "Skýrsla",
+    "manual": "Leiðbeiningar",
+    "form": "Eyðublað",
+    "other": "Annað"
+  },
+  "einvoice": {
+    "title": "Rafrænn reikningur",
+    "creditNoteTitle": "Kreditreikningur (rafrænn)",
+    "amountDue": "Til greiðslu",
+    "creditAmount": "Upphæð inneignar",
+    "dueOn": "gjalddagi {{date}}",
+    "exact": "Lesið nákvæmlega úr XML-skránni, án gervigreindar · {{format}}",
+    "downloadXml": "Sækja XML",
+    "copy": "Afrita {{label}}",
+    "copied": "Afritað: {{label}}",
+    "copyFailed": "Ekki er hægt að afrita hér.",
+    "fields": {
+      "number": "Reikningsnúmer",
+      "issueDate": "Reikningsdagsetning",
+      "seller": "Seljandi",
+      "buyer": "Kaupandi",
+      "vatId": "VSK-númer",
+      "buyerReference": "Tilvísun kaupanda",
+      "net": "Nettó",
+      "tax": "VSK {{rate}}",
+      "gross": "Brúttó",
+      "reference": "Skýring greiðslu",
+      "terms": "Greiðsluskilmálar"
+    },
+    "lines": {
+      "show_one": "Sýna {{count, number}} línu",
+      "show_other": "Sýna {{count, number}} línur",
+      "hide": "Fela línur",
+      "description": "Lýsing",
+      "quantity": "Magn",
+      "unitPrice": "Einingarverð",
+      "amount": "Upphæð"
     }
   }
 }

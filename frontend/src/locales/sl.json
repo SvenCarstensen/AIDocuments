@@ -107,7 +107,7 @@
     },
     "dropzone": {
       "title": "Spustite datoteke PDF ali fotografije sem",
-      "hint": "Naenkrat lahko spustite več datotek. Fotografije (JPG, PNG, HEIC) se pretvorijo v PDF. Vse se shrani, analizira in opremi z oznakami."
+      "hint": "Naenkrat lahko spustite več datotek. Fotografije (JPG, PNG, HEIC) in e-računi (XML) se pretvorijo v PDF. Vse se shrani, analizira in opremi z oznakami."
     },
     "remindersDue_one": "{{count, number}} zapadel opomnik",
     "remindersDue_two": "{{count, number}} zapadla opomnika",
@@ -128,7 +128,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Dodate lahko samo datoteke PDF in fotografije (JPG, PNG, HEIC).",
+    "onlyPdf": "Dodate lahko samo datoteke PDF, fotografije (JPG, PNG, HEIC) in e-račune (XML).",
     "uploadingFile": "Nalaganje »{{name}}« …",
     "uploadingFiles_one": "Nalaganje {{count, number}} datoteke …",
     "uploadingFiles_two": "Nalaganje {{count, number}} datotek …",
@@ -391,7 +391,7 @@
     "mailboxes": {
       "title": "Poštni predali",
       "navHint": "Strežniki IMAP, iz katerih se uvažajo priponke PDF in fotografije",
-      "intro": "Iz teh predalov IMAP se samodejno uvažajo priponke PDF in priložene fotografije (kot PDF), besedilo e-pošte in vdelani logotipi pa ne. Predali se samo berejo – e-pošta ostane nespremenjena in neprebrana.",
+      "intro": "Iz teh predalov IMAP se samodejno uvažajo priponke PDF, priložene fotografije (kot PDF) in e-računi (XRechnung kot XML), besedilo e-pošte in vdelani logotipi pa ne. Predali se samo berejo – e-pošta ostane nespremenjena in neprebrana.",
       "add": "Dodaj poštni predal",
       "emptyTitle": "Poštni predal še ni nastavljen",
       "emptyText": "Vnesite prijavne podatke poštnega predala IMAP – na primer predala, kamor vaš optični bralnik pošilja dokumente.",
@@ -456,7 +456,7 @@
       },
       "folder": {
         "title": "Mapa za uvoz",
-        "text": "Imenik na strežniku, ki se nadzoruje za nove datoteke PDF in fotografije (JPG, PNG, HEIC) – na primer ciljna mapa omrežnega optičnega bralnika. Pregledane so tudi podmape.",
+        "text": "Imenik na strežniku, ki se nadzoruje za nove datoteke PDF, fotografije (JPG, PNG, HEIC) in e-račune (XML) – na primer ciljna mapa omrežnega optičnega bralnika. Pregledane so tudi podmape.",
         "enable": "Nadzoruj mapo za uvoz",
         "path": "Pot na strežniku",
         "pathHint": "Absolutna pot. V vsebniku Docker je to priklopljena mapa, običajno {{path}}.",
@@ -1029,6 +1029,64 @@
       "title": "Odstraniti ključ za dostop?",
       "text": "Z »{{name}}« se nato ne more prijaviti nihče več. V upravitelju gesel oz. v napravi ostane shranjen, dokler ga tam ne izbrišete.",
       "confirm": "Odstrani"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Račun",
+    "quote": "Ponudba",
+    "order": "Naročilo",
+    "deliveryNote": "Dobavnica",
+    "paymentReminder": "Opomin",
+    "contract": "Pogodba",
+    "cancellation": "Odpoved",
+    "bankStatement": "Bančni izpisek",
+    "insurance": "Zavarovanje",
+    "tax": "Davek",
+    "payslip": "Plačilna lista",
+    "officialLetter": "Uradni dopis",
+    "certificate": "Potrdilo",
+    "reference": "Spričevalo",
+    "medicalLetter": "Zdravniški izvid",
+    "letter": "Pismo",
+    "report": "Poročilo",
+    "manual": "Navodila",
+    "form": "Obrazec",
+    "other": "Drugo"
+  },
+  "einvoice": {
+    "title": "E-račun",
+    "creditNoteTitle": "Dobropis (e-račun)",
+    "amountDue": "Za plačilo",
+    "creditAmount": "Znesek dobropisa",
+    "dueOn": "zapade {{date}}",
+    "exact": "Natančno prebrano iz datoteke XML, brez UI · {{format}}",
+    "downloadXml": "Prenesi XML",
+    "copy": "Kopiraj: {{label}}",
+    "copied": "Kopirano: {{label}}",
+    "copyFailed": "Kopiranje tukaj ni mogoče.",
+    "fields": {
+      "number": "Številka računa",
+      "issueDate": "Datum računa",
+      "seller": "Izdajatelj",
+      "buyer": "Prejemnik",
+      "vatId": "ID za DDV",
+      "buyerReference": "Referenca prejemnika",
+      "net": "Neto",
+      "tax": "DDV {{rate}}",
+      "gross": "Bruto",
+      "reference": "Namen plačila",
+      "terms": "Plačilni pogoji"
+    },
+    "lines": {
+      "show_one": "Prikaži {{count, number}} postavko",
+      "show_two": "Prikaži {{count, number}} postavki",
+      "show_few": "Prikaži {{count, number}} postavke",
+      "show_other": "Prikaži {{count, number}} postavk",
+      "hide": "Skrij postavke",
+      "description": "Opis",
+      "quantity": "Količina",
+      "unitPrice": "Cena na enoto",
+      "amount": "Znesek"
     }
   }
 }

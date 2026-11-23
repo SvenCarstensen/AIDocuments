@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "PDF’leri veya fotoğrafları buraya bırakın",
-      "hint": "Aynı anda birden fazla dosya bırakabilirsiniz. Fotoğraflar (JPG, PNG, HEIC) PDF’ye dönüştürülür. Hepsi kaydedilir, analiz edilir ve etiketlenir."
+      "hint": "Aynı anda birden fazla dosya bırakabilirsiniz. Fotoğraflar (JPG, PNG, HEIC) ve e-faturalar (XML) PDF’ye dönüştürülür. Hepsi kaydedilir, analiz edilir ve etiketlenir."
     },
     "remindersDue_one": "{{count, number}} hatırlatıcının zamanı geldi",
     "remindersDue_other": "{{count, number}} hatırlatıcının zamanı geldi",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Yalnızca PDF’ler ve fotoğraflar (JPG, PNG, HEIC) eklenebilir.",
+    "onlyPdf": "Yalnızca PDF’ler, fotoğraflar (JPG, PNG, HEIC) ve e-faturalar (XML) eklenebilir.",
     "uploadingFile": "“{{name}}” yükleniyor…",
     "uploadingFiles_one": "{{count, number}} dosya yükleniyor…",
     "uploadingFiles_other": "{{count, number}} dosya yükleniyor…",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Posta kutuları",
       "navHint": "PDF ve fotoğraf eklerinin içe aktarıldığı IMAP sunucuları",
-      "intro": "PDF ekleri ve ekli fotoğraflar (PDF olarak) bu IMAP posta kutularından otomatik olarak içe aktarılır; e-postaların metni ve gömülü logolar aktarılmaz. Posta kutuları yalnızca okunur – e-postalar değişmeden ve okunmamış olarak kalır.",
+      "intro": "PDF ekleri, ekli fotoğraflar (PDF olarak) ve e-faturalar (XML olarak XRechnung) bu IMAP posta kutularından otomatik olarak içe aktarılır; e-postaların metni ve gömülü logolar aktarılmaz. Posta kutuları yalnızca okunur – e-postalar değişmeden ve okunmamış olarak kalır.",
       "add": "Posta kutusu ekle",
       "emptyTitle": "Henüz posta kutusu ayarlanmadı",
       "emptyText": "Bir IMAP posta kutusunun erişim bilgilerini girin – örneğin tarayıcınızın belgeleri gönderdiği posta kutusu.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "İçe aktarma klasörü",
-        "text": "Sunucuda yeni PDF’ler ve fotoğraflar (JPG, PNG, HEIC) için izlenen bir dizin – örneğin bir ağ tarayıcısının hedef klasörü. Alt klasörler de aranır.",
+        "text": "Sunucuda yeni PDF’ler, fotoğraflar (JPG, PNG, HEIC) ve e-faturalar (XML) için izlenen bir dizin – örneğin bir ağ tarayıcısının hedef klasörü. Alt klasörler de aranır.",
         "enable": "İçe aktarma klasörünü izle",
         "path": "Sunucudaki yol",
         "pathHint": "Mutlak yol. Docker kapsayıcısında bu, bağlanan klasördür; genellikle {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Geçiş anahtarı kaldırılsın mı?",
       "text": "Bundan sonra kimse “{{name}}” ile oturum açamaz. Anahtar, siz oradan silene kadar parola yöneticisinde veya cihazda kayıtlı kalır.",
       "confirm": "Kaldır"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Fatura",
+    "quote": "Teklif",
+    "order": "Sipariş",
+    "deliveryNote": "İrsaliye",
+    "paymentReminder": "Ödeme hatırlatması",
+    "contract": "Sözleşme",
+    "cancellation": "Fesih",
+    "bankStatement": "Hesap özeti",
+    "insurance": "Sigorta",
+    "tax": "Vergi",
+    "payslip": "Maaş bordrosu",
+    "officialLetter": "Resmî yazı",
+    "certificate": "Belge",
+    "reference": "Referans mektubu",
+    "medicalLetter": "Doktor raporu",
+    "letter": "Mektup",
+    "report": "Rapor",
+    "manual": "Kılavuz",
+    "form": "Form",
+    "other": "Diğer"
+  },
+  "einvoice": {
+    "title": "E-fatura",
+    "creditNoteTitle": "Alacak dekontu (e-fatura)",
+    "amountDue": "Ödenecek tutar",
+    "creditAmount": "Alacak tutarı",
+    "dueOn": "son ödeme tarihi {{date}}",
+    "exact": "Yapay zekâ kullanılmadan doğrudan XML dosyasından okundu · {{format}}",
+    "downloadXml": "XML’i indir",
+    "copy": "Kopyala: {{label}}",
+    "copied": "Kopyalandı: {{label}}",
+    "copyFailed": "Burada kopyalama mümkün değil.",
+    "fields": {
+      "number": "Fatura numarası",
+      "issueDate": "Fatura tarihi",
+      "seller": "Satıcı",
+      "buyer": "Alıcı",
+      "vatId": "KDV No.",
+      "buyerReference": "Alıcı referansı",
+      "net": "Net",
+      "tax": "KDV {{rate}}",
+      "gross": "Brüt",
+      "reference": "Ödeme açıklaması",
+      "terms": "Ödeme koşulları"
+    },
+    "lines": {
+      "show_one": "{{count, number}} kalemi göster",
+      "show_other": "{{count, number}} kalemi göster",
+      "hide": "Kalemleri gizle",
+      "description": "Açıklama",
+      "quantity": "Miktar",
+      "unitPrice": "Birim fiyat",
+      "amount": "Tutar"
     }
   }
 }

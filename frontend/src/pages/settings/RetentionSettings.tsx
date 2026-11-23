@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { Alert, Button, Card, ConfirmDialog, EmptyState, Field, IconButton, Input, Modal, Spinner } from '../../components/ui'
 import { api, errorMessage, type RetentionRule } from '../../lib/api'
 import { SectionHeader } from './SectionHeader'
+import { documentTypeLabel, documentTypeOptions, documentTypeValue } from '../../lib/documentTypes'
 
 export function RetentionSettings() {
   const { t } = useTranslation()
@@ -60,18 +61,18 @@ export function RetentionSettings() {
             {rules.data.map((rule) => (
               <li key={rule.id} className="flex items-center gap-3 px-4 py-3 sm:px-5">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold">{rule.category}</p>
+                  <p className="truncate text-sm font-semibold">{documentTypeLabel(rule.category)}</p>
                   <p className="mt-0.5 text-xs text-muted">
                     {t('settings.retention.years', { count: rule.years })}
                     {' · '}
                     {t('common.documentCount', { count: rule.documentCount })}
                   </p>
                 </div>
-                <IconButton label={t('settings.retention.edit', { category: rule.category })} onClick={() => setEditing(rule)}>
+                <IconButton label={t('settings.retention.edit', { category: documentTypeLabel(rule.category) })} onClick={() => setEditing(rule)}>
                   <Pencil className="size-4" />
                 </IconButton>
                 <IconButton
-                  label={t('settings.retention.delete.label', { category: rule.category })}
+                  label={t('settings.retention.delete.label', { category: documentTypeLabel(rule.category) })}
                   onClick={() => setDeleting(rule)}
                   className="hover:!bg-danger-soft hover:!text-danger"
                 >
@@ -92,7 +93,7 @@ export function RetentionSettings() {
         title={t('settings.retention.delete.title')}
         confirmLabel={t('common.delete')}
       >
-        {t('settings.retention.delete.text', { category: deleting?.category ?? '' })}
+        {t('settings.retention.delete.text', { category: deleting ? documentTypeLabel(deleting.category) : '' })}
       </ConfirmDialog>
     </section>
   )
@@ -102,13 +103,13 @@ function RuleDialog({ rule, onClose }: { rule: RetentionRule | null; onClose: ()
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const facets = useQuery({ queryKey: ['documents', 'facets'], queryFn: api.facets })
-  const [category, setCategory] = useState(rule?.category ?? '')
+  const [category, setCategory] = useState(rule ? documentTypeLabel(rule.category) : '')
   const [years, setYears] = useState(String(rule?.years ?? 10))
   const shorter = rule !== null && Number(years) < rule.years
 
   const save = useMutation({
     mutationFn: () => {
-      const body = { category: category.trim(), years: Number(years) }
+      const body = { category: documentTypeValue(category), years: Number(years) }
       return rule ? api.updateRetentionRule(rule.id, body) : api.createRetentionRule(body)
     },
     onSuccess: async () => {
@@ -128,7 +129,7 @@ function RuleDialog({ rule, onClose }: { rule: RetentionRule | null; onClose: ()
   }
 
   return (
-    <Modal open onClose={onClose} title={rule ? t('settings.retention.edit', { category: rule.category }) : t('settings.retention.add')}>
+    <Modal open onClose={onClose} title={rule ? t('settings.retention.edit', { category: documentTypeLabel(rule.category) }) : t('settings.retention.add')}>
       <form onSubmit={submit} className="flex flex-col gap-4">
         {save.isError && <Alert tone="danger">{errorMessage(save.error)}</Alert>}
         <Field label={t('document.fields.category')} hint={t('settings.retention.dialog.categoryHint')}>
@@ -136,7 +137,7 @@ function RuleDialog({ rule, onClose }: { rule: RetentionRule | null; onClose: ()
             <>
               <Input id={id} value={category} onChange={(e) => setCategory(e.target.value)} list={`${id}-list`} maxLength={100} required autoFocus />
               <datalist id={`${id}-list`}>
-                {facets.data?.categories.map((facet) => <option key={facet.name} value={facet.name} />)}
+                {documentTypeOptions(facets.data?.categories.map((facet) => facet.name)).map((label) => <option key={label} value={label} />)}
               </datalist>
             </>
           )}

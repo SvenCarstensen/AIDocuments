@@ -106,7 +106,7 @@
     },
     "dropzone": {
       "title": "Deixa anar aquí PDF o fotos",
-      "hint": "Pots deixar anar diversos fitxers alhora. Les fotos (JPG, PNG, HEIC) es converteixen en PDF. Tot es desa, s’analitza i s’etiqueta."
+      "hint": "Pots deixar anar diversos fitxers alhora. Les fotos (JPG, PNG, HEIC) i les factures electròniques (XML) es converteixen en PDF. Tot es desa, s’analitza i s’etiqueta."
     },
     "remindersDue_one": "{{count, number}} recordatori pendent",
     "remindersDue_many": "{{count, number}} de recordatoris pendents",
@@ -126,7 +126,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Només es poden afegir PDF i fotos (JPG, PNG, HEIC).",
+    "onlyPdf": "Només es poden afegir PDF, fotos (JPG, PNG, HEIC) i factures electròniques (XML).",
     "uploadingFile": "S’està pujant «{{name}}»…",
     "uploadingFiles_one": "S’està pujant {{count, number}} fitxer…",
     "uploadingFiles_many": "S’estan pujant {{count, number}} de fitxers…",
@@ -378,7 +378,7 @@
     "mailboxes": {
       "title": "Bústies de correu",
       "navHint": "Servidors IMAP des dels quals s’importen els adjunts PDF i les fotos",
-      "intro": "Els adjunts PDF i les fotos adjuntes (com a PDF) s’importen automàticament d’aquestes bústies de correu IMAP; el text dels correus i els logotips incrustats, no. Les bústies només es llegeixen: els correus es mantenen sense canvis i sense llegir.",
+      "intro": "Els adjunts PDF, les fotos adjuntes (com a PDF) i les factures electròniques (XRechnung com a XML) s’importen automàticament d’aquestes bústies de correu IMAP; el text dels correus i els logotips incrustats, no. Les bústies només es llegeixen: els correus es mantenen sense canvis i sense llegir.",
       "add": "Afegeix una bústia de correu",
       "emptyTitle": "Encara no hi ha cap bústia configurada",
       "emptyText": "Introdueix les dades d’accés d’una bústia IMAP, per exemple la bústia a la qual l’escàner envia els documents.",
@@ -443,7 +443,7 @@
       },
       "folder": {
         "title": "Carpeta d’importació",
-        "text": "Un directori del servidor que es vigila a la recerca de PDF i fotos (JPG, PNG, HEIC) nous, per exemple la destinació d’un escàner de xarxa. També es cerca a les subcarpetes.",
+        "text": "Un directori del servidor que es vigila a la recerca de nous PDF, fotos (JPG, PNG, HEIC) i factures electròniques (XML), per exemple la destinació d’un escàner de xarxa. També es cerca a les subcarpetes.",
         "enable": "Vigila la carpeta d’importació",
         "path": "Ruta al servidor",
         "pathHint": "Ruta absoluta. Al contenidor Docker és la carpeta muntada, normalment {{path}}.",
@@ -1005,6 +1005,63 @@
       "title": "Vols eliminar la clau d’accés?",
       "text": "Després ningú no podrà iniciar la sessió amb «{{name}}». Continua desada al gestor de contrasenyes o al dispositiu fins que l’eliminis d’allà.",
       "confirm": "Elimina"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Factura",
+    "quote": "Pressupost",
+    "order": "Comanda",
+    "deliveryNote": "Albarà",
+    "paymentReminder": "Recordatori de pagament",
+    "contract": "Contracte",
+    "cancellation": "Rescissió",
+    "bankStatement": "Extracte bancari",
+    "insurance": "Assegurança",
+    "tax": "Impostos",
+    "payslip": "Nòmina",
+    "officialLetter": "Carta oficial",
+    "certificate": "Certificat",
+    "reference": "Referència",
+    "medicalLetter": "Informe mèdic",
+    "letter": "Carta",
+    "report": "Informe",
+    "manual": "Manual",
+    "form": "Formulari",
+    "other": "Altres"
+  },
+  "einvoice": {
+    "title": "Factura electrònica",
+    "creditNoteTitle": "Abonament (factura electrònica)",
+    "amountDue": "Import a pagar",
+    "creditAmount": "Import abonat",
+    "dueOn": "venç el {{date}}",
+    "exact": "Llegit amb exactitud del fitxer XML, sense IA · {{format}}",
+    "downloadXml": "Baixa l’XML",
+    "copy": "Copia {{label}}",
+    "copied": "Copiat: {{label}}",
+    "copyFailed": "Aquí no es pot copiar.",
+    "fields": {
+      "number": "Número de factura",
+      "issueDate": "Data de la factura",
+      "seller": "Emissor",
+      "buyer": "Destinatari",
+      "vatId": "NIF-IVA",
+      "buyerReference": "Referència del comprador",
+      "net": "Base imposable",
+      "tax": "IVA {{rate}}",
+      "gross": "Total",
+      "reference": "Concepte",
+      "terms": "Condicions de pagament"
+    },
+    "lines": {
+      "show_one": "Mostra {{count, number}} línia",
+      "show_many": "Mostra {{count, number}} línies",
+      "show_other": "Mostra {{count, number}} línies",
+      "hide": "Amaga les línies",
+      "description": "Descripció",
+      "quantity": "Quantitat",
+      "unitPrice": "Preu unitari",
+      "amount": "Import"
     }
   }
 }

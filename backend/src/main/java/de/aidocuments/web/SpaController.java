@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class SpaController {
 
-    @GetMapping({"/documents", "/documents/**", "/settings", "/settings/**", "/history", "/duplicates/**"})
+    /** Alle Seiten der Oberfläche (frontend/src/App.tsx) – sonst schlägt Neuladen oder ein Lesezeichen fehl. */
+    @GetMapping({"/documents", "/documents/**", "/settings", "/settings/**", "/history", "/reminders", "/contracts",
+            "/duplicates/**"})
     public String forward() {
         return "forward:/index.html";
     }

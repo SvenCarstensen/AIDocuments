@@ -106,7 +106,7 @@
     },
     "dropzone": {
       "title": "Suelta aquí los PDF o las fotos",
-      "hint": "Puedes soltar varios archivos a la vez. Las fotos (JPG, PNG, HEIC) se convierten en PDF. Todo se guarda, se analiza y se etiqueta."
+      "hint": "Puedes soltar varios archivos a la vez. Las fotos (JPG, PNG, HEIC) y las facturas electrónicas (XML) se convierten en PDF. Todo se guarda, se analiza y se etiqueta."
     },
     "remindersDue_one": "{{count, number}} recordatorio pendiente",
     "remindersDue_many": "{{count, number}} de recordatorios pendientes",
@@ -126,7 +126,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Solo se pueden añadir PDF y fotos (JPG, PNG, HEIC).",
+    "onlyPdf": "Solo se pueden añadir PDF, fotos (JPG, PNG, HEIC) y facturas electrónicas (XML).",
     "uploadingFile": "Subiendo «{{name}}»…",
     "uploadingFiles_one": "Subiendo {{count, number}} archivo…",
     "uploadingFiles_many": "Subiendo {{count, number}} de archivos…",
@@ -378,7 +378,7 @@
     "mailboxes": {
       "title": "Buzones de correo",
       "navHint": "Servidores IMAP desde los que se importan los PDF y las fotos adjuntos",
-      "intro": "Los PDF adjuntos y las fotos adjuntas (como PDF) se importan automáticamente desde estos buzones IMAP; el texto de los correos y los logotipos incrustados, no. Los buzones solo se leen: los correos no se modifican y siguen sin leer.",
+      "intro": "Los PDF adjuntos, las fotos adjuntas (como PDF) y las facturas electrónicas (XRechnung como XML) se importan automáticamente desde estos buzones IMAP; el texto de los correos y los logotipos incrustados, no. Los buzones solo se leen: los correos no se modifican y siguen sin leer.",
       "add": "Añadir buzón de correo",
       "emptyTitle": "Aún no hay ningún buzón configurado",
       "emptyText": "Introduce los datos de acceso de un buzón IMAP, por ejemplo el buzón al que tu escáner envía los documentos.",
@@ -443,7 +443,7 @@
       },
       "folder": {
         "title": "Carpeta de importación",
-        "text": "Un directorio del servidor que se vigila en busca de PDF y fotos (JPG, PNG, HEIC) nuevos, por ejemplo el destino de un escáner de red. También se busca en las subcarpetas.",
+        "text": "Un directorio del servidor que se vigila en busca de nuevos PDF, fotos (JPG, PNG, HEIC) y facturas electrónicas (XML), por ejemplo el destino de un escáner de red. También se busca en las subcarpetas.",
         "enable": "Vigilar la carpeta de importación",
         "path": "Ruta en el servidor",
         "pathHint": "Ruta absoluta. En el contenedor Docker es la carpeta montada, normalmente {{path}}.",
@@ -1005,6 +1005,63 @@
       "title": "¿Quitar la llave de acceso?",
       "text": "Después nadie podrá iniciar sesión con «{{name}}». Seguirá guardada en el gestor de contraseñas o en el dispositivo hasta que la elimines allí.",
       "confirm": "Quitar"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Factura",
+    "quote": "Presupuesto",
+    "order": "Pedido",
+    "deliveryNote": "Albarán",
+    "paymentReminder": "Recordatorio de pago",
+    "contract": "Contrato",
+    "cancellation": "Rescisión",
+    "bankStatement": "Extracto bancario",
+    "insurance": "Seguro",
+    "tax": "Impuestos",
+    "payslip": "Nómina",
+    "officialLetter": "Carta oficial",
+    "certificate": "Certificado",
+    "reference": "Referencia",
+    "medicalLetter": "Informe médico",
+    "letter": "Carta",
+    "report": "Informe",
+    "manual": "Manual",
+    "form": "Formulario",
+    "other": "Otros"
+  },
+  "einvoice": {
+    "title": "Factura electrónica",
+    "creditNoteTitle": "Abono (factura electrónica)",
+    "amountDue": "Importe a pagar",
+    "creditAmount": "Importe abonado",
+    "dueOn": "vence el {{date}}",
+    "exact": "Leído con exactitud del archivo XML, sin IA · {{format}}",
+    "downloadXml": "Descargar XML",
+    "copy": "Copiar {{label}}",
+    "copied": "Copiado: {{label}}",
+    "copyFailed": "Aquí no se puede copiar.",
+    "fields": {
+      "number": "Número de factura",
+      "issueDate": "Fecha de factura",
+      "seller": "Emisor",
+      "buyer": "Destinatario",
+      "vatId": "NIF-IVA",
+      "buyerReference": "Referencia del comprador",
+      "net": "Base imponible",
+      "tax": "IVA {{rate}}",
+      "gross": "Total",
+      "reference": "Concepto",
+      "terms": "Condiciones de pago"
+    },
+    "lines": {
+      "show_one": "Mostrar {{count, number}} línea",
+      "show_many": "Mostrar {{count, number}} líneas",
+      "show_other": "Mostrar {{count, number}} líneas",
+      "hide": "Ocultar líneas",
+      "description": "Descripción",
+      "quantity": "Cantidad",
+      "unitPrice": "Precio unitario",
+      "amount": "Importe"
     }
   }
 }

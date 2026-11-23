@@ -106,7 +106,7 @@
     },
     "dropzone": {
       "title": "Ievelciet PDF failus vai fotoattēlus šeit",
-      "hint": "Var ievilkt vairākus failus vienlaikus. Fotoattēli (JPG, PNG, HEIC) tiek pārvērsti PDF failos. Viss tiek saglabāts, analizēts un papildināts ar atslēgvārdiem."
+      "hint": "Var ievilkt vairākus failus vienlaikus. Fotoattēli (JPG, PNG, HEIC) un e-rēķini (XML) tiek pārvērsti PDF failos. Viss tiek saglabāts, analizēts un papildināts ar atslēgvārdiem."
     },
     "remindersDue_zero": "{{count, number}} aktuālu atgādinājumu",
     "remindersDue_one": "{{count, number}} aktuāls atgādinājums",
@@ -126,7 +126,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Var pievienot tikai PDF failus un fotoattēlus (JPG, PNG, HEIC).",
+    "onlyPdf": "Var pievienot tikai PDF failus, fotoattēlus (JPG, PNG, HEIC) un e-rēķinus (XML).",
     "uploadingFile": "Notiek „{{name}}” augšupielāde…",
     "uploadingFiles_zero": "Notiek {{count, number}} failu augšupielāde…",
     "uploadingFiles_one": "Notiek {{count, number}} faila augšupielāde…",
@@ -378,7 +378,7 @@
     "mailboxes": {
       "title": "Pastkastes",
       "navHint": "IMAP serveri, no kuriem tiek importēti PDF pielikumi un fotoattēli",
-      "intro": "No šīm IMAP pastkastēm automātiski tiek importēti PDF pielikumi un pievienotie fotoattēli (kā PDF); e-pasta ziņojumu teksts un iegultie logotipi – ne. Pastkastes tiek tikai lasītas – e-pasta ziņojumi paliek nemainīti un nelasīti.",
+      "intro": "No šīm IMAP pastkastēm automātiski tiek importēti PDF pielikumi, pievienotie fotoattēli (kā PDF) un e-rēķini (XRechnung kā XML); e-pasta ziņojumu teksts un iegultie logotipi – ne. Pastkastes tiek tikai lasītas – e-pasta ziņojumi paliek nemainīti un nelasīti.",
       "add": "Pievienot pastkasti",
       "emptyTitle": "Vēl nav iestatīta neviena pastkaste",
       "emptyText": "Ievadiet IMAP pastkastes piekļuves datus – piemēram, tās pastkastes, uz kuru jūsu skeneris sūta dokumentus.",
@@ -443,7 +443,7 @@
       },
       "folder": {
         "title": "Importa mape",
-        "text": "Mape serverī, kas tiek uzraudzīta, lai pamanītu jaunus PDF failus un fotoattēlus (JPG, PNG, HEIC), – piemēram, tīkla skenera mērķa mape. Tiek pārmeklētas arī apakšmapes.",
+        "text": "Mape serverī, kas tiek uzraudzīta, lai pamanītu jaunus PDF failus, fotoattēlus (JPG, PNG, HEIC) un e-rēķinus (XML), – piemēram, tīkla skenera mērķa mape. Tiek pārmeklētas arī apakšmapes.",
         "enable": "Uzraudzīt importa mapi",
         "path": "Ceļš serverī",
         "pathHint": "Absolūtais ceļš. Docker konteinerā tā ir pievienotā mape, parasti {{path}}.",
@@ -1005,6 +1005,63 @@
       "title": "Noņemt piekļuves atslēgu?",
       "text": "Pēc tam neviens vairs nevarēs pierakstīties ar „{{name}}”. Tā paliek saglabāta paroļu pārvaldniekā vai ierīcē, līdz jūs to tur izdzēsīsiet.",
       "confirm": "Noņemt"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Rēķins",
+    "quote": "Piedāvājums",
+    "order": "Pasūtījums",
+    "deliveryNote": "Pavadzīme",
+    "paymentReminder": "Atgādinājums par maksājumu",
+    "contract": "Līgums",
+    "cancellation": "Uzteikums",
+    "bankStatement": "Konta izraksts",
+    "insurance": "Apdrošināšana",
+    "tax": "Nodoklis",
+    "payslip": "Algas lapiņa",
+    "officialLetter": "Oficiāla vēstule",
+    "certificate": "Izziņa",
+    "reference": "Liecība",
+    "medicalLetter": "Ārsta izraksts",
+    "letter": "Vēstule",
+    "report": "Atskaite",
+    "manual": "Instrukcija",
+    "form": "Veidlapa",
+    "other": "Cits"
+  },
+  "einvoice": {
+    "title": "E-rēķins",
+    "creditNoteTitle": "Kredītrēķins (e-rēķins)",
+    "amountDue": "Maksājamā summa",
+    "creditAmount": "Kreditētā summa",
+    "dueOn": "apmaksāt līdz {{date}}",
+    "exact": "Precīzi nolasīts no XML faila, bez MI · {{format}}",
+    "downloadXml": "Lejupielādēt XML",
+    "copy": "Kopēt: {{label}}",
+    "copied": "Nokopēts: {{label}}",
+    "copyFailed": "Šeit nevar kopēt.",
+    "fields": {
+      "number": "Rēķina numurs",
+      "issueDate": "Rēķina datums",
+      "seller": "Pārdevējs",
+      "buyer": "Pircējs",
+      "vatId": "PVN reģ. Nr.",
+      "buyerReference": "Pircēja atsauce",
+      "net": "Neto",
+      "tax": "PVN {{rate}}",
+      "gross": "Bruto",
+      "reference": "Maksājuma mērķis",
+      "terms": "Apmaksas noteikumi"
+    },
+    "lines": {
+      "show_zero": "Rādīt {{count, number}} pozīcijas",
+      "show_one": "Rādīt {{count, number}} pozīciju",
+      "show_other": "Rādīt {{count, number}} pozīcijas",
+      "hide": "Paslēpt pozīcijas",
+      "description": "Apraksts",
+      "quantity": "Daudzums",
+      "unitPrice": "Vienības cena",
+      "amount": "Summa"
     }
   }
 }

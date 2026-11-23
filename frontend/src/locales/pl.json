@@ -107,7 +107,7 @@
     },
     "dropzone": {
       "title": "Upuść tutaj pliki PDF lub zdjęcia",
-      "hint": "Możesz upuścić kilka plików naraz. Zdjęcia (JPG, PNG, HEIC) zostaną zamienione na pliki PDF. Wszystko zostanie zapisane, przeanalizowane i oznaczone tagami."
+      "hint": "Możesz upuścić kilka plików naraz. Zdjęcia (JPG, PNG, HEIC) i e-faktury (XML) zostaną zamienione na pliki PDF. Wszystko zostanie zapisane, przeanalizowane i oznaczone tagami."
     },
     "remindersDue_one": "{{count, number}} przypomnienie do załatwienia",
     "remindersDue_few": "{{count, number}} przypomnienia do załatwienia",
@@ -128,7 +128,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Można dodawać tylko pliki PDF i zdjęcia (JPG, PNG, HEIC).",
+    "onlyPdf": "Można dodawać tylko pliki PDF, zdjęcia (JPG, PNG, HEIC) i e-faktury (XML).",
     "uploadingFile": "Przesyłanie „{{name}}”…",
     "uploadingFiles_one": "Przesyłanie {{count, number}} pliku…",
     "uploadingFiles_few": "Przesyłanie {{count, number}} plików…",
@@ -391,7 +391,7 @@
     "mailboxes": {
       "title": "Skrzynki pocztowe",
       "navHint": "Serwery IMAP, z których importowane są załączniki PDF i zdjęcia",
-      "intro": "Z tych skrzynek pocztowych IMAP automatycznie importowane są załączniki PDF i załączone zdjęcia (jako pliki PDF); treść wiadomości i osadzone logotypy – nie. Skrzynki są tylko odczytywane – wiadomości e-mail pozostają niezmienione i nieprzeczytane.",
+      "intro": "Z tych skrzynek pocztowych IMAP automatycznie importowane są załączniki PDF, załączone zdjęcia (jako pliki PDF) i e-faktury (XRechnung jako XML); treść wiadomości i osadzone logotypy – nie. Skrzynki są tylko odczytywane – wiadomości e-mail pozostają niezmienione i nieprzeczytane.",
       "add": "Dodaj skrzynkę",
       "emptyTitle": "Nie skonfigurowano jeszcze żadnej skrzynki",
       "emptyText": "Wpisz dane dostępowe skrzynki pocztowej IMAP – na przykład tej, na którą Twój skaner wysyła dokumenty.",
@@ -456,7 +456,7 @@
       },
       "folder": {
         "title": "Folder importu",
-        "text": "Katalog na serwerze, który jest obserwowany pod kątem nowych plików PDF i zdjęć (JPG, PNG, HEIC) – na przykład miejsce docelowe skanera sieciowego. Podfoldery są również przeszukiwane.",
+        "text": "Katalog na serwerze, który jest obserwowany pod kątem nowych plików PDF, zdjęć (JPG, PNG, HEIC) i e-faktur (XML) – na przykład miejsce docelowe skanera sieciowego. Podfoldery są również przeszukiwane.",
         "enable": "Obserwuj folder importu",
         "path": "Ścieżka na serwerze",
         "pathHint": "Ścieżka bezwzględna. W kontenerze Docker jest to zamontowany folder, zwykle {{path}}.",
@@ -1029,6 +1029,64 @@
       "title": "Usunąć klucz dostępu?",
       "text": "Za pomocą „{{name}}” nikt nie będzie mógł się już zalogować. Klucz pozostanie zapisany w menedżerze haseł lub na urządzeniu, dopóki go tam nie usuniesz.",
       "confirm": "Usuń"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Faktura",
+    "quote": "Oferta",
+    "order": "Zamówienie",
+    "deliveryNote": "Dowód dostawy",
+    "paymentReminder": "Monit",
+    "contract": "Umowa",
+    "cancellation": "Wypowiedzenie",
+    "bankStatement": "Wyciąg bankowy",
+    "insurance": "Ubezpieczenie",
+    "tax": "Podatek",
+    "payslip": "Pasek wypłaty",
+    "officialLetter": "Pismo urzędowe",
+    "certificate": "Zaświadczenie",
+    "reference": "Świadectwo",
+    "medicalLetter": "List od lekarza",
+    "letter": "List",
+    "report": "Raport",
+    "manual": "Instrukcja",
+    "form": "Formularz",
+    "other": "Inne"
+  },
+  "einvoice": {
+    "title": "E-faktura",
+    "creditNoteTitle": "Faktura korygująca (e-faktura)",
+    "amountDue": "Do zapłaty",
+    "creditAmount": "Kwota korekty",
+    "dueOn": "płatne do {{date}}",
+    "exact": "Odczytano dokładnie z pliku XML, bez AI · {{format}}",
+    "downloadXml": "Pobierz XML",
+    "copy": "Kopiuj: {{label}}",
+    "copied": "Skopiowano: {{label}}",
+    "copyFailed": "Kopiowanie nie jest tutaj możliwe.",
+    "fields": {
+      "number": "Numer faktury",
+      "issueDate": "Data wystawienia",
+      "seller": "Sprzedawca",
+      "buyer": "Nabywca",
+      "vatId": "NIP UE",
+      "buyerReference": "Referencja nabywcy",
+      "net": "Netto",
+      "tax": "VAT {{rate}}",
+      "gross": "Brutto",
+      "reference": "Tytuł przelewu",
+      "terms": "Warunki płatności"
+    },
+    "lines": {
+      "show_one": "Pokaż {{count, number}} pozycję",
+      "show_few": "Pokaż {{count, number}} pozycje",
+      "show_many": "Pokaż {{count, number}} pozycji",
+      "show_other": "Pokaż {{count, number}} pozycji",
+      "hide": "Ukryj pozycje",
+      "description": "Nazwa",
+      "quantity": "Ilość",
+      "unitPrice": "Cena jednostkowa",
+      "amount": "Wartość"
     }
   }
 }

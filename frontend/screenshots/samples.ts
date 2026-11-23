@@ -35,8 +35,6 @@ export interface Sample {
   /** Seiten als HTML-Fragmente */
   pages: string[]
   analysis: Analysis
-  /** Dokumentart, die in der englischen Oberfläche stehen soll */
-  type: string
 }
 
 const brand = (name: string, color: string, tagline = '') => `
@@ -115,7 +113,6 @@ export function samples(): Sample[] {
   return [
     {
       file: 'brightwave-invoice.pdf',
-      type: 'Invoice',
       pages: [`
         ${brand('Brightwave Energy', '#f59e0b', 'Clean power for every home')}
         ${recipient}
@@ -153,7 +150,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'brightwave-supply-contract.pdf',
-      type: 'Contract',
       pages: [`
         ${brand('Brightwave Energy', '#f59e0b', 'Clean power for every home')}
         ${recipient}
@@ -196,7 +192,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'harbourline-car-insurance.pdf',
-      type: 'Insurance',
       pages: [`
         ${brand('Harbourline Insurance', '#0e7490', 'Motor · Home · Travel')}
         ${recipient}
@@ -239,7 +234,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'northbank-statement.pdf',
-      type: 'Bank statement',
       pages: [
         `
         ${brand('Northbank', '#1d4ed8', 'Current account statement')}
@@ -289,7 +283,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'corrib-payslip.pdf',
-      type: 'Payslip',
       pages: [`
         ${brand('Corrib Software Ltd', '#7c3aed', 'Payroll')}
         ${recipient}
@@ -317,7 +310,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'lakeside-property-tax.pdf',
-      type: 'Tax',
       pages: [`
         ${brand('Lakeside County Council', '#15803d', 'Finance Department')}
         ${recipient}
@@ -352,7 +344,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'seaview-dental-invoice.pdf',
-      type: 'Invoice',
       pages: [`
         ${brand('Seaview Dental Practice', '#0891b2', 'Dr. Niamh Keane & team')}
         ${recipient}
@@ -379,7 +370,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'skylink-mobile-invoice.pdf',
-      type: 'Invoice',
       pages: [`
         ${brand('Skylink Mobile', '#db2777', 'Unlimited 5G')}
         ${recipient}
@@ -406,7 +396,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'kestrel-tenancy-agreement.pdf',
-      type: 'Contract',
       pages: [
         `
         ${brand('Kestrel Property Management', '#9333ea', 'Lettings · Galway')}
@@ -456,7 +445,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'oakline-delivery-note.pdf',
-      type: 'Delivery note',
       pages: [`
         ${brand('Oakline Furniture', '#92400e', 'Solid wood, made to last')}
         ${recipient}
@@ -484,7 +472,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'greenroof-solar-quote.pdf',
-      type: 'Quote',
       pages: [`
         ${brand('GreenRoof Solar', '#16a34a', 'Solar panels and storage')}
         ${recipient}
@@ -519,7 +506,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'pulse-gym-cancellation.pdf',
-      type: 'Cancellation',
       pages: [`
         ${brand('Pulse Gym', '#dc2626', 'Train smarter')}
         ${recipient}
@@ -547,7 +533,6 @@ export function samples(): Sample[] {
     },
     {
       file: 'first-aid-certificate.pdf',
-      type: 'Certificate',
       pages: [`
         <div style="border:6px double #b45309; height:100%; padding:20mm; text-align:center">
           <div class="name" style="color:#b45309; font-size:13pt; letter-spacing:3px">RED HARBOUR TRAINING</div>

@@ -105,7 +105,7 @@
     },
     "dropzone": {
       "title": "Lësho skedarët PDF ose fotot këtu",
-      "hint": "Mund të lëshosh disa skedarë njëherësh. Fotot (JPG, PNG, HEIC) shndërrohen në PDF. Gjithçka ruhet, analizohet dhe etiketohet."
+      "hint": "Mund të lëshosh disa skedarë njëherësh. Fotot (JPG, PNG, HEIC) dhe faturat elektronike (XML) shndërrohen në PDF. Gjithçka ruhet, analizohet dhe etiketohet."
     },
     "remindersDue_one": "{{count, number}} kujtesë për t’u kryer",
     "remindersDue_other": "{{count, number}} kujtesa për t’u kryer",
@@ -124,7 +124,7 @@
     }
   },
   "upload": {
-    "onlyPdf": "Mund të shtohen vetëm skedarë PDF dhe foto (JPG, PNG, HEIC).",
+    "onlyPdf": "Mund të shtohen vetëm skedarë PDF, foto (JPG, PNG, HEIC) dhe fatura elektronike (XML).",
     "uploadingFile": "Po ngarkohet „{{name}}“…",
     "uploadingFiles_one": "Po ngarkohet {{count, number}} skedar…",
     "uploadingFiles_other": "Po ngarkohen {{count, number}} skedarë…",
@@ -365,7 +365,7 @@
     "mailboxes": {
       "title": "Kutitë postare",
       "navHint": "Serverë IMAP nga të cilët importohen bashkëngjitjet PDF dhe fotot",
-      "intro": "Bashkëngjitjet PDF dhe fotot e bashkëngjitura (si PDF) importohen automatikisht nga këto kuti postare IMAP; teksti i email-eve dhe logot e ngulitura jo. Kutitë postare vetëm lexohen – email-et mbeten të pandryshuara dhe të palexuara.",
+      "intro": "Bashkëngjitjet PDF, fotot e bashkëngjitura (si PDF) dhe faturat elektronike (XRechnung si XML) importohen automatikisht nga këto kuti postare IMAP; teksti i email-eve dhe logot e ngulitura jo. Kutitë postare vetëm lexohen – email-et mbeten të pandryshuara dhe të palexuara.",
       "add": "Shto kuti postare",
       "emptyTitle": "Ende asnjë kuti postare e konfiguruar",
       "emptyText": "Shkruaj kredencialet e një kutie postare IMAP – për shembull të asaj ku skaneri yt dërgon dokumentet.",
@@ -430,7 +430,7 @@
       },
       "folder": {
         "title": "Dosja e importit",
-        "text": "Një direktori në server që mbikëqyret për skedarë të rinj PDF dhe foto (JPG, PNG, HEIC) – për shembull destinacioni i një skaneri rrjeti. Kërkohet edhe në nëndosje.",
+        "text": "Një direktori në server që mbikëqyret për skedarë të rinj PDF, foto (JPG, PNG, HEIC) dhe fatura elektronike (XML) – për shembull destinacioni i një skaneri rrjeti. Kërkohet edhe në nëndosje.",
         "enable": "Mbikëqyr dosjen e importit",
         "path": "Shtegu në server",
         "pathHint": "Shteg absolut. Në kontejnerin Docker kjo është dosja e montuar, zakonisht {{path}}.",
@@ -981,6 +981,62 @@
       "title": "Të hiqet çelësi i kalimit?",
       "text": "Pas kësaj askush nuk mund të hyjë më me „{{name}}“. Ai mbetet i ruajtur në menaxherin e fjalëkalimeve ose në pajisje derisa ta fshish atje.",
       "confirm": "Hiq"
+    }
+  },
+  "documentTypes": {
+    "invoice": "Faturë",
+    "quote": "Ofertë",
+    "order": "Porosi",
+    "deliveryNote": "Fletë dërgese",
+    "paymentReminder": "Kujtesë pagese",
+    "contract": "Kontratë",
+    "cancellation": "Zgjidhje kontrate",
+    "bankStatement": "Ekstrakt bankar",
+    "insurance": "Sigurim",
+    "tax": "Taksë",
+    "payslip": "Fletëpagesë",
+    "officialLetter": "Shkresë zyrtare",
+    "certificate": "Vërtetim",
+    "reference": "Dëftesë",
+    "medicalLetter": "Raport mjekësor",
+    "letter": "Letër",
+    "report": "Raport",
+    "manual": "Udhëzues",
+    "form": "Formular",
+    "other": "Tjetër"
+  },
+  "einvoice": {
+    "title": "Faturë elektronike",
+    "creditNoteTitle": "Notë krediti (faturë elektronike)",
+    "amountDue": "Për t’u paguar",
+    "creditAmount": "Shuma e kredituar",
+    "dueOn": "me afat më {{date}}",
+    "exact": "Lexuar saktësisht nga skedari XML, pa IA · {{format}}",
+    "downloadXml": "Shkarko XML-në",
+    "copy": "Kopjo: {{label}}",
+    "copied": "U kopjua: {{label}}",
+    "copyFailed": "Kopjimi nuk është i mundur këtu.",
+    "fields": {
+      "number": "Numri i faturës",
+      "issueDate": "Data e faturës",
+      "seller": "Shitësi",
+      "buyer": "Blerësi",
+      "vatId": "Nr. TVSH",
+      "buyerReference": "Referenca e blerësit",
+      "net": "Neto",
+      "tax": "TVSH {{rate}}",
+      "gross": "Bruto",
+      "reference": "Përshkrimi i pagesës",
+      "terms": "Kushtet e pagesës"
+    },
+    "lines": {
+      "show_one": "Shfaq {{count, number}} artikull",
+      "show_other": "Shfaq {{count, number}} artikuj",
+      "hide": "Fshih artikujt",
+      "description": "Përshkrimi",
+      "quantity": "Sasia",
+      "unitPrice": "Çmimi për njësi",
+      "amount": "Shuma"
     }
   }
 }
