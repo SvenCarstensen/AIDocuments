@@ -4,6 +4,8 @@ Document management for PDFs: the application collects PDF files and photos from
 folder or by upload, has an AI index them (title, summary, document type, correspondent, date, tags, key facts – and
 for scans the full text as well) and makes them searchable.
 
+![Document overview with thumbnails, document types and tags](docs/screenshots/documents.png)
+
 ## Highlights
 
 - **Modern, simple interface** – one search box, filters that stay out of the way, grid and list view with
@@ -20,6 +22,18 @@ for scans the full text as well) and makes them searchable.
 - **Text recognition included** – the Docker image ships Tesseract, which reads scanned PDFs, so they are
   full-text searchable from the first start, without any AI service and without your documents leaving the
   machine.
+
+## Screenshots
+
+All documents shown are fictional samples (see [Development](#development)). Click a picture to enlarge it.
+
+| | |
+|:-:|:-:|
+| [![Document page](docs/screenshots/document.png)](docs/screenshots/document.png)<br>**Document page** – PDF viewer, summary, key facts and a deadline the AI found | [![Asking a document](docs/screenshots/ask.png)](docs/screenshots/ask.png)<br>**Ask** – questions about a document, answered from its content |
+| [![AI search](docs/screenshots/ai-search.png)](docs/screenshots/ai-search.png)<br>**AI search** – a question in your own words becomes filters | [![List view](docs/screenshots/documents-list.png)](docs/screenshots/documents-list.png)<br>**List view** |
+| [![Follow-ups](docs/screenshots/reminders.png)](docs/screenshots/reminders.png)<br>**Follow-ups** – due, coming up and suggested by the AI | [![Contracts](docs/screenshots/contracts.png)](docs/screenshots/contracts.png)<br>**Contracts** – notice deadlines at a glance |
+| [![Shared document](docs/screenshots/shared-document.png)](docs/screenshots/shared-document.png)<br>**Sharing** – links for people without an account, plus contract details | [![Edit pages](docs/screenshots/edit-pages.png)](docs/screenshots/edit-pages.png)<br>**Edit pages** – reorder, rotate, remove, split |
+| [![Automatic backup](docs/screenshots/settings-backup.png)](docs/screenshots/settings-backup.png)<br>**Automatic backup** – nightly into a folder of your choice | [![Dark theme](docs/screenshots/documents-dark.png)](docs/screenshots/documents-dark.png)<br>**Dark theme** |
 
 ## Technology
 
@@ -132,6 +146,18 @@ the automatic backup with its warning, and passkeys (with a virtual authenticato
 stored on the computer). By default they use the installed Google Chrome; `AIDOCS_E2E_BROWSER=chromium` uses
 Playwright's own Chromium (`npx playwright install chromium` first). The report of the last run is in
 `frontend/playwright-report/`.
+
+The screenshots in `docs/screenshots/` are made the same way:
+
+```bash
+cd frontend && npm run screenshots
+```
+
+This starts a throwaway instance on ports 8093 (backend) and 5197 (user interface) with thirteen English sample
+documents of fictional companies, printed to PDF by Chrome, plus a small stand-in for the AI on port 8094 that returns
+prepared results – no language model is needed and none is contacted. All dates are relative to the day of the run,
+so deadlines always lie ahead. The pictures are taken in English at 1440 × 900 (2× scale), one of them in dark mode.
+On macOS, Chrome shows the placeholder of date fields in the language of the operating system.
 
 ## Production with Docker
 
