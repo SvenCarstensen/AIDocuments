@@ -52,6 +52,15 @@ public record AppProperties(
             }
             return candidate == provider ? new Preset(baseUrl, apiKey, model) : Preset.NONE;
         }
+
+        /** Ohne den Schlüssel – der gehört in kein Protokoll. */
+        @Override
+        public String toString() {
+            return "Ai[provider=" + provider + ", baseUrl=" + baseUrl + ", apiKey=" + masked(apiKey) + ", model="
+                    + model + ", effort=" + effort + ", outputLanguage=" + outputLanguage + ", ocr=" + ocr
+                    + ", compatibilityMode=" + compatibilityMode + ", presets=" + presets + ", revealPresetKeys="
+                    + revealPresetKeys + "]";
+        }
     }
 
     public record Preset(
@@ -60,6 +69,17 @@ public record AppProperties(
             @DefaultValue("") String model) {
 
         static final Preset NONE = new Preset("", "", "");
+
+        /** Ohne den Schlüssel – der gehört in kein Protokoll. */
+        @Override
+        public String toString() {
+            return "Preset[baseUrl=" + baseUrl + ", apiKey=" + masked(apiKey) + ", model=" + model + "]";
+        }
+    }
+
+    /** „***“ für einen gesetzten geheimen Wert, sonst leer. */
+    public static String masked(String secret) {
+        return secret == null || secret.isEmpty() ? "" : "***";
     }
 
     /**
@@ -96,7 +116,7 @@ public record AppProperties(
 
         @Override
         public String toString() {
-            return "Backup[directory=" + directory + ", password=" + (password.isEmpty() ? "" : "***") + "]";
+            return "Backup[directory=" + directory + ", password=" + masked(password) + "]";
         }
     }
 

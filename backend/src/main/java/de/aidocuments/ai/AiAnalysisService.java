@@ -288,7 +288,8 @@ public class AiAnalysisService {
         AnthropicOkHttpClient.Builder builder = AnthropicOkHttpClient.builder()
                 .apiKey(config.apiKey())
                 .timeout(TEST_TIMEOUT)
-                .maxRetries(0);
+                .maxRetries(0)
+                .addInterceptor(NoRedirects.INSTANCE); // der Schlüssel ginge sonst mit, siehe NoRedirects
         if (!config.baseUrl().isBlank()) {
             builder.baseUrl(config.baseUrl());
         }
@@ -1302,7 +1303,8 @@ public class AiAnalysisService {
             AnthropicOkHttpClient.Builder builder = AnthropicOkHttpClient.builder()
                     .apiKey(config.apiKey())
                     // Rate-Limits und Überlast treten beim Massenimport auf; das SDK wartet und wiederholt.
-                    .maxRetries(5);
+                    .maxRetries(5)
+                    .addInterceptor(NoRedirects.INSTANCE); // der Schlüssel ginge sonst mit, siehe NoRedirects
             if (!config.baseUrl().isBlank()) {
                 builder.baseUrl(config.baseUrl());
             }

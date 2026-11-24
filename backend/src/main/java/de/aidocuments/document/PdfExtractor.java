@@ -65,16 +65,89 @@ public class PdfExtractor {
         }
     }
 
+    /**
+     * Längste Zeit für das Lesen der Textebene eines Dokuments. Die Verarbeitung läuft in einer einzigen Warteschlange –
+     * ein präpariertes PDF soll sie nicht für alle anderen blockieren.
+     */
+    static final java.time.Duration TEXT_TIME_BUDGET = java.time.Duration.ofSeconds(120);
+
+    private final java.time.Duration textTimeBudget;
+
+    public PdfExtractor() {
+        this(TEXT_TIME_BUDGET);
+    }
+
+    /** Mit eigener Zeitgrenze für die Textebene – für Tests. */
+    PdfExtractor(java.time.Duration textTimeBudget) {
+        this.textTimeBudget = textTimeBudget;
+    }
+
+    /**
+     * Liest Seitenzahl, Text, Vorschaubild und E-Rechnung. Abgelehnt werden (als {@link PdfReadException}) unlesbare
+     * und übergroße PDFs, solche mit mehr als {@link DocumentPages#MAX_PAGES} Seiten und solche, deren Textebene sich
+     * nicht in {@link #TEXT_TIME_BUDGET} lesen lässt.
+     */
     public PdfContent extract(Path file, Path thumbnailTarget) throws PdfReadException {
         try (PDDocument pdf = load(file)) {
             int pages = pdf.getNumberOfPages();
-            String text = extractText(pdf);
+            if (pages > DocumentPages.MAX_PAGES) {
+                throw new PdfReadException(Msg.of("error.pages.tooMany", DocumentPages.MAX_PAGES), null);
+            }
+            String text = extractText(pdf, textTimeBudget);
             boolean thumbnail = pages > 0 && renderThumbnail(pdf, thumbnailTarget);
             return new PdfContent(pages, text, thumbnail, eInvoice(pdf, file));
         } catch (InvalidPasswordException e) {
             throw new PdfReadException(Msg.of("document.error.passwordProtected"), e);
+        } catch (TextTimeoutException e) {
+            log.warn("Textebene von {} abgebrochen: {}", file.getFileName(), e.getMessage());
+            throw new PdfReadException(Msg.of("document.error.corrupt", Msg.literal(
+                    "text extraction took longer than " + textTimeBudget.toSeconds() + " s")), e);
         } catch (IOException e) {
             throw new PdfReadException(Msg.of("document.error.corrupt", Msg.detailOf(e)), e);
+        }
+    }
+
+    /** Die Textebene braucht zu lange – das PDF wird abgelehnt. */
+    static final class TextTimeoutException extends IOException {
+        TextTimeoutException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * Liest den Text und bricht ab, sobald die Zeit um ist – geprüft vor jedem Operator der Seitenbeschreibung, so
+     * hält auch eine einzelne, absichtlich aufwendige Seite nicht auf.
+     */
+    static final class TimedTextStripper extends PDFTextStripper {
+        private final long deadline;
+        private final java.time.Duration budget;
+        private int checks;
+
+        TimedTextStripper(java.time.Duration budget) {
+            this.budget = budget;
+            this.deadline = System.nanoTime() + budget.toNanos();
+        }
+
+        @Override
+        protected void processOperator(org.apache.pdfbox.contentstream.operator.Operator operator,
+                                       List<org.apache.pdfbox.cos.COSBase> operands) throws IOException {
+            // die Uhr nur alle 64 Operatoren fragen – Seiten haben oft Hunderttausende
+            if ((++checks & 63) == 0) {
+                checkTime();
+            }
+            super.processOperator(operator, operands);
+        }
+
+        @Override
+        public void processPage(PDPage page) throws IOException {
+            checkTime();
+            super.processPage(page);
+        }
+
+        private void checkTime() throws TextTimeoutException {
+            if (System.nanoTime() - deadline > 0) {
+                throw new TextTimeoutException("Textebene nach " + budget.toSeconds() + " s abgebrochen");
+            }
         }
     }
 
@@ -177,9 +250,9 @@ public class PdfExtractor {
         };
     }
 
-    private static String extractText(PDDocument pdf) {
+    private static String extractText(PDDocument pdf, java.time.Duration budget) throws TextTimeoutException {
         try {
-            PDFTextStripper stripper = new PDFTextStripper();
+            PDFTextStripper stripper = new TimedTextStripper(budget);
             stripper.setSortByPosition(true);
             String raw = stripper.getText(pdf);
             return raw.replace("\u0000", "")
@@ -187,6 +260,8 @@ public class PdfExtractor {
                     .replaceAll(" ?\\R ?", "\n")
                     .replaceAll("\\n{3,}", "\n\n")
                     .strip();
+        } catch (TextTimeoutException e) {
+            throw e;
         } catch (IOException | RuntimeException e) {
             log.warn("Textebene konnte nicht gelesen werden: {}", e.toString());
             return "";
@@ -231,8 +306,13 @@ public class PdfExtractor {
     /** Arbeitsspeicher für entpackte Datenströme je PDF; was darüber hinausgeht, landet in einer temporären Datei. */
     private static final long STREAM_CACHE_MEMORY = 64L * 1024 * 1024;
 
-    /** Lädt ein PDF so, dass stark komprimierte Inhalte („Zip-Bomben“) nicht den ganzen Arbeitsspeicher belegen. */
-    static PDDocument load(Path file) throws IOException {
+    /**
+     * Lädt ein PDF so, dass stark komprimierte Inhalte („Zip-Bomben“) nicht den ganzen Arbeitsspeicher belegen: erst
+     * die Vorprüfung der Rohdatei ({@link PdfPrescan}), dann die Prüfung der Datenströme ({@link #checkStreams}).
+     * Jedes PDF, das von außen kommt, wird hierüber geladen.
+     */
+    public static PDDocument load(Path file) throws IOException {
+        PdfPrescan.check(file);
         PDDocument pdf = Loader.loadPDF(file.toFile(), MemoryUsageSetting.setupMixed(STREAM_CACHE_MEMORY).streamCache);
         try {
             checkStreams(pdf);
@@ -249,7 +329,7 @@ public class PdfExtractor {
     static final int MAX_TOKEN_BYTES = 1024 * 1024;
 
     /** Ein Datenstrom überschreitet die Grenzen – das PDF wird abgelehnt. */
-    static final class OversizedStreamException extends IOException {
+    public static final class OversizedStreamException extends IOException {
         OversizedStreamException(String message) {
             super(message);
         }

@@ -1580,12 +1580,17 @@ class ApplicationFlowTest {
         mvc.perform(delete("/api/areas/" + areaId).with(csrf()).session(adminSession)).andExpect(status().isConflict());
         mvc.perform(delete("/api/areas/general").with(csrf()).session(adminSession)).andExpect(status().isConflict());
 
-        // verschieben: in einen nicht sichtbaren Bereich geht nicht; in den allgemeinen sieht es jeder
+        // verschieben: nur mit dem Recht zum Löschen im bisherigen Bereich (Anna darf hier nur bearbeiten); in
+        // einen nicht sichtbaren Bereich geht es nicht; in den allgemeinen sieht es jeder
         mvc.perform(put("/api/documents/" + docId).with(csrf()).session(anna)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Gehaltsliste\",\"tags\":[],\"areaId\":\"general\"}"))
+                .andExpect(status().isForbidden());
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(adminSession)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\":\"Gehaltsliste\",\"tags\":[],\"areaId\":\"gibt-es-nicht\"}"))
                 .andExpect(status().isBadRequest());
-        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(anna)
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(adminSession)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\":\"Gehaltsliste\",\"tags\":[],\"areaId\":\"general\"}"))
                 .andExpect(status().isOk())
@@ -2570,6 +2575,12 @@ class ApplicationFlowTest {
                 .andExpect(jsonPath("$.directory").value(target.toString()))
                 .andExpect(jsonPath("$.nextRunAt").isNotEmpty());
         assertThat(target).isDirectory();
+        boolean posix = Files.getFileStore(target).supportsFileAttributeView("posix");
+        if (posix) {
+            // neu angelegt: nur für den Server-Benutzer
+            assertThat(java.nio.file.attribute.PosixFilePermissions.toString(Files.getPosixFilePermissions(target)))
+                    .isEqualTo("rwx------");
+        }
 
         // drei Läufe, zwei Stände bleiben; fremde Dateien im Ordner rührt die Sicherung nicht an
         Files.writeString(target.resolve("notizen.txt"), "bleibt");
@@ -2585,6 +2596,10 @@ class ApplicationFlowTest {
         assertThat(names.stream().filter(n -> n.matches("AIDocuments-Sicherung-\\d{4}-\\d{2}-\\d{2}-\\d{6}\\.zip")))
                 .hasSize(2);
         byte[] newest = Files.readAllBytes(target.resolve(names.get(1)));
+        if (posix) {
+            assertThat(java.nio.file.attribute.PosixFilePermissions.toString(
+                    Files.getPosixFilePermissions(target.resolve(names.get(1))))).isEqualTo("rw-------");
+        }
         // mit AIDOCS_BACKUP_PASSWORD verschlüsselt
         assertThat(unzip(newest, BACKUP_PASSWORD)).containsKey("README.txt").containsKey("aidocuments.db");
         org.assertj.core.api.Assertions.assertThatThrownBy(() -> unzip(newest))
@@ -3094,6 +3109,266 @@ class ApplicationFlowTest {
         mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
                         .contentType(MediaType.APPLICATION_JSON).content("{\"usage\":\"PRIVATE\"}"))
                 .andExpect(jsonPath("$.state").value("FREE"));
+    }
+
+    @Test
+    @Order(33)
+    void sessionsBeforeTheLoginAreShortLived() throws Exception {
+        // ein abgewiesener Aufruf ohne Anmeldung merkt sich keine Anfrage für später (das legte eine Sitzung an).
+        // Eine Sitzung kann es hier trotzdem geben: Im Test ersetzt csrf() den Cookie-Speicher für das CSRF-Token
+        // durch einen in der Sitzung – im Betrieb liegt das Token im Cookie.
+        MvcResult rejected = mvc.perform(get("/api/documents").header(HttpHeaders.ACCEPT, "text/html"))
+                .andExpect(status().isUnauthorized()).andReturn();
+        jakarta.servlet.http.HttpSession rejectedSession = rejected.getRequest().getSession(false);
+        if (rejectedSession != null) {
+            assertThat(java.util.Collections.list(rejectedSession.getAttributeNames()))
+                    .allMatch(name -> name.endsWith("CsrfTokenRepository.CSRF_TOKEN"));
+        }
+
+        // die Challenge für einen Passkey: eine Sitzung von fünf Minuten …
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"kurz-karl\",\"password\":\"test-Passwort-7\",\"role\":\"USER\"}"))
+                .andExpect(status().isCreated());
+        MockHttpSession session = new MockHttpSession();
+        mvc.perform(post("/api/auth/passkey/options").with(csrf()).session(session)).andExpect(status().isOk());
+        assertThat(session.getMaxInactiveInterval()).isEqualTo(5 * 60);
+        // … ebenso das Warten auf den Code aus der App – erst die Anmeldung gibt ihr die eingestellten zwölf Stunden
+        mvc.perform(post("/api/auth/login").with(csrf()).session(session).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"kurz-karl\",\"password\":\"test-Passwort-7\"}"))
+                .andExpect(status().isOk());
+        assertThat(session.getMaxInactiveInterval()).isEqualTo(12 * 60 * 60);
+        // angemeldet bleibt es lang, auch wenn eine Änderung mit einem Passkey bestätigt werden soll
+        mvc.perform(post("/api/auth/passkey/options").with(csrf()).session(session)).andExpect(status().isOk());
+        assertThat(session.getMaxInactiveInterval()).isEqualTo(12 * 60 * 60);
+    }
+
+    @Test
+    @Order(34)
+    void passkeysEndWhenTheAccountIsRecovered() throws Exception {
+        MockHttpSession nora = userWithSession("passkey-nora");
+        String noraId = userId(nora);
+        java.util.function.LongSupplier passkeys = () -> jdbc.sql("SELECT COUNT(*) FROM passkeys WHERE user_id = ?")
+                .param(noraId).query(Long.class).single();
+
+        // Zwei-Faktor-Anmeldung zurückgesetzt (Gerät verloren): auch die Passkeys sind weg
+        registerPasskey(nora, "test-Passwort-7");
+        assertThat(passkeys.getAsLong()).isEqualTo(1);
+        mvc.perform(delete("/api/users/" + noraId + "/two-factor").with(csrf()).session(adminSession))
+                .andExpect(status().isOk());
+        assertThat(passkeys.getAsLong()).isZero();
+
+        // Passwort vom Admin zurückgesetzt: ebenso
+        nora = login("passkey-nora", "test-Passwort-7");
+        registerPasskey(nora, "test-Passwort-7");
+        assertThat(passkeys.getAsLong()).isEqualTo(1);
+        mvc.perform(put("/api/users/" + noraId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"role\":\"USER\",\"enabled\":true,\"password\":\"neues-Passwort-9\"}"))
+                .andExpect(status().isOk());
+        assertThat(passkeys.getAsLong()).isZero();
+        // ohne neues Passwort (nur Rolle/Aktiv geändert) bleiben sie
+        nora = login("passkey-nora", "neues-Passwort-9");
+        registerPasskey(nora, "neues-Passwort-9");
+        mvc.perform(put("/api/users/" + noraId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"role\":\"USER\",\"enabled\":true,\"password\":\"\"}"))
+                .andExpect(status().isOk());
+        assertThat(passkeys.getAsLong()).isEqualTo(1);
+
+        // das eigene Passwort ändern: Die Passkeys bleiben
+        nora = login("passkey-nora", "neues-Passwort-9");
+        mvc.perform(post("/api/auth/password").with(csrf()).session(nora).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"currentPassword\":\"neues-Passwort-9\",\"newPassword\":\"drittes-Passwort-3\"}"))
+                .andExpect(status().isNoContent());
+        assertThat(passkeys.getAsLong()).isEqualTo(1);
+    }
+
+    @Test
+    @Order(35)
+    void shareLinksNeverReachFurtherThanTheirCreator() throws Exception {
+        MockHttpSession lisa = userWithSession("link-lisa");
+        MockHttpSession otto = userWithSession("link-otto"); // sieht den Bereich nicht
+        String lisaId = userId(lisa);
+        String areaId = jsonValue(mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(areaBody("Linkprobe", lisaId, "EDIT")))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        String docId = uploadInto(adminSession, areaId, "Linkprobe.pdf", "Linkprobe: Mietvertrag Garage");
+        String sharesUrl = "/api/documents/" + docId + "/shares";
+        String viewToken = jsonValue(mvc.perform(post(sharesUrl).with(csrf()).session(lisa)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"recipient\":\"Nur lesen\",\"canEdit\":false}"))
+                .andExpect(status().isCreated()).andReturn(), "$.token");
+        String editToken = jsonValue(mvc.perform(post(sharesUrl).with(csrf()).session(lisa)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"recipient\":\"Darf ändern\",\"canEdit\":true}"))
+                .andExpect(status().isCreated()).andReturn(), "$.token");
+        mvc.perform(get("/api/share/" + viewToken)).andExpect(status().isOk());
+        mvc.perform(get("/api/share/" + editToken)).andExpect(status().isOk());
+
+        // wer gerade angemeldet ist, spielt keine Rolle – auch ohne Zugang zum Bereich öffnet der Link
+        mvc.perform(get("/api/documents/" + docId).session(otto)).andExpect(status().isNotFound());
+        mvc.perform(get("/api/share/" + viewToken).session(otto)).andExpect(status().isOk());
+        mvc.perform(get("/api/share/" + viewToken + "/file").session(otto)).andExpect(status().isOk());
+
+        // die Erstellerin darf nur noch lesen: Der Link zum Bearbeiten ist tot, der zum Ansehen nicht
+        mvc.perform(put("/api/areas/" + areaId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(areaBody("Linkprobe", lisaId, "READ")))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/share/" + editToken)).andExpect(status().isNotFound());
+        mvc.perform(put("/api/share/" + editToken + "/file").with(csrf())
+                        .contentType(MediaType.APPLICATION_PDF).content(pdf("Geändert über einen toten Link")))
+                .andExpect(status().isNotFound());
+        mvc.perform(get("/api/share/" + viewToken)).andExpect(status().isOk());
+
+        // nicht mehr im Bereich: auch der Link zum Ansehen ist tot
+        mvc.perform(put("/api/areas/" + areaId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Linkprobe\",\"everyone\":false,\"members\":[]}"))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/share/" + viewToken)).andExpect(status().isNotFound());
+        mvc.perform(get("/api/share/" + viewToken + "/file")).andExpect(status().isNotFound());
+
+        // wieder Mitglied: Die Links leben wieder – bis das Konto deaktiviert oder gelöscht wird
+        mvc.perform(put("/api/areas/" + areaId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(areaBody("Linkprobe", lisaId, "EDIT")))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/share/" + editToken)).andExpect(status().isOk());
+        mvc.perform(put("/api/users/" + lisaId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"role\":\"USER\",\"enabled\":false}"))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/share/" + viewToken)).andExpect(status().isNotFound());
+        mvc.perform(get("/api/share/" + editToken)).andExpect(status().isNotFound());
+        mvc.perform(put("/api/users/" + lisaId).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"role\":\"USER\",\"enabled\":true}"))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/share/" + viewToken)).andExpect(status().isOk());
+        mvc.perform(delete("/api/users/" + lisaId).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+        mvc.perform(get("/api/share/" + viewToken)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(36)
+    void movingADocumentOutOfAnAreaNeedsTheRightToDeleteThere() throws Exception {
+        MockHttpSession vera = userWithSession("verschiebe-vera");
+        String veraId = userId(vera);
+        String from = jsonValue(mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(areaBody("Von hier", veraId, "EDIT")))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        String to = jsonValue(mvc.perform(post("/api/areas").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(areaBody("Nach dort", veraId, "EDIT")))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        String docId = uploadInto(adminSession, from, "Verschiebeprobe.pdf", "Verschiebeprobe: Kaufvertrag Fahrrad");
+        String move = "{\"title\":\"Kaufvertrag\",\"tags\":[],\"areaId\":\"" + to + "\"}";
+
+        // bearbeiten darf sie, aber aus dem Bereich verschwinden lassen (wie löschen) nicht
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(vera).header("Accept-Language", "de")
+                        .contentType(MediaType.APPLICATION_JSON).content(move))
+                .andExpect(status().isForbidden());
+        assertThat(documents.findById(docId).orElseThrow().getAreaId()).isEqualTo(from);
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(vera)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Kaufvertrag\",\"tags\":[]}"))
+                .andExpect(status().isOk());
+
+        // mit dem Recht zum Löschen im alten Bereich geht es
+        mvc.perform(put("/api/areas/" + from).with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content(areaBody("Von hier", veraId, "DELETE")))
+                .andExpect(status().isOk());
+        mvc.perform(put("/api/documents/" + docId).with(csrf()).session(vera)
+                        .contentType(MediaType.APPLICATION_JSON).content(move))
+                .andExpect(status().isOk());
+        assertThat(documents.findById(docId).orElseThrow().getAreaId()).isEqualTo(to);
+    }
+
+    @Test
+    @Order(37)
+    void pdfsWithTooManyPagesOrPackedTooTightlyAreRejected() throws Exception {
+        // mehr Seiten als ein Dokument haben darf: gar nicht erst abgelegt
+        byte[] tooMany;
+        try (PDDocument document = new PDDocument(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            for (int i = 0; i < 5001; i++) {
+                document.addPage(new PDPage());
+            }
+            document.save(out);
+            tooMany = out.toByteArray();
+        }
+        int before = documents.findAll().size();
+        mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files", "Telefonbuch.pdf",
+                        "application/pdf", tooMany)).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("REJECTED"));
+        assertThat(documents.findAll()).hasSize(before);
+
+        // „Zip-Bombe“: wenige KB, entpackt über 64 MB – abgelegt, aber als unlesbar markiert, ohne den Server zu belasten
+        String bombId = jsonValue(mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files",
+                                "Bombe.pdf", "application/pdf", de.aidocuments.document.PdfPrescanTest.flateBomb(80))).with(csrf())
+                        .session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 1);
+        Document bomb = documents.findById(bombId).orElseThrow();
+        assertThat(bomb.getStatus()).isEqualTo(DocumentStatus.FAILED);
+        assertThat(MsgCodec.decode(bomb.getErrorMessage()).toString()).contains("document.error.corrupt");
+        mvc.perform(delete("/api/documents/" + bombId).with(csrf()).session(adminSession))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Order(38)
+    void passkeyChallengesAreLimitedPerAddress() throws Exception {
+        int answered = 0;
+        for (int i = 0; i < 40; i++) {
+            int code = mvc.perform(post("/api/auth/passkey/options").with(csrf())
+                            .with(request -> {
+                                request.setRemoteAddr("198.51.100.77");
+                                return request;
+                            }))
+                    .andReturn().getResponse().getStatus();
+            if (code == 429) {
+                break;
+            }
+            assertThat(code).isEqualTo(200);
+            answered++;
+        }
+        assertThat(answered).isEqualTo(30);
+        // eine andere Adresse ist nicht betroffen
+        mvc.perform(post("/api/auth/passkey/options").with(csrf()).with(request -> {
+            request.setRemoteAddr("198.51.100.78");
+            return request;
+        })).andExpect(status().isOk());
+    }
+
+    /** Ein Bereich nur für eine Person mit dem angegebenen Recht. */
+    private static String areaBody(String name, String userId, String access) {
+        return "{\"name\":\"" + name + "\",\"everyone\":false,\"members\":[{\"userId\":\"" + userId
+                + "\",\"access\":\"" + access + "\"}]}";
+    }
+
+    private String uploadInto(MockHttpSession session, String areaId, String filename, String text) throws Exception {
+        int before = documents.findAll().size();
+        String id = jsonValue(mvc.perform(multipart("/api/documents").param("area", areaId)
+                        .file(new MockMultipartFile("files", filename, "application/pdf", pdf(text)))
+                        .with(csrf()).session(session))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed(before + 1);
+        return id;
+    }
+
+    private MockHttpSession login(String username, String password) throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        mvc.perform(post("/api/auth/login").with(csrf()).session(session).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}"))
+                .andExpect(status().isOk());
+        return session;
+    }
+
+    /** Legt für die Sitzung einen Passkey an (ohne Zwei-Faktor-Anmeldung: mit dem Passwort). */
+    private void registerPasskey(MockHttpSession session, String password) throws Exception {
+        String creation = mvc.perform(post("/api/auth/passkeys/options").with(csrf()).session(session)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"password\":\"" + password + "\"}"))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        mvc.perform(post("/api/auth/passkeys").with(csrf()).session(session).contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.writeValueAsString(java.util.Map.of("name", "Telefon",
+                                "credential", new SoftPasskey().create(creation, "http://localhost")))))
+                .andExpect(status().isCreated());
     }
 
     private static String jsonValue(MvcResult result, String path) throws Exception {

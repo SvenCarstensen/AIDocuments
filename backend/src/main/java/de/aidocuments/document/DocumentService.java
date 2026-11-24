@@ -127,7 +127,11 @@ public class DocumentService {
             if (existing != null) {
                 return new IngestResult(Outcome.DUPLICATE, existing, Msg.of("upload.duplicate"));
             }
-            de.aidocuments.einvoice.EInvoice early = isPdf ? embeddedInvoice(received.tempFile()) : null;
+            FirstLook look = isPdf ? firstLook(received.tempFile()) : null;
+            if (look != null && look.pages() > DocumentPages.MAX_PAGES) {
+                return new IngestResult(Outcome.REJECTED, null, Msg.of("error.pages.tooMany", DocumentPages.MAX_PAGES));
+            }
+            de.aidocuments.einvoice.EInvoice early = look == null ? null : look.invoice();
             if (xml) {
                 early = de.aidocuments.einvoice.EInvoiceReader.fromXml(received.tempFile());
             }
@@ -525,6 +529,9 @@ public class DocumentService {
         doc.replaceTags(DocumentProcessor.normalizeTags(request.tags()));
         boolean moved = request.areaId() != null && !request.areaId().equals(doc.getAreaId());
         if (moved) {
+            // aus dem Bereich heraus verschwindet es dort wie gelöscht – das verlangt das Recht zum Löschen
+            // (wie beim Zusammenführen, siehe DocumentPages.merge)
+            access.require(doc.getAreaId(), Permission.DELETE);
             access.requireTarget(request.areaId());
             moveToArea(doc, request.areaId());
         }
@@ -647,7 +654,8 @@ public class DocumentService {
                 doc.setDocumentDate(before.documentDate());
                 doc.replaceTags(new java.util.LinkedHashSet<>(before.tags() == null ? List.of() : before.tags()));
                 if (before.areaId() != null && !before.areaId().equals(doc.getAreaId())
-                        && access.allows(before.areaId(), Permission.EDIT)) {
+                        && access.allows(before.areaId(), Permission.EDIT)
+                        && access.allows(doc.getAreaId(), Permission.DELETE)) {
                     moveToArea(doc, before.areaId());
                 }
                 documents.save(doc);
@@ -931,12 +939,22 @@ public class DocumentService {
     }
 
     /** Die eingebettete E-Rechnung eines PDFs; {@code null}, wenn keine darin ist oder das PDF nicht lesbar ist. */
-    private static de.aidocuments.einvoice.EInvoice embeddedInvoice(Path pdf) {
-        try {
-            de.aidocuments.einvoice.EInvoiceReader.Read read = de.aidocuments.einvoice.EInvoiceReader.fromPdf(pdf);
-            return read == null ? null : read.invoice();
+    /** Was beim Ablegen schon aus dem PDF gelesen wird; {@code pages} -1 = unlesbar. */
+    private record FirstLook(de.aidocuments.einvoice.EInvoice invoice, int pages) {
+    }
+
+    /** Seitenzahl und eingebettete E-Rechnung – in einem Durchgang, geladen mit den Prüfungen gegen „Zip-Bomben“. */
+    private static FirstLook firstLook(Path pdf) {
+        try (org.apache.pdfbox.pdmodel.PDDocument document = PdfExtractor.load(pdf)) {
+            de.aidocuments.einvoice.EInvoiceReader.Read read = null;
+            try {
+                read = de.aidocuments.einvoice.EInvoiceReader.fromPdf(document);
+            } catch (RuntimeException e) {
+                // ohne lesbare E-Rechnung weiter
+            }
+            return new FirstLook(read == null ? null : read.invoice(), document.getNumberOfPages());
         } catch (IOException | RuntimeException e) {
-            return null; // die Verarbeitung meldet, was mit dem PDF nicht stimmt
+            return new FirstLook(null, -1); // die Verarbeitung meldet, was mit dem PDF nicht stimmt
         }
     }
 

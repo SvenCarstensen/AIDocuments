@@ -32,10 +32,12 @@ public class TwoFactorService {
     private final UserService userService;
     private final SecretCipher cipher;
     private final PasswordEncoder passwordEncoder;
+    private final PasskeyService passkeys;
     private final SecureRandom random = new SecureRandom();
 
     public TwoFactorService(AppUserRepository users, UserService userService, SecretCipher cipher,
-                            PasswordEncoder passwordEncoder) {
+                            PasswordEncoder passwordEncoder, PasskeyService passkeys) {
+        this.passkeys = passkeys;
         this.users = users;
         this.userService = userService;
         this.cipher = cipher;
@@ -111,11 +113,15 @@ public class TwoFactorService {
         userService.invalidateSessions(userId);
     }
 
-    /** Für Administratoren: Gerät verloren – das Konto meldet sich danach wieder nur mit dem Passwort an. */
+    /**
+     * Für Administratoren: Gerät verloren – das Konto meldet sich danach wieder nur mit dem Passwort an. Auch die
+     * Passkeys des Kontos entfallen: Sie ersetzen Passwort und Code, und das verlorene Gerät trägt womöglich einen.
+     */
     public synchronized void reset(String userId) {
         AppUser user = require(userId);
         user.setTwoFactor(null, null, null);
         users.save(user);
+        passkeys.deleteAll(userId);
         userService.invalidateSessions(userId);
     }
 

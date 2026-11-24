@@ -76,6 +76,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.spa().csrfTokenRepository(csrfTokens))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                // keine gemerkte Anfrage für eine Weiterleitung nach der Anmeldung (die Oberfläche braucht keine):
+                // sonst legte jeder abgewiesene Aufruf ohne Anmeldung eine Sitzung an
+                .requestCache(cache -> cache.requestCache(
+                        new org.springframework.security.web.savedrequest.NullRequestCache()))
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT)))

@@ -36,6 +36,11 @@ import org.springframework.web.bind.annotation.RestController;
  * „Link: &lt;Name&gt;“.
  *
  * <p>Abgelaufene, entzogene und unbekannte Links sowie Dokumente im Papierkorb ergeben alle dieselbe Antwort (404).
+ * Ebenso ein Link, dessen Ersteller es nicht mehr gibt, der deaktiviert ist oder den Bereich des Dokuments nicht mehr
+ * sieht – und bei einem Link zum Bearbeiten: dort nicht mehr bearbeiten darf. Ein Link reicht nie weiter als die Rechte
+ * dessen, der ihn angelegt hat.
+ *
+ * <p>Wer gerade im selben Browser angemeldet ist, spielt keine Rolle: Der Link wird immer wie ohne Anmeldung aufgelöst.
  */
 @RestController
 @RequestMapping("/api/share/{token}")
@@ -54,9 +59,14 @@ public class PublicShareController {
     private final DocumentService documents;
     private final DocumentShares shares;
     private final FileStorage storage;
+    private final de.aidocuments.user.AppUserRepository users;
+    private final de.aidocuments.area.AreaAccess access;
     private final Map<String, List<Save>> saves = new java.util.HashMap<>();
 
-    public PublicShareController(DocumentService documents, DocumentShares shares, FileStorage storage) {
+    public PublicShareController(DocumentService documents, DocumentShares shares, FileStorage storage,
+                                 de.aidocuments.user.AppUserRepository users, de.aidocuments.area.AreaAccess access) {
+        this.users = users;
+        this.access = access;
         this.documents = documents;
         this.shares = shares;
         this.storage = storage;
@@ -130,11 +140,41 @@ public class PublicShareController {
                 .orElseThrow(() -> ApiException.notFound("error.share.notFound"));
         Document document;
         try {
-            document = documents.require(share.documentId()); // liegt es im Papierkorb, gibt es das Dokument nicht
+            // liegt es im Papierkorb, gibt es das Dokument nicht; die Bereiche einer gerade angemeldeten Person
+            // zählen nicht – der Link öffnet für jeden dasselbe
+            document = withoutLogin(() -> documents.require(share.documentId()));
         } catch (ApiException e) {
             throw ApiException.notFound("error.share.notFound");
         }
+        if (!creatorStillAllows(share, document)) {
+            throw ApiException.notFound("error.share.notFound");
+        }
         return new Opened(share, document);
+    }
+
+    /** Darf der Ersteller des Links das Dokument noch sehen (und bei einem Link zum Bearbeiten: bearbeiten)? */
+    private boolean creatorStillAllows(DocumentShares.Share share, Document document) {
+        if (share.createdBy() == null) {
+            return false;
+        }
+        de.aidocuments.user.AppUser creator = users.findByUsername(share.createdBy()).orElse(null);
+        if (creator == null || !creator.isEnabled()) {
+            return false;
+        }
+        de.aidocuments.area.Permission permission = access.permission(creator.getId(),
+                creator.getRole() == de.aidocuments.user.Role.ADMIN, document.getAreaId());
+        return permission != null
+                && (!share.canEdit() || permission.allows(de.aidocuments.area.Permission.EDIT));
+    }
+
+    private static <T> T withoutLogin(java.util.function.Supplier<T> action) {
+        SecurityContext previous = SecurityContextHolder.getContext();
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        try {
+            return action.get();
+        } finally {
+            SecurityContextHolder.setContext(previous);
+        }
     }
 
     /** Ein Speichervorgang über einen Link: wann und wie viele Bytes er gebracht hat. */

@@ -84,14 +84,30 @@ final class OpenAiChatClient {
     }
 
     private static final ObjectMapper JSON = new ObjectMapper();
+    /**
+     * Höchstens so viel Antwort wird gelesen – ein fremder oder fehlerhafter Server soll nicht beliebig viel Speicher
+     * belegen. Größer ist keine gültige Antwort (selbst eine lange Transkription hat nur wenige MB).
+     */
+    static final int MAX_BODY_BYTES = 32 * 1024 * 1024;
+    /** Von einer Fehlerantwort genügt der Anfang (gezeigt werden ohnehin höchstens 300 Zeichen). */
+    static final int MAX_ERROR_BYTES = 64 * 1024;
 
-    private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build();
+    // Weiterleitungen werden nicht verfolgt (Vorgabe von java.net.http) – der API-Schlüssel ginge sonst mit
+    private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15))
+            .followRedirects(HttpClient.Redirect.NEVER).build();
     private final String baseUrl;
     private final String apiKey;
+    private final int maxBodyBytes;
 
     OpenAiChatClient(String baseUrl, String apiKey) {
+        this(baseUrl, apiKey, MAX_BODY_BYTES);
+    }
+
+    /** Mit eigener Obergrenze für die Antwort – für Tests. */
+    OpenAiChatClient(String baseUrl, String apiKey, int maxBodyBytes) {
         this.baseUrl = baseUrl.replaceAll("/+$", "");
         this.apiKey = apiKey;
+        this.maxBodyBytes = maxBodyBytes;
     }
 
     /** IDs der Modelle, die der Server anbietet. */
@@ -219,9 +235,22 @@ final class OpenAiChatClient {
         if (apiKey != null && !apiKey.isBlank()) {
             builder.header("Authorization", "Bearer " + apiKey);
         }
-        HttpResponse<String> response;
+        int status;
+        byte[] body;
+        boolean tooLarge;
         try {
-            response = http.send(builder.build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+            HttpResponse<java.io.InputStream> response = http.send(builder.build(),
+                    HttpResponse.BodyHandlers.ofInputStream());
+            status = response.statusCode();
+            // auch eine Weiterleitung (der nicht gefolgt wird) ist ein Fehler, keine Antwort
+            int limit = status >= 300 ? MAX_ERROR_BYTES : maxBodyBytes;
+            try (java.io.InputStream in = response.body()) {
+                body = in.readNBytes(limit + 1);
+            }
+            tooLarge = body.length > limit;
+            if (tooLarge) {
+                body = java.util.Arrays.copyOf(body, limit);
+            }
         } catch (HttpTimeoutException e) {
             throw new ConnectionException("Zeitüberschreitung", true, e);
         } catch (IOException e) {
@@ -231,11 +260,18 @@ final class OpenAiChatClient {
             Thread.currentThread().interrupt();
             throw new ConnectionException("unterbrochen", false, e);
         }
-        if (response.statusCode() >= 400) {
-            throw new StatusException(response.statusCode(), errorMessage(response.body()));
+        if (status >= 300 && status < 400) {
+            throw new StatusException(status, "redirect not followed (HTTP " + status + ")");
+        }
+        if (status >= 400) {
+            throw new StatusException(status, errorMessage(new String(body, StandardCharsets.UTF_8)));
+        }
+        if (tooLarge) {
+            // wie eine unbrauchbare Antwort – ohne sie ganz einzulesen
+            throw new NotJsonException(new IOException("Antwort größer als " + (maxBodyBytes >> 20) + " MB"));
         }
         try {
-            return JSON.readTree(response.body());
+            return JSON.readTree(body);
         } catch (IOException e) {
             throw new NotJsonException(e);
         }

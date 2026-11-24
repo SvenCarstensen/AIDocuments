@@ -73,9 +73,9 @@ public final class EInvoiceReader {
         return found == null ? null : found.read();
     }
 
-    /** Wie {@link #fromPdf(PDDocument)}, für eine Datei. */
+    /** Wie {@link #fromPdf(PDDocument)}, für eine Datei – geladen mit den Prüfungen gegen „Zip-Bomben“. */
     public static Read fromPdf(Path file) throws IOException {
-        try (PDDocument pdf = org.apache.pdfbox.Loader.loadPDF(file.toFile())) {
+        try (PDDocument pdf = de.aidocuments.document.PdfExtractor.load(file)) {
             return fromPdf(pdf);
         }
     }

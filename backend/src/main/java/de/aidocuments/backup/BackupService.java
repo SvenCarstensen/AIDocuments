@@ -95,16 +95,27 @@ public class BackupService {
         this.sqlite = datasourceUrl.startsWith("jdbc:sqlite:");
         this.configuredPassword = properties.backup() == null ? "" : properties.backup().password();
         if (!configuredPassword.isEmpty()) {
-            if (configuredPassword.length() < MIN_PASSWORD) {
-                log.warn("AIDOCS_BACKUP_PASSWORD ist kürzer als {} Zeichen – leicht zu erraten", MIN_PASSWORD);
+            if (configuredPassword.length() < MIN_PASSWORD || configuredPassword.length() > MAX_PASSWORD) {
+                // starten soll die Anwendung trotzdem; die Sicherungen damit schlagen fehl (siehe configuredPassword)
+                log.warn("AIDOCS_BACKUP_PASSWORD muss {} bis {} Zeichen lang sein – so wird es nicht verwendet: "
+                        + "Automatische Sicherungen schlagen fehl, bis es geändert ist", MIN_PASSWORD, MAX_PASSWORD);
+            } else {
+                log.info("Automatische Sicherungen werden verschlüsselt (AIDOCS_BACKUP_PASSWORD)");
             }
-            log.info("Automatische Sicherungen werden verschlüsselt (AIDOCS_BACKUP_PASSWORD)");
         }
     }
 
-    /** Das Passwort aus AIDOCS_BACKUP_PASSWORD als frische Kopie; null = keins gesetzt. */
+    /** Ist AIDOCS_BACKUP_PASSWORD gesetzt (ob gültig oder nicht)? */
+    public boolean hasConfiguredPassword() {
+        return !configuredPassword.isEmpty();
+    }
+
+    /**
+     * Das Passwort aus AIDOCS_BACKUP_PASSWORD als frische Kopie; null = keins gesetzt. Ein zu kurzes (oder zu langes)
+     * wird nicht verwendet – auch nicht stillschweigend weggelassen: Die Sicherung damit schlägt mit 400 fehl.
+     */
     public char[] configuredPassword() {
-        return configuredPassword.isEmpty() ? null : configuredPassword.toCharArray();
+        return configuredPassword.isEmpty() ? null : checkedPassword(configuredPassword);
     }
 
     public boolean available() {
@@ -124,7 +135,7 @@ public class BackupService {
             }
             bytes += size(root.resolve(DATABASE_ENTRY));
         }
-        return new BackupStatus(sqlite, last == null ? null : last.at(), bytes, count, !configuredPassword.isEmpty());
+        return new BackupStatus(sqlite, last == null ? null : last.at(), bytes, count, hasConfiguredPassword());
     }
 
     /** Wann zuletzt gesichert wurde – von Hand oder automatisch; null = noch nie. */

@@ -45,6 +45,15 @@ public class AiSettingsService {
             }
             return !provider.requiresApiKey() || !apiKey.isBlank();
         }
+
+        /** Ohne den Schlüssel – der gehört in kein Protokoll. */
+        @Override
+        public String toString() {
+            return "Effective[provider=" + provider + ", baseUrl=" + baseUrl + ", apiKey="
+                    + de.aidocuments.config.AppProperties.masked(apiKey) + ", keySource=" + keySource + ", model="
+                    + model + ", effort=" + effort + ", outputLanguage=" + outputLanguage + ", ocr=" + ocr
+                    + ", compatibilityMode=" + compatibilityMode + ", quickOcrFirst=" + quickOcrFirst + "]";
+        }
     }
 
     public record AiSettingsDto(LlmProvider provider, String baseUrl, String model, String effort,

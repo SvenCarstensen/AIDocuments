@@ -159,7 +159,9 @@ public class PasskeyService {
      * Passkeys an, die er für diese Adresse kennt, und nennt dabei auch das Konto.
      */
     public Map<String, Object> loginOptions(HttpServletRequest request) {
-        byte[] challenge = challenge(request.getSession(), LOGIN_CHALLENGE, null);
+        // vor der Anmeldung: nur eine kurzlebige Sitzung für die Challenge
+        byte[] challenge = challenge(de.aidocuments.security.SessionTimeouts.anonymous(request.getSession()),
+                LOGIN_CHALLENGE, null);
         Map<String, Object> options = new LinkedHashMap<>();
         options.put("challenge", Base64UrlUtil.encodeToString(challenge));
         options.put("rpId", rpId(request));

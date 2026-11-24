@@ -59,15 +59,33 @@ class LoginThrottleTest {
         }
         assertThat(throttle.secondFactorLocked("erika")).isTrue();
         assertThat(throttle.beginSecondFactor("erika", "198.51.100.1")).isNull();
-        // von zu Hause aus geht es weiter, und die Anmeldung mit Passwort ist nicht betroffen
-        assertThat(throttle.beginSecondFactor("erika", "192.0.2.10")).isNotNull();
+        // auch von zu Hause aus nicht: wer das Passwort kennt, käme sonst über eine bekannte Adresse unbegrenzt an
+        // weitere Versuche für den Code. Die Anmeldung mit Passwort ist nicht betroffen.
+        assertThat(throttle.beginSecondFactor("erika", "192.0.2.10")).isNull();
         assertThat(throttle.begin("erika", "198.51.100.2")).isNotNull();
+        assertThat(throttle.begin("erika", "192.0.2.10")).isNotNull();
         // ein richtiger Code zählt nicht mit
         LoginThrottle other = new LoginThrottle();
         for (int i = 0; i < 20; i++) {
             other.beginSecondFactor("max", "203.0.113." + i).succeeded();
         }
         assertThat(other.secondFactorLocked("max")).isFalse();
+    }
+
+    @Test
+    void limitsPasskeyChallengesPerAddress() {
+        LoginThrottle throttle = new LoginThrottle();
+        for (int i = 0; i < 30; i++) {
+            assertThat(throttle.allowPasskeyChallenge("198.51.100.20")).isTrue();
+        }
+        assertThat(throttle.allowPasskeyChallenge("198.51.100.20")).isFalse();
+        assertThat(throttle.allowPasskeyChallenge("198.51.100.21")).isTrue();
+        // IPv6: je /64 gezählt
+        for (int i = 0; i < 30; i++) {
+            assertThat(throttle.allowPasskeyChallenge("2001:db8:7:7::" + Integer.toHexString(i + 1))).isTrue();
+        }
+        assertThat(throttle.allowPasskeyChallenge("2001:db8:7:7::beef")).isFalse();
+        assertThat(throttle.allowPasskeyChallenge("2001:db8:7:8::1")).isTrue();
     }
 
     @Test

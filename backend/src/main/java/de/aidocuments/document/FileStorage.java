@@ -47,6 +47,51 @@ public class FileStorage {
         } catch (IOException e) {
             throw new UncheckedIOException("Datenverzeichnis kann nicht angelegt werden: " + root, e);
         }
+        removeLeftovers(tmp, java.time.Instant.now().minus(LEFTOVER_AGE));
+    }
+
+    /** Was so lange im tmp-Ordner liegt, gehört zu keiner laufenden Annahme mehr. */
+    static final java.time.Duration LEFTOVER_AGE = java.time.Duration.ofHours(1);
+
+    /**
+     * Beim Start: Reste im tmp-Ordner wegräumen, die älter als {@link #LEFTOVER_AGE} sind – etwa halb empfangene
+     * Dateien oder Momentaufnahmen einer Sicherung, als der Server mittendrin beendet wurde. Jüngere bleiben (ein
+     * zweiter Server auf demselben Datenverzeichnis könnte sie gerade schreiben). Symbolischen Links wird nicht gefolgt.
+     */
+    static void removeLeftovers(Path directory, java.time.Instant olderThan) {
+        int removed = 0;
+        try (java.nio.file.DirectoryStream<Path> entries = Files.newDirectoryStream(directory)) {
+            for (Path entry : entries) {
+                try {
+                    java.nio.file.attribute.BasicFileAttributes attributes = Files.readAttributes(entry,
+                            java.nio.file.attribute.BasicFileAttributes.class, java.nio.file.LinkOption.NOFOLLOW_LINKS);
+                    if (attributes.lastModifiedTime().toInstant().isBefore(olderThan)) {
+                        deleteRecursively(entry, attributes);
+                        removed++;
+                    }
+                } catch (IOException | RuntimeException e) {
+                    log.warn("Rest im tmp-Ordner nicht entfernt: {} ({})", entry, e.toString());
+                }
+            }
+        } catch (IOException | RuntimeException e) {
+            log.warn("tmp-Ordner {} nicht aufgeräumt: {}", directory, e.toString());
+        }
+        if (removed > 0) {
+            log.info("{} alte Reste im tmp-Ordner entfernt", removed);
+        }
+    }
+
+    private static void deleteRecursively(Path entry, java.nio.file.attribute.BasicFileAttributes attributes)
+            throws IOException {
+        if (attributes.isDirectory()) {
+            try (java.nio.file.DirectoryStream<Path> children = Files.newDirectoryStream(entry)) {
+                for (Path child : children) {
+                    deleteRecursively(child, Files.readAttributes(child,
+                            java.nio.file.attribute.BasicFileAttributes.class, java.nio.file.LinkOption.NOFOLLOW_LINKS));
+                }
+            }
+        }
+        Files.deleteIfExists(entry); // ein Link wird selbst entfernt, nicht sein Ziel
     }
 
     /** Größte Datei, die angenommen wird – gleich auf welchem Weg (Upload, geänderte Fassung, E-Mail, Ordner). */

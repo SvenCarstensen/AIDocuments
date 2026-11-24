@@ -167,7 +167,7 @@ public class AutoBackup {
 
     private static void requireWritable(Path directory) {
         try {
-            Files.createDirectories(directory);
+            createPrivateDirectories(directory);
         } catch (IOException | SecurityException e) {
             throw ApiException.badRequest("error.backup.directoryNotWritable", directory.toString());
         }
@@ -184,7 +184,7 @@ public class AutoBackup {
                 directory().toString(), defaultDirectory.toString(), settings.warnAfterDays(), running.get(),
                 last == null ? null : last.at(), last == null ? null : last.ok(),
                 last == null || last.ok() ? null : messages.localize(last.error(), locale),
-                nextRun(settings, last), stored(directory()), backups.configuredPassword() != null);
+                nextRun(settings, last), stored(directory()), backups.hasConfiguredPassword());
     }
 
     /** Wann der nächste Lauf ansteht; null = aus. Liegt der Zeitpunkt schon zurück, kommt er beim nächsten Takt. */
@@ -260,8 +260,10 @@ public class AutoBackup {
             String name = PREFIX + STAMP.format(LocalDateTime.now()) + ".zip";
             part = directory.resolve(name + ".part");
             char[] password = backups.configuredPassword();
-            try (OutputStream out = Files.newOutputStream(part, StandardOpenOption.CREATE_NEW,
-                    StandardOpenOption.WRITE)) {
+            // gleich beim Anlegen nur für den Eigentümer lesbar (0600): Die Sicherung enthält alle Dokumente
+            try (OutputStream out = java.nio.channels.Channels.newOutputStream(Files.newByteChannel(part,
+                    java.util.Set.of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE),
+                    ownerOnly(part, "rw-------")))) {
                 backups.write(out, Locale.getDefault(), "automatisch", password);
             } finally {
                 if (password != null) {
@@ -298,6 +300,34 @@ public class AutoBackup {
             }
             running.set(false);
         }
+    }
+
+    /**
+     * Legt fehlende Ordner an, nur für den Eigentümer zugänglich (0700) – bestehende bleiben, wie sie sind (etwa ein
+     * eigens eingerichteter Ordner auf einem Netzlaufwerk).
+     */
+    static void createPrivateDirectories(Path directory) throws IOException {
+        Path existing = directory.toAbsolutePath();
+        while (existing != null && !Files.exists(existing)) {
+            existing = existing.getParent();
+        }
+        Files.createDirectories(directory, existing == null ? new java.nio.file.attribute.FileAttribute<?>[0]
+                : ownerOnly(existing, "rwx------"));
+    }
+
+    /** Dateirechte zum Anlegen – nur, wo das Dateisystem POSIX-Rechte kennt (unter Windows regelt das Benutzerprofil). */
+    private static java.nio.file.attribute.FileAttribute<?>[] ownerOnly(Path near, String permissions) {
+        Path probe = Files.exists(near) ? near : near.toAbsolutePath().getParent();
+        boolean posix;
+        try {
+            posix = probe != null && Files.getFileStore(probe).supportsFileAttributeView("posix");
+        } catch (IOException e) {
+            posix = near.getFileSystem().supportedFileAttributeViews().contains("posix");
+        }
+        return posix
+                ? new java.nio.file.attribute.FileAttribute<?>[]{java.nio.file.attribute.PosixFilePermissions
+                        .asFileAttribute(java.nio.file.attribute.PosixFilePermissions.fromString(permissions))}
+                : new java.nio.file.attribute.FileAttribute<?>[0];
     }
 
     private void failed(Msg reason) {

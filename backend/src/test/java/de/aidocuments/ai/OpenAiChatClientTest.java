@@ -118,4 +118,41 @@ class OpenAiChatClientTest {
                 .isInstanceOfSatisfying(OpenAiChatClient.ConnectionException.class,
                         e -> assertThat(e.timeout()).isFalse());
     }
+
+    @Test
+    void oversizedAnswersAreNotReadIntoMemory() {
+        response = "{\"object\":\"list\",\"data\":[" + "{\"id\":\"m\"},".repeat(100) + "{\"id\":\"z\"}]}";
+        // zu groß: wie eine unbrauchbare Antwort
+        assertThatThrownBy(() -> new OpenAiChatClient(baseUrl, "k", 200).listModels(TIMEOUT))
+                .isInstanceOf(OpenAiChatClient.NotJsonException.class);
+        assertThat(new OpenAiChatClient(baseUrl, "k", 10_000).listModels(TIMEOUT)).hasSize(101);
+        // auch eine riesige Fehlerantwort wird nur angelesen
+        status = 500;
+        response = "x".repeat(2 * 1024 * 1024);
+        assertThatThrownBy(() -> new OpenAiChatClient(baseUrl, "k").listModels(TIMEOUT))
+                .isInstanceOfSatisfying(OpenAiChatClient.StatusException.class, e -> {
+                    assertThat(e.status()).isEqualTo(500);
+                    assertThat(e.getMessage().length()).isLessThanOrEqualTo(OpenAiChatClient.MAX_ERROR_BYTES);
+                });
+    }
+
+    @Test
+    void redirectsAreNotFollowed() {
+        AtomicReference<String> forwarded = new AtomicReference<>();
+        server.createContext("/umgeleitet", exchange -> {
+            forwarded.set(exchange.getRequestHeaders().getFirst("Authorization"));
+            exchange.sendResponseHeaders(200, -1);
+            exchange.close();
+        });
+        server.createContext("/weiter", exchange -> {
+            exchange.getResponseHeaders().add("Location", baseUrl.replace("/v1", "/umgeleitet"));
+            exchange.sendResponseHeaders(307, -1);
+            exchange.close();
+        });
+        String redirecting = baseUrl.replace("/v1", "/weiter");
+        assertThatThrownBy(() -> new OpenAiChatClient(redirecting, "geheim").listModels(TIMEOUT))
+                .isInstanceOfSatisfying(OpenAiChatClient.StatusException.class,
+                        e -> assertThat(e.status()).isEqualTo(307));
+        assertThat(forwarded.get()).isNull();
+    }
 }

@@ -9,6 +9,7 @@ import de.aidocuments.user.UserDtos.SetupRequest;
 import de.aidocuments.user.UserDtos.TwoFactorRequired;
 import de.aidocuments.user.UserDtos.UserDto;
 import de.aidocuments.security.RecentConfirmation;
+import de.aidocuments.security.SessionTimeouts;
 import de.aidocuments.web.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -50,10 +51,13 @@ public class AuthController {
     private final TwoFactorService twoFactor;
     private final PasskeyService passkeys;
     private final de.aidocuments.license.LicenseService license;
+    private final SessionTimeouts sessionTimeouts;
 
     public AuthController(UserService userService, AuthenticationManager authenticationManager,
                           LoginThrottle throttle, CsrfTokenRepository csrfTokens, TwoFactorService twoFactor,
-                          PasskeyService passkeys, de.aidocuments.license.LicenseService license) {
+                          PasskeyService passkeys, de.aidocuments.license.LicenseService license,
+                          SessionTimeouts sessionTimeouts) {
+        this.sessionTimeouts = sessionTimeouts;
         this.license = license;
         this.passkeys = passkeys;
         this.twoFactor = twoFactor;
@@ -117,7 +121,8 @@ public class AuthController {
         if (twoFactor.isEnabled(principal.id())) {
             // Passwort stimmt – kein Fehlversuch; gezählt wird beim Code erneut
             attempt.discard();
-            HttpSession session = request.getSession(true);
+            // noch nicht angemeldet: kurzlebige Sitzung, so lange wie der Code aussteht
+            HttpSession session = SessionTimeouts.anonymous(request.getSession(true));
             session.setAttribute(PENDING_LOGIN, new PendingLogin(principal.id(), principal.getUsername(),
                     principal.version(), Instant.now().plus(PENDING_LOGIN_TIME), 0));
             return new TwoFactorRequired(true);
@@ -221,9 +226,15 @@ public class AuthController {
     // Passkeys: anmelden, bestätigen, verwalten
     // ---------------------------------------------------------------------------------------------------------
 
-    /** Schritt 1 der Anmeldung per Passkey: die Challenge (öffentlich, wie die Anmeldung selbst). */
+    /**
+     * Schritt 1 der Anmeldung per Passkey: die Challenge (öffentlich, wie die Anmeldung selbst). Je Adresse begrenzt –
+     * jeder Aufruf legt eine (kurzlebige) Sitzung an.
+     */
     @PostMapping("/passkey/options")
     public java.util.Map<String, Object> passkeyLoginOptions(HttpServletRequest request) {
+        if (!throttle.allowPasskeyChallenge(request.getRemoteAddr())) {
+            throw ApiException.of(HttpStatus.TOO_MANY_REQUESTS, "error.auth.tooManyAttempts");
+        }
         return passkeys.loginOptions(request);
     }
 
@@ -429,6 +440,7 @@ public class AuthController {
             request.changeSessionId(); // Schutz vor Session-Fixation
         }
         contextRepository.saveContext(context, request, response);
+        sessionTimeouts.established(request.getSession(false)); // bis hierher war die Sitzung kurzlebig
         renewCsrfToken(request, response);
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         userService.recordLogin(principal.id());

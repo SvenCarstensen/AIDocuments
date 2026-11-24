@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecretCipher {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SecretCipher.class);
     private static final int IV_LENGTH = 12;
     private static final int TAG_BITS = 128;
 
@@ -79,9 +80,10 @@ public class SecretCipher {
         }
     }
 
-    private static byte[] loadOrCreateKey(Path file) {
+    static byte[] loadOrCreateKey(Path file) {
         try {
             if (Files.exists(file)) {
+                restrictToOwner(file); // auch eine ältere, zu offen angelegte Datei
                 byte[] existing = Base64.getDecoder().decode(Files.readString(file).trim());
                 if (existing.length != 32) {
                     throw new IllegalStateException("Ungültige Schlüsseldatei: " + file);
@@ -91,15 +93,54 @@ public class SecretCipher {
             Files.createDirectories(file.getParent());
             byte[] fresh = new byte[32];
             new SecureRandom().nextBytes(fresh);
-            Files.writeString(file, Base64.getEncoder().encodeToString(fresh));
+            // erst vollständig in eine Nebendatei, die von Anfang an nur der Eigentümer lesen kann (0600) – kein
+            // Augenblick, in dem der Schlüssel für andere lesbar oder nur halb geschrieben dasteht –, dann umbenennen
+            Path part = file.resolveSibling(file.getFileName() + ".part");
+            Files.deleteIfExists(part);
+            boolean posix = Files.getFileStore(file.getParent()).supportsFileAttributeView("posix");
+            java.nio.file.attribute.FileAttribute<?>[] attributes = posix
+                    ? new java.nio.file.attribute.FileAttribute<?>[]{
+                            PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------"))}
+                    : new java.nio.file.attribute.FileAttribute<?>[0];
+            try (java.nio.channels.FileChannel channel = java.nio.channels.FileChannel.open(part,
+                    java.util.Set.of(java.nio.file.StandardOpenOption.CREATE_NEW,
+                            java.nio.file.StandardOpenOption.WRITE), attributes)) {
+                ByteBuffer content = ByteBuffer.wrap(
+                        Base64.getEncoder().encodeToString(fresh).getBytes(StandardCharsets.US_ASCII));
+                while (content.hasRemaining()) {
+                    channel.write(content);
+                }
+                channel.force(true);
+            }
             try {
-                Files.setPosixFilePermissions(file, PosixFilePermissions.fromString("rw-------"));
-            } catch (UnsupportedOperationException ignored) {
-                // Windows: Dateirechte werden über das Benutzerprofil geregelt
+                Files.move(part, file, java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+            } catch (java.nio.file.AtomicMoveNotSupportedException e) {
+                Files.move(part, file);
             }
             return fresh;
         } catch (IOException e) {
             throw new UncheckedIOException("Schlüsseldatei kann nicht gelesen/erzeugt werden: " + file, e);
+        }
+    }
+
+    /** Nur für den Eigentümer lesbar (0600) – wo das Dateisystem POSIX-Rechte kennt. */
+    private static void restrictToOwner(Path file) {
+        try {
+            if (!Files.getFileStore(file).supportsFileAttributeView("posix")) {
+                return; // Windows: Dateirechte werden über das Benutzerprofil geregelt
+            }
+            // Gruppe und andere verlieren jedes Recht; was der Eigentümer hat, bleibt (höchstens 0600)
+            java.util.Set<java.nio.file.attribute.PosixFilePermission> current = Files.getPosixFilePermissions(file);
+            java.util.Set<java.nio.file.attribute.PosixFilePermission> wanted = java.util.EnumSet.noneOf(
+                    java.nio.file.attribute.PosixFilePermission.class);
+            wanted.addAll(current);
+            wanted.retainAll(PosixFilePermissions.fromString("rw-------"));
+            if (!current.equals(wanted)) {
+                Files.setPosixFilePermissions(file, wanted);
+                log.info("Rechte der Schlüsseldatei {} auf {} eingeschränkt", file, PosixFilePermissions.toString(wanted));
+            }
+        } catch (IOException | UnsupportedOperationException e) {
+            log.warn("Rechte der Schlüsseldatei {} lassen sich nicht einschränken: {}", file, e.toString());
         }
     }
 }

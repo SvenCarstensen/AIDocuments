@@ -158,6 +158,11 @@ public class UserService implements UserDetailsService {
             user.setPasswordHash(encode(request.password()));
         }
         users.save(user);
+        if (request.password() != null && !request.password().isBlank()) {
+            // Passwort zurückgesetzt (Konto wiederhergestellt): Passkeys ersetzen Passwort und Code – wer einen
+            // entwendet hat, käme sonst weiter herein
+            passkeys.deleteAll(id);
+        }
         invalidateSessions(id);
         return UserDto.of(user);
     }

@@ -121,11 +121,12 @@ public class FolderImportService {
                 IngestResult result = null;
                 // „Rechnung_4711.pdf“ und „Rechnung_4711.xml“: meist dieselbe Rechnung – dann ein Dokument
                 Path partner = xmlPartner(file, candidates);
-                BasicFileAttributes partnerAttributes = partner == null || !Files.isRegularFile(partner) ? null
+                BasicFileAttributes partnerAttributes = partner == null
+                        || !Files.isRegularFile(partner, java.nio.file.LinkOption.NOFOLLOW_LINKS) ? null
                         : pending(partner);
                 if (partnerAttributes != null) {
-                    result = documentService.ingestPair(() -> Files.newInputStream(file),
-                            file.getFileName().toString(), () -> Files.newInputStream(partner),
+                    result = documentService.ingestPair(() -> open(file),
+                            file.getFileName().toString(), () -> open(partner),
                             partner.getFileName().toString(), DocumentSource.FOLDER, null, config.folderAreaId());
                     if (result != null) {
                         handled.add(partner);
@@ -133,7 +134,7 @@ public class FolderImportService {
                     }
                 }
                 if (result == null) {
-                    try (InputStream in = Files.newInputStream(file)) {
+                    try (InputStream in = open(file)) {
                         result = documentService.ingest(in, file.getFileName().toString(), DocumentSource.FOLDER,
                                 null, config.folderAreaId());
                     }
@@ -173,9 +174,22 @@ public class FolderImportService {
         return Status.of(failed == 0, sentences);
     }
 
+    /**
+     * Öffnet eine Datei aus dem Eingangsordner, ohne einem symbolischen Link zu folgen: Geprüft wird das schon bei der
+     * Suche ({@link #isCandidate}), aber bis zum Öffnen könnte die Datei durch einen Link ersetzt worden sein.
+     */
+    private static InputStream open(Path file) throws IOException {
+        return Files.newInputStream(file, java.nio.file.StandardOpenOption.READ,
+                java.nio.file.LinkOption.NOFOLLOW_LINKS);
+    }
+
     /** Die Angaben der Datei, wenn sie fertig geschrieben und noch nicht übernommen ist – sonst {@code null}. */
     private BasicFileAttributes pending(Path file) throws IOException {
-        BasicFileAttributes attributes = Files.readAttributes(file, BasicFileAttributes.class);
+        BasicFileAttributes attributes = Files.readAttributes(file, BasicFileAttributes.class,
+                java.nio.file.LinkOption.NOFOLLOW_LINKS);
+        if (!attributes.isRegularFile()) {
+            return null; // inzwischen ein Link (oder ein Ordner)
+        }
         long modified = attributes.lastModifiedTime().toMillis();
         if (System.currentTimeMillis() - modified < SETTLE_MILLIS) {
             return null;

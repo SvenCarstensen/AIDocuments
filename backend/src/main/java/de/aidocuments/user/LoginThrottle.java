@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 /**
- * Bremst das Durchprobieren von Passwörtern (und Einrichtungscodes) auf drei Ebenen:
+ * Bremst das Durchprobieren von Passwörtern (und Einrichtungscodes) auf mehreren Ebenen:
  *
  * <ul>
  *   <li>je Konto und Absender (IP-Adresse): nach fünf Fehlversuchen fünf Minuten Pause – gegen gezieltes Raten,
@@ -24,7 +24,9 @@ import org.springframework.stereotype.Component;
  *       Raten von sehr vielen Adressen aus. Adressen, von denen sich das Konto schon einmal erfolgreich angemeldet hat,
  *       sind davon ausgenommen – so kann ein Angreifer den Inhaber damit nicht aussperren.</li>
  *   <li>für den Code aus der Authenticator-App zusätzlich je Konto: zehn falsche Codes in 24 Stunden
- *       ({@link #beginSecondFactor}).</li>
+ *       ({@link #beginSecondFactor}) – ohne Ausnahme für bekannte Adressen.</li>
+ *   <li>für die Challenge der Anmeldung per Passkey je Absender: höchstens 30 in fünf Minuten
+ *       ({@link #allowPasskeyChallenge}) – jede legt eine Sitzung an.</li>
  * </ul>
  *
  * <p>IPv6-Adressen zählen je /64-Netz: Ein Anschluss bekommt meist ein ganzes /64, darin ließe sich sonst für jeden
@@ -43,6 +45,7 @@ public class LoginThrottle {
     private final Limiter byAddress = new Limiter(20, Duration.ofMinutes(15), Duration.ofMinutes(15));
     private final Limiter byAccount = new Limiter(100, Duration.ofHours(1), Duration.ofMinutes(15));
     private final Limiter secondFactorByAccount = new Limiter(10, Duration.ofHours(24), Duration.ofHours(24));
+    private final Limiter passkeyChallengesByAddress = new Limiter(30, Duration.ofMinutes(5), Duration.ofMinutes(5));
     /** Konto+Adresse, die sich schon erfolgreich angemeldet haben (für 30 Tage), mit Zeitpunkt der letzten Anmeldung. */
     private final Map<String, Instant> knownPairs = new ConcurrentHashMap<>();
     private static final Duration KNOWN_PAIR_TIME = Duration.ofDays(30);
@@ -86,12 +89,24 @@ public class LoginThrottle {
 
     /**
      * Wie {@link #begin}, für den Code aus der Authenticator-App bei der Anmeldung. Wer hier rät, kennt das Passwort
-     * schon – deshalb gilt zusätzlich je Konto: höchstens zehn falsche Codes in 24 Stunden, danach 24 Stunden Pause
-     * (Adressen, von denen sich das Konto schon angemeldet hat, ausgenommen). Ohne diese Grenze ließe sich der Code von
-     * vielen Adressen aus mit 100 Versuchen in der Stunde erraten – in einem Monat mit rund 20 % Wahrscheinlichkeit.
+     * schon – deshalb gilt zusätzlich je Konto: höchstens zehn falsche Codes in 24 Stunden, danach 24 Stunden Pause.
+     * Ohne diese Grenze ließe sich der Code von vielen Adressen aus mit 100 Versuchen in der Stunde erraten – in einem
+     * Monat mit rund 20 % Wahrscheinlichkeit. Bekannte Adressen sind hier bewusst <em>nicht</em> ausgenommen: Hinter
+     * einem gemeinsamen Anschluss (oder einem nicht eingetragenen Proxy) teilt ein Angreifer die Adresse des Inhabers
+     * und hätte sonst fast unbegrenzt Versuche. Der Inhaber kommt in der Zeit per Passkey oder Wiederherstellung herein.
      */
     public Attempt beginSecondFactor(String username, String rawAddress) {
         return begin(username, rawAddress, true);
+    }
+
+    /**
+     * Zählt eine angeforderte Challenge für die Anmeldung per Passkey. Sie wird nie wieder abgezogen – es geht nicht um
+     * Fehlversuche, sondern darum, dass niemand massenhaft Sitzungen anlegt.
+     *
+     * @return {@code false}, wenn von dieser Adresse gerade zu viele kamen
+     */
+    public boolean allowPasskeyChallenge(String rawAddress) {
+        return passkeyChallengesByAddress.tryAcquire(addressKey(rawAddress));
     }
 
     /** Ist das Konto wegen zu vieler falscher Codes aus der App gesperrt? (für einen Hinweis im Log) */
@@ -106,7 +121,8 @@ public class LoginThrottle {
         boolean knownPair = pairKey != null && isKnownPair(pairKey);
         if (!acquire(byAddress, address, releases)
                 || (username != null && !knownPair && !acquire(byAccount, accountKey(username), releases))
-                || (secondFactor && username != null && !knownPair
+                // für den zweiten Faktor ohne Ausnahme für bekannte Adressen (siehe beginSecondFactor)
+                || (secondFactor && username != null
                         && !acquire(secondFactorByAccount, accountKey(username), releases))
                 || (pairKey != null && !acquire(byAccountAndAddress, pairKey, releases))) {
             releases.forEach(Runnable::run);

@@ -66,6 +66,11 @@ public class AreaAccess {
         return visible == null || visible.contains(areaId);
     }
 
+    /** Was eine bestimmte Person (nicht die anfragende) im Bereich darf; {@code null}, wenn sie ihn nicht sieht. */
+    public Permission permission(String userId, boolean admin, String areaId) {
+        return admin ? Permission.DELETE : areas.permissionsFor(userId).get(areaId);
+    }
+
     /** Ob eine bestimmte Person (nicht die anfragende) den Bereich sieht – etwa wer eine Erinnerung bekommt. */
     public boolean canSee(String userId, boolean admin, String areaId) {
         return admin || areas.visibleFor(userId).contains(areaId);
