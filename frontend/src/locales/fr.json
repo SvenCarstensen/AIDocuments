@@ -1103,6 +1103,8 @@
     "codeHint": "Commence par AIDOCS-. Vous pouvez aussi le saisir plus tard sous Paramètres → Licence ; d’ici là, tout reste utilisable.",
     "codeLaterHint": "Commence par AIDOCS-. Sans code, tout reste utilisable ; seul un avis s’affiche.",
     "codeKeepHint": "Un code est enregistré. Laissez le champ vide pour le conserver ou saisissez-en un nouveau.",
+    "request": "Pas encore de code ? Écrivez à <mail>{{email}}</mail> – en indiquant le nom de l’entreprise tel qu’il doit figurer dans le code.",
+    "requestSubject": "Code d’activation pour AIDocuments",
     "removeCode": "Supprimer le code",
     "saved": "Licence enregistrée",
     "licensedTo": "Licence délivrée à {{name}}",

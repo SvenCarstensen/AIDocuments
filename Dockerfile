@@ -6,13 +6,18 @@
 #
 #   docker build -t aidocuments .
 #   docker run -d -p 8080:8080 -v aidocuments-data:/aidocuments aidocuments
+#
+# Für mehrere Plattformen (so baut es .github/workflows/docker.yml):
+#   docker buildx build --platform linux/amd64,linux/arm64 -t aidocuments .
+# Oberfläche und JAR sind plattformunabhängig und werden nur einmal auf der Plattform des Rechners gebaut
+# ($BUILDPLATFORM); je Zielplattform entsteht nur die Laufzeit-Stufe.
 
 # Sprachen der eingebauten Texterkennung (Tesseract-Kürzel, Leerzeichen-getrennt). Welche davon beim Lesen genutzt
 # werden, bestimmt AIDOCS_OCR_LANGUAGES; weitere lassen sich hier für einen eigenen Build ergänzen.
 ARG OCR_LANGUAGES="deu eng fra ita spa nld"
 
 # ---------- 1. Oberfläche bauen ----------
-FROM node:24-alpine AS frontend
+FROM --platform=$BUILDPLATFORM node:24-alpine AS frontend
 WORKDIR /build
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
@@ -20,7 +25,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # ---------- 2. Backend bauen (die Oberfläche wandert als statische Dateien ins JAR) ----------
-FROM eclipse-temurin:21-jdk AS backend
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS backend
 WORKDIR /build
 COPY backend/.mvn .mvn
 COPY backend/mvnw backend/pom.xml ./
@@ -42,6 +47,10 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw -q -B -DskipTests package \
 # ---------- 3. Laufzeit: Java-Laufzeit (Ubuntu) mit Tesseract ----------
 FROM eclipse-temurin:21-jre
 ARG OCR_LANGUAGES
+LABEL org.opencontainers.image.title="AIDocuments" \
+      org.opencontainers.image.description="Self-hosted document management for PDFs with OCR, optional AI indexing and full-text search" \
+      org.opencontainers.image.licenses="PolyForm-Noncommercial-1.0.0" \
+      org.opencontainers.image.source="https://github.com/SvenCarstensen/AIDocuments"
 # Schriften und FreeType braucht die PDF-Vorschau (Rendern der ersten Seite), Tesseract die Texterkennung,
 # gosu das Abgeben der root-Rechte beim Start, heif-convert (libheif mit HEVC-Decoder) das Umwandeln von iPhone-Fotos
 # (HEIC). Die Anwendung läuft als eigener Benutzer "aidocuments".

@@ -1,12 +1,13 @@
 # Produktion, Variante A: alles in einem Container – die Datenbank (SQLite) liegt im Datenverzeichnis.
 #
-#   docker compose up -d --build
+#   docker compose up -d            (fertiges Image von ghcr.io; mit --build aus diesem Ordner gebaut)
 #
 # Danach http://<server>:8080 öffnen und das Administratorkonto anlegen.
 services:
   aidocuments:
+    # Das fertige Image (amd64 und arm64); "docker compose up -d --build" baut es stattdessen aus diesem Ordner.
+    image: ghcr.io/svencarstensen/aidocuments:latest
     build: .
-    image: aidocuments:latest
     restart: unless-stopped
     ports:
       # Unverschlüsselt (HTTP) – so nur im eigenen Netz. Aus dem Internet erreichbar nur über einen Reverse-Proxy
@@ -15,6 +16,9 @@ services:
       - "8080:8080"
     environment:
       TZ: Europe/Berlin
+      # Hinter einem Reverse-Proxy mit HTTPS: dessen Adresse(n) eintragen (oder "private", wenn Port 8080 nicht
+      # veröffentlicht ist) – erst dann gelten sichere Cookies und HSTS, siehe README:
+      # AIDOCS_TRUSTED_PROXIES: 172.18.0.1
       # Optional – lässt sich alles auch in der Oberfläche unter Einstellungen → KI eintragen:
       # AIDOCS_AI_PROVIDER: openai-compatible   # anthropic | openai | moonshot | lm-studio | openai-compatible
       # AIDOCS_AI_BASE_URL: http://192.168.1.10:8000/v1

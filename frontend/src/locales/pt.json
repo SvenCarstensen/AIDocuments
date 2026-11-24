@@ -1103,6 +1103,8 @@
     "codeHint": "Começa por AIDOCS-. Também pode introduzi-lo mais tarde em Definições → Licença; até lá, tudo continua utilizável.",
     "codeLaterHint": "Começa por AIDOCS-. Sem código, tudo continua utilizável; é apenas apresentado um aviso.",
     "codeKeepHint": "Está guardado um código. Deixe vazio para o manter ou introduza um novo.",
+    "request": "Ainda não tem um código? Escreva para <mail>{{email}}</mail> – com o nome da empresa tal como deve constar no código.",
+    "requestSubject": "Código de ativação para o AIDocuments",
     "removeCode": "Remover código",
     "saved": "Licença guardada",
     "licensedTo": "Ativado para {{name}}",

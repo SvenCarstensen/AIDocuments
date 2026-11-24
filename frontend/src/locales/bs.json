@@ -1103,6 +1103,8 @@
     "codeHint": "Počinje sa AIDOCS-. Možete ga unijeti i kasnije u Postavke → Licenca; do tada sve ostaje upotrebljivo.",
     "codeLaterHint": "Počinje sa AIDOCS-. Bez koda sve ostaje upotrebljivo; prikazuje se samo obavijest.",
     "codeKeepHint": "Kod je pohranjen. Ostavite prazno da ga zadržite ili unesite novi.",
+    "request": "Još nemate kod? Pišite na <mail>{{email}}</mail> – s nazivom firme onako kako treba stajati u kodu.",
+    "requestSubject": "Kod za otključavanje za AIDocuments",
     "removeCode": "Ukloni kod",
     "saved": "Licenca je spremljena",
     "licensedTo": "Licencirano za {{name}}",

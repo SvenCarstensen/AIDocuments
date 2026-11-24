@@ -8,8 +8,9 @@
 # Das Datenbank-Passwort kommt aus MARIADB_PASSWORD (Umgebung oder .env-Datei neben dieser Datei) – ohne startet nichts.
 services:
   aidocuments:
+    # Das fertige Image (amd64 und arm64); mit --build wird es stattdessen aus diesem Ordner gebaut.
+    image: ghcr.io/svencarstensen/aidocuments:latest
     build: .
-    image: aidocuments:latest
     restart: unless-stopped
     depends_on:
       mariadb:

@@ -1078,6 +1078,8 @@
     "codeHint": "Alkaa tunnuksella AIDOCS-. Voit syöttää sen myös myöhemmin kohdassa Asetukset → Lisenssi; siihen asti kaikki on käytettävissä.",
     "codeLaterHint": "Alkaa tunnuksella AIDOCS-. Ilman koodia kaikki on käytettävissä; vain ilmoitus näytetään.",
     "codeKeepHint": "Koodi on tallennettu. Jätä kenttä tyhjäksi säilyttääksesi sen tai syötä uusi.",
+    "request": "Eikö koodia vielä ole? Kirjoita osoitteeseen <mail>{{email}}</mail> – ja mainitse yrityksen nimi sellaisena kuin sen pitää koodissa olla.",
+    "requestSubject": "Aktivointikoodi AIDocumentsille",
     "removeCode": "Poista koodi",
     "saved": "Lisenssi tallennettu",
     "licensedTo": "Lisenssin haltija: {{name}}",

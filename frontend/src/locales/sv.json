@@ -1078,6 +1078,8 @@
     "codeHint": "Börjar med AIDOCS-. Du kan också ange den senare under Inställningar → Licens; till dess går allt att använda.",
     "codeLaterHint": "Börjar med AIDOCS-. Utan kod går allt att använda, bara ett meddelande visas.",
     "codeKeepHint": "En kod är sparad. Lämna tomt för att behålla den, eller ange en ny.",
+    "request": "Ingen kod än? Skriv till <mail>{{email}}</mail> – med företagsnamnet så som det ska stå i koden.",
+    "requestSubject": "Aktiveringskod för AIDocuments",
     "removeCode": "Ta bort kod",
     "saved": "Licensen sparad",
     "licensedTo": "Aktiverad för {{name}}",

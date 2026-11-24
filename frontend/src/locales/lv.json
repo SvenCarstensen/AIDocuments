@@ -1103,6 +1103,8 @@
     "codeHint": "Sākas ar AIDOCS-. To var ievadīt arī vēlāk sadaļā Iestatījumi → Licence; līdz tam viss ir izmantojams.",
     "codeLaterHint": "Sākas ar AIDOCS-. Bez koda viss ir izmantojams, tiek rādīts tikai paziņojums.",
     "codeKeepHint": "Kods ir saglabāts. Atstājiet tukšu, lai to paturētu, vai ievadiet jaunu.",
+    "request": "Vēl nav koda? Rakstiet uz <mail>{{email}}</mail> – norādot uzņēmuma nosaukumu tādu, kādam tam jābūt kodā.",
+    "requestSubject": "AIDocuments atbloķēšanas kods",
     "removeCode": "Noņemt kodu",
     "saved": "Licence saglabāta",
     "licensedTo": "Licencēts: {{name}}",

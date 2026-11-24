@@ -1078,6 +1078,8 @@
     "codeHint": "Fillon me AIDOCS-. Mund ta vendosësh edhe më vonë te Cilësimet → Licenca; deri atëherë gjithçka mbetet e përdorshme.",
     "codeLaterHint": "Fillon me AIDOCS-. Pa kod gjithçka mbetet e përdorshme; shfaqet vetëm një njoftim.",
     "codeKeepHint": "Një kod është ruajtur. Lëre bosh për ta mbajtur, ose vendos një të ri.",
+    "request": "Nuk ke ende kod? Shkruaj te <mail>{{email}}</mail> – me emrin e kompanisë ashtu siç duhet të shfaqet në kod.",
+    "requestSubject": "Kod aktivizimi për AIDocuments",
     "removeCode": "Hiq kodin",
     "saved": "Licenca u ruajt",
     "licensedTo": "Aktivizuar për {{name}}",

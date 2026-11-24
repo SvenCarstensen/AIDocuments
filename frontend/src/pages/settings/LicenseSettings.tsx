@@ -3,7 +3,7 @@ import { BadgeCheck } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { FreeForNote, UsageChoice } from '../../components/License'
+import { FreeForNote, RequestCodeNote, UsageChoice } from '../../components/License'
 import { Alert, Button, Card, Field, Spinner, Textarea } from '../../components/ui'
 import { api, errorMessage, type LicenseStatus, type LicenseUsage } from '../../lib/api'
 import { formatDate } from '../../lib/format'
@@ -75,6 +75,7 @@ function LicenseForm({ stored }: { stored: LicenseStatus }) {
               )}
             </Field>
           )}
+          {usage === 'BUSINESS' && <RequestCodeNote />}
           <div className="flex flex-wrap items-center gap-2">
             <Button type="submit" variant="primary" loading={save.isPending && save.variables?.code !== ''} disabled={!usage}>
               {t('common.save')}

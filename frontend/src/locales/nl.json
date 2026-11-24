@@ -1078,6 +1078,8 @@
     "codeHint": "Begint met AIDOCS-. Je kunt de code ook later invoeren onder Instellingen → Licentie; tot die tijd blijft alles bruikbaar.",
     "codeLaterHint": "Begint met AIDOCS-. Zonder code blijft alles bruikbaar; er wordt alleen een melding getoond.",
     "codeKeepHint": "Er is een code opgeslagen. Laat dit veld leeg om hem te behouden, of voer een nieuwe in.",
+    "request": "Nog geen code? Mail naar <mail>{{email}}</mail> – met de bedrijfsnaam zoals die in de code moet staan.",
+    "requestSubject": "Activeringscode voor AIDocuments",
     "removeCode": "Code verwijderen",
     "saved": "Licentie opgeslagen",
     "licensedTo": "Geactiveerd voor {{name}}",

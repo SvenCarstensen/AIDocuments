@@ -1078,6 +1078,8 @@
     "codeHint": "Byrjar á AIDOCS-. Þú getur líka slegið hann inn síðar undir Stillingar → Leyfi; þangað til er allt nothæft.",
     "codeLaterHint": "Byrjar á AIDOCS-. Án kóða er allt nothæft; aðeins birtist tilkynning.",
     "codeKeepHint": "Kóði er vistaður. Skildu reitinn eftir auðan til að halda honum eða sláðu inn nýjan.",
+    "request": "Ertu ekki með kóða enn? Sendu póst á <mail>{{email}}</mail> – með nafni fyrirtækisins eins og það á að standa í kóðanum.",
+    "requestSubject": "Opnunarkóði fyrir AIDocuments",
     "removeCode": "Fjarlægja kóða",
     "saved": "Leyfi vistað",
     "licensedTo": "Leyfi fyrir {{name}}",

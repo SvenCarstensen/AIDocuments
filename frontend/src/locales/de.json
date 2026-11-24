@@ -1078,6 +1078,8 @@
     "codeHint": "Beginnt mit AIDOCS-. Du kannst ihn auch später unter Einstellungen → Lizenz eintragen; bis dahin lässt sich alles nutzen.",
     "codeLaterHint": "Beginnt mit AIDOCS-. Ohne Code lässt sich alles nutzen, es erscheint nur ein Hinweis.",
     "codeKeepHint": "Ein Code ist gespeichert. Leer lassen, um ihn zu behalten, oder einen neuen eintragen.",
+    "request": "Noch keinen Code? Schreib an <mail>{{email}}</mail> – mit dem Firmennamen, wie er im Code stehen soll.",
+    "requestSubject": "Freischaltcode für AIDocuments",
     "removeCode": "Code entfernen",
     "saved": "Lizenz gespeichert",
     "licensedTo": "Freigeschaltet für {{name}}",

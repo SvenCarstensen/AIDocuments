@@ -1128,6 +1128,8 @@
     "codeHint": "Zaczyna się od AIDOCS-. Możesz go wpisać także później w Ustawienia → Licencja; do tego czasu wszystko działa.",
     "codeLaterHint": "Zaczyna się od AIDOCS-. Bez kodu wszystko działa, wyświetlane jest tylko powiadomienie.",
     "codeKeepHint": "Kod jest zapisany. Zostaw to pole puste, aby go zachować, albo wpisz nowy.",
+    "request": "Nie masz jeszcze kodu? Napisz na <mail>{{email}}</mail> – podaj nazwę firmy w takiej postaci, w jakiej ma się znaleźć w kodzie.",
+    "requestSubject": "Kod aktywacyjny do AIDocuments",
     "removeCode": "Usuń kod",
     "saved": "Licencja zapisana",
     "licensedTo": "Aktywowano dla: {{name}}",

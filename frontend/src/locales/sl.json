@@ -1128,6 +1128,8 @@
     "codeHint": "Se začne z AIDOCS-. Vnesete jo lahko tudi pozneje v Nastavitve → Licenca; do takrat je vse uporabno.",
     "codeLaterHint": "Se začne z AIDOCS-. Brez kode je vse uporabno, prikaže se le obvestilo.",
     "codeKeepHint": "Koda je shranjena. Pustite prazno, če jo želite obdržati, ali vnesite novo.",
+    "request": "Še nimate kode? Pišite na <mail>{{email}}</mail> – z imenom podjetja, kakor naj bo navedeno v kodi.",
+    "requestSubject": "Aktivacijska koda za AIDocuments",
     "removeCode": "Odstrani kodo",
     "saved": "Licenca shranjena",
     "licensedTo": "Aktivirano za {{name}}",

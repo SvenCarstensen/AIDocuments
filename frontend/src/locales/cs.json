@@ -1128,6 +1128,8 @@
     "codeHint": "Začíná na AIDOCS-. Můžete jej zadat i později v Nastavení → Licence; do té doby zůstává vše použitelné.",
     "codeLaterHint": "Začíná na AIDOCS-. Bez kódu zůstává vše použitelné; zobrazí se pouze upozornění.",
     "codeKeepHint": "Kód je uložen. Nechte pole prázdné, pokud jej chcete ponechat, nebo zadejte nový.",
+    "request": "Ještě nemáte kód? Napište na <mail>{{email}}</mail> – s názvem firmy tak, jak má být uveden v kódu.",
+    "requestSubject": "Odemykací kód pro AIDocuments",
     "removeCode": "Odstranit kód",
     "saved": "Licence uložena",
     "licensedTo": "Licencováno pro {{name}}",

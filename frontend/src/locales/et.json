@@ -1078,6 +1078,8 @@
     "codeHint": "Algab AIDOCS-iga. Võid selle sisestada ka hiljem jaotises Seaded → Litsents; seni on kõik kasutatav.",
     "codeLaterHint": "Algab AIDOCS-iga. Ilma koodita on kõik kasutatav; kuvatakse vaid teade.",
     "codeKeepHint": "Kood on salvestatud. Jäta väli tühjaks, et see alles jätta, või sisesta uus.",
+    "request": "Koodi veel pole? Kirjuta aadressile <mail>{{email}}</mail> – koos ettevõtte nimega, nii nagu see peab koodis olema.",
+    "requestSubject": "Aktiveerimiskood AIDocuments’ile",
     "removeCode": "Eemalda kood",
     "saved": "Litsents salvestatud",
     "licensedTo": "Litsentsi omanik: {{name}}",

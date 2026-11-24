@@ -1103,6 +1103,8 @@
     "codeHint": "Inizia con AIDOCS-. Puoi inserirlo anche più tardi in Impostazioni → Licenza; fino ad allora tutto resta utilizzabile.",
     "codeLaterHint": "Inizia con AIDOCS-. Senza codice tutto resta utilizzabile; viene mostrato solo un avviso.",
     "codeKeepHint": "Un codice è memorizzato. Lascia vuoto per mantenerlo, oppure inseriscine uno nuovo.",
+    "request": "Non hai ancora un codice? Scrivi a <mail>{{email}}</mail> – con il nome dell’azienda così come deve comparire nel codice.",
+    "requestSubject": "Codice di sblocco per AIDocuments",
     "removeCode": "Rimuovi codice",
     "saved": "Licenza salvata",
     "licensedTo": "Concessa in licenza a {{name}}",

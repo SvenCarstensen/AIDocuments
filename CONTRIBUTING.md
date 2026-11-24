@@ -6,7 +6,7 @@ Contributions are welcome – bug reports, ideas and pull requests alike.
 
 AIDocuments is **source-available** under the [PolyForm Noncommercial License 1.0.0](LICENSE.md): you may read,
 use, change and share the code for any noncommercial purpose. Commercial use requires a separate license from the
-copyright holder.
+copyright holder – an unlock code, available from [license@appcreation.de](mailto:license@appcreation.de).
 
 ## Contributor agreement
 

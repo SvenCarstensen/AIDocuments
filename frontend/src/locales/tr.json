@@ -1078,6 +1078,8 @@
     "codeHint": "AIDOCS- ile başlar. Kodu daha sonra Ayarlar → Lisans bölümünden de girebilirsiniz; o zamana kadar her şey kullanılabilir kalır.",
     "codeLaterHint": "AIDOCS- ile başlar. Kod olmadan her şey kullanılabilir kalır; yalnızca bir bildirim gösterilir.",
     "codeKeepHint": "Kayıtlı bir kod var. Korumak için boş bırakın ya da yeni bir kod girin.",
+    "request": "Henüz bir kodunuz yok mu? <mail>{{email}}</mail> adresine yazın – şirket adını kodda görünmesini istediğiniz şekilde belirtin.",
+    "requestSubject": "AIDocuments için etkinleştirme kodu",
     "removeCode": "Kodu kaldır",
     "saved": "Lisans kaydedildi",
     "licensedTo": "{{name}} için etkinleştirildi",

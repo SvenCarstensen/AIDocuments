@@ -1,8 +1,9 @@
-import { BadgeCheck, Building2, Home, Landmark, Users } from 'lucide-react'
+import { BadgeCheck, Building2, Home, Landmark, Mail, Users } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import type { LicenseUsage } from '../lib/api'
 import { cx } from '../lib/format'
+import { LICENSE_CONTACT } from '../lib/license'
 
 const usages: Array<{ value: LicenseUsage; icon: ReactNode }> = [
   { value: 'PRIVATE', icon: <Home className="size-4" aria-hidden /> },
@@ -46,6 +47,22 @@ export function UsageChoice({ value, onChange, required }: { value: LicenseUsage
         ))}
       </div>
     </fieldset>
+  )
+}
+
+/** Wo es einen Freischaltcode gibt – als E-Mail-Link mit vorbereitetem Betreff. */
+export function RequestCodeNote({ className }: { className?: string }) {
+  const { t } = useTranslation()
+  const href = `mailto:${LICENSE_CONTACT}?subject=${encodeURIComponent(t('license.requestSubject'))}`
+  return (
+    <p className={cx('text-[13px] leading-relaxed text-muted', className)}>
+      <Mail className="mr-1.5 -mt-0.5 inline size-4" aria-hidden />
+      <Trans
+        i18nKey="license.request"
+        values={{ email: LICENSE_CONTACT }}
+        components={{ mail: <a href={href} className="font-medium text-brand-ink underline-offset-2 hover:underline" /> }}
+      />
+    </p>
   )
 }
 

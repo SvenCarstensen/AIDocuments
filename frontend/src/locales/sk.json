@@ -1128,6 +1128,8 @@
     "codeHint": "Začína sa na AIDOCS-. Môžete ho zadať aj neskôr v Nastavenia → Licencia; dovtedy zostáva všetko použiteľné.",
     "codeLaterHint": "Začína sa na AIDOCS-. Bez kódu zostáva všetko použiteľné, zobrazí sa len upozornenie.",
     "codeKeepHint": "Kód je uložený. Ak ho chcete ponechať, nechajte pole prázdne, alebo zadajte nový.",
+    "request": "Ešte nemáte kód? Napíšte na <mail>{{email}}</mail> – s názvom firmy tak, ako má byť uvedený v kóde.",
+    "requestSubject": "Aktivačný kód pre AIDocuments",
     "removeCode": "Odstrániť kód",
     "saved": "Licencia uložená",
     "licensedTo": "Aktivované pre {{name}}",

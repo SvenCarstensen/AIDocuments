@@ -1078,6 +1078,8 @@
     "codeHint": "Starts with AIDOCS-. You can also enter it later under Settings → License; until then everything stays usable.",
     "codeLaterHint": "Starts with AIDOCS-. Without a code everything stays usable; only a notice is shown.",
     "codeKeepHint": "A code is stored. Leave this empty to keep it, or enter a new one.",
+    "request": "No code yet? Write to <mail>{{email}}</mail> – with the company name as it should appear in the code.",
+    "requestSubject": "Unlock code for AIDocuments",
     "removeCode": "Remove code",
     "saved": "License saved",
     "licensedTo": "Licensed to {{name}}",

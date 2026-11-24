@@ -1078,6 +1078,8 @@
     "codeHint": "AIDOCS- előtaggal kezdődik. Később is megadhatod a Beállítások → Licenc menüpontban; addig minden használható.",
     "codeLaterHint": "AIDOCS- előtaggal kezdődik. Kód nélkül is minden használható, csak egy értesítés jelenik meg.",
     "codeKeepHint": "Van tárolt kód. Hagyd üresen a megtartásához, vagy adj meg újat.",
+    "request": "Még nincs kódod? Írj a <mail>{{email}}</mail> címre – a cég nevével, ahogyan a kódban szerepelnie kell.",
+    "requestSubject": "Feloldó kód az AIDocumentshez",
     "removeCode": "Kód eltávolítása",
     "saved": "Licenc mentve",
     "licensedTo": "Licenctulajdonos: {{name}}",

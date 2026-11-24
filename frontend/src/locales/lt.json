@@ -1128,6 +1128,8 @@
     "codeHint": "Prasideda AIDOCS-. Galite jį įvesti ir vėliau skiltyje Nustatymai → Licencija; iki tol viskas veikia.",
     "codeLaterHint": "Prasideda AIDOCS-. Be kodo viskas veikia, tik rodomas pranešimas.",
     "codeKeepHint": "Kodas išsaugotas. Palikite tuščią, kad jį paliktumėte, arba įveskite naują.",
+    "request": "Dar neturite kodo? Rašykite adresu <mail>{{email}}</mail> – nurodydami įmonės pavadinimą tokį, koks turi būti kode.",
+    "requestSubject": "AIDocuments atrakinimo kodas",
     "removeCode": "Pašalinti kodą",
     "saved": "Licencija išsaugota",
     "licensedTo": "Licencijos turėtojas: {{name}}",

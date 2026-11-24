@@ -6,6 +6,31 @@ for scans the full text as well) and makes them searchable.
 
 ![Document overview with thumbnails, document types and tags](docs/screenshots/documents.png)
 
+## Quick start
+
+All you need is Docker (Docker Desktop on Windows and macOS, Docker Engine on Linux). The image runs on x86-64 and
+ARM64 (Apple Silicon, Raspberry Pi 4/5, most NAS devices).
+
+```bash
+docker run -d --name aidocuments --restart unless-stopped \
+  -p 127.0.0.1:8080:8080 -v aidocuments-data:/aidocuments \
+  ghcr.io/svencarstensen/aidocuments:latest
+```
+
+1. Read the one-time setup code from the log – the line starts with `Einrichtungscode`:
+   `docker logs aidocuments 2>&1 | grep Einrichtungscode`
+2. Open <http://localhost:8080>, enter the code and create the administrator account. Administrators sign in with
+   a second factor, so have an authenticator app ready (or add a passkey later).
+3. Choose who uses AIDocuments – free for private individuals, clubs and public authorities; businesses
+   [request an unlock code](#free-use-and-unlock-codes).
+4. Drop a few PDFs into the upload, or set up a mailbox, the AI and the automatic backup under *Settings*.
+
+`127.0.0.1:8080` keeps the application on this computer. To use it from other devices in your network, publish
+`-p 8080:8080` instead; to reach it from the internet, put it behind a reverse proxy with HTTPS – see
+[Production with Docker](#production-with-docker), which also covers Docker Compose, MariaDB, the import folder and
+backups. Updating: `docker pull ghcr.io/svencarstensen/aidocuments:latest`, then remove and start the container
+again with the same command – all data lives in the volume `aidocuments-data`.
+
 ## Highlights
 
 - **Modern, simple interface** – one search box, filters that stay out of the way, grid and list view with
@@ -168,7 +193,8 @@ database (SQLite).
 ### Option A: built-in database
 
 ```bash
-docker compose up -d --build
+docker compose up -d            # uses the published image ghcr.io/svencarstensen/aidocuments
+docker compose up -d --build    # or: build the image from this checkout
 ```
 
 Without `AIDOCS_DB_URL` the application keeps its data in an SQLite file – nothing else to install or run.
@@ -737,8 +763,9 @@ server.
 ## Free use and unlock codes
 
 AIDocuments is **free for private individuals, clubs and public authorities**. Businesses unlock it with an unlock
-code. The type of use is chosen during the first start and can be changed later under Settings → License; the sign-in
-page states the rule as well.
+code – request one at [license@appcreation.de](mailto:license@appcreation.de), stating the company name as it should
+appear in the code and, if you like, the desired term. The type of use is chosen during the first start and can be
+changed later under Settings → License; the sign-in page states the rule as well, and both pages show the address.
 
 Without a code nothing is restricted – a business installation only shows a notice in the document list (with a
 link to the license settings for administrators). With a valid code the sidebar and the settings show whom the
@@ -794,8 +821,8 @@ tools/lizenz/  issuing and checking unlock codes
 AIDocuments is **source-available**, not open source in the OSI sense: it is licensed under the
 [PolyForm Noncommercial License 1.0.0](LICENSE.md). You may use, change and share it for any noncommercial
 purpose – personal use, and use by charities, educational and research institutions and public authorities.
-Commercial use requires a separate license – an [unlock code](#free-use-and-unlock-codes); please get in touch via
-the issue tracker.
+Commercial use requires a separate license – an [unlock code](#free-use-and-unlock-codes); write to
+[license@appcreation.de](mailto:license@appcreation.de).
 
 Contributions are welcome under the [contributor agreement](CONTRIBUTING.md#contributor-agreement). Please report security problems privately as described in [SECURITY.md](SECURITY.md), never in a public issue.
 

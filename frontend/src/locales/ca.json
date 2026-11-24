@@ -1103,6 +1103,8 @@
     "codeHint": "Comença per AIDOCS-. També el pots introduir més tard a Configuració → Llicència; fins aleshores tot continua sent utilitzable.",
     "codeLaterHint": "Comença per AIDOCS-. Sense codi tot continua sent utilitzable; només es mostra un avís.",
     "codeKeepHint": "Hi ha un codi desat. Deixa el camp buit per mantenir-lo o introdueix-ne un de nou.",
+    "request": "Encara no tens cap codi? Escriu a <mail>{{email}}</mail> – amb el nom de l’empresa tal com ha d’aparèixer al codi.",
+    "requestSubject": "Codi de desbloqueig per a AIDocuments",
     "removeCode": "Elimina el codi",
     "saved": "Llicència desada",
     "licensedTo": "Llicència a nom de {{name}}",

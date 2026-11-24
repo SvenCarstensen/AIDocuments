@@ -1078,6 +1078,8 @@
     "codeHint": "Starter med AIDOCS-. Du kan også skrive den inn senere under Innstillinger → Lisens; til da kan alt brukes.",
     "codeLaterHint": "Starter med AIDOCS-. Uten kode kan alt brukes; det vises bare et varsel.",
     "codeKeepHint": "En kode er lagret. La feltet stå tomt for å beholde den, eller skriv inn en ny.",
+    "request": "Ingen kode ennå? Skriv til <mail>{{email}}</mail> – med firmanavnet slik det skal stå i koden.",
+    "requestSubject": "Opplåsingskode for AIDocuments",
     "removeCode": "Fjern kode",
     "saved": "Lisens lagret",
     "licensedTo": "Lisensiert til {{name}}",

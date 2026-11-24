@@ -3,7 +3,7 @@ import { type FormEvent, type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
 import { TwoFactorSetupFlow } from '../components/TwoFactorDialog'
-import { FreeForNote, UsageChoice } from '../components/License'
+import { FreeForNote, RequestCodeNote, UsageChoice } from '../components/License'
 import { Alert, Button, Field, Input, Logo, Textarea } from '../components/ui'
 import { api, errorMessage, type LicenseUsage, type User } from '../lib/api'
 import { getPasskey, isCancelled, passkeysSupported } from '../lib/passkey'
@@ -322,6 +322,7 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
             )}
           </Field>
         )}
+        {usage === 'BUSINESS' && <RequestCodeNote />}
         <Button type="submit" variant="primary" loading={busy} disabled={mismatch} className="mt-1 w-full">
           {t('auth.setup.submit')}
         </Button>

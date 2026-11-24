@@ -1078,6 +1078,8 @@
     "codeHint": "Fänkt mat AIDOCS- un. Dir kënnt en och méi spéit ënner Astellungen → Lizenz aginn; bis dohin léisst sech alles notzen.",
     "codeLaterHint": "Fänkt mat AIDOCS- un. Ouni Code léisst sech alles notzen, et gëtt just en Hiweis ugewisen.",
     "codeKeepHint": "E Code ass gespäichert. Loosst d’Feld eidel, fir en ze behalen, oder gitt en neien an.",
+    "request": "Nach kee Code? Schreift un <mail>{{email}}</mail> – mam Firmenumm, esou wéi en am Code stoe soll.",
+    "requestSubject": "Fräischaltcode fir AIDocuments",
     "removeCode": "Code ewechhuelen",
     "saved": "Lizenz gespäichert",
     "licensedTo": "Fräigeschalt fir {{name}}",

@@ -1153,6 +1153,8 @@
     "codeHint": "Jibda b’AIDOCS-. Tista’ tdaħħlu wkoll aktar tard taħt Settings → Liċenzja; sa dakinhar kollox jibqa’ jintuża.",
     "codeLaterHint": "Jibda b’AIDOCS-. Mingħajr kodiċi kollox jibqa’ jintuża; tidher biss avviż.",
     "codeKeepHint": "Kodiċi huwa maħżun. Ħallih vojt biex iżommu, jew daħħal wieħed ġdid.",
+    "request": "Għad m’għandekx kodiċi? Ikteb lil <mail>{{email}}</mail> – bl-isem tal-kumpanija kif għandu jidher fil-kodiċi.",
+    "requestSubject": "Kodiċi ta’ ftuħ għal AIDocuments",
     "removeCode": "Neħħi l-kodiċi",
     "saved": "Il-liċenzja nħażnet",
     "licensedTo": "Liċenzjat lil {{name}}",

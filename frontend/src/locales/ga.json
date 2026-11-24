@@ -1153,6 +1153,8 @@
     "codeHint": "Tosaíonn sé le AIDOCS-. Is féidir leat é a chur isteach níos déanaí freisin faoi Socruithe → Ceadúnas; go dtí sin, tá gach rud inúsáidte.",
     "codeLaterHint": "Tosaíonn sé le AIDOCS-. Gan cód, tá gach rud inúsáidte; ní thaispeántar ach fógra.",
     "codeKeepHint": "Tá cód stóráilte. Fág folamh é chun é a choinneáil, nó cuir isteach cód nua.",
+    "request": "Níl cód agat go fóill? Scríobh chuig <mail>{{email}}</mail> – le hainm na cuideachta mar ba mhaith leat é a bheith sa chód.",
+    "requestSubject": "Cód díghlasála do AIDocuments",
     "removeCode": "Bain an cód",
     "saved": "Ceadúnas sábháilte",
     "licensedTo": "Ceadúnaithe do {{name}}",

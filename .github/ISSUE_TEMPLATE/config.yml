@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/SvenCarstensen/AIDocuments/security/advisories/new
     about: Please report security problems privately, never in a public issue – see SECURITY.md.
   - name: Commercial license
-    url: https://github.com/SvenCarstensen/AIDocuments/blob/main/README.md#license
-    about: AIDocuments is free for noncommercial use. For commercial use, see the license section.
+    url: mailto:license@appcreation.de
+    about: Free for private individuals, clubs and public authorities. Businesses request an unlock code at license@appcreation.de.

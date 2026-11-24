@@ -1078,6 +1078,8 @@
     "codeHint": "Begynder med AIDOCS-. Du kan også indtaste den senere under Indstillinger → Licens; indtil da kan alt stadig bruges.",
     "codeLaterHint": "Begynder med AIDOCS-. Uden kode kan alt stadig bruges; der vises kun en besked.",
     "codeKeepHint": "Der er gemt en kode. Lad feltet stå tomt for at beholde den, eller indtast en ny.",
+    "request": "Har du ikke en kode endnu? Skriv til <mail>{{email}}</mail> – med firmanavnet, som det skal stå i koden.",
+    "requestSubject": "Oplåsningskode til AIDocuments",
     "removeCode": "Fjern kode",
     "saved": "Licens gemt",
     "licensedTo": "Licenseret til {{name}}",

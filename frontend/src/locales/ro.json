@@ -1103,6 +1103,8 @@
     "codeHint": "Începe cu AIDOCS-. Îl puteți introduce și mai târziu în Setări → Licență; până atunci totul rămâne utilizabil.",
     "codeLaterHint": "Începe cu AIDOCS-. Fără cod, totul rămâne utilizabil; se afișează doar o notificare.",
     "codeKeepHint": "Un cod este salvat. Lăsați gol pentru a-l păstra sau introduceți unul nou.",
+    "request": "Nu aveți încă un cod? Scrieți la <mail>{{email}}</mail> – cu numele companiei așa cum trebuie să apară în cod.",
+    "requestSubject": "Cod de activare pentru AIDocuments",
     "removeCode": "Elimină codul",
     "saved": "Licență salvată",
     "licensedTo": "Activat pentru {{name}}",
