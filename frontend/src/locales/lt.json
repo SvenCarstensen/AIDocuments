@@ -699,6 +699,19 @@
       "never": "niekada",
       "keyWarning": "Atsarginė kopija neužšifruota, joje yra išsaugotų slaptažodžių (pašto dėžučių, DI, dviejų veiksnių autentifikavimo) raktas. Saugokite ją taip pat patikimai kaip ir pačius dokumentus.",
       "restore": "Kaip atkurti: sustabdykite AIDocuments, išpakuokite ZIP failo turinį į tuščią duomenų aplanką ir vėl paleiskite. Instrukcija yra ZIP faile (README.txt).",
+      "encryption": {
+        "label": "Šifravimas",
+        "configured": "Su atsarginės kopijos slaptažodžiu iš .env failo",
+        "own": "Su savo slaptažodžiu",
+        "none": "Be šifravimo",
+        "password": "Slaptažodis",
+        "passwordHint": "Ne mažiau kaip {{min}} simbolių. Jis niekur neišsaugomas – be jo atsarginės kopijos nebebus galima atidaryti.",
+        "repeat": "Pakartokite slaptažodį",
+        "mismatch": "Slaptažodžiai nesutampa.",
+        "configuredNote": "ZIP failas šifruojamas AES-256 ir slaptažodžiu iš AIDOCS_BACKUP_PASSWORD. Papildomai saugokite jį ne serveryje, pavyzdžiui, slaptažodžių tvarkyklėje – jei serveris suges, jo reikės atkuriant.",
+        "ownNote": "ZIP failas šifruojamas AES-256. Saugiai laikykite slaptažodį, pavyzdžiui, slaptažodžių tvarkyklėje.",
+        "openWith": "Jį galima atidaryti su 7-Zip (Windows, Linux), Keka arba The Unarchiver (macOS) – ne su įtaisytuoju Windows ar macOS išpakavimo įrankiu."
+      },
       "download": "Atsisiųsti atsarginę kopiją",
       "started": "Atsarginė kopija atsisiunčiama.",
       "externalDatabase": "Atsarginė kopija vienu spustelėjimu galima tik su įtaisytąja duomenų baze. Naudodami MariaDB, duomenų bazės atsarginę kopiją darykite jos įrankiais (pvz., mariadb-dump) ir papildomai išsaugokite duomenų aplanką.",
@@ -736,7 +749,9 @@
         "runStarted": "Atsarginė kopija kuriama fone.",
         "done": "Atsarginė kopija įrašyta.",
         "saved": "Nustatymai išsaugoti.",
-        "externalDatabase": "Automatinė atsarginė kopija galima tik su įtaisytąja duomenų baze. Naudodami MariaDB, duomenų bazės atsarginę kopiją darykite jos įrankiais (pvz., kas naktį paleisdami mariadb-dump) ir kartu išsaugokite duomenų aplanką."
+        "externalDatabase": "Automatinė atsarginė kopija galima tik su įtaisytąja duomenų baze. Naudodami MariaDB, duomenų bazės atsarginę kopiją darykite jos įrankiais (pvz., kas naktį paleisdami mariadb-dump) ir kartu išsaugokite duomenų aplanką.",
+        "encrypted": "Atsarginės kopijos šifruojamos AES-256 ir atsarginės kopijos slaptažodžiu iš .env failo (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Atsarginės kopijos nešifruojamos. Norėdami jas šifruoti, .env faile nustatykite AIDOCS_BACKUP_PASSWORD ir iš naujo paleiskite AIDocuments."
       }
     },
     "license": {

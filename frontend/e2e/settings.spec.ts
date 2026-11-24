@@ -53,6 +53,25 @@ test.describe('Sicherung', () => {
     await expect(card.getByText(t('settings.backup.auto.stored_one', { count: 1, directory: target }))).toBeVisible()
     expect(existsSync(target) && readdirSync(target).filter((name) => name.endsWith('.zip'))).toHaveLength(1)
 
+    // ohne AIDOCS_BACKUP_PASSWORD bleiben die automatischen Stände unverschlüsselt – das steht dabei
+    await expect(card.getByText(t('settings.backup.auto.notEncrypted'))).toBeVisible()
+
+    // Download: eigenes Passwort, zweimal eingegeben; ohne hinterlegtes Passwort gibt es diese Wahl nicht
+    const manual = page.getByRole('heading', { name: t('settings.backup.backupTitle') }).locator('xpath=../..')
+    const encryption = manual.getByLabel(t('settings.backup.encryption.label'))
+    await expect(encryption).toHaveValue('none')
+    await expect(encryption.locator('option[value="configured"]')).toHaveCount(0)
+    await expect(manual.getByText(t('settings.backup.keyWarning'))).toBeVisible()
+    await encryption.selectOption('own')
+    await manual.getByLabel(t('settings.backup.encryption.password'), { exact: true }).fill('ein langes Passwort')
+    await manual.getByLabel(t('settings.backup.encryption.repeat')).fill('ein anderes Passwort')
+    await expect(manual.getByText(t('settings.backup.encryption.mismatch'))).toBeVisible()
+    await expect(manual.getByRole('button', { name: t('settings.backup.download') })).toBeDisabled()
+    await manual.getByLabel(t('settings.backup.encryption.repeat')).fill('ein langes Passwort')
+    await expect(manual.getByText(t('settings.backup.encryption.mismatch'))).toHaveCount(0)
+    await expect(manual.getByRole('button', { name: t('settings.backup.download') })).toBeEnabled()
+    await expect(manual.getByText(t('settings.backup.encryption.openWith'), { exact: false })).toBeVisible()
+
     // gesichert: kein Hinweis mehr
     await page.goto('/documents')
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()

@@ -77,24 +77,44 @@ public class BackupController {
         }
     }
 
-    /** Schritt 1: den Download freigeben. */
+    /**
+     * @param password      eigenes Passwort; leer = unverschlüsselt
+     * @param useConfigured stattdessen mit dem Passwort aus AIDOCS_BACKUP_PASSWORD verschlüsseln
+     */
+    public record PrepareRequest(@jakarta.validation.constraints.Size(max = BackupService.MAX_PASSWORD,
+            message = de.aidocuments.i18n.ValidationMessages.SIZE) String password, Boolean useConfigured) {
+    }
+
+    /** Schritt 1: den Download freigeben – das Passwort steht im Anfragekörper, nie in der Adresse. */
     @PostMapping
-    public TicketDto prepare(HttpServletRequest request) {
-        return new TicketDto(backups.prepare(request.getSession()));
+    public TicketDto prepare(@jakarta.validation.Valid @org.springframework.web.bind.annotation.RequestBody(
+            required = false) PrepareRequest body, HttpServletRequest request) {
+        return new TicketDto(body == null ? backups.prepare(request.getSession())
+                : backups.prepare(request.getSession(), body.password(),
+                Boolean.TRUE.equals(body.useConfigured())));
     }
 
     /** Schritt 2: das ZIP – ein gewöhnlicher Seitenaufruf, der Schlüssel gilt einmal. */
     @GetMapping("/{token}")
     public void download(@PathVariable String token, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        if (!backups.take(request.getSession(false), token)) {
+        BackupService.Ticket ticket = backups.take(request.getSession(false), token);
+        if (ticket == null) {
             throw ApiException.notFound("error.export.notFound");
         }
         response.setContentType("application/zip");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                .filename("AIDocuments-Sicherung-" + LocalDate.now() + ".zip").build().toString());
+                .filename("AIDocuments-Sicherung-" + LocalDate.now() + (ticket.password() == null ? "" : "-verschluesselt")
+                        + ".zip").build().toString());
         response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");
-        backups.write(response.getOutputStream(), LocaleContextHolder.getLocale(), currentUser());
+        try {
+            backups.write(response.getOutputStream(), LocaleContextHolder.getLocale(), currentUser(),
+                    ticket.password());
+        } finally {
+            if (ticket.password() != null) {
+                java.util.Arrays.fill(ticket.password(), '\0');
+            }
+        }
     }
 
     /**

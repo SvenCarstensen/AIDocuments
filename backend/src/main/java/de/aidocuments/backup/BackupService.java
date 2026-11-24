@@ -27,6 +27,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.AesKeyStrength;
+import net.lingala.zip4j.model.enums.CompressionLevel;
+import net.lingala.zip4j.model.enums.CompressionMethod;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +47,9 @@ import org.springframework.stereotype.Service;
  *
  * <p>Wie beim Export zweistufig: {@link #prepare} (mit Bestätigung per App-Code) gibt einen einmal gültigen Schlüssel
  * für den Download aus.
+ *
+ * <p>Mit Passwort entsteht ein AES-256-verschlüsseltes ZIP (WinZip-Verfahren, zu öffnen etwa mit 7-Zip, Keka oder The
+ * Unarchiver). Das Passwort wird nirgends gespeichert – beim Download liegt es nur bis zum Abruf in der Sitzung.
  */
 @Service
 public class BackupService {
@@ -53,9 +61,17 @@ public class BackupService {
     static final String SETTINGS_ID = "backup";
     static final String DATABASE_ENTRY = "aidocuments.db";
     static final String KEY_ENTRY = "secret.key";
+    /** Das ZIP-Verfahren leitet den Schlüssel mit nur 1.000 Runden ab – ein kurzes Passwort wäre schnell erraten. */
+    public static final int MIN_PASSWORD = 12;
+    public static final int MAX_PASSWORD = 128;
 
-    /** Was die Einstellungsseite anzeigt. */
-    public record BackupStatus(boolean available, Instant lastBackupAt, long dataBytes, int files) {
+    /** Ein freigegebener Download; {@code password} null = unverschlüsselt. */
+    public record Ticket(Instant expires, char[] password) {
+    }
+
+    /** Was die Einstellungsseite anzeigt; {@code passwordConfigured}: AIDOCS_BACKUP_PASSWORD ist gesetzt. */
+    public record BackupStatus(boolean available, Instant lastBackupAt, long dataBytes, int files,
+                               boolean passwordConfigured) {
     }
 
     /** Gespeichert in den Einstellungen: wann zuletzt gesichert wurde. */
@@ -67,6 +83,7 @@ public class BackupService {
     private final Messages messages;
     private final Path root;
     private final boolean sqlite;
+    private final String configuredPassword;
     private final AtomicBoolean running = new AtomicBoolean();
 
     public BackupService(Db db, SettingsStore settings, Messages messages, AppProperties properties,
@@ -76,6 +93,18 @@ public class BackupService {
         this.messages = messages;
         this.root = properties.dataRoot();
         this.sqlite = datasourceUrl.startsWith("jdbc:sqlite:");
+        this.configuredPassword = properties.backup() == null ? "" : properties.backup().password();
+        if (!configuredPassword.isEmpty()) {
+            if (configuredPassword.length() < MIN_PASSWORD) {
+                log.warn("AIDOCS_BACKUP_PASSWORD ist kürzer als {} Zeichen – leicht zu erraten", MIN_PASSWORD);
+            }
+            log.info("Automatische Sicherungen werden verschlüsselt (AIDOCS_BACKUP_PASSWORD)");
+        }
+    }
+
+    /** Das Passwort aus AIDOCS_BACKUP_PASSWORD als frische Kopie; null = keins gesetzt. */
+    public char[] configuredPassword() {
+        return configuredPassword.isEmpty() ? null : configuredPassword.toCharArray();
     }
 
     public boolean available() {
@@ -95,7 +124,7 @@ public class BackupService {
             }
             bytes += size(root.resolve(DATABASE_ENTRY));
         }
-        return new BackupStatus(sqlite, last == null ? null : last.at(), bytes, count);
+        return new BackupStatus(sqlite, last == null ? null : last.at(), bytes, count, !configuredPassword.isEmpty());
     }
 
     /** Wann zuletzt gesichert wurde – von Hand oder automatisch; null = noch nie. */
@@ -106,25 +135,56 @@ public class BackupService {
 
     /** Schritt 1: merkt sich in der Sitzung, dass ein Download erlaubt ist. */
     public String prepare(HttpSession session) {
+        return prepare(session, null);
+    }
+
+    /** @param password leer oder null = unverschlüsselt */
+    public String prepare(HttpSession session, String password) {
+        return prepare(session, password, false);
+    }
+
+    /**
+     * @param password      eigenes Passwort; leer oder null = unverschlüsselt
+     * @param useConfigured stattdessen das Passwort aus AIDOCS_BACKUP_PASSWORD
+     */
+    public String prepare(HttpSession session, String password, boolean useConfigured) {
         requireAvailable();
+        if (useConfigured && configuredPassword.isEmpty()) {
+            throw ApiException.badRequest("error.backup.noConfiguredPassword");
+        }
+        char[] secret = useConfigured ? configuredPassword()
+                : password == null || password.isEmpty() ? null : checkedPassword(password);
         byte[] bytes = new byte[24];
         RANDOM.nextBytes(bytes);
         String token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
-        Map<String, Instant> tickets = tickets(session);
+        Map<String, Ticket> tickets = tickets(session);
         Instant now = Instant.now();
-        tickets.values().removeIf(expires -> expires.isBefore(now));
-        tickets.put(token, now.plus(VALID_FOR));
+        tickets.values().removeIf(ticket -> ticket.expires().isBefore(now));
+        tickets.put(token, new Ticket(now.plus(VALID_FOR), secret));
         return token;
     }
 
-    /** Schritt 2: der Schlüssel gilt einmal und nur in der Sitzung, die ihn bekam. */
-    public boolean take(HttpSession session, String token) {
-        Instant expires = session == null || token == null ? null : tickets(session).remove(token);
-        return expires != null && expires.isAfter(Instant.now());
+    /** Prüft die Länge – Leerzeichen zählen mit, abgeschnitten wird nichts. */
+    public static char[] checkedPassword(String password) {
+        if (password.length() < MIN_PASSWORD || password.length() > MAX_PASSWORD) {
+            throw ApiException.badRequest("error.backup.passwordLength", MIN_PASSWORD, MAX_PASSWORD);
+        }
+        return password.toCharArray();
+    }
+
+    /** Schritt 2: der Schlüssel gilt einmal und nur in der Sitzung, die ihn bekam. @return null = ungültig */
+    public Ticket take(HttpSession session, String token) {
+        Ticket ticket = session == null || token == null ? null : tickets(session).remove(token);
+        return ticket != null && ticket.expires().isAfter(Instant.now()) ? ticket : null;
     }
 
     /** Schreibt das ZIP. Läuft schon eine Sicherung, wird abgelehnt – zwei gleichzeitig kosten nur Platz und Zeit. */
     public void write(OutputStream target, Locale locale, String user) throws IOException {
+        write(target, locale, user, null);
+    }
+
+    /** @param password null = unverschlüsselt; sonst AES-256 für jeden Eintrag */
+    public void write(OutputStream target, Locale locale, String user, char[] password) throws IOException {
         requireAvailable();
         if (!running.compareAndSet(false, true)) {
             throw ApiException.conflict("error.backup.running");
@@ -136,9 +196,8 @@ public class BackupService {
             db.jdbc().sql("VACUUM INTO '" + snapshot.toString().replace("'", "''") + "'").update();
             Instant now = Instant.now();
             int files = 0;
-            try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(target, 64 * 1024),
-                    StandardCharsets.UTF_8)) {
-                zip.setLevel(1); // PDFs und JPEGs sind schon komprimiert
+            OutputStream buffered = new BufferedOutputStream(target, 64 * 1024);
+            try (Archive zip = password == null ? new PlainArchive(buffered) : new EncryptedArchive(buffered, password)) {
                 entry(zip, "README.txt", messages.render(Msg.of("backup.readme", java.util.Date.from(now)), locale)
                         .getBytes(StandardCharsets.UTF_8));
                 copy(zip, DATABASE_ENTRY, snapshot);
@@ -154,7 +213,8 @@ public class BackupService {
                 }
             }
             settings.save(SETTINGS_ID, new LastBackup(now));
-            log.info("Sicherung durch {} erstellt ({} Dateien)", user, files);
+            log.info("Sicherung durch {} erstellt ({} Dateien{})", user, files,
+                    password == null ? "" : ", verschlüsselt");
         } finally {
             Files.deleteIfExists(snapshot);
             running.set(false);
@@ -167,27 +227,104 @@ public class BackupService {
         }
     }
 
-    private static void entry(ZipOutputStream zip, String name, byte[] content) throws IOException {
-        zip.putNextEntry(new ZipEntry(name));
-        zip.write(content);
-        zip.closeEntry();
+    private static void entry(Archive zip, String name, byte[] content) throws IOException {
+        zip.begin(name, FileTime.from(Instant.now()));
+        zip.out().write(content);
+        zip.end();
     }
 
-    private static void copy(ZipOutputStream zip, String name, Path file) throws IOException {
-        ZipEntry entry = new ZipEntry(name);
+    private static void copy(Archive zip, String name, Path file) throws IOException {
+        FileTime modified;
         try {
-            entry.setLastModifiedTime(Files.getLastModifiedTime(file));
+            modified = Files.getLastModifiedTime(file);
         } catch (IOException e) {
-            entry.setLastModifiedTime(FileTime.from(Instant.now()));
+            modified = FileTime.from(Instant.now());
         }
-        zip.putNextEntry(entry);
+        zip.begin(name, modified);
         try {
-            Files.copy(file, zip);
+            Files.copy(file, zip.out());
         } catch (java.nio.file.NoSuchFileException e) {
             // eben gelöscht (Papierkorb geleert, Fassung verworfen) – dann bleibt der Eintrag leer
             log.warn("Sicherung: {} fehlt", name);
         }
-        zip.closeEntry();
+        zip.end();
+    }
+
+    /** Ein ZIP, Eintrag für Eintrag geschrieben – mit oder ohne Verschlüsselung. */
+    private interface Archive extends java.io.Closeable {
+        void begin(String name, FileTime modified) throws IOException;
+
+        OutputStream out();
+
+        void end() throws IOException;
+    }
+
+    private static final class PlainArchive implements Archive {
+        private final ZipOutputStream zip;
+
+        PlainArchive(OutputStream target) {
+            zip = new ZipOutputStream(target, StandardCharsets.UTF_8);
+            zip.setLevel(1); // PDFs und JPEGs sind schon komprimiert
+        }
+
+        @Override
+        public void begin(String name, FileTime modified) throws IOException {
+            ZipEntry entry = new ZipEntry(name);
+            entry.setLastModifiedTime(modified);
+            zip.putNextEntry(entry);
+        }
+
+        @Override
+        public OutputStream out() {
+            return zip;
+        }
+
+        @Override
+        public void end() throws IOException {
+            zip.closeEntry();
+        }
+
+        @Override
+        public void close() throws IOException {
+            zip.close();
+        }
+    }
+
+    /** AES-256 nach dem WinZip-Verfahren (AE-2) – jeder Eintrag einzeln verschlüsselt, auch README.txt. */
+    private static final class EncryptedArchive implements Archive {
+        private final net.lingala.zip4j.io.outputstream.ZipOutputStream zip;
+
+        EncryptedArchive(OutputStream target, char[] password) throws IOException {
+            zip = new net.lingala.zip4j.io.outputstream.ZipOutputStream(target, password, StandardCharsets.UTF_8);
+        }
+
+        @Override
+        public void begin(String name, FileTime modified) throws IOException {
+            ZipParameters parameters = new ZipParameters();
+            parameters.setFileNameInZip(name);
+            parameters.setCompressionMethod(CompressionMethod.DEFLATE);
+            parameters.setCompressionLevel(CompressionLevel.FASTEST);
+            parameters.setEncryptFiles(true);
+            parameters.setEncryptionMethod(EncryptionMethod.AES);
+            parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
+            parameters.setLastModifiedFileTime(modified.toMillis());
+            zip.putNextEntry(parameters);
+        }
+
+        @Override
+        public OutputStream out() {
+            return zip;
+        }
+
+        @Override
+        public void end() throws IOException {
+            zip.closeEntry();
+        }
+
+        @Override
+        public void close() throws IOException {
+            zip.close();
+        }
     }
 
     private static List<Path> files(Path dir) {
@@ -210,13 +347,13 @@ public class BackupService {
     }
 
     @SuppressWarnings("unchecked")
-    private static Map<String, Instant> tickets(HttpSession session) {
+    private static Map<String, Ticket> tickets(HttpSession session) {
         synchronized (session) {
             Object existing = session.getAttribute(SESSION_ATTRIBUTE);
             if (existing instanceof Map<?, ?> map) {
-                return (Map<String, Instant>) map;
+                return (Map<String, Ticket>) map;
             }
-            Map<String, Instant> created = new ConcurrentHashMap<>();
+            Map<String, Ticket> created = new ConcurrentHashMap<>();
             session.setAttribute(SESSION_ATTRIBUTE, created);
             return created;
         }

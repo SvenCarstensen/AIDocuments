@@ -682,6 +682,19 @@
       "never": "nunca",
       "keyWarning": "La copia de seguridad no está cifrada y contiene la clave de las contraseñas guardadas (buzones, IA, autenticación en dos pasos). Guárdala tan a salvo como los propios documentos.",
       "restore": "Para restaurar: detén AIDocuments, extrae el contenido del ZIP en un directorio de datos vacío y vuelve a iniciarlo. El ZIP incluye las instrucciones (README.txt).",
+      "encryption": {
+        "label": "Cifrado",
+        "configured": "Con la contraseña de copia de seguridad del archivo .env",
+        "own": "Con una contraseña propia",
+        "none": "Sin cifrar",
+        "password": "Contraseña",
+        "passwordHint": "Al menos {{min}} caracteres. No se guarda en ningún sitio: sin ella, ya no podrás abrir la copia de seguridad.",
+        "repeat": "Repite la contraseña",
+        "mismatch": "Las contraseñas no coinciden.",
+        "configuredNote": "El ZIP se cifra con AES-256 y la contraseña de AIDOCS_BACKUP_PASSWORD. Guárdala también fuera del servidor, por ejemplo en un gestor de contraseñas; si el servidor falla, la necesitarás para restaurar.",
+        "ownNote": "El ZIP se cifra con AES-256. Guarda bien la contraseña, por ejemplo en un gestor de contraseñas.",
+        "openWith": "Se puede abrir con 7-Zip (Windows, Linux), Keka o The Unarchiver (macOS), pero no con la herramienta de extracción integrada de Windows o macOS."
+      },
       "download": "Descargar copia de seguridad",
       "started": "Se está descargando la copia de seguridad.",
       "externalDatabase": "La copia de seguridad con un clic solo está disponible con la base de datos integrada. Con MariaDB, haz la copia de la base de datos con sus propias herramientas (como mariadb-dump) y, además, la del directorio de datos.",
@@ -718,7 +731,9 @@
         "runStarted": "La copia de seguridad se está haciendo en segundo plano.",
         "done": "Copia de seguridad guardada.",
         "saved": "Ajustes guardados.",
-        "externalDatabase": "La copia de seguridad automática solo está disponible con la base de datos integrada. Con MariaDB, haz la copia de la base de datos con sus propias herramientas (por ejemplo, un mariadb-dump cada noche) y, además, la del directorio de datos."
+        "externalDatabase": "La copia de seguridad automática solo está disponible con la base de datos integrada. Con MariaDB, haz la copia de la base de datos con sus propias herramientas (por ejemplo, un mariadb-dump cada noche) y, además, la del directorio de datos.",
+        "encrypted": "Las copias se cifran con AES-256 y la contraseña de copia de seguridad del archivo .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Las copias no se cifran. Para cifrarlas, define AIDOCS_BACKUP_PASSWORD en el archivo .env y reinicia AIDocuments."
       }
     },
     "license": {

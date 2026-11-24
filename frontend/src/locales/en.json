@@ -665,6 +665,19 @@
       "never": "never",
       "keyWarning": "The backup is not encrypted and contains the key to the stored passwords (mailboxes, AI, two-factor sign-in). Keep it as safe as the documents themselves.",
       "restore": "To restore: stop AIDocuments, extract the contents of the ZIP into an empty data directory and start it again. Instructions are included in the ZIP (README.txt).",
+      "encryption": {
+        "label": "Encryption",
+        "configured": "With the backup password from the .env file",
+        "own": "With a password of your own",
+        "none": "Not encrypted",
+        "password": "Password",
+        "passwordHint": "At least {{min}} characters. It is not stored anywhere – without it, the backup can no longer be opened.",
+        "repeat": "Repeat password",
+        "mismatch": "The passwords do not match.",
+        "configuredNote": "The ZIP is encrypted with AES-256 and the password from AIDOCS_BACKUP_PASSWORD. Keep a copy of it outside the server as well, for example in a password manager – if the server fails, you need it to restore.",
+        "ownNote": "The ZIP is encrypted with AES-256. Keep the password safe, for example in a password manager.",
+        "openWith": "It can be opened with 7-Zip (Windows, Linux), Keka or The Unarchiver (macOS) – not with the built-in extraction of Windows or macOS."
+      },
       "download": "Download backup",
       "started": "The backup is being downloaded.",
       "externalDatabase": "One-click backups are only available with the built-in database. With MariaDB, back up the database with its own tools (such as mariadb-dump) and the data directory as well.",
@@ -700,7 +713,9 @@
         "runStarted": "The backup is running in the background.",
         "done": "Backup written.",
         "saved": "Settings saved.",
-        "externalDatabase": "Automatic backup is only available with the built-in database. With MariaDB, back up the database with its own tools (for example a nightly mariadb-dump) together with the data directory."
+        "externalDatabase": "Automatic backup is only available with the built-in database. With MariaDB, back up the database with its own tools (for example a nightly mariadb-dump) together with the data directory.",
+        "encrypted": "The backups are encrypted with AES-256 and the backup password from the .env file (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "The backups are not encrypted. To encrypt them, set AIDOCS_BACKUP_PASSWORD in the .env file and restart AIDocuments."
       }
     },
     "license": {

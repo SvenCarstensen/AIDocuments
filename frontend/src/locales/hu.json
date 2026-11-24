@@ -665,6 +665,19 @@
       "never": "még soha",
       "keyWarning": "A biztonsági mentés nincs titkosítva, és tartalmazza a tárolt jelszavak kulcsát (postafiókok, MI, kétlépcsős azonosítás). Ugyanolyan gondosan őrizd, mint magukat a dokumentumokat.",
       "restore": "Visszaállítás: állítsd le az AIDocuments alkalmazást, csomagold ki a ZIP-fájl tartalmát egy üres adatkönyvtárba, majd indítsd újra. Az útmutató a ZIP-fájlban található (README.txt).",
+      "encryption": {
+        "label": "Titkosítás",
+        "configured": "A .env fájlban megadott mentési jelszóval",
+        "own": "Saját jelszóval",
+        "none": "Titkosítás nélkül",
+        "password": "Jelszó",
+        "passwordHint": "Legalább {{min}} karakter. A jelszót sehol nem tároljuk – nélküle a biztonsági mentést többé nem lehet megnyitni.",
+        "repeat": "Jelszó megismétlése",
+        "mismatch": "A jelszavak nem egyeznek.",
+        "configuredNote": "A ZIP-fájl titkosítása AES-256-tal történik, az AIDOCS_BACKUP_PASSWORD változóban megadott jelszóval. Őrizd meg a jelszót a szerveren kívül is, például egy jelszókezelőben – ha a szerver meghibásodik, a visszaállításhoz szükséged lesz rá.",
+        "ownNote": "A ZIP-fájl titkosítása AES-256-tal történik. A jelszót őrizd biztonságos helyen, például egy jelszókezelőben.",
+        "openWith": "Megnyitható a 7-Zip (Windows, Linux), a Keka vagy a The Unarchiver (macOS) programmal – a Windows és a macOS beépített kicsomagolójával viszont nem."
+      },
       "download": "Biztonsági mentés letöltése",
       "started": "A biztonsági mentés letöltése folyamatban.",
       "externalDatabase": "Az egy kattintásos biztonsági mentés csak a beépített adatbázissal érhető el. MariaDB esetén az adatbázist annak saját eszközeivel (például mariadb-dump) mentsd, és mellé az adatkönyvtárat is.",
@@ -700,7 +713,9 @@
         "runStarted": "A mentés a háttérben fut.",
         "done": "A mentés elkészült.",
         "saved": "Beállítások mentve.",
-        "externalDatabase": "Az automatikus biztonsági mentés csak a beépített adatbázissal érhető el. MariaDB esetén az adatbázist annak saját eszközeivel (például éjszakánként futtatott mariadb-dump paranccsal) mentsd, és mellé az adatkönyvtárat is."
+        "externalDatabase": "Az automatikus biztonsági mentés csak a beépített adatbázissal érhető el. MariaDB esetén az adatbázist annak saját eszközeivel (például éjszakánként futtatott mariadb-dump paranccsal) mentsd, és mellé az adatkönyvtárat is.",
+        "encrypted": "A mentések titkosítása AES-256-tal történik, a .env fájlban megadott mentési jelszóval (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "A mentések nincsenek titkosítva. A titkosításhoz állítsd be az AIDOCS_BACKUP_PASSWORD változót a .env fájlban, és indítsd újra az AIDocuments alkalmazást."
       }
     },
     "license": {

@@ -699,6 +699,19 @@
       "never": "zatiaľ nikdy",
       "keyWarning": "Záloha nie je šifrovaná a obsahuje kľúč k uloženým heslám (schránky, AI, dvojfázové overenie). Uchovávajte ju rovnako bezpečne ako samotné dokumenty.",
       "restore": "Obnovenie: ukončite AIDocuments, rozbaľte obsah ZIPu do prázdneho dátového adresára a aplikáciu znova spustite. Návod je súčasťou ZIPu (README.txt).",
+      "encryption": {
+        "label": "Šifrovanie",
+        "configured": "Heslom zálohy zo súboru .env",
+        "own": "Vlastným heslom",
+        "none": "Bez šifrovania",
+        "password": "Heslo",
+        "passwordHint": "Aspoň {{min}} znakov. Nikde sa neukladá – bez neho už zálohu nebude možné otvoriť.",
+        "repeat": "Zopakujte heslo",
+        "mismatch": "Heslá sa nezhodujú.",
+        "configuredNote": "ZIP sa zašifruje pomocou AES-256 a hesla z AIDOCS_BACKUP_PASSWORD. Uchovávajte ho aj mimo servera, napríklad v správcovi hesiel – ak server zlyhá, budete ho potrebovať na obnovenie.",
+        "ownNote": "ZIP sa zašifruje pomocou AES-256. Heslo uchovávajte na bezpečnom mieste, napríklad v správcovi hesiel.",
+        "openWith": "Otvoriť ho možno pomocou 7-Zip (Windows, Linux), Keka alebo The Unarchiver (macOS) – nie vstavaným rozbaľovaním vo Windows alebo macOS."
+      },
       "download": "Stiahnuť zálohu",
       "started": "Záloha sa sťahuje.",
       "externalDatabase": "Záloha jedným kliknutím je k dispozícii iba so vstavanou databázou. Pri MariaDB zálohujte databázu jej vlastnými nástrojmi (napr. mariadb-dump) a k tomu aj dátový adresár.",
@@ -736,7 +749,9 @@
         "runStarted": "Záloha prebieha na pozadí.",
         "done": "Záloha bola uložená.",
         "saved": "Nastavenia boli uložené.",
-        "externalDatabase": "Automatická záloha je k dispozícii iba so vstavanou databázou. Pri MariaDB zálohujte databázu jej vlastnými nástrojmi (napr. nočným spustením mariadb-dump) a k tomu aj dátový adresár."
+        "externalDatabase": "Automatická záloha je k dispozícii iba so vstavanou databázou. Pri MariaDB zálohujte databázu jej vlastnými nástrojmi (napr. nočným spustením mariadb-dump) a k tomu aj dátový adresár.",
+        "encrypted": "Zálohy sa šifrujú pomocou AES-256 a hesla zálohy zo súboru .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Zálohy sa nešifrujú. Ak ich chcete šifrovať, nastavte AIDOCS_BACKUP_PASSWORD v súbore .env a reštartujte AIDocuments."
       }
     },
     "license": {

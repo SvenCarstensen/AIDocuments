@@ -682,6 +682,19 @@
       "never": "mai",
       "keyWarning": "Il backup non è cifrato e contiene la chiave delle password salvate (caselle di posta, IA, autenticazione a due fattori). Conservalo con la stessa cura dei documenti.",
       "restore": "Per ripristinare: arresta AIDocuments, estrai il contenuto dello ZIP in una cartella dati vuota e riavvialo. Le istruzioni sono incluse nello ZIP (README.txt).",
+      "encryption": {
+        "label": "Cifratura",
+        "configured": "Con la password di backup del file .env",
+        "own": "Con una password personale",
+        "none": "Non cifrato",
+        "password": "Password",
+        "passwordHint": "Almeno {{min}} caratteri. Non viene salvata da nessuna parte – senza di essa non sarà più possibile aprire il backup.",
+        "repeat": "Ripeti la password",
+        "mismatch": "Le password non corrispondono.",
+        "configuredNote": "Lo ZIP viene cifrato con AES-256 e la password di AIDOCS_BACKUP_PASSWORD. Conservane una copia anche fuori dal server, ad esempio in un gestore di password – se il server si guasta, ti servirà per il ripristino.",
+        "ownNote": "Lo ZIP viene cifrato con AES-256. Conserva la password in un luogo sicuro, ad esempio in un gestore di password.",
+        "openWith": "Si può aprire con 7-Zip (Windows, Linux), Keka o The Unarchiver (macOS) – ma non con lo strumento di estrazione integrato di Windows o macOS."
+      },
       "download": "Scarica backup",
       "started": "Download del backup in corso.",
       "externalDatabase": "Il backup con un clic è disponibile solo con il database integrato. Con MariaDB esegui il backup del database con i suoi strumenti (ad es. mariadb-dump) e, in aggiunta, della cartella dati.",
@@ -718,7 +731,9 @@
         "runStarted": "Il backup è in corso in background.",
         "done": "Backup creato.",
         "saved": "Impostazioni salvate.",
-        "externalDatabase": "Il backup automatico è disponibile solo con il database integrato. Con MariaDB esegui il backup del database con i suoi strumenti (ad es. un mariadb-dump ogni notte) e, in aggiunta, della cartella dati."
+        "externalDatabase": "Il backup automatico è disponibile solo con il database integrato. Con MariaDB esegui il backup del database con i suoi strumenti (ad es. un mariadb-dump ogni notte) e, in aggiunta, della cartella dati.",
+        "encrypted": "I backup vengono cifrati con AES-256 e la password di backup del file .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "I backup non vengono cifrati. Per cifrarli, imposta AIDOCS_BACKUP_PASSWORD nel file .env e riavvia AIDocuments."
       }
     },
     "license": {

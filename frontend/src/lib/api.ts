@@ -384,7 +384,11 @@ export interface BackupStatus {
   lastBackupAt: string | null
   dataBytes: number
   files: number
+  /** AIDOCS_BACKUP_PASSWORD ist gesetzt (das Passwort selbst bekommt die Oberfläche nie) */
+  passwordConfigured: boolean
 }
+/** Mindestlänge eines Sicherungspassworts – wie BackupService.MIN_PASSWORD */
+export const BACKUP_PASSWORD_MIN = 12
 export interface StoredBackup {
   name: string
   bytes: number
@@ -409,6 +413,8 @@ export interface AutoBackupStatus {
   lastRunError: string | null
   nextRunAt: string | null
   backups: StoredBackup[]
+  /** die Stände werden mit dem Passwort aus AIDOCS_BACKUP_PASSWORD verschlüsselt */
+  encrypted: boolean
 }
 export interface AutoBackupInput {
   enabled: boolean
@@ -874,7 +880,9 @@ export const api = {
 
   areas: () => request<Area[]>('/api/areas'),
   backupStatus: () => request<BackupStatus>('/api/settings/backup'),
-  prepareBackup: () => request<{ token: string }>('/api/settings/backup', { method: 'POST' }),
+  /** ohne Angabe unverschlüsselt; das Passwort geht im Rumpf mit, nie in der Adresse */
+  prepareBackup: (encryption?: { password?: string; useConfigured?: boolean }) =>
+    request<{ token: string }>('/api/settings/backup', { method: 'POST', body: JSON.stringify(encryption ?? {}) }),
   autoBackup: () => request<AutoBackupStatus>('/api/settings/backup/auto'),
   updateAutoBackup: (input: AutoBackupInput) =>
     request<AutoBackupStatus>('/api/settings/backup/auto', { method: 'PUT', body: JSON.stringify(input) }),

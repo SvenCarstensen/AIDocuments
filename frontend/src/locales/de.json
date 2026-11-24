@@ -665,6 +665,19 @@
       "never": "noch nie",
       "keyWarning": "Die Sicherung ist nicht verschlüsselt und enthält den Schlüssel zu den gespeicherten Kennwörtern (Postfächer, KI, Zwei-Faktor-Anmeldung). Bewahre sie so sicher auf wie die Dokumente selbst.",
       "restore": "Wiederherstellen: AIDocuments beenden, den Inhalt des ZIPs in ein leeres Datenverzeichnis entpacken und neu starten. Eine Anleitung liegt im ZIP (README.txt).",
+      "encryption": {
+        "label": "Verschlüsselung",
+        "configured": "Mit dem Sicherungspasswort aus der .env",
+        "own": "Mit eigenem Passwort",
+        "none": "Unverschlüsselt",
+        "password": "Passwort",
+        "passwordHint": "Mindestens {{min}} Zeichen. Es wird nirgends gespeichert – ohne es lässt sich die Sicherung nicht mehr öffnen.",
+        "repeat": "Passwort wiederholen",
+        "mismatch": "Die Passwörter stimmen nicht überein.",
+        "configuredNote": "Das ZIP wird mit AES-256 und dem Passwort aus AIDOCS_BACKUP_PASSWORD verschlüsselt. Bewahre es zusätzlich außerhalb des Servers auf, etwa in einem Passwortmanager – fällt der Server aus, brauchst du es zum Wiederherstellen.",
+        "ownNote": "Das ZIP wird mit AES-256 verschlüsselt. Bewahre das Passwort sicher auf, etwa in einem Passwortmanager.",
+        "openWith": "Öffnen lässt es sich mit 7-Zip (Windows, Linux), Keka oder The Unarchiver (macOS) – nicht mit dem eingebauten Entpacken von Windows oder macOS."
+      },
       "download": "Sicherung herunterladen",
       "started": "Die Sicherung wird heruntergeladen.",
       "externalDatabase": "Die Sicherung per Knopfdruck gibt es nur mit der eingebauten Datenbank. Mit MariaDB sicherst du die Datenbank mit deren Werkzeugen (etwa mariadb-dump) und dazu das Datenverzeichnis.",
@@ -700,7 +713,9 @@
         "runStarted": "Die Sicherung läuft im Hintergrund.",
         "done": "Sicherung geschrieben.",
         "saved": "Einstellungen gespeichert.",
-        "externalDatabase": "Die automatische Sicherung gibt es nur mit der eingebauten Datenbank. Mit MariaDB sicherst du die Datenbank mit deren Werkzeugen (etwa ein nächtliches mariadb-dump) und dazu das Datenverzeichnis."
+        "externalDatabase": "Die automatische Sicherung gibt es nur mit der eingebauten Datenbank. Mit MariaDB sicherst du die Datenbank mit deren Werkzeugen (etwa ein nächtliches mariadb-dump) und dazu das Datenverzeichnis.",
+        "encrypted": "Die Stände werden mit AES-256 und dem Sicherungspasswort aus der .env (AIDOCS_BACKUP_PASSWORD) verschlüsselt.",
+        "notEncrypted": "Die Stände werden nicht verschlüsselt. Zum Verschlüsseln AIDOCS_BACKUP_PASSWORD in der .env setzen und AIDocuments neu starten."
       }
     },
     "license": {

@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarClock, CheckCircle2, DatabaseBackup, Download, Play, Upload, XCircle } from 'lucide-react'
+import { CalendarClock, CheckCircle2, DatabaseBackup, Download, LockKeyhole, Play, Upload, XCircle } from 'lucide-react'
 import { type FormEvent, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { AreaSelect } from '../../components/AreaSelect'
 import { Alert, Button, Card, Field, Input, Select, Spinner, Switch } from '../../components/ui'
-import { api, type ArchiveImportResult, type AutoBackupStatus, errorMessage } from '../../lib/api'
-import { formatBytes, formatDateTime, formatHour, formatRelative } from '../../lib/format'
+import { api, type ArchiveImportResult, type AutoBackupStatus, BACKUP_PASSWORD_MIN, type BackupStatus, errorMessage } from '../../lib/api'
+import { cx, formatBytes, formatDateTime, formatHour, formatRelative } from '../../lib/format'
 import { SectionHeader } from './SectionHeader'
 
 export function BackupSettings() {
@@ -21,31 +21,11 @@ export function BackupSettings() {
   )
 }
 
+type Encryption = 'configured' | 'own' | 'none'
+
 function BackupCard() {
   const { t } = useTranslation()
-  const queryClient = useQueryClient()
   const status = useQuery({ queryKey: ['backup'], queryFn: api.backupStatus })
-  const [busy, setBusy] = useState(false)
-
-  async function download() {
-    setBusy(true)
-    try {
-      const { token } = await api.prepareBackup()
-      // ein gewöhnlicher Download – der Browser zeigt den Fortschritt, die Datei wird nicht erst im Speicher gebaut
-      const link = document.createElement('a')
-      link.href = api.backupUrl(token)
-      link.rel = 'noopener'
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      toast.success(t('settings.backup.started'))
-      window.setTimeout(() => void queryClient.invalidateQueries({ queryKey: ['backup'] }), 5000)
-    } catch (e) {
-      toast.error(errorMessage(e))
-    } finally {
-      setBusy(false)
-    }
-  }
 
   return (
     <Card className="p-5">
@@ -60,26 +40,107 @@ function BackupCard() {
       ) : !status.data.available ? (
         <Alert tone="warn">{t('settings.backup.externalDatabase')}</Alert>
       ) : (
-        <div className="flex flex-col gap-4">
-          <p className="text-sm text-muted">{t('settings.backup.backupText')}</p>
-          <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-sm">
-            <dt className="text-muted">{t('settings.backup.size')}</dt>
-            <dd className="font-medium">{t('settings.backup.sizeValue', { size: formatBytes(status.data.dataBytes), count: status.data.files })}</dd>
-            <dt className="text-muted">{t('settings.backup.last')}</dt>
-            <dd className="font-medium" title={status.data.lastBackupAt ? new Date(status.data.lastBackupAt).toLocaleString() : undefined}>
-              {status.data.lastBackupAt ? formatRelative(status.data.lastBackupAt) : t('settings.backup.never')}
-            </dd>
-          </dl>
-          <Alert tone="warn">{t('settings.backup.keyWarning')}</Alert>
-          <p className="text-sm text-muted">{t('settings.backup.restore')}</p>
-          <div>
-            <Button variant="primary" icon={<Download className="size-4" aria-hidden />} loading={busy} onClick={() => void download()}>
-              {t('settings.backup.download')}
-            </Button>
-          </div>
-        </div>
+        <BackupForm status={status.data} />
       )}
     </Card>
+  )
+}
+
+function BackupForm({ status }: { status: BackupStatus }) {
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  const [busy, setBusy] = useState(false)
+  // Ist ein Sicherungspasswort in der .env hinterlegt, wird damit verschlüsselt – sonst wie bisher ohne
+  const [encryption, setEncryption] = useState<Encryption>(status.passwordConfigured ? 'configured' : 'none')
+  const [password, setPassword] = useState('')
+  const [repeat, setRepeat] = useState('')
+  const mismatch = encryption === 'own' && repeat !== '' && password !== repeat
+
+  async function download(event: FormEvent) {
+    event.preventDefault()
+    if (encryption === 'own' && password !== repeat) return
+    setBusy(true)
+    try {
+      const { token } = await api.prepareBackup(
+        encryption === 'configured' ? { useConfigured: true } : encryption === 'own' ? { password } : undefined,
+      )
+      // ein gewöhnlicher Download – der Browser zeigt den Fortschritt, die Datei wird nicht erst im Speicher gebaut
+      const link = document.createElement('a')
+      link.href = api.backupUrl(token)
+      link.rel = 'noopener'
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      toast.success(t('settings.backup.started'))
+      // das Passwort nicht länger als nötig im Formular stehen lassen
+      setPassword('')
+      setRepeat('')
+      window.setTimeout(() => void queryClient.invalidateQueries({ queryKey: ['backup'] }), 5000)
+    } catch (e) {
+      toast.error(errorMessage(e))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <form onSubmit={(event) => void download(event)} className="flex flex-col gap-4">
+      <p className="text-sm text-muted">{t('settings.backup.backupText')}</p>
+      <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-sm">
+        <dt className="text-muted">{t('settings.backup.size')}</dt>
+        <dd className="font-medium">{t('settings.backup.sizeValue', { size: formatBytes(status.dataBytes), count: status.files })}</dd>
+        <dt className="text-muted">{t('settings.backup.last')}</dt>
+        <dd className="font-medium" title={status.lastBackupAt ? new Date(status.lastBackupAt).toLocaleString() : undefined}>
+          {status.lastBackupAt ? formatRelative(status.lastBackupAt) : t('settings.backup.never')}
+        </dd>
+      </dl>
+      <Field label={t('settings.backup.encryption.label')} className="max-w-md">
+        {(id) => (
+          <Select id={id} value={encryption} onChange={(e) => setEncryption(e.target.value as Encryption)}>
+            {status.passwordConfigured && <option value="configured">{t('settings.backup.encryption.configured')}</option>}
+            <option value="own">{t('settings.backup.encryption.own')}</option>
+            <option value="none">{t('settings.backup.encryption.none')}</option>
+          </Select>
+        )}
+      </Field>
+      {encryption === 'own' && (
+        <div className="flex flex-wrap gap-4">
+          <Field label={t('settings.backup.encryption.password')} hint={t('settings.backup.encryption.passwordHint', { min: BACKUP_PASSWORD_MIN })} className="w-full sm:w-64">
+            {(id) => (
+              <Input
+                id={id}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                minLength={BACKUP_PASSWORD_MIN}
+                maxLength={128}
+                autoComplete="new-password"
+                required
+              />
+            )}
+          </Field>
+          <Field label={t('settings.backup.encryption.repeat')} error={mismatch ? t('settings.backup.encryption.mismatch') : undefined} className="w-full sm:w-64">
+            {(id) => (
+              <Input id={id} type="password" value={repeat} onChange={(e) => setRepeat(e.target.value)} maxLength={128} autoComplete="new-password" required />
+            )}
+          </Field>
+        </div>
+      )}
+      {encryption === 'none' ? (
+        <Alert tone="warn">{t('settings.backup.keyWarning')}</Alert>
+      ) : (
+        <Alert tone="ok">
+          {t(encryption === 'configured' ? 'settings.backup.encryption.configuredNote' : 'settings.backup.encryption.ownNote')}{' '}
+          {t('settings.backup.encryption.openWith')}
+        </Alert>
+      )}
+      <p className="text-sm text-muted">{t('settings.backup.restore')}</p>
+      <div>
+        <Button type="submit" variant="primary" icon={<Download className="size-4" aria-hidden />} loading={busy} disabled={mismatch}>
+          {t('settings.backup.download')}
+        </Button>
+      </div>
+    </form>
   )
 }
 
@@ -243,6 +304,10 @@ function AutoBackupForm({ data, onSaved }: { data: AutoBackupStatus; onSaved: (n
         )}
       </dl>
       {!data.running && data.lastRunOk === false && data.lastRunError && <Alert tone="danger">{data.lastRunError}</Alert>}
+      <p className="inline-flex items-start gap-2 text-sm text-muted">
+        <LockKeyhole className={cx('mt-0.5 size-4 shrink-0', data.encrypted ? 'text-ok' : 'text-muted')} aria-hidden />
+        <span>{data.encrypted ? t('settings.backup.auto.encrypted') : t('settings.backup.auto.notEncrypted')}</span>
+      </p>
 
       {data.backups.length > 0 && (
         <div>

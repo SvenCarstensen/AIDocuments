@@ -665,6 +665,19 @@
       "never": "nog nooit",
       "keyWarning": "De back-up is niet versleuteld en bevat de sleutel voor de opgeslagen wachtwoorden (mailboxen, AI, tweestapsverificatie). Bewaar hem net zo veilig als de documenten zelf.",
       "restore": "Herstellen: stop AIDocuments, pak de inhoud van de ZIP uit in een lege gegevensmap en start opnieuw. Een handleiding zit in de ZIP (README.txt).",
+      "encryption": {
+        "label": "Versleuteling",
+        "configured": "Met het back-upwachtwoord uit het .env-bestand",
+        "own": "Met een eigen wachtwoord",
+        "none": "Niet versleuteld",
+        "password": "Wachtwoord",
+        "passwordHint": "Minstens {{min}} tekens. Het wordt nergens opgeslagen – zonder dit wachtwoord kan de back-up niet meer worden geopend.",
+        "repeat": "Wachtwoord herhalen",
+        "mismatch": "De wachtwoorden komen niet overeen.",
+        "configuredNote": "De ZIP wordt versleuteld met AES-256 en het wachtwoord uit AIDOCS_BACKUP_PASSWORD. Bewaar het daarnaast ook buiten de server, bijvoorbeeld in een wachtwoordmanager – als de server uitvalt, heb je het nodig om te herstellen.",
+        "ownNote": "De ZIP wordt versleuteld met AES-256. Bewaar het wachtwoord op een veilige plek, bijvoorbeeld in een wachtwoordmanager.",
+        "openWith": "Je kunt hem openen met 7-Zip (Windows, Linux), Keka of The Unarchiver (macOS) – niet met de ingebouwde uitpakfunctie van Windows of macOS."
+      },
       "download": "Back-up downloaden",
       "started": "De back-up wordt gedownload.",
       "externalDatabase": "Een back-up met één klik is alleen mogelijk met de ingebouwde database. Met MariaDB maak je een back-up van de database met de tools van MariaDB zelf (zoals mariadb-dump) en daarnaast van de gegevensmap.",
@@ -700,7 +713,9 @@
         "runStarted": "De back-up wordt op de achtergrond gemaakt.",
         "done": "Back-up opgeslagen.",
         "saved": "Instellingen opgeslagen.",
-        "externalDatabase": "Automatische back-ups zijn alleen mogelijk met de ingebouwde database. Met MariaDB maak je een back-up van de database met de tools van MariaDB zelf (bijvoorbeeld een nachtelijke mariadb-dump) en daarnaast van de gegevensmap."
+        "externalDatabase": "Automatische back-ups zijn alleen mogelijk met de ingebouwde database. Met MariaDB maak je een back-up van de database met de tools van MariaDB zelf (bijvoorbeeld een nachtelijke mariadb-dump) en daarnaast van de gegevensmap.",
+        "encrypted": "De back-ups worden versleuteld met AES-256 en het back-upwachtwoord uit het .env-bestand (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "De back-ups worden niet versleuteld. Stel AIDOCS_BACKUP_PASSWORD in het .env-bestand in en start AIDocuments opnieuw om ze te versleutelen."
       }
     },
     "license": {

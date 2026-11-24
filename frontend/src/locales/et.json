@@ -665,6 +665,19 @@
       "never": "pole kunagi tehtud",
       "keyWarning": "Varukoopia ei ole krüptitud ja sisaldab salvestatud paroolide võtit (postkastid, TI, kaheastmeline autentimine). Hoia seda sama turvaliselt kui dokumente endid.",
       "restore": "Taastamiseks peata AIDocuments, paki ZIP-faili sisu lahti tühja andmekausta ja käivita rakendus uuesti. Juhend on ZIP-failis (README.txt).",
+      "encryption": {
+        "label": "Krüptimine",
+        "configured": "Varukoopiate parooliga .env-failist",
+        "own": "Oma parooliga",
+        "none": "Krüptimata",
+        "password": "Parool",
+        "passwordHint": "Vähemalt {{min}} märki. Parooli ei salvestata kuhugi – ilma selleta ei saa varukoopiat enam avada.",
+        "repeat": "Korda parooli",
+        "mismatch": "Paroolid ei kattu.",
+        "configuredNote": "ZIP-fail krüptitakse AES-256 abil parooliga muutujast AIDOCS_BACKUP_PASSWORD. Hoia parooli ka väljaspool serverit, näiteks paroolihalduris – kui server rikki läheb, on seda taastamiseks vaja.",
+        "ownNote": "ZIP-fail krüptitakse AES-256 abil. Hoia parooli turvalises kohas, näiteks paroolihalduris.",
+        "openWith": "Seda saab avada programmiga 7-Zip (Windows, Linux), Keka või The Unarchiver (macOS) – mitte aga Windowsi või macOS-i sisseehitatud lahtipakkimisega."
+      },
       "download": "Laadi varukoopia alla",
       "started": "Varukoopiat laaditakse alla.",
       "externalDatabase": "Varukoopia ühe klõpsuga on saadaval ainult sisseehitatud andmebaasiga. MariaDB puhul varunda andmebaas selle enda tööriistadega (nt mariadb-dump) ja lisaks andmekaust.",
@@ -700,7 +713,9 @@
         "runStarted": "Varundamine käib taustal.",
         "done": "Varukoopia salvestatud.",
         "saved": "Seaded salvestatud.",
-        "externalDatabase": "Automaatne varundus on saadaval ainult sisseehitatud andmebaasiga. MariaDB puhul varunda andmebaas selle enda tööriistadega (nt igal ööl käivitatava mariadb-dump-käsuga) ja lisaks andmekaust."
+        "externalDatabase": "Automaatne varundus on saadaval ainult sisseehitatud andmebaasiga. MariaDB puhul varunda andmebaas selle enda tööriistadega (nt igal ööl käivitatava mariadb-dump-käsuga) ja lisaks andmekaust.",
+        "encrypted": "Varukoopiad krüptitakse AES-256 abil varukoopiate parooliga .env-failist (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Varukoopiaid ei krüptita. Krüptimiseks määra .env-failis AIDOCS_BACKUP_PASSWORD ja käivita AIDocuments uuesti."
       }
     },
     "license": {

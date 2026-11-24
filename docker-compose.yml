@@ -25,6 +25,9 @@ services:
       # AIDOCS_OCR_LANGUAGES: deu+eng+fra     # Sprachen der Dokumente (im Image: deu eng fra ita spa nld)
       # Vorgabe-Ordner der automatischen Sicherung (Einstellungen → Sicherung) – zusammen mit dem Volume unten:
       # AIDOCS_BACKUP_DIR: /backups
+      # Passwort, mit dem jede automatische Sicherung als AES-256-ZIP verschlüsselt wird. Steht in einer .env-Datei
+      # neben dieser Datei (AIDOCS_BACKUP_PASSWORD=…, ohne Anführungszeichen) – leer = unverschlüsselt:
+      AIDOCS_BACKUP_PASSWORD: ${AIDOCS_BACKUP_PASSWORD:-}
     volumes:
       # PDFs, Suchindex, Schlüsseldatei und die Datenbank (aidocuments.db)
       - aidocuments-data:/aidocuments

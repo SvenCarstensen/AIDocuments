@@ -128,9 +128,13 @@ class ApplicationFlowTest {
         Locale.setDefault(systemLocale);
     }
 
+    /** wie AIDOCS_BACKUP_PASSWORD aus der .env: verschlüsselt die automatischen Sicherungen */
+    static final String BACKUP_PASSWORD = "Sicherungs-Testpasswort-42";
+
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
         registry.add("app.data-dir", dataDir::toString);
+        registry.add("app.backup.password", () -> BACKUP_PASSWORD);
         if (mariaDb != null) {
             mariaDb.start();
             registry.add("spring.datasource.url", mariaDb::getJdbcUrl);
@@ -2344,7 +2348,41 @@ class ApplicationFlowTest {
             assertThat(entries.keySet().stream().filter(n -> n.startsWith("files/")).count())
                     .isGreaterThanOrEqualTo(documents.findAll().size());
             mvc.perform(get("/api/settings/backup").session(adminSession))
-                    .andExpect(jsonPath("$.lastBackupAt").isNotEmpty());
+                    .andExpect(jsonPath("$.lastBackupAt").isNotEmpty())
+                    .andExpect(jsonPath("$.passwordConfigured").value(true))
+                    .andExpect(jsonPath("$.password").doesNotExist());
+
+            // verschlüsselt mit eigenem Passwort: zu kurz oder zu lang wird abgelehnt
+            for (String bad : List.of("elf Zeichen", "x".repeat(129))) {
+                mvc.perform(post("/api/settings/backup").with(csrf()).session(adminSession)
+                                .header(HttpHeaders.ACCEPT_LANGUAGE, "de").contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.writeValueAsString(java.util.Map.of("password", bad))))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(jsonPath("$.detail").value(containsString("128")));
+            }
+            // ein leerer Rumpf bleibt unverschlüsselt wie bisher
+            String plain = jsonValue(mvc.perform(post("/api/settings/backup").with(csrf()).session(adminSession)
+                    .contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(status().isOk()).andReturn(), "$.token");
+            assertThat(unzip(mvc.perform(get("/api/settings/backup/" + plain).session(adminSession))
+                    .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, org.hamcrest.Matchers.not(
+                            containsString("verschluesselt")))).andReturn().getResponse().getContentAsByteArray()))
+                    .containsKey("aidocuments.db");
+            String own = "eigenes Passwört 2026!";
+            byte[] encrypted = downloadBackup(JSON.writeValueAsString(java.util.Map.of("password", own)));
+            java.util.Map<String, byte[]> decrypted = unzip(encrypted, own);
+            assertThat(decrypted.keySet()).isEqualTo(entries.keySet());
+            assertThat(decrypted.get("secret.key")).isEqualTo(entries.get("secret.key"));
+            // ohne oder mit falschem Passwort ist nichts lesbar – auch die Namen der Einträge allein verraten nichts
+            org.assertj.core.api.Assertions.assertThatThrownBy(() -> unzip(encrypted))
+                    .isInstanceOf(java.util.zip.ZipException.class);
+            org.assertj.core.api.Assertions.assertThatThrownBy(() -> unzip(encrypted, "falsches Passwort"))
+                    .isInstanceOf(IOException.class);
+            assertThat(new String(encrypted, java.nio.charset.StandardCharsets.ISO_8859_1)).doesNotContain("SQLite format 3");
+
+            // mit dem Passwort aus AIDOCS_BACKUP_PASSWORD – das selbst nie in einer Antwort steht
+            byte[] configured = downloadBackup("{\"useConfigured\":true}");
+            assertThat(unzip(configured, BACKUP_PASSWORD)).containsKeys("README.txt", "aidocuments.db", "secret.key");
+            assertThat(new String(configured, java.nio.charset.StandardCharsets.ISO_8859_1)).doesNotContain(BACKUP_PASSWORD);
         } else {
             mvc.perform(post("/api/settings/backup").with(csrf()).session(adminSession))
                     .andExpect(status().isConflict());
@@ -2547,8 +2585,12 @@ class ApplicationFlowTest {
         assertThat(names.stream().filter(n -> n.matches("AIDocuments-Sicherung-\\d{4}-\\d{2}-\\d{2}-\\d{6}\\.zip")))
                 .hasSize(2);
         byte[] newest = Files.readAllBytes(target.resolve(names.get(1)));
-        assertThat(unzip(newest)).containsKey("README.txt").containsKey("aidocuments.db");
+        // mit AIDOCS_BACKUP_PASSWORD verschlüsselt
+        assertThat(unzip(newest, BACKUP_PASSWORD)).containsKey("README.txt").containsKey("aidocuments.db");
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> unzip(newest))
+                .isInstanceOf(java.util.zip.ZipException.class);
         mvc.perform(get(auto).session(adminSession))
+                .andExpect(jsonPath("$.encrypted").value(true))
                 .andExpect(jsonPath("$.lastRunOk").value(true))
                 .andExpect(jsonPath("$.backups", hasSize(2)))
                 .andExpect(jsonPath("$.backups[0].name").value(names.get(1)));
@@ -2836,6 +2878,32 @@ class ApplicationFlowTest {
                 .getContentAsString();
         return JSON.readTree(json).path("running").asBoolean() ? null
                 : JSON.readTree(json).path("lastRunOk").isBoolean() ? JSON.readTree(json).path("lastRunOk").asBoolean() : null;
+    }
+
+    /** Sicherung vorbereiten und herunterladen; der Dateiname verrät, ob verschlüsselt */
+    private byte[] downloadBackup(String body) throws Exception {
+        MvcResult prepared = mvc.perform(post("/api/settings/backup").with(csrf()).session(adminSession)
+                .contentType(MediaType.APPLICATION_JSON).content(body)).andReturn();
+        assertThat(prepared.getResponse().getStatus()).as(prepared.getResponse().getContentAsString()).isEqualTo(200);
+        String token = jsonValue(prepared, "$.token");
+        return mvc.perform(get("/api/settings/backup/" + token).session(adminSession))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, containsString("-verschluesselt.zip")))
+                .andReturn().getResponse().getContentAsByteArray();
+    }
+
+    /** ein AES-verschlüsseltes ZIP so lesen, wie es 7-Zip & Co. tun */
+    private static java.util.Map<String, byte[]> unzip(byte[] bytes, String password) throws IOException {
+        java.util.Map<String, byte[]> entries = new java.util.LinkedHashMap<>();
+        try (var zip = new net.lingala.zip4j.io.inputstream.ZipInputStream(new java.io.ByteArrayInputStream(bytes),
+                password.toCharArray(), java.nio.charset.StandardCharsets.UTF_8)) {
+            for (net.lingala.zip4j.model.LocalFileHeader entry; (entry = zip.getNextEntry()) != null; ) {
+                assertThat(entry.isEncrypted()).isTrue();
+                assertThat(entry.getEncryptionMethod()).isEqualTo(net.lingala.zip4j.model.enums.EncryptionMethod.AES);
+                entries.put(entry.getFileName(), zip.readAllBytes());
+            }
+        }
+        return entries;
     }
 
     private static java.util.Map<String, byte[]> unzip(byte[] bytes) throws IOException {

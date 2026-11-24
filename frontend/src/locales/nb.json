@@ -665,6 +665,19 @@
       "never": "aldri",
       "keyWarning": "Sikkerhetskopien er ikke kryptert og inneholder nøkkelen til de lagrede passordene (postkasser, KI, tofaktorautentisering). Oppbevar den like sikkert som selve dokumentene.",
       "restore": "Slik gjenoppretter du: Stopp AIDocuments, pakk ut innholdet i ZIP-filen i en tom datamappe og start på nytt. En veiledning ligger i ZIP-filen (README.txt).",
+      "encryption": {
+        "label": "Kryptering",
+        "configured": "Med sikkerhetskopipassordet fra .env-filen",
+        "own": "Med eget passord",
+        "none": "Ukryptert",
+        "password": "Passord",
+        "passwordHint": "Minst {{min}} tegn. Det lagres ingen steder – uten det kan sikkerhetskopien ikke lenger åpnes.",
+        "repeat": "Gjenta passordet",
+        "mismatch": "Passordene er ikke like.",
+        "configuredNote": "ZIP-filen krypteres med AES-256 og passordet fra AIDOCS_BACKUP_PASSWORD. Oppbevar det i tillegg utenfor serveren, for eksempel i en passordbehandler – hvis serveren svikter, trenger du det for å gjenopprette.",
+        "ownNote": "ZIP-filen krypteres med AES-256. Oppbevar passordet trygt, for eksempel i en passordbehandler.",
+        "openWith": "Den kan åpnes med 7-Zip (Windows, Linux), Keka eller The Unarchiver (macOS) – ikke med den innebygde utpakkingen i Windows eller macOS."
+      },
       "download": "Last ned sikkerhetskopi",
       "started": "Sikkerhetskopien lastes ned.",
       "externalDatabase": "Sikkerhetskopi med ett klikk finnes bare med den innebygde databasen. Med MariaDB sikkerhetskopierer du databasen med dens egne verktøy (for eksempel mariadb-dump) og i tillegg datamappen.",
@@ -700,7 +713,9 @@
         "runStarted": "Sikkerhetskopieringen kjører i bakgrunnen.",
         "done": "Sikkerhetskopien er lagret.",
         "saved": "Innstillingene er lagret.",
-        "externalDatabase": "Automatisk sikkerhetskopiering finnes bare med den innebygde databasen. Med MariaDB sikkerhetskopierer du databasen med dens egne verktøy (for eksempel en nattlig mariadb-dump) og i tillegg datamappen."
+        "externalDatabase": "Automatisk sikkerhetskopiering finnes bare med den innebygde databasen. Med MariaDB sikkerhetskopierer du databasen med dens egne verktøy (for eksempel en nattlig mariadb-dump) og i tillegg datamappen.",
+        "encrypted": "Sikkerhetskopiene krypteres med AES-256 og sikkerhetskopipassordet fra .env-filen (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Sikkerhetskopiene krypteres ikke. For å kryptere dem setter du AIDOCS_BACKUP_PASSWORD i .env-filen og starter AIDocuments på nytt."
       }
     },
     "license": {

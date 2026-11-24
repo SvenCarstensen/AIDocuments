@@ -682,6 +682,19 @@
       "never": "niciodată",
       "keyWarning": "Backupul nu este criptat și conține cheia pentru parolele stocate (căsuțe de e-mail, IA, autentificare în doi pași). Păstrați-l la fel de sigur ca documentele însele.",
       "restore": "Pentru restaurare: opriți AIDocuments, extrageți conținutul ZIP-ului într-un director de date gol și porniți-l din nou. Instrucțiunile se află în ZIP (README.txt).",
+      "encryption": {
+        "label": "Criptare",
+        "configured": "Cu parola de backup din fișierul .env",
+        "own": "Cu o parolă proprie",
+        "none": "Fără criptare",
+        "password": "Parolă",
+        "passwordHint": "Cel puțin {{min}} caractere. Nu este salvată nicăieri – fără ea, backupul nu mai poate fi deschis.",
+        "repeat": "Repetați parola",
+        "mismatch": "Parolele nu coincid.",
+        "configuredNote": "ZIP-ul este criptat cu AES-256 și cu parola din AIDOCS_BACKUP_PASSWORD. Păstrați-o și în afara serverului, de exemplu într-un manager de parole – dacă serverul se defectează, aveți nevoie de ea pentru restaurare.",
+        "ownNote": "ZIP-ul este criptat cu AES-256. Păstrați parola în siguranță, de exemplu într-un manager de parole.",
+        "openWith": "Poate fi deschis cu 7-Zip (Windows, Linux), Keka sau The Unarchiver (macOS) – nu cu funcția de dezarhivare integrată din Windows sau macOS."
+      },
       "download": "Descărcați backupul",
       "started": "Backupul se descarcă.",
       "externalDatabase": "Backupul cu un clic este disponibil doar cu baza de date integrată. Cu MariaDB, salvați baza de date cu instrumentele proprii ale acesteia (de ex. mariadb-dump) și, în plus, directorul de date.",
@@ -718,7 +731,9 @@
         "runStarted": "Backupul rulează în fundal.",
         "done": "Backup creat.",
         "saved": "Setări salvate.",
-        "externalDatabase": "Backupul automat este disponibil doar cu baza de date integrată. Cu MariaDB, salvați baza de date cu instrumentele proprii ale acesteia (de ex. un mariadb-dump în fiecare noapte) și, în plus, directorul de date."
+        "externalDatabase": "Backupul automat este disponibil doar cu baza de date integrată. Cu MariaDB, salvați baza de date cu instrumentele proprii ale acesteia (de ex. un mariadb-dump în fiecare noapte) și, în plus, directorul de date.",
+        "encrypted": "Backupurile sunt criptate cu AES-256 și cu parola de backup din fișierul .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Backupurile nu sunt criptate. Pentru a le cripta, setați AIDOCS_BACKUP_PASSWORD în fișierul .env și reporniți AIDocuments."
       }
     },
     "license": {

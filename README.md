@@ -212,7 +212,9 @@ use it as the import folder. Switch it off or change it under *Settings → Sche
 With the built-in database, *Settings → Backup* downloads a complete backup while the application keeps running,
 or writes one automatically every night – see [Backup and import](#backup-and-import). For the automatic backup,
 mount a folder on another disk or a network drive, e.g. `-v /mnt/nas/aidocuments-backups:/backups`, and set
-`AIDOCS_BACKUP_DIR=/backups` (or enter `/backups` in the settings). Otherwise back up `/aidocuments` – with an external MariaDB the
+`AIDOCS_BACKUP_DIR=/backups` (or enter `/backups` in the settings). To encrypt the backups, put
+`AIDOCS_BACKUP_PASSWORD=…` into a `.env` file next to `docker-compose.yml` – see
+[Encrypted backups](#encrypted-backups). Otherwise back up `/aidocuments` – with an external MariaDB the
 database as well. Stop the container before copying the directory, so the built-in database is not copied in the
 middle of a write. The file `secret.key` belongs in the backup: without it, stored mailbox passwords and API keys
 can no longer be decrypted.
@@ -290,6 +292,7 @@ values saved in the user interface take precedence.
 | `AIDOCS_DATA_DIR` | Storage for PDFs, search index, key file and the built-in database | `./data` (in the image: `/aidocuments`) |
 | `AIDOCS_IMPORT_DIR` | Watched import folder | empty = off (in the image: `/import`) |
 | `AIDOCS_BACKUP_DIR` | Default folder of the automatic backup (can be changed in the interface) | `backups/` in the data directory |
+| `AIDOCS_BACKUP_PASSWORD` | Encrypts every automatic backup (and, if chosen, the download) as an AES-256 ZIP – best kept in `.env`, see [Encrypted backups](#encrypted-backups) | empty = not encrypted |
 | `AIDOCS_IMPORT_INTERVAL` | General check interval (import folder and mailboxes without their own), e.g. `5m`; only until it is changed in the interface | `5m` |
 | `AIDOCS_AI_PROVIDER` | LLM provider: `anthropic`, `openai`, `moonshot`, `lm-studio`, `openai-compatible` | `anthropic` |
 | `AIDOCS_AI_BASE_URL` | Address of the LLM server | the provider's default address |
@@ -555,7 +558,7 @@ needed to restore the installation – a consistent copy of the database taken w
 files including originals and older versions, the thumbnails and `secret.key`. The search index is left out; it is
 rebuilt on start. The page shows the size and when the last backup was made. Like the export, the download asks for
 a current authenticator code first and the link works once, for five minutes. The ZIP contains the key for the
-stored mailbox passwords and API keys – keep it as safe as the server itself. With an external MariaDB, back up the
+stored mailbox passwords and API keys – keep it as safe as the server itself, or encrypt it (below). With an external MariaDB, back up the
 database with its own tools (`mariadb-dump`) and the directory `/aidocuments` as described under
 [Backup](#backup).
 
@@ -575,6 +578,31 @@ Each backup is the same ZIP as the manual download, written as `<name>.zip.part`
 complete, so a half-written file never counts as a backup. If there is not enough free space (roughly the size of the
 data, plus 1 GB on the data disk), the run fails with a message saying how much is missing. *Back up now* starts a run immediately. The card shows the last
 run, the next one and the backups in the folder.
+
+#### Encrypted backups
+
+Backups can be encrypted as a password-protected ZIP (AES-256, the WinZip method). Every entry is encrypted,
+`README.txt` included; only the file names inside remain visible. Open such a ZIP with 7-Zip (Windows, Linux:
+`7z x <file>`), Keka or The Unarchiver (macOS) – the built-in extraction of Windows and macOS and `unzip` cannot
+read it. Without the password a backup cannot be restored, and nobody can recover it: keep it in a password manager
+as well, not only on the server.
+
+- **Download:** choose *Encryption* above the button – *With the backup password from the .env file* (offered when
+  `AIDOCS_BACKUP_PASSWORD` is set, and then preselected), *With a password of your own* (12–128 characters, typed
+  twice; it is sent with the request and never stored or put into a URL) or *Not encrypted*. Encrypted downloads
+  are named `AIDocuments-Sicherung-<date>-verschluesselt.zip`.
+- **Automatic backup:** encrypted with `AIDOCS_BACKUP_PASSWORD` when it is set; the card says whether it is. The
+  password is not stored in the database and never sent to the browser.
+
+Set it in the `.env` file in the project folder (it is listed in `.gitignore` and `.dockerignore`). Docker
+Compose passes it to the container; started with `java -jar` from the project or the `backend` folder, the
+application reads `.env` itself. Write the value without quotes – the file is read as a properties file, which
+would keep them – and restart AIDocuments after changing it. Changing the password does not re-encrypt older
+backups; they keep the password they were written with. A random password:
+
+```bash
+echo "AIDOCS_BACKUP_PASSWORD=$(openssl rand -base64 24)" >> .env
+```
 
 **Warning when the last backup is too old:** administrators see a notice above the document list when there is no
 backup yet, when the last backup – manual or automatic – is older than *Warn after (days)* (default 7, 0 = never),

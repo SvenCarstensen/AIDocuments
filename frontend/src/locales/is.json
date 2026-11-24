@@ -665,6 +665,19 @@
       "never": "aldrei",
       "keyWarning": "Afritið er ekki dulkóðað og inniheldur lykilinn að vistuðu lykilorðunum (pósthólf, gervigreind, tveggja þátta auðkenning). Geymdu það jafn tryggilega og skjölin sjálf.",
       "restore": "Til að endurheimta: stöðvaðu AIDocuments, afþjappaðu innihald ZIP-skrárinnar í tóma gagnamöppu og ræstu það aftur. Leiðbeiningar fylgja í ZIP-skránni (README.txt).",
+      "encryption": {
+        "label": "Dulkóðun",
+        "configured": "Með afritunarlykilorðinu úr .env-skránni",
+        "own": "Með eigin lykilorði",
+        "none": "Ekki dulkóðað",
+        "password": "Lykilorð",
+        "passwordHint": "Minnst {{min}} stafir. Það er hvergi vistað – án þess er ekki lengur hægt að opna afritið.",
+        "repeat": "Endurtaka lykilorð",
+        "mismatch": "Lykilorðin eru ekki eins.",
+        "configuredNote": "ZIP-skráin er dulkóðuð með AES-256 og lykilorðinu úr AIDOCS_BACKUP_PASSWORD. Geymdu það líka utan þjónsins, t.d. í lykilorðastjóra – ef þjónninn bilar þarftu það til að endurheimta gögnin.",
+        "ownNote": "ZIP-skráin er dulkóðuð með AES-256. Geymdu lykilorðið á öruggum stað, t.d. í lykilorðastjóra.",
+        "openWith": "Hægt er að opna hana með 7-Zip (Windows, Linux), Keka eða The Unarchiver (macOS) – en ekki með innbyggðu afþjöppuninni í Windows eða macOS."
+      },
       "download": "Sækja afrit",
       "started": "Verið er að sækja afritið.",
       "externalDatabase": "Afrit með einum smelli er aðeins í boði með innbyggða gagnagrunninum. Með MariaDB afritarðu gagnagrunninn með hans eigin verkfærum (t.d. mariadb-dump) og auk þess gagnamöppuna.",
@@ -700,7 +713,9 @@
         "runStarted": "Afritunin keyrir í bakgrunni.",
         "done": "Afrit vistað.",
         "saved": "Stillingar vistaðar.",
-        "externalDatabase": "Sjálfvirk afritun er aðeins í boði með innbyggða gagnagrunninum. Með MariaDB afritarðu gagnagrunninn með hans eigin verkfærum (t.d. mariadb-dump á hverri nóttu) og auk þess gagnamöppuna."
+        "externalDatabase": "Sjálfvirk afritun er aðeins í boði með innbyggða gagnagrunninum. Með MariaDB afritarðu gagnagrunninn með hans eigin verkfærum (t.d. mariadb-dump á hverri nóttu) og auk þess gagnamöppuna.",
+        "encrypted": "Afritin eru dulkóðuð með AES-256 og afritunarlykilorðinu úr .env-skránni (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Afritin eru ekki dulkóðuð. Til að dulkóða þau skaltu stilla AIDOCS_BACKUP_PASSWORD í .env-skránni og endurræsa AIDocuments."
       }
     },
     "license": {

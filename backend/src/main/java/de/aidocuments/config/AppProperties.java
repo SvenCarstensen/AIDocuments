@@ -88,7 +88,16 @@ public record AppProperties(
      * Vorgabe für die automatische Sicherung: der Ordner, in den sie schreibt; leer = {@code backups} im
      * Datenverzeichnis. In der Oberfläche gespeicherte Einstellungen haben Vorrang.
      */
-    public record Backup(@DefaultValue("") String directory) {
+    /**
+     * @param password verschlüsselt jede automatische Sicherung als AES-256-ZIP (AIDOCS_BACKUP_PASSWORD, etwa aus der
+     *                 .env-Datei); leer = unverschlüsselt. Wird nirgends gespeichert oder angezeigt.
+     */
+    public record Backup(@DefaultValue("") String directory, @DefaultValue("") String password) {
+
+        @Override
+        public String toString() {
+            return "Backup[directory=" + directory + ", password=" + (password.isEmpty() ? "" : "***") + "]";
+        }
     }
 
     /** Vorgaben für den automatischen Abruf; in der Oberfläche gespeicherte Einstellungen haben Vorrang. */

@@ -63,7 +63,7 @@ class AiSettingsServiceTest {
         AppProperties properties = new AppProperties(Path.of("./data"), ai,
                 new AppProperties.Import(Duration.ofMinutes(5), ""),
                 new AppProperties.Ocr(false, "tesseract", "deu+eng", 50, 300, Duration.ofMinutes(5)),
-                new AppProperties.Backup(""));
+                new AppProperties.Backup("", ""));
         return new AiSettingsService(mock(SettingsStore.class), mock(SecretCipher.class), properties,
                 TestMessages.create());
     }

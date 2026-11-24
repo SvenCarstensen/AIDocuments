@@ -665,6 +665,19 @@
       "never": "hiç yapılmadı",
       "keyWarning": "Yedek şifrelenmemiştir ve kayıtlı parolaların (posta kutuları, yapay zekâ, iki adımlı doğrulama) anahtarını içerir. Yedeği belgelerin kendisi kadar güvenli saklayın.",
       "restore": "Geri yüklemek için: AIDocuments’ı durdurun, ZIP’in içeriğini boş bir veri dizinine çıkarın ve yeniden başlatın. Talimatlar ZIP’in içindedir (README.txt).",
+      "encryption": {
+        "label": "Şifreleme",
+        "configured": ".env dosyasındaki yedekleme parolasıyla",
+        "own": "Kendi parolanızla",
+        "none": "Şifresiz",
+        "password": "Parola",
+        "passwordHint": "En az {{min}} karakter. Parola hiçbir yerde saklanmaz – o olmadan yedek bir daha açılamaz.",
+        "repeat": "Parolayı tekrarlayın",
+        "mismatch": "Parolalar eşleşmiyor.",
+        "configuredNote": "ZIP, AES-256 ve AIDOCS_BACKUP_PASSWORD değişkenindeki parolayla şifrelenir. Parolayı ayrıca sunucunun dışında da saklayın, örneğin bir parola yöneticisinde – sunucu arızalanırsa geri yükleme için ona ihtiyacınız olur.",
+        "ownNote": "ZIP, AES-256 ile şifrelenir. Parolayı güvenli bir yerde saklayın, örneğin bir parola yöneticisinde.",
+        "openWith": "7-Zip (Windows, Linux), Keka veya The Unarchiver (macOS) ile açılabilir – Windows ya da macOS’in yerleşik arşiv açma özelliğiyle açılamaz."
+      },
       "download": "Yedeği indir",
       "started": "Yedek indiriliyor.",
       "externalDatabase": "Tek tıkla yedekleme yalnızca yerleşik veritabanıyla kullanılabilir. MariaDB kullanıyorsanız veritabanını kendi araçlarıyla (ör. mariadb-dump) yedekleyin, veri dizinini de ayrıca yedekleyin.",
@@ -700,7 +713,9 @@
         "runStarted": "Yedekleme arka planda çalışıyor.",
         "done": "Yedek oluşturuldu.",
         "saved": "Ayarlar kaydedildi.",
-        "externalDatabase": "Otomatik yedekleme yalnızca yerleşik veritabanıyla kullanılabilir. MariaDB kullanıyorsanız veritabanını kendi araçlarıyla (ör. her gece çalışan bir mariadb-dump ile) yedekleyin, veri dizinini de ayrıca yedekleyin."
+        "externalDatabase": "Otomatik yedekleme yalnızca yerleşik veritabanıyla kullanılabilir. MariaDB kullanıyorsanız veritabanını kendi araçlarıyla (ör. her gece çalışan bir mariadb-dump ile) yedekleyin, veri dizinini de ayrıca yedekleyin.",
+        "encrypted": "Yedekler AES-256 ve .env dosyasındaki yedekleme parolasıyla (AIDOCS_BACKUP_PASSWORD) şifrelenir.",
+        "notEncrypted": "Yedekler şifrelenmez. Şifrelemek için .env dosyasında AIDOCS_BACKUP_PASSWORD değişkenini ayarlayın ve AIDocuments’ı yeniden başlatın."
       }
     },
     "license": {

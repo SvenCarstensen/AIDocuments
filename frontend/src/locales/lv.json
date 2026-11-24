@@ -682,6 +682,19 @@
       "never": "nekad",
       "keyWarning": "Rezerves kopija nav šifrēta, un tajā ir saglabāto paroļu (pastkastu, MI, divu faktoru autentifikācijas) atslēga. Glabājiet to tikpat droši kā pašus dokumentus.",
       "restore": "Atjaunošana: apturiet AIDocuments, izpakojiet ZIP saturu tukšā datu mapē un palaidiet no jauna. Norādījumi ir ZIP failā (README.txt).",
+      "encryption": {
+        "label": "Šifrēšana",
+        "configured": "Ar rezerves kopijas paroli no .env faila",
+        "own": "Ar savu paroli",
+        "none": "Bez šifrēšanas",
+        "password": "Parole",
+        "passwordHint": "Vismaz {{min}} rakstzīmes. Tā netiek nekur saglabāta – bez tās rezerves kopiju vairs nevarēs atvērt.",
+        "repeat": "Atkārtojiet paroli",
+        "mismatch": "Paroles nesakrīt.",
+        "configuredNote": "ZIP fails tiek šifrēts ar AES-256 un paroli no AIDOCS_BACKUP_PASSWORD. Glabājiet to arī ārpus servera, piemēram, paroļu pārvaldniekā – ja serveris sabojājas, tā būs nepieciešama atjaunošanai.",
+        "ownNote": "ZIP fails tiek šifrēts ar AES-256. Glabājiet paroli drošā vietā, piemēram, paroļu pārvaldniekā.",
+        "openWith": "To var atvērt ar 7-Zip (Windows, Linux), Keka vai The Unarchiver (macOS) – ne ar Windows vai macOS iebūvēto izpakošanas rīku."
+      },
       "download": "Lejupielādēt rezerves kopiju",
       "started": "Notiek rezerves kopijas lejupielāde.",
       "externalDatabase": "Rezerves kopija ar vienu klikšķi ir pieejama tikai ar iebūvēto datubāzi. Ja izmantojat MariaDB, izveidojiet datubāzes rezerves kopiju ar tās rīkiem (piemēram, mariadb-dump) un papildus arī datu mapes rezerves kopiju.",
@@ -718,7 +731,9 @@
         "runStarted": "Rezerves kopija tiek veidota fonā.",
         "done": "Rezerves kopija ierakstīta.",
         "saved": "Iestatījumi saglabāti.",
-        "externalDatabase": "Automātiskā rezerves kopēšana ir pieejama tikai ar iebūvēto datubāzi. Ja izmantojat MariaDB, veidojiet datubāzes rezerves kopiju ar tās rīkiem (piemēram, katru nakti ar mariadb-dump) un papildus arī datu mapes rezerves kopiju."
+        "externalDatabase": "Automātiskā rezerves kopēšana ir pieejama tikai ar iebūvēto datubāzi. Ja izmantojat MariaDB, veidojiet datubāzes rezerves kopiju ar tās rīkiem (piemēram, katru nakti ar mariadb-dump) un papildus arī datu mapes rezerves kopiju.",
+        "encrypted": "Rezerves kopijas tiek šifrētas ar AES-256 un rezerves kopiju paroli no .env faila (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Rezerves kopijas netiek šifrētas. Lai tās šifrētu, iestatiet AIDOCS_BACKUP_PASSWORD .env failā un palaidiet AIDocuments no jauna."
       }
     },
     "license": {

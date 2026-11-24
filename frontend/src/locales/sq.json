@@ -665,6 +665,19 @@
       "never": "asnjëherë",
       "keyWarning": "Kopja rezervë nuk është e enkriptuar dhe përmban çelësin për fjalëkalimet e ruajtura (kutitë postare, IA, vërtetimi me dy faktorë). Ruaje po aq sigurt sa vetë dokumentet.",
       "restore": "Për rikthim: ndalo AIDocuments, nxirr përmbajtjen e ZIP-it në një dosje të zbrazët të dhënash dhe nise sërish. Udhëzimet gjenden në ZIP (README.txt).",
+      "encryption": {
+        "label": "Enkriptimi",
+        "configured": "Me fjalëkalimin e kopjes rezervë nga skedari .env",
+        "own": "Me fjalëkalimin tënd",
+        "none": "Pa enkriptim",
+        "password": "Fjalëkalimi",
+        "passwordHint": "Të paktën {{min}} karaktere. Nuk ruhet askund – pa të, kopja rezervë nuk mund të hapet më.",
+        "repeat": "Përsërit fjalëkalimin",
+        "mismatch": "Fjalëkalimet nuk përputhen.",
+        "configuredNote": "ZIP-i enkriptohet me AES-256 dhe me fjalëkalimin nga AIDOCS_BACKUP_PASSWORD. Ruaje edhe jashtë serverit, për shembull në një menaxher fjalëkalimesh – nëse prishet serveri, të duhet për rikthimin.",
+        "ownNote": "ZIP-i enkriptohet me AES-256. Ruaje fjalëkalimin në një vend të sigurt, për shembull në një menaxher fjalëkalimesh.",
+        "openWith": "Mund të hapet me 7-Zip (Windows, Linux), Keka ose The Unarchiver (macOS) – jo me nxjerrjen e integruar të Windows ose macOS."
+      },
       "download": "Shkarko kopjen rezervë",
       "started": "Kopja rezervë po shkarkohet.",
       "externalDatabase": "Kopja rezervë me një klik është e disponueshme vetëm me bazën e integruar të të dhënave. Me MariaDB, bëj kopje rezervë të bazës së të dhënave me mjetet e saj (p.sh. mariadb-dump) dhe po ashtu të dosjes së të dhënave.",
@@ -700,7 +713,9 @@
         "runStarted": "Kopja rezervë po krijohet në sfond.",
         "done": "Kopja rezervë u krijua.",
         "saved": "Cilësimet u ruajtën.",
-        "externalDatabase": "Kopja rezervë automatike është e disponueshme vetëm me bazën e integruar të të dhënave. Me MariaDB, bëj kopje rezervë të bazës së të dhënave me mjetet e saj (p.sh. një mariadb-dump çdo natë) dhe po ashtu të dosjes së të dhënave."
+        "externalDatabase": "Kopja rezervë automatike është e disponueshme vetëm me bazën e integruar të të dhënave. Me MariaDB, bëj kopje rezervë të bazës së të dhënave me mjetet e saj (p.sh. një mariadb-dump çdo natë) dhe po ashtu të dosjes së të dhënave.",
+        "encrypted": "Kopjet rezervë enkriptohen me AES-256 dhe me fjalëkalimin e kopjes rezervë nga skedari .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Kopjet rezervë nuk enkriptohen. Për t’i enkriptuar, vendos AIDOCS_BACKUP_PASSWORD në skedarin .env dhe rinise AIDocuments."
       }
     },
     "license": {

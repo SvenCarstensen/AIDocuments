@@ -716,6 +716,19 @@
       "never": "ní dhearnadh fós",
       "keyWarning": "Níl an cúltaca criptithe agus tá an eochair do na pasfhocail stóráilte ann (boscaí poist, IS, fíordheimhniú dhá fhachtóir). Coinnigh é chomh slán leis na doiciméid féin.",
       "restore": "Le hathchóiriú: stop AIDocuments, bain ábhar an ZIP amach chuig eolaire sonraí folamh agus tosaigh arís é. Tá treoracha sa ZIP (README.txt).",
+      "encryption": {
+        "label": "Criptiú",
+        "configured": "Le pasfhocal na gcúltacaí ón gcomhad .env",
+        "own": "Le do phasfhocal féin",
+        "none": "Gan chriptiú",
+        "password": "Pasfhocal",
+        "passwordHint": "{{min}} carachtar ar a laghad. Ní stóráiltear é áit ar bith – gan é, ní féidir an cúltaca a oscailt níos mó.",
+        "repeat": "An pasfhocal arís",
+        "mismatch": "Ní hionann na pasfhocail.",
+        "configuredNote": "Criptítear an ZIP le AES-256 agus leis an bpasfhocal ó AIDOCS_BACKUP_PASSWORD. Coinnigh cóip de lasmuigh den fhreastalaí freisin, mar shampla i mbainisteoir pasfhocal – má theipeann ar an bhfreastalaí, beidh sé uait chun athchóiriú a dhéanamh.",
+        "ownNote": "Criptítear an ZIP le AES-256. Coinnigh an pasfhocal slán, mar shampla i mbainisteoir pasfhocal.",
+        "openWith": "Is féidir é a oscailt le 7-Zip (Windows, Linux), Keka nó The Unarchiver (macOS) – ach ní leis an uirlis eastósctha atá ionsuite i Windows ná i macOS."
+      },
       "download": "Íoslódáil an cúltaca",
       "started": "Tá an cúltaca á íoslódáil.",
       "externalDatabase": "Níl cúltaca le cliceáil amháin ar fáil ach leis an mbunachar sonraí ionsuite. Le MariaDB, déan cúltaca den bhunachar sonraí lena uirlisí féin (mar shampla mariadb-dump) agus den eolaire sonraí chomh maith.",
@@ -754,7 +767,9 @@
         "runStarted": "Tá an cúltaca á dhéanamh sa chúlra.",
         "done": "Scríobhadh an cúltaca.",
         "saved": "Sábháladh na socruithe.",
-        "externalDatabase": "Níl an cúltaca uathoibríoch ar fáil ach leis an mbunachar sonraí ionsuite. Le MariaDB, déan cúltaca den bhunachar sonraí lena uirlisí féin (mar shampla mariadb-dump gach oíche) agus den eolaire sonraí chomh maith."
+        "externalDatabase": "Níl an cúltaca uathoibríoch ar fáil ach leis an mbunachar sonraí ionsuite. Le MariaDB, déan cúltaca den bhunachar sonraí lena uirlisí féin (mar shampla mariadb-dump gach oíche) agus den eolaire sonraí chomh maith.",
+        "encrypted": "Criptítear na cúltacaí le AES-256 agus le pasfhocal na gcúltacaí ón gcomhad .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Ní chriptítear na cúltacaí. Chun iad a chriptiú, socraigh AIDOCS_BACKUP_PASSWORD sa chomhad .env agus atosaigh AIDocuments."
       }
     },
     "license": {

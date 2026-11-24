@@ -665,6 +665,19 @@
       "never": "ei koskaan",
       "keyWarning": "Varmuuskopiota ei ole salattu, ja se sisältää tallennettujen salasanojen avaimen (postilaatikot, tekoäly, kaksivaiheinen tunnistautuminen). Säilytä sitä yhtä huolellisesti kuin itse asiakirjoja.",
       "restore": "Palauttaminen: pysäytä AIDocuments, pura ZIP-tiedoston sisältö tyhjään datahakemistoon ja käynnistä sovellus uudelleen. Ohjeet ovat ZIP-tiedostossa (README.txt).",
+      "encryption": {
+        "label": "Salaus",
+        "configured": "Varmuuskopioinnin salasanalla .env-tiedostosta",
+        "own": "Omalla salasanalla",
+        "none": "Salaamaton",
+        "password": "Salasana",
+        "passwordHint": "Vähintään {{min}} merkkiä. Salasanaa ei tallenneta mihinkään – ilman sitä varmuuskopiota ei voi enää avata.",
+        "repeat": "Toista salasana",
+        "mismatch": "Salasanat eivät täsmää.",
+        "configuredNote": "ZIP-tiedosto salataan AES-256:lla ja AIDOCS_BACKUP_PASSWORD-muuttujan salasanalla. Säilytä salasana myös palvelimen ulkopuolella, esimerkiksi salasanojen hallintasovelluksessa – jos palvelin hajoaa, tarvitset sitä palauttamiseen.",
+        "ownNote": "ZIP-tiedosto salataan AES-256:lla. Säilytä salasana turvallisesti, esimerkiksi salasanojen hallintasovelluksessa.",
+        "openWith": "Sen voi avata ohjelmilla 7-Zip (Windows, Linux), Keka tai The Unarchiver (macOS) – ei kuitenkaan Windowsin tai macOS:n sisäänrakennetulla purkutoiminnolla."
+      },
       "download": "Lataa varmuuskopio",
       "started": "Varmuuskopiota ladataan.",
       "externalDatabase": "Varmuuskopio yhdellä napsautuksella on käytettävissä vain sisäänrakennetun tietokannan kanssa. Jos käytät MariaDB:tä, varmuuskopioi tietokanta sen omilla työkaluilla (esim. mariadb-dump) ja lisäksi datahakemisto.",
@@ -700,7 +713,9 @@
         "runStarted": "Varmuuskopiointi on käynnissä taustalla.",
         "done": "Varmuuskopio tallennettu.",
         "saved": "Asetukset tallennettu.",
-        "externalDatabase": "Automaattinen varmuuskopiointi on käytettävissä vain sisäänrakennetun tietokannan kanssa. Jos käytät MariaDB:tä, varmuuskopioi tietokanta sen omilla työkaluilla (esim. joka yö ajettavalla mariadb-dump-komennolla) ja lisäksi datahakemisto."
+        "externalDatabase": "Automaattinen varmuuskopiointi on käytettävissä vain sisäänrakennetun tietokannan kanssa. Jos käytät MariaDB:tä, varmuuskopioi tietokanta sen omilla työkaluilla (esim. joka yö ajettavalla mariadb-dump-komennolla) ja lisäksi datahakemisto.",
+        "encrypted": "Varmuuskopiot salataan AES-256:lla ja .env-tiedoston varmuuskopioinnin salasanalla (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Varmuuskopioita ei salata. Jos haluat salata ne, määritä AIDOCS_BACKUP_PASSWORD .env-tiedostossa ja käynnistä AIDocuments uudelleen."
       }
     },
     "license": {

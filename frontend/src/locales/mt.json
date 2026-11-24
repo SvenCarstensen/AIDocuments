@@ -716,6 +716,19 @@
       "never": "qatt",
       "keyWarning": "Il-backup mhuwiex kriptat u fih iċ-ċavetta għall-passwords maħżuna (kaxex postali, IA, awtentikazzjoni b’żewġ fatturi). Żommu sigur daqs id-dokumenti nfushom.",
       "restore": "Biex tirrestawra: waqqaf AIDocuments, estratta l-kontenut taż-ZIP f’direttorju tad-data vojt u erġa’ ibdih. L-istruzzjonijiet jinsabu fiż-ZIP (README.txt).",
+      "encryption": {
+        "label": "Kriptaġġ",
+        "configured": "Bil-password tal-backup mill-fajl .env",
+        "own": "B’password tiegħek",
+        "none": "Mhux kriptat",
+        "password": "Password",
+        "passwordHint": "Għall-inqas {{min}} karattri. Ma tinħażen imkien – mingħajrha l-backup ma jkunx jista’ jinfetaħ aktar.",
+        "repeat": "Erġa’ ikteb il-password",
+        "mismatch": "Il-passwords ma jaqblux.",
+        "configuredNote": "Iż-ZIP jiġi kriptat b’AES-256 u bil-password minn AIDOCS_BACKUP_PASSWORD. Żommha wkoll barra mis-server, pereżempju f’password manager – jekk is-server jfalli, ikollok bżonnha biex tirrestawra.",
+        "ownNote": "Iż-ZIP jiġi kriptat b’AES-256. Żomm il-password f’post sigur, pereżempju f’password manager.",
+        "openWith": "Jista’ jinfetaħ b’7-Zip (Windows, Linux), Keka jew The Unarchiver (macOS) – mhux bl-estrazzjoni integrata ta’ Windows jew macOS."
+      },
       "download": "Niżżel il-backup",
       "started": "Il-backup qed jitniżżel.",
       "externalDatabase": "Il-backup bi klikk waħda huwa disponibbli biss bid-database integrata. B’MariaDB, agħmel backup tad-database bl-għodod tagħha stess (bħal mariadb-dump) u tad-direttorju tad-data wkoll.",
@@ -754,7 +767,9 @@
         "runStarted": "Il-backup qed isir fl-isfond.",
         "done": "Il-backup inkiteb.",
         "saved": "Is-settings ġew issejvjati.",
-        "externalDatabase": "Il-backup awtomatiku huwa disponibbli biss bid-database integrata. B’MariaDB, agħmel backup tad-database bl-għodod tagħha stess (pereżempju mariadb-dump kull lejl) flimkien mad-direttorju tad-data."
+        "externalDatabase": "Il-backup awtomatiku huwa disponibbli biss bid-database integrata. B’MariaDB, agħmel backup tad-database bl-għodod tagħha stess (pereżempju mariadb-dump kull lejl) flimkien mad-direttorju tad-data.",
+        "encrypted": "Il-backups jiġu kriptati b’AES-256 u bil-password tal-backup mill-fajl .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Il-backups mhumiex kriptati. Biex tikkriptahom, issettja AIDOCS_BACKUP_PASSWORD fil-fajl .env u erġa’ ibda AIDocuments."
       }
     },
     "license": {

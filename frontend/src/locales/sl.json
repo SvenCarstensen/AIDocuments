@@ -699,6 +699,19 @@
       "never": "še nikoli",
       "keyWarning": "Varnostna kopija ni šifrirana in vsebuje ključ do shranjenih gesel (poštni predali, UI, dvostopenjsko preverjanje). Hranite jo enako varno kot same dokumente.",
       "restore": "Obnovitev: ustavite AIDocuments, razširite vsebino ZIP-a v prazen podatkovni imenik in AIDocuments znova zaženite. Navodila so v ZIP-u (README.txt).",
+      "encryption": {
+        "label": "Šifriranje",
+        "configured": "Z geslom za varnostne kopije iz datoteke .env",
+        "own": "Z lastnim geslom",
+        "none": "Brez šifriranja",
+        "password": "Geslo",
+        "passwordHint": "Najmanj {{min}} znakov. Nikjer se ne shrani – brez njega varnostne kopije ni več mogoče odpreti.",
+        "repeat": "Ponovite geslo",
+        "mismatch": "Gesli se ne ujemata.",
+        "configuredNote": "ZIP se šifrira z AES-256 in geslom iz AIDOCS_BACKUP_PASSWORD. Hranite ga tudi zunaj strežnika, na primer v upravitelju gesel – če strežnik odpove, ga boste potrebovali za obnovitev.",
+        "ownNote": "ZIP se šifrira z AES-256. Geslo hranite na varnem, na primer v upravitelju gesel.",
+        "openWith": "Odprete ga lahko s 7-Zip (Windows, Linux), Keka ali The Unarchiver (macOS) – ne pa z vgrajenim razširjanjem v sistemu Windows ali macOS."
+      },
       "download": "Prenesi varnostno kopijo",
       "started": "Varnostna kopija se prenaša.",
       "externalDatabase": "Varnostna kopija z enim klikom je na voljo samo z vgrajeno bazo podatkov. Pri MariaDB bazo podatkov varnostno kopirajte z njenimi orodji (npr. mariadb-dump), poleg tega pa še podatkovni imenik.",
@@ -736,7 +749,9 @@
         "runStarted": "Varnostno kopiranje poteka v ozadju.",
         "done": "Varnostna kopija je zapisana.",
         "saved": "Nastavitve so shranjene.",
-        "externalDatabase": "Samodejno varnostno kopiranje je na voljo samo z vgrajeno bazo podatkov. Pri MariaDB bazo podatkov varnostno kopirajte z njenimi orodji (npr. vsako noč z mariadb-dump), poleg tega pa še podatkovni imenik."
+        "externalDatabase": "Samodejno varnostno kopiranje je na voljo samo z vgrajeno bazo podatkov. Pri MariaDB bazo podatkov varnostno kopirajte z njenimi orodji (npr. vsako noč z mariadb-dump), poleg tega pa še podatkovni imenik.",
+        "encrypted": "Varnostne kopije se šifrirajo z AES-256 in geslom za varnostne kopije iz datoteke .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Varnostne kopije se ne šifrirajo. Če jih želite šifrirati, nastavite AIDOCS_BACKUP_PASSWORD v datoteki .env in znova zaženite AIDocuments."
       }
     },
     "license": {

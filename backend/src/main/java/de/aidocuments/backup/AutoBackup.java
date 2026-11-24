@@ -88,9 +88,11 @@ public class AutoBackup {
     public record StoredBackup(String name, long bytes, Instant createdAt) {
     }
 
+    /** {@code encrypted}: die Stände werden mit dem Passwort aus AIDOCS_BACKUP_PASSWORD verschlüsselt. */
     public record AutoStatus(boolean available, boolean enabled, int hour, int keep, String directory,
                              String defaultDirectory, int warnAfterDays, boolean running, Instant lastRunAt,
-                             Boolean lastRunOk, String lastRunError, Instant nextRunAt, List<StoredBackup> backups) {
+                             Boolean lastRunOk, String lastRunError, Instant nextRunAt, List<StoredBackup> backups,
+                             boolean encrypted) {
     }
 
     /** Für die Admins: wann zuletzt gesichert wurde und ob das zu lange her ist bzw. was schiefging. */
@@ -182,7 +184,7 @@ public class AutoBackup {
                 directory().toString(), defaultDirectory.toString(), settings.warnAfterDays(), running.get(),
                 last == null ? null : last.at(), last == null ? null : last.ok(),
                 last == null || last.ok() ? null : messages.localize(last.error(), locale),
-                nextRun(settings, last), stored(directory()));
+                nextRun(settings, last), stored(directory()), backups.configuredPassword() != null);
     }
 
     /** Wann der nächste Lauf ansteht; null = aus. Liegt der Zeitpunkt schon zurück, kommt er beim nächsten Takt. */
@@ -257,9 +259,14 @@ public class AutoBackup {
             requireSpace(directory, backups.status().dataBytes());
             String name = PREFIX + STAMP.format(LocalDateTime.now()) + ".zip";
             part = directory.resolve(name + ".part");
+            char[] password = backups.configuredPassword();
             try (OutputStream out = Files.newOutputStream(part, StandardOpenOption.CREATE_NEW,
                     StandardOpenOption.WRITE)) {
-                backups.write(out, Locale.getDefault(), "automatisch");
+                backups.write(out, Locale.getDefault(), "automatisch", password);
+            } finally {
+                if (password != null) {
+                    java.util.Arrays.fill(password, '\0');
+                }
             }
             Path target = directory.resolve(name);
             try {

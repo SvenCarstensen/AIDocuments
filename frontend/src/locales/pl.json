@@ -699,6 +699,19 @@
       "never": "jeszcze nigdy",
       "keyWarning": "Kopia zapasowa nie jest zaszyfrowana i zawiera klucz do zapisanych haseł (skrzynki pocztowe, AI, uwierzytelnianie dwuskładnikowe). Przechowuj ją równie bezpiecznie jak same dokumenty.",
       "restore": "Przywracanie: zatrzymaj AIDocuments, rozpakuj zawartość pliku ZIP do pustego katalogu danych i uruchom aplikację ponownie. Instrukcja znajduje się w pliku ZIP (README.txt).",
+      "encryption": {
+        "label": "Szyfrowanie",
+        "configured": "Hasłem kopii zapasowej z pliku .env",
+        "own": "Własnym hasłem",
+        "none": "Bez szyfrowania",
+        "password": "Hasło",
+        "passwordHint": "Co najmniej {{min}} znaków. Hasło nie jest nigdzie zapisywane – bez niego kopii zapasowej nie da się już otworzyć.",
+        "repeat": "Powtórz hasło",
+        "mismatch": "Hasła nie są zgodne.",
+        "configuredNote": "Plik ZIP jest szyfrowany za pomocą AES-256 i hasła z AIDOCS_BACKUP_PASSWORD. Przechowuj je również poza serwerem, np. w menedżerze haseł – w razie awarii serwera będzie potrzebne do przywrócenia danych.",
+        "ownNote": "Plik ZIP jest szyfrowany za pomocą AES-256. Przechowuj hasło w bezpiecznym miejscu, np. w menedżerze haseł.",
+        "openWith": "Można go otworzyć programem 7-Zip (Windows, Linux), Keka lub The Unarchiver (macOS) – nie wbudowanym narzędziem do rozpakowywania w systemie Windows lub macOS."
+      },
       "download": "Pobierz kopię zapasową",
       "started": "Kopia zapasowa jest pobierana.",
       "externalDatabase": "Kopia zapasowa jednym kliknięciem jest dostępna tylko z wbudowaną bazą danych. W przypadku MariaDB utwórz kopię zapasową bazy danych jej własnymi narzędziami (np. mariadb-dump), a do tego także katalogu danych.",
@@ -736,7 +749,9 @@
         "runStarted": "Kopia zapasowa jest tworzona w tle.",
         "done": "Kopia zapasowa została zapisana.",
         "saved": "Ustawienia zostały zapisane.",
-        "externalDatabase": "Automatyczna kopia zapasowa jest dostępna tylko z wbudowaną bazą danych. W przypadku MariaDB utwórz kopię zapasową bazy danych jej własnymi narzędziami (np. za pomocą mariadb-dump uruchamianego co noc), a do tego także katalogu danych."
+        "externalDatabase": "Automatyczna kopia zapasowa jest dostępna tylko z wbudowaną bazą danych. W przypadku MariaDB utwórz kopię zapasową bazy danych jej własnymi narzędziami (np. za pomocą mariadb-dump uruchamianego co noc), a do tego także katalogu danych.",
+        "encrypted": "Kopie zapasowe są szyfrowane za pomocą AES-256 i hasła kopii zapasowej z pliku .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Kopie zapasowe nie są szyfrowane. Aby je szyfrować, ustaw AIDOCS_BACKUP_PASSWORD w pliku .env i uruchom ponownie AIDocuments."
       }
     },
     "license": {

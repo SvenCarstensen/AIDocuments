@@ -682,6 +682,19 @@
       "never": "mai",
       "keyWarning": "La còpia de seguretat no està xifrada i conté la clau de les contrasenyes desades (bústies, IA, autenticació en dos passos). Guarda-la amb la mateixa cura que els documents.",
       "restore": "Per restaurar-la: atura AIDocuments, extreu el contingut del ZIP en un directori de dades buit i torna’l a iniciar. El ZIP inclou les instruccions (README.txt).",
+      "encryption": {
+        "label": "Xifratge",
+        "configured": "Amb la contrasenya de còpia de seguretat del fitxer .env",
+        "own": "Amb una contrasenya pròpia",
+        "none": "Sense xifrar",
+        "password": "Contrasenya",
+        "passwordHint": "Com a mínim {{min}} caràcters. No es desa enlloc – sense ella ja no podràs obrir la còpia de seguretat.",
+        "repeat": "Repeteix la contrasenya",
+        "mismatch": "Les contrasenyes no coincideixen.",
+        "configuredNote": "El ZIP es xifra amb AES-256 i la contrasenya d’AIDOCS_BACKUP_PASSWORD. Guarda’n també una còpia fora del servidor, per exemple en un gestor de contrasenyes – si el servidor falla, la necessitaràs per restaurar les dades.",
+        "ownNote": "El ZIP es xifra amb AES-256. Guarda bé la contrasenya, per exemple en un gestor de contrasenyes.",
+        "openWith": "Es pot obrir amb 7-Zip (Windows, Linux), Keka o The Unarchiver (macOS) – però no amb l’eina d’extracció integrada de Windows o macOS."
+      },
       "download": "Baixa la còpia de seguretat",
       "started": "S’està baixant la còpia de seguretat.",
       "externalDatabase": "La còpia de seguretat amb un clic només està disponible amb la base de dades integrada. Amb MariaDB, fes la còpia de la base de dades amb les seves pròpies eines (com ara mariadb-dump) i, a més, del directori de dades.",
@@ -718,7 +731,9 @@
         "runStarted": "La còpia de seguretat s’està fent en segon pla.",
         "done": "Còpia de seguretat desada.",
         "saved": "Configuració desada.",
-        "externalDatabase": "La còpia de seguretat automàtica només està disponible amb la base de dades integrada. Amb MariaDB, fes la còpia de la base de dades amb les seves pròpies eines (com ara un mariadb-dump cada nit) i, a més, del directori de dades."
+        "externalDatabase": "La còpia de seguretat automàtica només està disponible amb la base de dades integrada. Amb MariaDB, fes la còpia de la base de dades amb les seves pròpies eines (com ara un mariadb-dump cada nit) i, a més, del directori de dades.",
+        "encrypted": "Les còpies es xifren amb AES-256 i la contrasenya de còpia de seguretat del fitxer .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Les còpies no es xifren. Per xifrar-les, defineix AIDOCS_BACKUP_PASSWORD al fitxer .env i reinicia AIDocuments."
       }
     },
     "license": {

@@ -665,6 +665,19 @@
       "never": "nach ni",
       "keyWarning": "D’Sécherung ass net verschlësselt an enthält de Schlëssel fir déi gespäichert Passwierder (Mailboxen, KI, Zwee-Faktor-Umeldung). Bewaart se esou sécher op wéi d’Dokumenter selwer.",
       "restore": "Restauréieren: AIDocuments stoppen, den Inhalt vum ZIP an en eidelt Dateverzeechnes auspaken an nei starten. Eng Uleedung läit am ZIP (README.txt).",
+      "encryption": {
+        "label": "Verschlësselung",
+        "configured": "Mam Sécherungspasswuert aus der .env",
+        "own": "Mat engem eegene Passwuert",
+        "none": "Onverschlësselt",
+        "password": "Passwuert",
+        "passwordHint": "Mindestens {{min}} Zeechen. Et gëtt néierens gespäichert – ouni et kann d’Sécherung net méi opgemaach ginn.",
+        "repeat": "Passwuert widderhuelen",
+        "mismatch": "D’Passwierder stëmmen net iwwereneen.",
+        "configuredNote": "Den ZIP gëtt mat AES-256 a mam Passwuert aus AIDOCS_BACKUP_PASSWORD verschlësselt. Bewaart et zousätzlech ausserhalb vum Server op, zum Beispill an engem Passwuertmanager – wann de Server ausfält, braucht Dir et fir ze restauréieren.",
+        "ownNote": "Den ZIP gëtt mat AES-256 verschlësselt. Bewaart d’Passwuert sécher op, zum Beispill an engem Passwuertmanager.",
+        "openWith": "Opmaache léisst e sech mat 7-Zip (Windows, Linux), Keka oder The Unarchiver (macOS) – net mat der agebauter Auspakfunktioun vu Windows oder macOS."
+      },
       "download": "Sécherung eroflueden",
       "started": "D’Sécherung gëtt erofgelueden.",
       "externalDatabase": "D’Sécherung mat engem Klick gëtt et nëmme mat der agebauter Datebank. Mat MariaDB séchert Dir d’Datebank mat hiren eegenen Tools (z. B. mariadb-dump) an dozou d’Dateverzeechnes.",
@@ -700,7 +713,9 @@
         "runStarted": "D’Sécherung leeft am Hannergrond.",
         "done": "Sécherung geschriwwen.",
         "saved": "Astellunge gespäichert.",
-        "externalDatabase": "Déi automatesch Sécherung gëtt et nëmme mat der agebauter Datebank. Mat MariaDB séchert Dir d’Datebank mat hiren eegenen Tools (z. B. en nuetleche mariadb-dump) an dozou d’Dateverzeechnes."
+        "externalDatabase": "Déi automatesch Sécherung gëtt et nëmme mat der agebauter Datebank. Mat MariaDB séchert Dir d’Datebank mat hiren eegenen Tools (z. B. en nuetleche mariadb-dump) an dozou d’Dateverzeechnes.",
+        "encrypted": "D’Sécherunge ginn mat AES-256 a mam Sécherungspasswuert aus der .env (AIDOCS_BACKUP_PASSWORD) verschlësselt.",
+        "notEncrypted": "D’Sécherunge ginn net verschlësselt. Fir se ze verschlësselen, AIDOCS_BACKUP_PASSWORD an der .env setzen an AIDocuments nei starten."
       }
     },
     "license": {

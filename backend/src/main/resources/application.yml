@@ -23,6 +23,10 @@ spring:
     import:
       - optional:file:./config/debug.yml
       - optional:file:./backend/config/debug.yml
+      # Geheimnisse wie AIDOCS_BACKUP_PASSWORD aus der .env im Projektordner (gestartet aus dem Projekt- oder dem
+      # backend-Ordner). Im Docker-Container setzt docker compose sie als Umgebungsvariablen.
+      - optional:file:./.env[.properties]
+      - optional:file:../.env[.properties]
   datasource:
     # Eingebaut: eine SQLite-Datei im Datenverzeichnis – nichts zu installieren.
     # Externe MariaDB: AIDOCS_DB_URL=jdbc:mariadb://host:3306/aidocuments, dazu AIDOCS_DB_USER und AIDOCS_DB_PASSWORD.
@@ -88,6 +92,9 @@ app:
     # Ordner der automatischen Sicherung; leer = "backups" im Datenverzeichnis. Besser auf einer anderen Platte
     # (in der Oberfläche unter Einstellungen → Sicherung & Import änderbar).
     directory: ${AIDOCS_BACKUP_DIR:}
+    # Passwort, mit dem jede automatische Sicherung als AES-256-ZIP verschlüsselt wird; leer = unverschlüsselt.
+    # Gehört in die .env (nie ins Git) – und zusätzlich in einen Passwortmanager: ohne es ist keine Sicherung lesbar.
+    password: ${AIDOCS_BACKUP_PASSWORD:}
 
 logging:
   level:

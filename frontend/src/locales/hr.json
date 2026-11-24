@@ -682,6 +682,19 @@
       "never": "nikad",
       "keyWarning": "Sigurnosna kopija nije šifrirana i sadrži ključ za pohranjene lozinke (poštanski sandučići, UI, dvofaktorska autentifikacija). Čuvajte je jednako sigurno kao i same dokumente.",
       "restore": "Vraćanje: zaustavite AIDocuments, raspakirajte sadržaj ZIP datoteke u prazan direktorij podataka i ponovno ga pokrenite. Upute se nalaze u ZIP datoteci (README.txt).",
+      "encryption": {
+        "label": "Šifriranje",
+        "configured": "Lozinkom za sigurnosne kopije iz datoteke .env",
+        "own": "Vlastitom lozinkom",
+        "none": "Bez šifriranja",
+        "password": "Lozinka",
+        "passwordHint": "Najmanje {{min}} znakova. Lozinka se nigdje ne pohranjuje – bez nje se sigurnosna kopija više ne može otvoriti.",
+        "repeat": "Ponovite lozinku",
+        "mismatch": "Lozinke se ne podudaraju.",
+        "configuredNote": "ZIP datoteka šifrira se algoritmom AES-256 i lozinkom iz AIDOCS_BACKUP_PASSWORD. Čuvajte je i izvan poslužitelja, primjerice u upravitelju lozinki – ako poslužitelj otkaže, trebat će vam za vraćanje.",
+        "ownNote": "ZIP datoteka šifrira se algoritmom AES-256. Lozinku čuvajte na sigurnom mjestu, primjerice u upravitelju lozinki.",
+        "openWith": "Može se otvoriti programom 7-Zip (Windows, Linux), Keka ili The Unarchiver (macOS) – ali ne i ugrađenim alatom za raspakiravanje sustava Windows ili macOS."
+      },
       "download": "Preuzmi sigurnosnu kopiju",
       "started": "Sigurnosna kopija se preuzima.",
       "externalDatabase": "Sigurnosna kopija jednim klikom dostupna je samo s ugrađenom bazom podataka. Uz MariaDB bazu podataka kopirajte njezinim vlastitim alatima (npr. mariadb-dump), a uz to i direktorij podataka.",
@@ -718,7 +731,9 @@
         "runStarted": "Sigurnosna kopija izrađuje se u pozadini.",
         "done": "Sigurnosna kopija je izrađena.",
         "saved": "Postavke su spremljene.",
-        "externalDatabase": "Automatska sigurnosna kopija dostupna je samo s ugrađenom bazom podataka. Uz MariaDB bazu podataka kopirajte njezinim vlastitim alatima (npr. svake noći pomoću mariadb-dump), a uz to i direktorij podataka."
+        "externalDatabase": "Automatska sigurnosna kopija dostupna je samo s ugrađenom bazom podataka. Uz MariaDB bazu podataka kopirajte njezinim vlastitim alatima (npr. svake noći pomoću mariadb-dump), a uz to i direktorij podataka.",
+        "encrypted": "Sigurnosne kopije šifriraju se algoritmom AES-256 i lozinkom za sigurnosne kopije iz datoteke .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Sigurnosne kopije se ne šifriraju. Za šifriranje postavite AIDOCS_BACKUP_PASSWORD u datoteci .env i ponovno pokrenite AIDocuments."
       }
     },
     "license": {

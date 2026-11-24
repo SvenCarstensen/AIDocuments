@@ -682,6 +682,19 @@
       "never": "jamais",
       "keyWarning": "La sauvegarde n’est pas chiffrée et contient la clé des mots de passe enregistrés (boîtes mail, IA, authentification à deux facteurs). Conservez-la avec autant de soin que les documents eux-mêmes.",
       "restore": "Pour restaurer : arrêtez AIDocuments, extrayez le contenu du ZIP dans un répertoire de données vide et redémarrez. Les instructions se trouvent dans le ZIP (README.txt).",
+      "encryption": {
+        "label": "Chiffrement",
+        "configured": "Avec le mot de passe de sauvegarde du fichier .env",
+        "own": "Avec votre propre mot de passe",
+        "none": "Sans chiffrement",
+        "password": "Mot de passe",
+        "passwordHint": "Au moins {{min}} caractères. Il n’est enregistré nulle part – sans lui, la sauvegarde ne pourra plus être ouverte.",
+        "repeat": "Répéter le mot de passe",
+        "mismatch": "Les mots de passe ne correspondent pas.",
+        "configuredNote": "Le ZIP est chiffré en AES-256 avec le mot de passe défini dans AIDOCS_BACKUP_PASSWORD. Conservez-en aussi une copie en dehors du serveur, par exemple dans un gestionnaire de mots de passe – si le serveur tombe en panne, vous en aurez besoin pour la restauration.",
+        "ownNote": "Le ZIP est chiffré en AES-256. Conservez le mot de passe en lieu sûr, par exemple dans un gestionnaire de mots de passe.",
+        "openWith": "Il peut être ouvert avec 7-Zip (Windows, Linux), Keka ou The Unarchiver (macOS) – mais pas avec l’outil d’extraction intégré de Windows ou de macOS."
+      },
       "download": "Télécharger la sauvegarde",
       "started": "La sauvegarde est en cours de téléchargement.",
       "externalDatabase": "La sauvegarde en un clic n’est disponible qu’avec la base de données intégrée. Avec MariaDB, sauvegardez la base de données avec ses propres outils (comme mariadb-dump), ainsi que le répertoire de données.",
@@ -718,7 +731,9 @@
         "runStarted": "La sauvegarde s’exécute en arrière-plan.",
         "done": "Sauvegarde créée.",
         "saved": "Paramètres enregistrés.",
-        "externalDatabase": "La sauvegarde automatique n’est disponible qu’avec la base de données intégrée. Avec MariaDB, sauvegardez la base de données avec ses propres outils (par exemple un mariadb-dump chaque nuit), ainsi que le répertoire de données."
+        "externalDatabase": "La sauvegarde automatique n’est disponible qu’avec la base de données intégrée. Avec MariaDB, sauvegardez la base de données avec ses propres outils (par exemple un mariadb-dump chaque nuit), ainsi que le répertoire de données.",
+        "encrypted": "Les sauvegardes sont chiffrées en AES-256 avec le mot de passe de sauvegarde du fichier .env (AIDOCS_BACKUP_PASSWORD).",
+        "notEncrypted": "Les sauvegardes ne sont pas chiffrées. Pour les chiffrer, définissez AIDOCS_BACKUP_PASSWORD dans le fichier .env et redémarrez AIDocuments."
       }
     },
     "license": {
