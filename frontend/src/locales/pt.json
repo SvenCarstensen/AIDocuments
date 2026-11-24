@@ -1047,9 +1047,12 @@
       "buyer": "Cliente",
       "vatId": "N.º de IVA",
       "buyerReference": "Referência do comprador",
+      "allowances": "Descontos",
+      "charges": "Encargos",
       "net": "Valor líquido",
       "tax": "IVA {{rate}}",
       "gross": "Total",
+      "prepaid": "Já pago",
       "reference": "Referência de pagamento",
       "terms": "Condições de pagamento"
     },

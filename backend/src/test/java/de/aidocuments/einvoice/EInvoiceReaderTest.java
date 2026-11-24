@@ -59,6 +59,9 @@ class EInvoiceReaderTest {
         assertThat(invoice.taxAmount()).isEqualTo(new BigDecimal("28.58")); // nicht die Angabe in CHF
         assertThat(invoice.grossAmount()).isEqualTo(new BigDecimal("194.78"));
         assertThat(invoice.amountDue()).isEqualTo(new BigDecimal("144.78")); // nach der Anzahlung
+        assertThat(invoice.prepaidAmount()).isEqualTo(new BigDecimal("50.00"));
+        assertThat(invoice.lineTotal()).isEqualTo(new BigDecimal("166.20"));
+        assertThat(invoice.allowanceTotal()).isNull();
         assertThat(invoice.iban()).isEqualTo("DE02120300000000202051");
         assertThat(invoice.bic()).isEqualTo("BYLADEM1001");
         assertThat(invoice.paymentReference()).isEqualTo("RE-2026-004711");
@@ -208,7 +211,8 @@ class EInvoiceReaderTest {
             assertThat(text).contains("Rechnung RE-2026-004711", "Stadtwerke Musterstadt GmbH", "USt-IdNr. DE123456789",
                     "Erika Mustermann", "15.11.2026", "15.12.2026", "Arbeitspreis Strom", "412,5 kWh",
                     "Ratgeber „Energie sparen im Haushalt“", "166,20 €", "Umsatzsteuer 19 %", "26,83 €",
-                    "Umsatzsteuer 7 %", "194,78 €", "Zu zahlen", "144,78 €", "DE02120300000000202051",
+                    "Umsatzsteuer 7 %", "194,78 €", "Bereits gezahlt", "-50,00 €", "Zu zahlen", "144,78 €",
+                    "DE02120300000000202051",
                     "Zahlbar bis 15.12.2026 ohne Abzug.", "RE-2026-004711.xml");
             assertThat(doc.getDocumentInformation().getTitle()).isEqualTo("Rechnung RE-2026-004711");
         }
@@ -219,9 +223,130 @@ class EInvoiceReaderTest {
         new EInvoicePdf(TestMessages.create()).render(EInvoiceReader.parse(creditXml), creditXml, "gs.xml",
                 Locale.ENGLISH, credit);
         try (PDDocument doc = Loader.loadPDF(credit.toFile())) {
-            assertThat(new PDFTextStripper().getText(doc)).contains("Credit note GS-2026-12", "21 Nov 2026",
+            String text = new PDFTextStripper().getText(doc);
+            assertThat(text).contains("Credit note GS-2026-12", "21 Nov 2026",
                     "Rücknahme Toner schwarz (beschädigt)", "€94.01");
+            assertThat(text).doesNotContain("Due date"); // eine Gutschrift zahlt man nicht
         }
+    }
+
+    @Test
+    void allowancesAndChargesOnTheWholeInvoiceAppearSoThePdfAddsUp() throws IOException {
+        String xml = new String(resource("xrechnung-cii.xml"), StandardCharsets.UTF_8).replace(
+                "<ram:LineTotalAmount>166.20</ram:LineTotalAmount>",
+                "<ram:LineTotalAmount>171.20</ram:LineTotalAmount><ram:ChargeTotalAmount>4.00</ram:ChargeTotalAmount>"
+                        + "<ram:AllowanceTotalAmount>9.00</ram:AllowanceTotalAmount>");
+        EInvoice invoice = EInvoiceReader.parse(xml.getBytes(StandardCharsets.UTF_8));
+        assertThat(invoice.lineTotal()).isEqualTo(new BigDecimal("171.20"));
+        assertThat(invoice.allowanceTotal()).isEqualTo(new BigDecimal("9.00"));
+        assertThat(invoice.chargeTotal()).isEqualTo(new BigDecimal("4.00"));
+        Path pdf = dir.resolve("nachlass.pdf");
+        new EInvoicePdf(TestMessages.create()).render(invoice, xml.getBytes(StandardCharsets.UTF_8), "n.xml",
+                Locale.GERMAN, pdf);
+        try (PDDocument doc = Loader.loadPDF(pdf.toFile())) {
+            assertThat(new PDFTextStripper().getText(doc)).contains("Summe Positionen 171,20 €", "Nachlässe -9,00 €",
+                    "Zuschläge 4,00 €", "Summe netto 166,20 €");
+        }
+    }
+
+    @Test
+    void longPartiesAndTermsFlowOntoTheNextPageInsteadOfOffThePage() throws IOException {
+        String longText = "Sehr lange Angabe ".repeat(55).strip();
+        String xml = new String(resource("xrechnung-cii.xml"), StandardCharsets.UTF_8)
+                .replace("Am Kraftwerk 1", longText)
+                .replace("<ram:Name>Stadtwerke Musterstadt GmbH</ram:Name>", "<ram:Name>" + longText + "</ram:Name>")
+                .replace("<ram:Name>Erika Mustermann</ram:Name>", "<ram:Name>" + longText + "</ram:Name>")
+                .replace("Zahlbar bis 15.12.2026 ohne Abzug.", longText);
+        EInvoice invoice = EInvoiceReader.parse(xml.getBytes(StandardCharsets.UTF_8));
+        Path pdf = dir.resolve("lang.pdf");
+        new EInvoicePdf(TestMessages.create()).render(invoice, xml.getBytes(StandardCharsets.UTF_8), "l.xml",
+                Locale.GERMAN, pdf);
+        assertThat(invoice.buyer().name()).isEqualTo(longText);
+        try (PDDocument doc = Loader.loadPDF(pdf.toFile())) {
+            assertThat(doc.getNumberOfPages()).isGreaterThan(1);
+            for (PDPage page : doc.getPages()) {
+                PDFTextStripper stripper = new PDFTextStripper() {
+                    @Override
+                    protected void writeString(String text, List<org.apache.pdfbox.text.TextPosition> positions)
+                            throws IOException {
+                        for (org.apache.pdfbox.text.TextPosition position : positions) {
+                            // nichts unterhalb des unteren Rands (PDF-Koordinaten von unten: y ≥ 50)
+                            assertThat(position.getPageHeight() - position.getY()).isGreaterThan(45);
+                        }
+                        super.writeString(text, positions);
+                    }
+                };
+                int number = doc.getPages().indexOf(page) + 1;
+                stripper.setStartPage(number);
+                stripper.setEndPage(number);
+                stripper.getText(doc);
+            }
+        }
+    }
+
+    @Test
+    void theInvoiceCanBeAttachedToAPdfAndTakenOutAgainWithoutTouchingOtherAttachments() throws IOException {
+        byte[] xml = resource("xrechnung-cii.xml");
+        try (PDDocument doc = new PDDocument()) {
+            doc.addPage(new PDPage());
+            PDEmbeddedFilesNameTreeNode tree = new PDEmbeddedFilesNameTreeNode();
+            tree.setNames(Map.of("anlage.xml", spec(doc, "anlage.xml", "<anlage/>".getBytes())));
+            PDDocumentNameDictionary names = new PDDocumentNameDictionary(doc.getDocumentCatalog());
+            names.setEmbeddedFiles(tree);
+            doc.getDocumentCatalog().setNames(names);
+
+            assertThat(EInvoiceReader.attachTo(doc, xml, "RE-2026-004711.xml")).isTrue();
+            assertThat(EInvoiceReader.fromPdf(doc).xml().content()).isEqualTo(xml);
+            assertThat(EInvoiceReader.attachTo(doc, xml, "noch-einmal.xml")).isFalse(); // eine reicht
+            assertThat(doc.getDocumentCatalog().getNames().getEmbeddedFiles().getNames())
+                    .containsOnlyKeys("anlage.xml", "RE-2026-004711.xml");
+
+            assertThat(EInvoiceReader.removeFrom(doc)).isTrue();
+            assertThat(EInvoiceReader.fromPdf(doc)).isNull();
+            assertThat(doc.getDocumentCatalog().getNames().getEmbeddedFiles().getNames()).containsOnlyKeys("anlage.xml");
+            assertThat(EInvoiceReader.removeFrom(doc)).isFalse();
+        }
+    }
+
+    @Test
+    void aPdfWithManyAttachmentsIsNotReadInFull() throws IOException {
+        byte[] invoiceXml = resource("xrechnung-cii.xml");
+        for (String invoiceName : List.of("zz-rechnung.xml", "factur-x.xml")) {
+            try (PDDocument doc = new PDDocument()) {
+                doc.addPage(new PDPage());
+                Map<String, PDComplexFileSpecification> files = new java.util.TreeMap<>();
+                for (int i = 10; i < 60; i++) {
+                    files.put("a" + i + ".xml", spec(doc, "a" + i + ".xml", "<anlage/>".getBytes()));
+                }
+                files.put(invoiceName, spec(doc, invoiceName, invoiceXml));
+                PDEmbeddedFilesNameTreeNode tree = new PDEmbeddedFilesNameTreeNode();
+                tree.setNames(files);
+                PDDocumentNameDictionary names = new PDDocumentNameDictionary(doc.getDocumentCatalog());
+                names.setEmbeddedFiles(tree);
+                doc.getDocumentCatalog().setNames(names);
+                // gelesen werden die bekannten Rechnungsnamen zuerst, danach nur noch wenige andere
+                assertThat(EInvoiceReader.fromPdf(doc) != null).isEqualTo(invoiceName.equals("factur-x.xml"));
+            }
+        }
+    }
+
+    @Test
+    void theDuplicateKeyNeverDropsNumberOrDateAndNeedsASeller() throws IOException {
+        EInvoice invoice = EInvoiceReader.parse(resource("gutschrift-ubl.xml"));
+        Party longName = new Party("Sehr lange Firma ".repeat(20), null, null, null, null, null, null);
+        EInvoice first = withSeller(invoice, longName, "GS-1");
+        EInvoice second = withSeller(invoice, longName, "GS-2");
+        assertThat(first.identity()).startsWith("sha256:").hasSizeLessThanOrEqualTo(255);
+        assertThat(first.identity()).isNotEqualTo(second.identity());
+        assertThat(withSeller(invoice, null, "GS-1").identity()).isNull();
+        assertThat(withSeller(invoice, new Party(" ", null, null, null, null, null, null), "GS-1").identity()).isNull();
+    }
+
+    private static EInvoice withSeller(EInvoice i, Party seller, String number) {
+        return new EInvoice(i.syntax(), i.profile(), i.typeCode(), number, i.issueDate(), i.dueDate(), i.currency(),
+                seller, i.buyer(), i.buyerReference(), i.lineTotal(), i.allowanceTotal(), i.chargeTotal(),
+                i.netAmount(), i.taxAmount(), i.grossAmount(), i.prepaidAmount(), i.amountDue(), i.iban(), i.bic(),
+                i.paymentReference(), i.paymentTerms(), i.taxes(), i.lines());
     }
 
     @Test

@@ -1023,9 +1023,12 @@
       "buyer": "Empfänger",
       "vatId": "USt-IdNr.",
       "buyerReference": "Käuferreferenz",
+      "allowances": "Nachlässe",
+      "charges": "Zuschläge",
       "net": "Netto",
       "tax": "Umsatzsteuer {{rate}}",
       "gross": "Brutto",
+      "prepaid": "Bereits gezahlt",
       "reference": "Verwendungszweck",
       "terms": "Zahlungsbedingungen"
     },

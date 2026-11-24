@@ -1023,9 +1023,12 @@
       "buyer": "Blerësi",
       "vatId": "Nr. TVSH",
       "buyerReference": "Referenca e blerësit",
+      "allowances": "Zbritje",
+      "charges": "Shtesa",
       "net": "Neto",
       "tax": "TVSH {{rate}}",
       "gross": "Bruto",
+      "prepaid": "Paguar tashmë",
       "reference": "Përshkrimi i pagesës",
       "terms": "Kushtet e pagesës"
     },

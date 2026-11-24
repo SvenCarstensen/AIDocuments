@@ -233,10 +233,13 @@ public class DocumentExport {
         return out.toString();
     }
 
+    private static final java.util.regex.Pattern NUMBER = java.util.regex.Pattern.compile("-?[0-9]+(\\.[0-9]+)?");
+
     static String csvCell(String value) {
         String cell = value;
-        // Formeln nicht ausführen lassen (CSV-Injection): =, +, -, @ am Anfang werden zu Text
-        if (!cell.isEmpty() && "=+-@\t\r".indexOf(cell.charAt(0)) >= 0) {
+        // Formeln nicht ausführen lassen (CSV-Injection): =, +, -, @ am Anfang werden zu Text – nur reine Zahlen wie
+        // „-12.50“ (eine Gutschrift) nicht, sonst rechnete die Tabellenkalkulation nicht mehr mit ihnen
+        if (!cell.isEmpty() && "=+-@\t\r".indexOf(cell.charAt(0)) >= 0 && !NUMBER.matcher(cell).matches()) {
             cell = "'" + cell;
         }
         if (cell.contains(";") || cell.contains("\"") || cell.contains("\n") || cell.contains("\r")) {

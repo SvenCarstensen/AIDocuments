@@ -33,7 +33,8 @@ export function AppShell() {
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="sticky top-0 z-30 border-b border-line bg-surface/85 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-3 px-4 sm:px-6">
+        {/* Auf dem Handy steht die Suche in einer eigenen Zeile – neben Logo und Knöpfen bliebe ihr kaum Platz */}
+        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2.5 sm:h-16 sm:flex-nowrap sm:px-6 sm:py-0">
           <Link to="/documents" className="flex shrink-0 items-center gap-2.5 rounded-lg pr-1">
             <Logo />
             <span className="hidden text-[17px] font-semibold tracking-tight md:block">AIDocuments</span>
@@ -41,7 +42,7 @@ export function AppShell() {
 
           <SearchBox />
 
-          <div className="flex shrink-0 items-center gap-1">
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0">
             <Button
               variant="primary"
               icon={<Upload className="size-4" aria-hidden />}
@@ -230,7 +231,7 @@ function SearchBox() {
       onSubmit={submit}
       role="search"
       className={cx(
-        'mx-auto flex h-11 min-w-0 flex-1 items-center gap-1 rounded-xl border border-line bg-raised pr-1.5 transition-all md:max-w-2xl',
+        'mx-auto flex h-11 min-w-0 flex-1 items-center gap-1 rounded-xl border border-line bg-raised pr-1.5 transition-all max-sm:order-last max-sm:basis-full md:max-w-2xl',
         aiAvailable ? 'pl-1' : 'pl-3.5',
         'focus-within:border-brand focus-within:bg-surface focus-within:ring-3 focus-within:ring-brand/20',
       )}

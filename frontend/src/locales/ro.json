@@ -1047,9 +1047,12 @@
       "buyer": "Cumpărător",
       "vatId": "Cod TVA",
       "buyerReference": "Referința cumpărătorului",
+      "allowances": "Reduceri",
+      "charges": "Suplimente",
       "net": "Net",
       "tax": "TVA {{rate}}",
       "gross": "Brut",
+      "prepaid": "Deja plătit",
       "reference": "Detalii plată",
       "terms": "Condiții de plată"
     },

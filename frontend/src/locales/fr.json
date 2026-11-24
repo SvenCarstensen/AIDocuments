@@ -1047,9 +1047,12 @@
       "buyer": "Client",
       "vatId": "N° TVA",
       "buyerReference": "Référence acheteur",
+      "allowances": "Remises",
+      "charges": "Frais",
       "net": "Montant HT",
       "tax": "TVA {{rate}}",
       "gross": "Montant TTC",
+      "prepaid": "Déjà payé",
       "reference": "Référence de paiement",
       "terms": "Conditions de paiement"
     },

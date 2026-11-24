@@ -1047,9 +1047,12 @@
       "buyer": "Kupac",
       "vatId": "PDV ID",
       "buyerReference": "Referenca kupca",
+      "allowances": "Popusti",
+      "charges": "Doplate",
       "net": "Neto",
       "tax": "PDV {{rate}}",
       "gross": "Bruto",
+      "prepaid": "Već plaćeno",
       "reference": "Opis plaćanja",
       "terms": "Uvjeti plaćanja"
     },

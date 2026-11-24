@@ -1071,9 +1071,12 @@
       "buyer": "Pirkėjas",
       "vatId": "PVM kodas",
       "buyerReference": "Pirkėjo nuoroda",
+      "allowances": "Nuolaidos",
+      "charges": "Antkainiai",
       "net": "Neto",
       "tax": "PVM {{rate}}",
       "gross": "Bruto",
+      "prepaid": "Jau sumokėta",
       "reference": "Mokėjimo paskirtis",
       "terms": "Mokėjimo sąlygos"
     },

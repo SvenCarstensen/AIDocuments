@@ -1023,9 +1023,12 @@
       "buyer": "Buyer",
       "vatId": "VAT ID",
       "buyerReference": "Buyer reference",
+      "allowances": "Allowances",
+      "charges": "Charges",
       "net": "Net",
       "tax": "VAT {{rate}}",
       "gross": "Gross",
+      "prepaid": "Already paid",
       "reference": "Payment reference",
       "terms": "Payment terms"
     },

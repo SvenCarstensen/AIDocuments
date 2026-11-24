@@ -1023,9 +1023,12 @@
       "buyer": "Alıcı",
       "vatId": "KDV No.",
       "buyerReference": "Alıcı referansı",
+      "allowances": "İndirimler",
+      "charges": "Ek ücretler",
       "net": "Net",
       "tax": "KDV {{rate}}",
       "gross": "Brüt",
+      "prepaid": "Zaten ödendi",
       "reference": "Ödeme açıklaması",
       "terms": "Ödeme koşulları"
     },

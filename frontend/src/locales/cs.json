@@ -1071,9 +1071,12 @@
       "buyer": "Odběratel",
       "vatId": "DIČ",
       "buyerReference": "Reference odběratele",
+      "allowances": "Slevy",
+      "charges": "Příplatky",
       "net": "Bez DPH",
       "tax": "DPH {{rate}}",
       "gross": "S DPH",
+      "prepaid": "Již uhrazeno",
       "reference": "Účel platby",
       "terms": "Platební podmínky"
     },

@@ -21,7 +21,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocumentNameDictionary;
+import org.apache.pdfbox.pdmodel.PDEmbeddedFilesNameTreeNode;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.w3c.dom.Element;
@@ -43,7 +47,12 @@ public final class EInvoiceReader {
             "zugferd_invoice.xml");
 
     private static final int MAX_TEXT = 1000;
-    private static final int MAX_EMBEDDED_FILES = 50;
+    /** So viele eingebettete XML-Dateien werden höchstens gelesen … */
+    private static final int MAX_EMBEDDED_FILES = 20;
+    /** … zusammen höchstens so viele Bytes (entpackt) … */
+    private static final long MAX_TOTAL_BYTES = 3L * MAX_XML_BYTES;
+    /** … und so viele Einträge des Namensbaums angesehen. */
+    private static final int MAX_ENTRIES = 1000;
 
     /** Die XML-Datei einer Rechnung samt ihrem Namen im PDF. */
     public record EmbeddedXml(String filename, byte[] content) {
@@ -60,13 +69,8 @@ public final class EInvoiceReader {
 
     /** Die Rechnung aus einem PDF (ZUGFeRD/Factur-X) – {@code null}, wenn keine eingebettete E-Rechnung darin ist. */
     public static Read fromPdf(PDDocument pdf) {
-        for (EmbeddedXml xml : embeddedXmlFiles(pdf)) {
-            EInvoice invoice = parse(xml.content());
-            if (invoice != null) {
-                return new Read(invoice, xml);
-            }
-        }
-        return null;
+        Found found = find(pdf);
+        return found == null ? null : found.read();
     }
 
     /** Wie {@link #fromPdf(PDDocument)}, für eine Datei. */
@@ -76,43 +80,184 @@ public final class EInvoiceReader {
         }
     }
 
-    /** Eingebettete XML-Dateien, die bekannten Rechnungsnamen zuerst. */
-    private static List<EmbeddedXml> embeddedXmlFiles(PDDocument pdf) {
-        List<EmbeddedXml> found = new ArrayList<>();
-        try {
-            PDDocumentNameDictionary names = pdf.getDocumentCatalog().getNames();
-            if (names == null || names.getEmbeddedFiles() == null) {
-                return found;
-            }
-            collect(names.getEmbeddedFiles(), found, 0);
-        } catch (IOException | RuntimeException e) {
-            return found; // ein kaputter Namensbaum macht das PDF nicht unlesbar – nur ohne E-Rechnung
+    /**
+     * Nimmt die eingebettete E-Rechnung aus dem PDF (und nur sie; andere Anhänge bleiben) – für Seiten, die von einer
+     * Rechnung abgetrennt werden. {@code true}, wenn eine darin war.
+     */
+    public static boolean removeFrom(PDDocument pdf) {
+        Found found = find(pdf);
+        if (found == null) {
+            return false;
         }
-        found.sort((a, b) -> Boolean.compare(!known(a.filename()), !known(b.filename())));
+        PDDocumentNameDictionary names = pdf.getDocumentCatalog().getNames();
+        List<Entry> entries = entries(names);
+        if (entries.size() >= MAX_ENTRIES) {
+            return false; // nicht vollständig gelesen – neu aufbauen hieße, Anhänge zu verlieren
+        }
+        Map<String, PDComplexFileSpecification> rest = new java.util.TreeMap<>();
+        for (Entry entry : entries) {
+            if (entry.spec().getCOSObject() != found.spec().getCOSObject()) {
+                rest.put(entry.key(), entry.spec());
+            }
+        }
+        if (rest.isEmpty()) {
+            names.setEmbeddedFiles(null);
+        } else {
+            PDEmbeddedFilesNameTreeNode tree = new PDEmbeddedFilesNameTreeNode();
+            tree.setNames(rest);
+            names.setEmbeddedFiles(tree);
+        }
+        // ZUGFeRD verweist auch im Katalog auf die Datei („Associated Files“)
+        COSBase associated = pdf.getDocumentCatalog().getCOSObject().getDictionaryObject(AF);
+        if (associated instanceof COSArray array) {
+            for (int i = array.size() - 1; i >= 0; i--) {
+                if (array.getObject(i) == found.spec().getCOSObject()) {
+                    array.remove(i);
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Legt eine XML-Rechnung als Anhang in ein PDF (wie bei ZUGFeRD). Bestehende Anhänge bleiben, eine bereits
+     * eingebettete E-Rechnung wird nicht ersetzt (dann {@code false}).
+     */
+    public static boolean attachTo(PDDocument pdf, byte[] xml, String filename) throws IOException {
+        if (find(pdf) != null) {
+            return false;
+        }
+        PDEmbeddedFile file = new PDEmbeddedFile(pdf, new ByteArrayInputStream(xml));
+        file.setSubtype("text/xml");
+        file.setSize(xml.length);
+        java.util.Calendar now = java.util.GregorianCalendar.getInstance();
+        file.setCreationDate(now);
+        file.setModDate(now);
+        PDComplexFileSpecification spec = new PDComplexFileSpecification();
+        spec.setFile(filename);
+        spec.setFileUnicode(filename);
+        spec.setEmbeddedFile(file);
+        spec.setEmbeddedFileUnicode(file);
+        spec.getCOSObject().setName(COSName.getPDFName("AFRelationship"), "Alternative");
+
+        PDDocumentNameDictionary names = pdf.getDocumentCatalog().getNames();
+        if (names == null) {
+            names = new PDDocumentNameDictionary(pdf.getDocumentCatalog());
+        }
+        List<Entry> entries = entries(names);
+        if (entries.size() >= MAX_ENTRIES) {
+            return false;
+        }
+        Map<String, PDComplexFileSpecification> all = new java.util.TreeMap<>();
+        for (Entry entry : entries) {
+            all.put(entry.key(), entry.spec());
+        }
+        String key = filename;
+        for (int i = 2; all.containsKey(key); i++) {
+            key = i + "-" + filename;
+        }
+        all.put(key, spec);
+        PDEmbeddedFilesNameTreeNode tree = new PDEmbeddedFilesNameTreeNode();
+        tree.setNames(all);
+        names.setEmbeddedFiles(tree);
+        pdf.getDocumentCatalog().setNames(names);
+        COSBase associated = pdf.getDocumentCatalog().getCOSObject().getDictionaryObject(AF);
+        COSArray array = associated instanceof COSArray existing ? existing : new COSArray();
+        array.add(spec);
+        pdf.getDocumentCatalog().getCOSObject().setItem(AF, array);
+        return true;
+    }
+
+    private static final COSName AF = COSName.getPDFName("AF");
+
+    /** Ein Eintrag im Namensbaum der eingebetteten Dateien. */
+    private record Entry(String key, String name, PDComplexFileSpecification spec) {
+    }
+
+    /** Die gefundene Rechnung und der Eintrag, in dem sie liegt. */
+    private record Found(Read read, PDComplexFileSpecification spec) {
+    }
+
+    /**
+     * Sucht die E-Rechnung unter den eingebetteten XML-Dateien, die bekannten Rechnungsnamen zuerst. Gelesen wird Datei
+     * für Datei, bis eine Rechnung gefunden ist – höchstens {@link #MAX_EMBEDDED_FILES} und zusammen höchstens
+     * {@link #MAX_TOTAL_BYTES}: So bleibt auch ein präpariertes PDF mit Hunderten Anhängen harmlos.
+     */
+    private static Found find(PDDocument pdf) {
+        List<Entry> candidates = new ArrayList<>();
+        try {
+            for (Entry entry : entries(pdf.getDocumentCatalog().getNames())) {
+                if (entry.name().toLowerCase(Locale.ROOT).endsWith(".xml")) {
+                    candidates.add(entry);
+                }
+            }
+        } catch (RuntimeException e) {
+            return null; // ein kaputter Namensbaum macht das PDF nicht unlesbar – nur ohne E-Rechnung
+        }
+        candidates.sort((a, b) -> Boolean.compare(!known(a.name()), !known(b.name())));
+        long budget = MAX_TOTAL_BYTES;
+        int read = 0;
+        for (Entry candidate : candidates) {
+            if (read >= MAX_EMBEDDED_FILES || budget <= 0) {
+                break;
+            }
+            PDEmbeddedFile file = embedded(candidate.spec());
+            if (file == null) {
+                continue;
+            }
+            read++;
+            int limit = (int) Math.min(MAX_XML_BYTES, budget);
+            byte[] content;
+            try {
+                content = readLimited(file, limit);
+            } catch (IOException | RuntimeException e) {
+                continue;
+            }
+            if (content == null) {
+                budget -= limit; // zu groß für eine Rechnung
+                continue;
+            }
+            budget -= content.length;
+            EInvoice invoice = parse(content);
+            if (invoice != null) {
+                return new Found(new Read(invoice, new EmbeddedXml(candidate.name(), content)), candidate.spec());
+            }
+        }
+        return null;
+    }
+
+    /** Alle Einträge im Namensbaum (Dateiname aus der Dateiangabe, sonst der Schlüssel), höchstens {@link #MAX_ENTRIES}. */
+    private static List<Entry> entries(PDDocumentNameDictionary names) {
+        List<Entry> found = new ArrayList<>();
+        if (names == null) {
+            return found;
+        }
+        try {
+            PDEmbeddedFilesNameTreeNode tree = names.getEmbeddedFiles();
+            if (tree != null) {
+                collect(tree, found, 0);
+            }
+        } catch (IOException e) {
+            throw new java.io.UncheckedIOException(e);
+        }
         return found;
     }
 
     private static void collect(org.apache.pdfbox.pdmodel.common.PDNameTreeNode<PDComplexFileSpecification> node,
-                                List<EmbeddedXml> found, int depth)
-            throws IOException {
-        if (depth > 10 || found.size() >= MAX_EMBEDDED_FILES) {
+                                List<Entry> found, int depth) throws IOException {
+        if (depth > 10 || found.size() >= MAX_ENTRIES) {
             return;
         }
         Map<String, PDComplexFileSpecification> files = node.getNames();
         if (files != null) {
             for (Map.Entry<String, PDComplexFileSpecification> entry : files.entrySet()) {
+                if (found.size() >= MAX_ENTRIES) {
+                    return;
+                }
                 PDComplexFileSpecification spec = entry.getValue();
-                if (spec == null) {
-                    continue;
-                }
-                String name = spec.getFilename() != null ? spec.getFilename() : entry.getKey();
-                PDEmbeddedFile file = embedded(spec);
-                if (name == null || file == null || !name.toLowerCase(Locale.ROOT).endsWith(".xml")) {
-                    continue;
-                }
-                byte[] content = readLimited(file);
-                if (content != null) {
-                    found.add(new EmbeddedXml(name, content));
+                if (spec != null && entry.getKey() != null) {
+                    String name = spec.getFilename() != null ? spec.getFilename() : entry.getKey();
+                    found.add(new Entry(entry.getKey(), name, spec));
                 }
             }
         }
@@ -133,15 +278,16 @@ public final class EInvoiceReader {
         return null;
     }
 
-    private static byte[] readLimited(PDEmbeddedFile file) throws IOException {
+    /** Der Inhalt, wenn er höchstens {@code limit} Bytes groß ist – sonst {@code null}. */
+    private static byte[] readLimited(PDEmbeddedFile file, int limit) throws IOException {
         try (InputStream in = file.createInputStream()) {
-            byte[] content = in.readNBytes(MAX_XML_BYTES + 1);
-            return content.length > MAX_XML_BYTES ? null : content;
+            byte[] content = in.readNBytes(limit + 1);
+            return content.length > limit ? null : content;
         }
     }
 
     private static boolean known(String filename) {
-        return KNOWN_NAMES.contains(filename.toLowerCase(Locale.ROOT));
+        return filename != null && KNOWN_NAMES.contains(filename.toLowerCase(Locale.ROOT));
     }
 
     // ---- XML ----
@@ -231,13 +377,16 @@ public final class EInvoiceReader {
                 due = ciiDate(child(term, "DueDateDateTime"));
             }
             String description = text(term, "Description");
-            if (description != null) {
+            if (description != null && terms.size() < 20) {
                 terms.add(description);
             }
         }
 
         List<Tax> taxes = new ArrayList<>();
         for (Element tax : children(settlement, "ApplicableTradeTax")) {
+            if (taxes.size() >= EInvoice.MAX_TAXES) {
+                break;
+            }
             taxes.add(new Tax(text(tax, "CategoryCode"), amount(tax, "RateApplicablePercent"),
                     amount(tax, "BasisAmount"), amount(tax, "CalculatedAmount")));
         }
@@ -271,9 +420,13 @@ public final class EInvoiceReader {
                 ciiParty(child(agreement, "SellerTradeParty")),
                 ciiParty(child(agreement, "BuyerTradeParty")),
                 text(agreement, "BuyerReference"),
+                amount(totals, "LineTotalAmount"),
+                amount(totals, "AllowanceTotalAmount"),
+                amount(totals, "ChargeTotalAmount"),
                 amount(totals, "TaxBasisTotalAmount"),
                 amountIn(totals, "TaxTotalAmount", currency),
                 amount(totals, "GrandTotalAmount"),
+                amount(totals, "TotalPrepaidAmount"),
                 amount(totals, "DuePayableAmount"),
                 iban(account == null ? null : first(text(account, "IBANID"), text(account, "ProprietaryID"))),
                 text(child(means, "PayeeSpecifiedCreditorFinancialInstitution"), "BICID"),
@@ -348,7 +501,7 @@ public final class EInvoiceReader {
         List<String> terms = new ArrayList<>();
         for (Element term : children(root, "PaymentTerms")) {
             String note = text(term, "Note");
-            if (note != null) {
+            if (note != null && terms.size() < 20) {
                 terms.add(note);
             }
         }
@@ -363,6 +516,9 @@ public final class EInvoiceReader {
             }
             taxAmount = decimal(amount);
             for (Element subtotal : children(total, "TaxSubtotal")) {
+                if (taxes.size() >= EInvoice.MAX_TAXES) {
+                    break;
+                }
                 Element category = child(subtotal, "TaxCategory");
                 taxes.add(new Tax(text(category, "ID"), amount(category, "Percent"), amount(subtotal, "TaxableAmount"),
                         amount(subtotal, "TaxAmount")));
@@ -392,9 +548,13 @@ public final class EInvoiceReader {
                 ublParty(child(child(root, "AccountingSupplierParty"), "Party")),
                 ublParty(child(child(root, "AccountingCustomerParty"), "Party")),
                 text(root, "BuyerReference"),
+                amount(totals, "LineExtensionAmount"),
+                amount(totals, "AllowanceTotalAmount"),
+                amount(totals, "ChargeTotalAmount"),
                 amount(totals, "TaxExclusiveAmount"),
                 taxAmount,
                 amount(totals, "TaxInclusiveAmount"),
+                amount(totals, "PrepaidAmount"),
                 amount(totals, "PayableAmount"),
                 iban(text(account, "ID")),
                 text(child(account, "FinancialInstitutionBranch"), "ID"),

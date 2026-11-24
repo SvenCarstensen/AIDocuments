@@ -1023,9 +1023,12 @@
       "buyer": "Kaupandi",
       "vatId": "VSK-númer",
       "buyerReference": "Tilvísun kaupanda",
+      "allowances": "Afslættir",
+      "charges": "Álög",
       "net": "Nettó",
       "tax": "VSK {{rate}}",
       "gross": "Brúttó",
+      "prepaid": "Þegar greitt",
       "reference": "Skýring greiðslu",
       "terms": "Greiðsluskilmálar"
     },

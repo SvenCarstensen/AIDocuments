@@ -2671,6 +2671,151 @@ class ApplicationFlowTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail").value("This document does not contain an e-invoice."));
 
+        // ein gewöhnliches PDF und die XRechnung dazu, zusammen hochgeladen: ein Dokument, die XML-Datei im PDF –
+        // und das PDF des Absenders bleibt Byte für Byte erhalten
+        byte[] plainPdf = pdf("Stadtwerke Musterstadt GmbH", "Rechnung Nr. RE-2026-0999");
+        byte[] pairXml = new String(cii, java.nio.charset.StandardCharsets.UTF_8).replace("RE-2026-004711", "RE-2026-0999")
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        MvcResult pair = mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", "rechnung.pdf", "application/pdf", plainPdf))
+                        .file(new MockMultipartFile("files", "rechnung.xml", "application/xml", pairXml))
+                        .with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED"))
+                .andExpect(jsonPath("$[1].outcome").value("IGNORED")).andReturn();
+        String pairId = jsonValue(pair, "$[0].documentId");
+        assertThat(jsonValue(pair, "$[1].documentId")).isEqualTo(pairId);
+        awaitProcessed((int) documents.count());
+        mvc.perform(get("/api/documents/" + pairId).session(adminSession))
+                .andExpect(jsonPath("$.originalFilename").value("rechnung.pdf"))
+                .andExpect(jsonPath("$.eInvoice.number").value("RE-2026-0999"))
+                .andExpect(jsonPath("$.eInvoice.prepaidAmount").value(50.00));
+        byte[] stored = file("/api/documents/" + pairId + "/file");
+        assertThat(java.util.Arrays.copyOf(stored, plainPdf.length)).isEqualTo(plainPdf);
+        assertThat(mvc.perform(get("/api/documents/" + pairId + "/e-invoice").session(adminSession)).andReturn()
+                .getResponse().getContentAsByteArray()).isEqualTo(pairXml);
+        // dasselbe PDF noch einmal allein: schon da
+        mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files", "nochmal.pdf", "application/pdf",
+                        plainPdf)).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("DUPLICATE"));
+        // ein PDF, das die Rechnungsnummer nicht nennt, gehört nicht dazu: zwei Dokumente
+        byte[] otherXml = new String(cii, java.nio.charset.StandardCharsets.UTF_8).replace("RE-2026-004711", "RE-2026-1001")
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        mvc.perform(multipart("/api/documents")
+                        .file(new MockMultipartFile("files", "agb.pdf", "application/pdf", pdf("Allgemeine Geschäftsbedingungen")))
+                        .file(new MockMultipartFile("files", "RE-2026-1001.xml", "application/xml", otherXml))
+                        .with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED"))
+                .andExpect(jsonPath("$[1].outcome").value("CREATED"));
+
+        // erst die XML-Datei, dann das ZUGFeRD-PDF derselben Rechnung: ebenfalls ein Duplikat
+        byte[] laterXml = new String(cii, java.nio.charset.StandardCharsets.UTF_8).replace("RE-2026-004711", "RE-2026-1002")
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        String laterId = jsonValue(mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files",
+                        "RE-2026-1002.xml", "application/xml", laterXml)).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        Path laterPdf = Files.createTempFile(dataDir, "zugferd", ".pdf");
+        new de.aidocuments.einvoice.EInvoicePdf(de.aidocuments.i18n.TestMessages.create()).render(
+                de.aidocuments.einvoice.EInvoiceReader.parse(laterXml), laterXml, "factur-x.xml", Locale.GERMAN, laterPdf);
+        mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files", "RE-2026-1002.pdf",
+                        "application/pdf", Files.readAllBytes(laterPdf))).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("DUPLICATE"))
+                .andExpect(jsonPath("$[0].documentId").value(laterId));
+        awaitProcessed((int) documents.count());
+
+        // eine Rechnung mit angehängten Seiten trennen: Der abgetrennte Teil ist keine zweite Rechnung
+        byte[] splitXml = new String(cii, java.nio.charset.StandardCharsets.UTF_8).replace("RE-2026-004711", "RE-2026-1003")
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        byte[] withAttachment;
+        try (PDDocument doc = org.apache.pdfbox.Loader.loadPDF(pages("Rechnung RE-2026-1003", "Mietvertrag Seite 1",
+                "Mietvertrag Seite 2")); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            de.aidocuments.einvoice.EInvoiceReader.attachTo(doc, splitXml, "factur-x.xml");
+            doc.save(out);
+            withAttachment = out.toByteArray();
+        }
+        String invoiceId = jsonValue(mvc.perform(multipart("/api/documents").file(new MockMultipartFile("files",
+                        "rechnung-mit-vertrag.pdf", "application/pdf", withAttachment)).with(csrf()).session(adminSession))
+                .andExpect(jsonPath("$[0].outcome").value("CREATED")).andReturn(), "$[0].documentId");
+        awaitProcessed((int) documents.count());
+        String rest = jsonValue(mvc.perform(post("/api/documents/" + invoiceId + "/split").with(csrf())
+                        .session(adminSession).contentType(MediaType.APPLICATION_JSON).content("{\"fromPage\":2}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.original.eInvoice.number").value("RE-2026-1003")).andReturn(), "$.createdId");
+        awaitProcessed((int) documents.count());
+        mvc.perform(get("/api/documents/" + rest).session(adminSession))
+                .andExpect(jsonPath("$.pageCount").value(2))
+                .andExpect(jsonPath("$.eInvoice").doesNotExist())
+                .andExpect(jsonPath("$.category").value(org.hamcrest.Matchers.not("Rechnung")));
+        mvc.perform(get("/api/documents/" + rest + "/e-invoice").session(adminSession)).andExpect(status().isNotFound());
+
+        // eine E-Rechnung an ein anderes Dokument anhängen geht nicht (ihre XML-Datei käme mit) – umgekehrt schon
+        mvc.perform(post("/api/documents/" + rest + "/merge").with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"documentIds\":[\"" + invoiceId + "\"]}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.detail").value(org.hamcrest.Matchers.containsString("ist eine E-Rechnung")));
+        mvc.perform(post("/api/documents/" + invoiceId + "/merge").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"documentIds\":[\"" + rest + "\"]}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.pageCount").value(3))
+                .andExpect(jsonPath("$.eInvoice.number").value("RE-2026-1003"));
+    }
+
+    @Test
+    @Order(31)
+    void aPdfAndItsXRechnungArrivingTogetherBecomeOneDocument() throws Exception {
+        String cii = new String(einvoice("xrechnung-cii.xml"), java.nio.charset.StandardCharsets.UTF_8);
+
+        // per E-Mail: das PDF des Absenders und die XRechnung dazu
+        GreenMailUser mailbox = greenMail.setUser("rechnungen@example.test", "rechnungen@example.test",
+                "imap-test-secret");
+        MimeMessage mail = mailWithPdf("Ihre Rechnung", "Rechnung_2001.pdf",
+                pdf("Stadtwerke Musterstadt GmbH", "Rechnung RE-2026-2001"));
+        MimeMultipart parts = (MimeMultipart) mail.getContent();
+        MimeBodyPart xml = new MimeBodyPart();
+        xml.setDataHandler(new DataHandler(new ByteArrayDataSource(cii.replace("RE-2026-004711", "RE-2026-2001")
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8), "application/xml")));
+        xml.setFileName("RE-2026-2001.xml");
+        parts.addBodyPart(xml);
+        mail.setContent(parts);
+        mail.saveChanges();
+        mailbox.deliver(mail);
+        String accountId = jsonValue(mvc.perform(post("/api/mail-accounts").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {"name":"Rechnungen","host":"127.0.0.1","port":%d,"security":"NONE",
+                                 "username":"rechnungen@example.test","password":"imap-test-secret","folder":"INBOX",
+                                 "enabled":false}""".formatted(greenMail.getImap().getPort())))
+                .andExpect(status().isCreated()).andReturn(), "$.id");
+        long before = documents.count();
+        mailSync.sync(accountId);
+        awaitProcessed((int) before + 1);
+        Document fromMail = documents.findAll().stream().filter(doc -> accountId.equals(doc.getMailAccountId()))
+                .collect(java.util.stream.Collectors.collectingAndThen(java.util.stream.Collectors.toList(),
+                        list -> { assertThat(list).hasSize(1); return list.getFirst(); }));
+        assertThat(fromMail.getOriginalFilename()).isEqualTo("Rechnung_2001.pdf");
+        assertThat(fromMail.getEInvoice().number()).isEqualTo("RE-2026-2001");
+
+        // im Eingangsordner: gleicher Name, einmal .pdf und einmal .xml
+        mvc.perform(put("/api/settings/import").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"intervalMinutes\":15,\"folderEnabled\":true,\"folderPath\":\"%s\",\"folderMode\":\"MOVE\"}"
+                                .formatted(inbox)))
+                .andExpect(status().isOk());
+        Path pdfFile = inbox.resolve("Rechnung 2002.pdf");
+        Path xmlFile = inbox.resolve("Rechnung 2002.XML");
+        Files.write(pdfFile, pdf("Stadtwerke Musterstadt GmbH", "Rechnung RE-2026-2002"));
+        Files.writeString(xmlFile, cii.replace("RE-2026-004711", "RE-2026-2002"));
+        FileTime settled = FileTime.from(Instant.now().minusSeconds(60));
+        Files.setLastModifiedTime(pdfFile, settled);
+        Files.setLastModifiedTime(xmlFile, settled);
+        before = documents.count();
+        folderImport.scan();
+        awaitProcessed((int) before + 1);
+        assertThat(documents.findAll().stream().filter(doc -> doc.getEInvoice() != null
+                && "RE-2026-2002".equals(doc.getEInvoice().number())).map(Document::getOriginalFilename))
+                .containsExactly("Rechnung 2002.pdf");
+        assertThat(pdfFile).doesNotExist();
+        assertThat(xmlFile).doesNotExist();
+        assertThat(inbox.resolve("importiert").resolve("Rechnung 2002.XML")).exists();
     }
 
     private static byte[] einvoice(String name) throws IOException {

@@ -1047,9 +1047,12 @@
       "buyer": "Cliente",
       "vatId": "Partita IVA",
       "buyerReference": "Riferimento acquirente",
+      "allowances": "Sconti",
+      "charges": "Maggiorazioni",
       "net": "Imponibile",
       "tax": "IVA {{rate}}",
       "gross": "Totale",
+      "prepaid": "Già pagato",
       "reference": "Causale",
       "terms": "Condizioni di pagamento"
     },

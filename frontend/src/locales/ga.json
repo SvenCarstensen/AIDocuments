@@ -1095,9 +1095,12 @@
       "buyer": "Ceannaitheoir",
       "vatId": "Uimhir CBL",
       "buyerReference": "Tagairt an cheannaitheora",
+      "allowances": "Lascainí",
+      "charges": "Táillí breise",
       "net": "Glan",
       "tax": "CBL {{rate}}",
       "gross": "Comhlán",
+      "prepaid": "Íoctha cheana",
       "reference": "Tagairt íocaíochta",
       "terms": "Téarmaí íocaíochta"
     },

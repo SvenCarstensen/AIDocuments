@@ -222,9 +222,13 @@ export interface EInvoice {
   seller: EInvoiceParty | null
   buyer: EInvoiceParty | null
   buyerReference: string | null
+  lineTotal: number | null
+  allowanceTotal: number | null
+  chargeTotal: number | null
   netAmount: number | null
   taxAmount: number | null
   grossAmount: number | null
+  prepaidAmount: number | null
   amountDue: number | null
   iban: string | null
   bic: string | null

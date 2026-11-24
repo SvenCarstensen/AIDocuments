@@ -1023,9 +1023,12 @@
       "buyer": "Køber",
       "vatId": "Momsnr.",
       "buyerReference": "Købers reference",
+      "allowances": "Rabatter",
+      "charges": "Tillæg",
       "net": "Netto",
       "tax": "Moms {{rate}}",
       "gross": "Brutto",
+      "prepaid": "Allerede betalt",
       "reference": "Betalingsreference",
       "terms": "Betalingsbetingelser"
     },

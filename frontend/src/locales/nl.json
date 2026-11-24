@@ -1023,9 +1023,12 @@
       "buyer": "Klant",
       "vatId": "Btw-nummer",
       "buyerReference": "Referentie koper",
+      "allowances": "Kortingen",
+      "charges": "Toeslagen",
       "net": "Netto",
       "tax": "Btw {{rate}}",
       "gross": "Bruto",
+      "prepaid": "Al betaald",
       "reference": "Betalingskenmerk",
       "terms": "Betalingsvoorwaarden"
     },

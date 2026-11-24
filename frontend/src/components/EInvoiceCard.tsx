@@ -196,6 +196,8 @@ export function EInvoiceCard({ doc }: { doc: Doc }) {
           </Row>
         )}
         {invoice.buyerReference && <Row label={t('einvoice.fields.buyerReference')}>{invoice.buyerReference}</Row>}
+        {!!invoice.allowanceTotal && <Row label={t('einvoice.fields.allowances')}>{money(-invoice.allowanceTotal)}</Row>}
+        {!!invoice.chargeTotal && <Row label={t('einvoice.fields.charges')}>{money(invoice.chargeTotal)}</Row>}
         {invoice.netAmount != null && <Row label={t('einvoice.fields.net')}>{money(invoice.netAmount)}</Row>}
         {taxes.length > 0
           ? taxes.map((tax, index) => (
@@ -205,6 +207,7 @@ export function EInvoiceCard({ doc }: { doc: Doc }) {
             ))
           : invoice.taxAmount != null && <Row label={t('einvoice.fields.tax', { rate: '' }).trim()}>{money(invoice.taxAmount)}</Row>}
         {invoice.grossAmount != null && <Row label={t('einvoice.fields.gross')}>{money(invoice.grossAmount)}</Row>}
+        {!!invoice.prepaidAmount && <Row label={t('einvoice.fields.prepaid')}>{money(-invoice.prepaidAmount)}</Row>}
         {invoice.iban && (
           <Row label="IBAN">
             <CopyValue label="IBAN" value={invoice.iban} />

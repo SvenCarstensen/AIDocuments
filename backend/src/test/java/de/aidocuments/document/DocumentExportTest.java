@@ -13,6 +13,10 @@ class DocumentExportTest {
         assertThat(DocumentExport.csvCell("a;b")).isEqualTo("\"a;b\"");
         assertThat(DocumentExport.csvCell("Zeile 1\nZeile 2")).isEqualTo("\"Zeile 1\nZeile 2\"");
         assertThat(DocumentExport.csvCell("Stromrechnung")).isEqualTo("Stromrechnung");
+        // eine Gutschrift bleibt eine Zahl, eine Rechnung damit nicht
+        assertThat(DocumentExport.csvCell("-12.50")).isEqualTo("-12.50");
+        assertThat(DocumentExport.csvCell("-1+2")).isEqualTo("'-1+2");
+        assertThat(DocumentExport.csvCell("+49 461 123")).isEqualTo("'+49 461 123");
     }
 
     @Test

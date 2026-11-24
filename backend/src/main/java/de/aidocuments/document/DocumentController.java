@@ -373,8 +373,34 @@ public class DocumentController {
         }
         List<UploadResultDto> results = new ArrayList<>();
         boolean storageFull = false;
-        for (MultipartFile file : files) {
+        // ein PDF und eine XRechnung zusammen hochgeladen: meist dieselbe Rechnung – dann ein Dokument
+        List<String> names = files.stream().map(MultipartFile::getOriginalFilename).toList();
+        int[] pair = DocumentService.invoicePair(names);
+        DocumentService.IngestResult paired = null;
+        if (pair != null) {
+            MultipartFile pdf = files.get(pair[0]);
+            MultipartFile xml = files.get(pair[1]);
+            try {
+                paired = service.ingestPair(pdf::getInputStream, names.get(pair[0]), xml::getInputStream,
+                        names.get(pair[1]), DocumentSource.UPLOAD, null, areaId);
+            } catch (IOException | FileStorage.StorageFullException e) {
+                paired = null; // dann einzeln – bei voller Platte lehnt die Schleife unten alle ab
+                storageFull = e instanceof FileStorage.StorageFullException;
+            }
+        }
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
             String name = file.getOriginalFilename() != null ? file.getOriginalFilename() : "Dokument.pdf";
+            if (paired != null && (i == pair[0] || i == pair[1])) {
+                // die XML-Datei steckt jetzt im PDF: nur einmal zählen
+                DocumentService.IngestResult result = i == pair[0] ? paired
+                        : new DocumentService.IngestResult(DocumentService.Outcome.IGNORED, paired.document(), null);
+                results.add(new UploadResultDto(name, result.outcome().name(),
+                        result.document() != null && areaAccess.canSee(result.document().getAreaId())
+                                ? result.document().getId() : null,
+                        result.message() != null ? messages.render(result.message()) : null));
+                continue;
+            }
             if (storageFull) {
                 results.add(new UploadResultDto(name, DocumentService.Outcome.REJECTED.name(), null,
                         messages.get("upload.storeFailed")));

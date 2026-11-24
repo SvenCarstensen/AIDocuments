@@ -1047,9 +1047,12 @@
       "buyer": "Destinatari",
       "vatId": "NIF-IVA",
       "buyerReference": "Referència del comprador",
+      "allowances": "Descomptes",
+      "charges": "Recàrrecs",
       "net": "Base imposable",
       "tax": "IVA {{rate}}",
       "gross": "Total",
+      "prepaid": "Ja pagat",
       "reference": "Concepte",
       "terms": "Condicions de pagament"
     },

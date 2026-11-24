@@ -120,6 +120,8 @@ public class DocumentPages {
                 pdf.getPages().forEach(all::add);
                 // erst der hintere Teil (vorne entfernen), dann der vordere (hinten entfernen)
                 all.subList(0, fromPage - 1).forEach(pdf.getPages()::remove);
+                // die E-Rechnung gehört zum vorderen Teil – sonst würde der abgetrennte zu einer zweiten Rechnung
+                de.aidocuments.einvoice.EInvoiceReader.removeFrom(pdf);
                 save(pdf, second);
             }
             try (PDDocument pdf = open(doc)) {
@@ -152,7 +154,8 @@ public class DocumentPages {
 
     /**
      * Hängt die Seiten der anderen Dokumente in dieser Reihenfolge an. Die angehängten Dokumente kommen danach in den
-     * Papierkorb – das verlangt das Recht zum Löschen, und keines darf unter einer Aufbewahrungsfrist stehen.
+     * Papierkorb – das verlangt das Recht zum Löschen, und keines darf unter einer Aufbewahrungsfrist stehen oder eine
+     * E-Rechnung sein.
      */
     public DocumentDto merge(String id, List<String> otherIds) throws IOException {
         Document doc = editable(id);
@@ -178,6 +181,11 @@ public class DocumentPages {
                     for (Document other : others) {
                         PDDocument source = open(other);
                         opened.add(source);
+                        if (de.aidocuments.einvoice.EInvoiceReader.fromPdf(source) != null) {
+                            // ihre XML-Datei käme mit und machte das Ziel zur Rechnung – oder ginge mit dem
+                            // Papierkorb verloren; umgekehrt (an die Rechnung anhängen) geht es
+                            throw ApiException.conflict("error.pages.mergeEInvoice", other.getTitle());
+                        }
                         merger.appendDocument(target, source);
                     }
                     if (target.getNumberOfPages() > MAX_PAGES) {

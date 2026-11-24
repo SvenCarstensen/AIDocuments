@@ -1071,9 +1071,12 @@
       "buyer": "Nabywca",
       "vatId": "NIP UE",
       "buyerReference": "Referencja nabywcy",
+      "allowances": "Rabaty",
+      "charges": "Dopłaty",
       "net": "Netto",
       "tax": "VAT {{rate}}",
       "gross": "Brutto",
+      "prepaid": "Już zapłacono",
       "reference": "Tytuł przelewu",
       "terms": "Warunki płatności"
     },

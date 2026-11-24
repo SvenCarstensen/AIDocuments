@@ -129,18 +129,20 @@ public class DocumentService {
             }
             de.aidocuments.einvoice.EInvoice early = isPdf ? embeddedInvoice(received.tempFile()) : null;
             if (xml) {
-                de.aidocuments.einvoice.EInvoice invoice = de.aidocuments.einvoice.EInvoiceReader.fromXml(
-                        received.tempFile());
+                early = de.aidocuments.einvoice.EInvoiceReader.fromXml(received.tempFile());
+            }
+            Document sameInvoice = sameInvoice(early, areaId);
+            if (sameInvoice != null) {
+                // dieselbe Rechnung kam schon – als ZUGFeRD-PDF und XML-Datei in derselben E-Mail, oder in anderer
+                // Reihenfolge (erst die XML-Datei, dann das PDF)
+                return new IngestResult(Outcome.DUPLICATE, sameInvoice, Msg.of("upload.duplicate"));
+            }
+            if (xml) {
+                de.aidocuments.einvoice.EInvoice invoice = early;
                 if (invoice == null) {
                     // andere XML-Dateien in E-Mails (Signaturen, Formulardaten …) sind kein Fehler
                     return source == DocumentSource.MAIL ? new IngestResult(Outcome.IGNORED, null, null)
                             : new IngestResult(Outcome.REJECTED, null, Msg.of("upload.xmlNotEInvoice"));
-                }
-                String key = invoice.identity();
-                Document same = key == null ? null : documents.findByEInvoiceKey(key).orElse(null);
-                if (same != null) {
-                    // dieselbe Rechnung kam schon – meist als ZUGFeRD-PDF in derselben E-Mail
-                    return new IngestResult(Outcome.DUPLICATE, same, Msg.of("upload.duplicate"));
                 }
                 early = invoice;
                 Path converted = storage.tempSibling(received, ".pdf");
@@ -172,6 +174,129 @@ public class DocumentService {
                 storage.discard(pdf);
             }
         }
+    }
+
+    /** Dieselbe E-Rechnung im selben Bereich (siehe {@code EInvoice.identity}) – oder {@code null}. */
+    private Document sameInvoice(de.aidocuments.einvoice.EInvoice invoice, String areaId) {
+        String key = invoice == null ? null : invoice.identity();
+        return key == null ? null : documents.findByEInvoiceKey(key, areaId).orElse(null);
+    }
+
+    /** Öffnet eine Datei (erneut) zum Lesen. */
+    @FunctionalInterface
+    public interface Opener {
+        InputStream open() throws IOException;
+    }
+
+    /**
+     * Ein PDF und eine XML-Rechnung, die zusammen kamen (dieselbe E-Mail, derselbe Upload, derselbe Name im
+     * Eingangsordner). Ist das PDF dieselbe Rechnung – es trägt noch keine eingebettete und nennt ihre Nummer –, kommt
+     * die XML-Datei als Anhang hinein: ein Dokument, das aussieht wie vom Absender und die exakten Angaben trägt. Das
+     * PDF bleibt dabei Byte für Byte erhalten (der Anhang wird angefügt, nichts umgeschrieben).
+     *
+     * @return {@code null}, wenn beides nicht zusammengehört – dann nimmt der Aufrufer die Dateien einzeln auf
+     */
+    public IngestResult ingestPair(Opener pdfFile, String pdfName, Opener xmlFile, String xmlName,
+                                   DocumentSource source, MailOrigin origin, String areaId) throws IOException {
+        FileStorage.Received xml = null;
+        FileStorage.Received pdf = null;
+        Path attached = null;
+        try {
+            try (InputStream in = xmlFile.open()) {
+                xml = storage.receive(in);
+            } catch (FileStorage.TooLargeException e) {
+                return null;
+            }
+            if (xml.size() == 0 || xml.size() > de.aidocuments.einvoice.EInvoiceReader.MAX_XML_BYTES
+                    || !de.aidocuments.einvoice.EInvoiceReader.looksLikeXml(xml.tempFile())) {
+                return null;
+            }
+            byte[] xmlBytes = Files.readAllBytes(xml.tempFile());
+            de.aidocuments.einvoice.EInvoice invoice = de.aidocuments.einvoice.EInvoiceReader.parse(xmlBytes);
+            if (invoice == null || invoice.number() == null) {
+                return null;
+            }
+            try (InputStream in = pdfFile.open()) {
+                pdf = storage.receive(in);
+            } catch (FileStorage.TooLargeException e) {
+                return null;
+            }
+            if (pdf.size() == 0 || !storage.looksLikePdf(pdf) || documents.findBySha256(pdf.sha256()).isPresent()) {
+                return null; // ein schon vorhandenes PDF meldet die Aufnahme einzeln als Duplikat
+            }
+            attached = storage.tempSibling(pdf, ".pdf");
+            try (org.apache.pdfbox.pdmodel.PDDocument document = PdfExtractor.load(pdf.tempFile())) {
+                if (document.isEncrypted() || !mentions(document, invoice.number())
+                        || !de.aidocuments.einvoice.EInvoiceReader.attachTo(document, xmlBytes,
+                        xmlName(sanitizeFilename(xmlName)))) {
+                    return null;
+                }
+                try (java.io.OutputStream out = Files.newOutputStream(attached)) {
+                    document.saveIncremental(out);
+                }
+            } catch (IOException | RuntimeException e) {
+                log.warn("XML-Rechnung ließ sich nicht an {} anhängen: {}", pdfName, e.toString());
+                return null;
+            }
+            Document same = sameInvoice(invoice, areaId);
+            if (same != null) {
+                return new IngestResult(Outcome.DUPLICATE, same, Msg.of("upload.duplicate"));
+            }
+            // die Prüfsumme bleibt die des PDFs: Kommt es noch einmal allein, ist es ein Duplikat
+            FileStorage.Received combined = storage.converted(pdf, attached);
+            attached = null;
+            storage.discard(pdf);
+            pdf = combined;
+            log.info("XML-Rechnung {} an {} angehängt", xmlName, pdfName);
+            return store(combined, sanitizeFilename(pdfName), source, origin, areaId, null, invoice);
+        } finally {
+            if (xml != null) {
+                storage.discard(xml);
+            }
+            if (pdf != null) {
+                storage.discard(pdf);
+            }
+            if (attached != null) {
+                Files.deleteIfExists(attached);
+            }
+        }
+    }
+
+    /** Ob die Rechnungsnummer im Text der ersten Seiten steht (Leerraum und Groß-/Kleinschreibung egal). */
+    private static boolean mentions(org.apache.pdfbox.pdmodel.PDDocument pdf, String number) {
+        try {
+            org.apache.pdfbox.text.PDFTextStripper stripper = new org.apache.pdfbox.text.PDFTextStripper();
+            stripper.setEndPage(Math.min(pdf.getNumberOfPages(), 10));
+            String text = stripper.getText(pdf).replaceAll("\\s+", "").toLowerCase(java.util.Locale.ROOT);
+            String wanted = number.replaceAll("\\s+", "").toLowerCase(java.util.Locale.ROOT);
+            return !wanted.isEmpty() && text.contains(wanted);
+        } catch (IOException | RuntimeException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Unter mehreren Dateien genau ein PDF und genau eine XML-Datei (nach Dateiendung)? Dann ihre Stellen
+     * {@code [pdf, xml]}, sonst {@code null} – bei mehr Dateien wäre nicht klar, welche zusammengehören.
+     */
+    public static int[] invoicePair(List<String> filenames) {
+        int pdf = -1;
+        int xml = -1;
+        for (int i = 0; i < filenames.size(); i++) {
+            String name = filenames.get(i) == null ? "" : filenames.get(i).toLowerCase(java.util.Locale.ROOT);
+            if (name.endsWith(".pdf")) {
+                if (pdf >= 0) {
+                    return null;
+                }
+                pdf = i;
+            } else if (name.endsWith(".xml")) {
+                if (xml >= 0) {
+                    return null;
+                }
+                xml = i;
+            }
+        }
+        return pdf >= 0 && xml >= 0 ? new int[] {pdf, xml} : null;
     }
 
     /** Eine Datei, die zusammen mit anderen hereinkommt. */
@@ -709,9 +834,10 @@ public class DocumentService {
         }
     }
 
-    /** Seitenzahl, Vorschaubild und – bei Text aus der Textebene – den Text der neuen Fassung übernehmen. */
+    /** Seitenzahl, Vorschaubild, E-Rechnung und – bei Text aus der Textebene – den Text der neuen Fassung übernehmen. */
     private void adoptRendering(Document doc, PdfExtractor.PdfContent pdf, Path thumbnail) throws IOException {
         doc.setPageCount(pdf.pageCount());
+        doc.setEInvoice(pdf.eInvoice()); // die Angaben folgen der Datei (etwa nach dem Wiederherstellen einer Fassung)
         if (pdf.thumbnailCreated()) {
             Files.move(thumbnail, storage.thumbnailPath(doc.getId()), StandardCopyOption.REPLACE_EXISTING);
             doc.setHasThumbnail(true);

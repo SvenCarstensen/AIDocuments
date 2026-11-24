@@ -24,6 +24,17 @@ export const MAX_COMBINED_BYTES = 240 * 1024 * 1024
 export const canCombine = (photos: File[]) =>
   photos.length <= MAX_COMBINED_PHOTOS && photos.reduce((sum, file) => sum + file.size, 0) <= MAX_COMBINED_BYTES
 
+/**
+ * Genau ein PDF und genau eine XML-Datei: meist dieselbe Rechnung. Beide kommen zuerst und damit in dieselbe Anfrage –
+ * der Server legt die XML-Datei dann in das PDF, statt zwei Dokumente anzulegen.
+ */
+function invoicePairFirst(files: File[]): File[] {
+  const pdfs = files.filter((file) => /\.pdf$/i.test(file.name))
+  const xmls = files.filter((file) => /\.xml$/i.test(file.name))
+  if (pdfs.length !== 1 || xmls.length !== 1) return files
+  return [pdfs[0], xmls[0], ...files.filter((file) => file !== pdfs[0] && file !== xmls[0])]
+}
+
 /** Seite 2 vor Seite 10: Fotos in der Reihenfolge ihrer Dateinamen. */
 const byName = (a: File, b: File) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
 
@@ -56,7 +67,7 @@ export function useUpload() {
         // In Paketen senden, damit auch viele Dateien auf einmal das Anfragelimit nicht sprengen.
         const results = []
         const photos = combine ? photosAmong(pdfs).sort(byName) : []
-        const single = combine && photos.length > 1 ? pdfs.filter((file) => !photos.includes(file)) : pdfs
+        const single = invoicePairFirst(combine && photos.length > 1 ? pdfs.filter((file) => !photos.includes(file)) : pdfs)
         if (photos.length > 1) results.push(...(await api.upload(photos, area, true)))
         for (let i = 0; i < single.length; i += 5) {
           results.push(...(await api.upload(single.slice(i, i + 5), area)))

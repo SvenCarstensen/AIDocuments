@@ -1023,9 +1023,12 @@
       "buyer": "Empfänger",
       "vatId": "TVA-Nr.",
       "buyerReference": "Keeferreferenz",
+      "allowances": "Rabatter",
+      "charges": "Zouschléi",
       "net": "Netto",
       "tax": "TVA {{rate}}",
       "gross": "Brutto",
+      "prepaid": "Scho bezuelt",
       "reference": "Verwendungszweck",
       "terms": "Bezuelkonditiounen"
     },

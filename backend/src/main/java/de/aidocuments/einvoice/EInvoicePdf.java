@@ -79,7 +79,8 @@ public class EInvoicePdf {
                 "einvoice.pdf.quantity", "einvoice.pdf.unitPrice", "einvoice.pdf.amount", "einvoice.pdf.net",
                 "einvoice.pdf.tax", "einvoice.pdf.total", "einvoice.pdf.due", "einvoice.pdf.payment",
                 "einvoice.pdf.reference", "einvoice.pdf.terms", "einvoice.pdf.unit.day", "einvoice.pdf.unit.month",
-                "einvoice.pdf.unit.lumpSum", "einvoice.pdf.note")) {
+                "einvoice.pdf.unit.lumpSum", "einvoice.pdf.note", "einvoice.pdf.lineTotal", "einvoice.pdf.allowances",
+                "einvoice.pdf.charges", "einvoice.pdf.prepaid")) {
             try {
                 bold.encode(label(locale, key, "", "").replaceAll("[\\t\\r\\n\\u00a0\\u202f]", " "));
             } catch (IllegalArgumentException | IOException e) {
@@ -130,6 +131,7 @@ public class EInvoicePdf {
         private final Map<Character, Boolean> encodable = new HashMap<>();
         private PDPageContentStream out;
         private float y;
+        private int pages;
 
         Writer(PDDocument pdf, EInvoice invoice, Locale locale) {
             this.pdf = pdf;
@@ -144,22 +146,29 @@ public class EInvoicePdf {
                 text(heading(invoice, locale), bold, 18, MARGIN, y);
                 y -= 34;
 
+                // rechts die Eckdaten (kurz, passen immer auf die erste Seite), links der Verkäufer
                 float top = y;
-                party(label(locale, "einvoice.pdf.seller"), invoice.seller(), MARGIN, 250);
-                float leftEnd = y;
-                y = top;
                 List<String[]> facts = new ArrayList<>();
                 facts.add(new String[] {label(locale, "einvoice.pdf.issueDate"), date(invoice.issueDate())});
-                facts.add(new String[] {label(locale, "einvoice.pdf.dueDate"), date(invoice.dueDate())});
+                if (!invoice.creditNote()) {
+                    facts.add(new String[] {label(locale, "einvoice.pdf.dueDate"), date(invoice.dueDate())});
+                }
                 facts.add(new String[] {label(locale, "einvoice.pdf.buyerReference"), invoice.buyerReference()});
                 for (String[] fact : facts) {
                     if (fact[1] != null) {
                         text(fact[0], bold, 9, 330, y);
-                        text(fact[1], regular, 9, 445, y);
-                        y -= 13;
+                        for (String part : wrap(fact[1], regular, 9, MARGIN + WIDTH - 445)) {
+                            text(part, regular, 9, 445, y);
+                            y -= 12;
+                        }
+                        y -= 1;
                     }
                 }
-                y = Math.min(leftEnd, y) - 14;
+                float rightEnd = y;
+                int page = pages;
+                y = top;
+                party(label(locale, "einvoice.pdf.seller"), invoice.seller(), MARGIN, 250);
+                y = (pages == page ? Math.min(y, rightEnd) : y) - 14;
                 party(label(locale, "einvoice.pdf.buyer"), invoice.buyer(), MARGIN, 250);
                 y -= 14;
 
@@ -174,6 +183,7 @@ public class EInvoicePdf {
         }
 
         private void party(String title, Party party, float x, float width) throws IOException {
+            ensure(26);
             text(title, bold, 9, x, y);
             y -= 13;
             if (party == null) {
@@ -193,6 +203,7 @@ public class EInvoicePdf {
             for (String row : rows) {
                 if (row != null && !row.isBlank()) {
                     for (String part : wrap(row, regular, 9, width)) {
+                        ensure(12);
                         text(part, regular, 9, x, y);
                         y -= 12;
                     }
@@ -241,6 +252,18 @@ public class EInvoicePdf {
 
         private void totals() throws IOException {
             List<String[]> rows = new ArrayList<>();
+            // Nachlässe und Zuschläge auf Rechnungsebene: Sonst passte die Summe der Positionen nicht zum Netto
+            boolean adjusted = nonZero(invoice.allowanceTotal()) || nonZero(invoice.chargeTotal());
+            if (adjusted && invoice.lineTotal() != null) {
+                rows.add(new String[] {label(locale, "einvoice.pdf.lineTotal"), money(invoice.lineTotal())});
+            }
+            if (nonZero(invoice.allowanceTotal())) {
+                rows.add(new String[] {label(locale, "einvoice.pdf.allowances"),
+                        money(invoice.allowanceTotal().negate())});
+            }
+            if (nonZero(invoice.chargeTotal())) {
+                rows.add(new String[] {label(locale, "einvoice.pdf.charges"), money(invoice.chargeTotal())});
+            }
             rows.add(new String[] {label(locale, "einvoice.pdf.net"), money(invoice.netAmount())});
             for (Tax tax : invoice.taxes() == null ? List.<Tax>of() : invoice.taxes()) {
                 rows.add(new String[] {label(locale, "einvoice.pdf.tax", percent(tax.rate())), money(tax.amount())});
@@ -249,6 +272,9 @@ public class EInvoicePdf {
                 rows.add(new String[] {label(locale, "einvoice.pdf.tax", ""), money(invoice.taxAmount())});
             }
             rows.add(new String[] {label(locale, "einvoice.pdf.total"), money(invoice.grossAmount())});
+            if (nonZero(invoice.prepaidAmount())) {
+                rows.add(new String[] {label(locale, "einvoice.pdf.prepaid"), money(invoice.prepaidAmount().negate())});
+            }
             boolean differs = invoice.amountDue() != null && (invoice.grossAmount() == null
                     || invoice.amountDue().compareTo(invoice.grossAmount()) != 0);
             if (differs) {
@@ -287,9 +313,10 @@ public class EInvoicePdf {
                 for (String paragraph : row[1].split("\n")) {
                     value.addAll(wrap(paragraph, regular, 9, WIDTH - 120));
                 }
-                ensure(value.size() * 12);
+                ensure(Math.min(value.size(), 3) * 12);
                 text(row[0], bold, 9, MARGIN, y);
                 for (String part : value) {
+                    ensure(12);
                     text(part, regular, 9, MARGIN + 120, y);
                     y -= 12;
                 }
@@ -308,6 +335,10 @@ public class EInvoicePdf {
             }
         }
 
+        private static boolean nonZero(BigDecimal value) {
+            return value != null && value.signum() != 0;
+        }
+
         // ---- Seiten und Text ----
 
         private void ensure(float height) throws IOException {
@@ -322,6 +353,7 @@ public class EInvoicePdf {
             }
             PDPage page = new PDPage(PDRectangle.A4);
             pdf.addPage(page);
+            pages++;
             out = new PDPageContentStream(pdf, page);
             y = PDRectangle.A4.getHeight() - MARGIN - 10;
         }

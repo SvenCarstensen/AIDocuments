@@ -1071,9 +1071,12 @@
       "buyer": "Prejemnik",
       "vatId": "ID za DDV",
       "buyerReference": "Referenca prejemnika",
+      "allowances": "Popusti",
+      "charges": "Doplačila",
       "net": "Neto",
       "tax": "DDV {{rate}}",
       "gross": "Bruto",
+      "prepaid": "Že plačano",
       "reference": "Namen plačila",
       "terms": "Plačilni pogoji"
     },

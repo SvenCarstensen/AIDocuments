@@ -13,8 +13,12 @@ import java.util.Locale;
  * @param profile      die Kennung der Spezifikation, etwa {@code urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0}
  * @param typeCode     Rechnungsart nach UNTDID 1001: 380 Rechnung, 381 Gutschrift, 384 Rechnungskorrektur …
  * @param buyerReference Käuferreferenz, bei öffentlichen Auftraggebern die Leitweg-ID
+ * @param lineTotal    Summe der Positionen (vor Nachlässen und Zuschlägen auf Rechnungsebene)
+ * @param allowanceTotal Nachlässe auf Rechnungsebene
+ * @param chargeTotal  Zuschläge auf Rechnungsebene
  * @param netAmount    Summe ohne Umsatzsteuer
  * @param grossAmount  Summe mit Umsatzsteuer
+ * @param prepaidAmount bereits gezahlt (Anzahlungen)
  * @param amountDue    der zu zahlende Betrag (nach Anzahlungen und Rundung)
  */
 public record EInvoice(
@@ -28,9 +32,13 @@ public record EInvoice(
         Party seller,
         Party buyer,
         String buyerReference,
+        BigDecimal lineTotal,
+        BigDecimal allowanceTotal,
+        BigDecimal chargeTotal,
         BigDecimal netAmount,
         BigDecimal taxAmount,
         BigDecimal grossAmount,
+        BigDecimal prepaidAmount,
         BigDecimal amountDue,
         String iban,
         String bic,
@@ -41,6 +49,8 @@ public record EInvoice(
 
     /** Höchstens so viele Positionen werden gespeichert – die vollständige Rechnung bleibt in der XML-Datei. */
     public static final int MAX_LINES = 500;
+    /** Höchstens so viele Zeilen der Steueraufschlüsselung (eine echte Rechnung hat eine Handvoll). */
+    public static final int MAX_TAXES = 50;
 
     /** Verkäufer oder Käufer. */
     public record Party(String name, String vatId, String taxNumber, String street, String postcode, String city,
@@ -64,15 +74,29 @@ public record EInvoice(
 
     /**
      * Woran sich dieselbe Rechnung wiedererkennen lässt, die auf zwei Wegen kommt (als PDF und als XML-Datei):
-     * Verkäufer (Umsatzsteuer-ID, sonst Name), Rechnungsnummer und Datum. Ohne Rechnungsnummer {@code null}.
+     * Verkäufer (Umsatzsteuer-ID, sonst Name), Rechnungsnummer und Datum. Ohne Rechnungsnummer oder Verkäufer
+     * {@code null} – dann ließen sich Rechnungen verschiedener Absender nicht auseinanderhalten. Ein Schlüssel, der
+     * nicht in die Spalte passt, wird als Ganzes gehasht (statt gekürzt: Sonst fielen Nummer und Datum weg).
      */
     public String identity() {
         if (number == null || number.isBlank()) {
             return null;
         }
         String issuer = seller == null ? "" : seller.vatId() != null ? seller.vatId() : nz(seller.name());
+        if (issuer.isBlank()) {
+            return null;
+        }
         String key = String.join("|", normalize(issuer), normalize(number), issueDate == null ? "" : issueDate.toString());
-        return key.length() <= 250 ? key : key.substring(0, 250);
+        return key.length() <= 250 ? key : "sha256:" + sha256(key);
+    }
+
+    private static String sha256(String value) {
+        try {
+            return java.util.HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256")
+                    .digest(value.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+        } catch (java.security.NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private static String normalize(String value) {

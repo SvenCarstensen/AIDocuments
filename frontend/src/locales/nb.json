@@ -1023,9 +1023,12 @@
       "buyer": "Kjøper",
       "vatId": "MVA-nr.",
       "buyerReference": "Kjøpers referanse",
+      "allowances": "Rabatter",
+      "charges": "Tillegg",
       "net": "Netto",
       "tax": "MVA {{rate}}",
       "gross": "Brutto",
+      "prepaid": "Allerede betalt",
       "reference": "Betalingsreferanse",
       "terms": "Betalingsbetingelser"
     },

@@ -211,7 +211,9 @@ public class MailSyncService {
                                  | de.aidocuments.document.FileStorage.StorageFullException e) {
                             // Verbindung weg oder Platte voll: abbrechen, beim nächsten Lauf hier weitermachen
                             throw e;
-                        } catch (MessagingException | IOException | RuntimeException e) {
+                        } catch (MessagingException | IOException | RuntimeException | OutOfMemoryError e) {
+                            // auch eine E-Mail, die den Speicher sprengt, wird übergangen – sonst käme sie bei jedem
+                            // Abruf wieder an die Reihe
                             counters.unreadable++;
                             log.warn("E-Mail UID {} in {} konnte nicht gelesen werden: {}", uid,
                                     account.getName(), e.toString());
@@ -266,17 +268,47 @@ public class MailSyncService {
             counters.rejected += pdfParts.size() - MAX_ATTACHMENTS;
             pdfParts = pdfParts.subList(0, MAX_ATTACHMENTS);
         }
+        List<String> names = new ArrayList<>();
+        for (Part part : pdfParts) {
+            names.add(isPdf(part) ? "x.pdf" : isXml(part) ? "x.xml" : "");
+        }
+        int[] pair = de.aidocuments.document.DocumentService.invoicePair(names);
+        if (pair != null) {
+            // ein PDF und eine XRechnung: meist dieselbe Rechnung – dann ein Dokument, die XML-Datei im PDF
+            Part pdf = pdfParts.get(pair[0]);
+            Part xml = pdfParts.get(pair[1]);
+            de.aidocuments.document.DocumentService.IngestResult paired = documentService.ingestPair(
+                    () -> open(pdf), filename(pdf), () -> open(xml), filename(xml), DocumentSource.MAIL, origin,
+                    account.getAreaId());
+            if (paired != null) {
+                count(paired.outcome(), counters);
+                pdfParts = new ArrayList<>(pdfParts);
+                pdfParts.remove(pdf);
+                pdfParts.remove(xml);
+            }
+        }
         for (Part part : pdfParts) {
             try (InputStream in = part.getInputStream()) {
-                Outcome outcome = documentService.ingest(in, filename(part), DocumentSource.MAIL, origin,
-                        account.getAreaId()).outcome();
-                switch (outcome) {
-                    case CREATED -> counters.imported++;
-                    case DUPLICATE -> counters.duplicates++;
-                    case REJECTED -> counters.rejected++;
-                    case IGNORED -> { }
-                }
+                count(documentService.ingest(in, filename(part), DocumentSource.MAIL, origin,
+                        account.getAreaId()).outcome(), counters);
             }
+        }
+    }
+
+    private static void count(Outcome outcome, Counters counters) {
+        switch (outcome) {
+            case CREATED -> counters.imported++;
+            case DUPLICATE -> counters.duplicates++;
+            case REJECTED -> counters.rejected++;
+            case IGNORED -> { }
+        }
+    }
+
+    private static InputStream open(Part part) throws IOException {
+        try {
+            return part.getInputStream();
+        } catch (MessagingException e) {
+            throw new IOException(e);
         }
     }
 

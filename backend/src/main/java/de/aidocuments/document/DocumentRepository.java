@@ -191,9 +191,15 @@ public class DocumentRepository {
         return spec.query(DocumentRepository::map).list();
     }
 
-    /** Ein Dokument mit derselben E-Rechnung (Verkäufer, Nummer, Datum – siehe {@code EInvoice.identity}). */
-    public Optional<Document> findByEInvoiceKey(String key) {
-        return jdbc.sql("SELECT * FROM documents WHERE e_invoice_key = ? ORDER BY created_at LIMIT 1").param(key)
+    /**
+     * Ein Dokument mit derselben E-Rechnung (Verkäufer, Nummer, Datum – siehe {@code EInvoice.identity}) im selben
+     * Bereich: Ob es sie in einem anderen gibt, soll niemand erfahren, der ihn nicht sehen darf.
+     */
+    public Optional<Document> findByEInvoiceKey(String key, String areaId) {
+        return jdbc.sql("SELECT * FROM documents WHERE e_invoice_key = :key"
+                        + (areaId == null ? " AND area_id IS NULL" : " AND area_id = :area")
+                        + " ORDER BY created_at LIMIT 1")
+                .param("key", key).params(areaId == null ? java.util.Map.of() : java.util.Map.of("area", areaId))
                 .query(DocumentRepository::map).optional();
     }
 

@@ -337,7 +337,8 @@ public class DocumentProcessor {
     static final String INVOICE_CATEGORY = "Rechnung";
 
     /**
-     * Die exakten Angaben einer E-Rechnung übernehmen: Dokumentart, Absender (Verkäufer) und Rechnungsdatum. Die KI
+     * Die exakten Angaben einer E-Rechnung übernehmen: Dokumentart (außer bei Gutschriften), Absender (Verkäufer) und
+     * Rechnungsdatum. Die KI
      * kann sich verlesen, die XML-Datei nicht. Hat die KI keinen Titel gefunden, wird er „Verkäufer · Nummer“.
      */
     private void applyInvoice(Document doc, de.aidocuments.einvoice.EInvoice invoice) {
@@ -345,7 +346,9 @@ public class DocumentProcessor {
         if (invoice == null) {
             return;
         }
-        doc.setCategory(INVOICE_CATEGORY);
+        if (!invoice.creditNote()) {
+            doc.setCategory(INVOICE_CATEGORY); // eine Gutschrift ist keine – deren Dokumentart bestimmt die Analyse
+        }
         String seller = invoice.seller() == null ? null : blankToNull(invoice.seller().name());
         if (seller != null) {
             doc.setCorrespondent(clip(knownSpelling(seller), 255));

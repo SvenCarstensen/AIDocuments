@@ -94,7 +94,12 @@ public class FolderImportService {
         }
         List<Path> candidates;
         try (Stream<Path> walk = Files.walk(root, MAX_DEPTH)) {
-            candidates = walk.filter(path -> isCandidate(root, path)).sorted().toList();
+            // ein PDF vor der gleichnamigen XML-Datei (auch bei „.XML“): Es nimmt sie mit, falls sie dazugehört
+            candidates = walk.filter(path -> isCandidate(root, path)).sorted(java.util.Comparator
+                    .comparing((Path path) -> withoutExtension(path).toLowerCase(java.util.Locale.ROOT))
+                    .thenComparing(path -> !path.getFileName().toString().toLowerCase(java.util.Locale.ROOT)
+                            .endsWith(".pdf"))
+                    .thenComparing(java.util.Comparator.naturalOrder())).toList();
         } catch (IOException | RuntimeException e) {
             return Status.of(false, List.of(Msg.of("folder.scan.readFailed", Msg.detailOf(e))));
         }
@@ -103,22 +108,35 @@ public class FolderImportService {
         int duplicates = 0;
         int rejected = 0;
         int failed = 0;
+        java.util.Set<Path> handled = new java.util.HashSet<>();
         for (Path file : candidates) {
+            if (handled.contains(file)) {
+                continue;
+            }
             try {
-                BasicFileAttributes attributes = Files.readAttributes(file, BasicFileAttributes.class);
-                long modified = attributes.lastModifiedTime().toMillis();
-                if (System.currentTimeMillis() - modified < SETTLE_MILLIS) {
+                BasicFileAttributes attributes = pending(file);
+                if (attributes == null) {
                     continue;
                 }
-                String key = file.toAbsolutePath().toString();
-                ImportedFile known = importedFiles.findById(key).orElse(null);
-                if (known != null && known.size() == attributes.size() && known.modifiedAt() == modified) {
-                    continue;
+                IngestResult result = null;
+                // „Rechnung_4711.pdf“ und „Rechnung_4711.xml“: meist dieselbe Rechnung – dann ein Dokument
+                Path partner = xmlPartner(file, candidates);
+                BasicFileAttributes partnerAttributes = partner == null || !Files.isRegularFile(partner) ? null
+                        : pending(partner);
+                if (partnerAttributes != null) {
+                    result = documentService.ingestPair(() -> Files.newInputStream(file),
+                            file.getFileName().toString(), () -> Files.newInputStream(partner),
+                            partner.getFileName().toString(), DocumentSource.FOLDER, null, config.folderAreaId());
+                    if (result != null) {
+                        handled.add(partner);
+                        remember(config, root, partner, partnerAttributes, Outcome.IGNORED);
+                    }
                 }
-                IngestResult result;
-                try (InputStream in = Files.newInputStream(file)) {
-                    result = documentService.ingest(in, file.getFileName().toString(), DocumentSource.FOLDER, null,
-                            config.folderAreaId());
+                if (result == null) {
+                    try (InputStream in = Files.newInputStream(file)) {
+                        result = documentService.ingest(in, file.getFileName().toString(), DocumentSource.FOLDER,
+                                null, config.folderAreaId());
+                    }
                 }
                 switch (result.outcome()) {
                     case CREATED -> imported++;
@@ -126,12 +144,7 @@ public class FolderImportService {
                     case REJECTED -> rejected++;
                     case IGNORED -> { }
                 }
-                if (config.folderMode() == FolderMode.MOVE && result.outcome() != Outcome.REJECTED) {
-                    moveAside(root, file);
-                } else {
-                    importedFiles.save(new ImportedFile(key, attributes.size(), modified, result.outcome().name(),
-                            Instant.now()));
-                }
+                remember(config, root, file, attributes, result.outcome());
             } catch (IOException | RuntimeException e) {
                 failed++;
                 log.warn("Datei {} konnte nicht übernommen werden: {}", file, e.toString());
@@ -158,6 +171,52 @@ public class FolderImportService {
             sentences.add(Msg.of("folder.scan.unreadable", failed));
         }
         return Status.of(failed == 0, sentences);
+    }
+
+    /** Die Angaben der Datei, wenn sie fertig geschrieben und noch nicht übernommen ist – sonst {@code null}. */
+    private BasicFileAttributes pending(Path file) throws IOException {
+        BasicFileAttributes attributes = Files.readAttributes(file, BasicFileAttributes.class);
+        long modified = attributes.lastModifiedTime().toMillis();
+        if (System.currentTimeMillis() - modified < SETTLE_MILLIS) {
+            return null;
+        }
+        ImportedFile known = importedFiles.findById(file.toAbsolutePath().toString()).orElse(null);
+        return known != null && known.size() == attributes.size() && known.modifiedAt() == modified ? null : attributes;
+    }
+
+    /** Übernommene Dateien beiseitelegen oder sich merken (abgelehnte bleiben liegen und werden nur gemerkt). */
+    private void remember(Effective config, Path root, Path file, BasicFileAttributes attributes, Outcome outcome)
+            throws IOException {
+        if (config.folderMode() == FolderMode.MOVE && outcome != Outcome.REJECTED) {
+            moveAside(root, file);
+        } else {
+            importedFiles.save(new ImportedFile(file.toAbsolutePath().toString(), attributes.size(),
+                    attributes.lastModifiedTime().toMillis(), outcome.name(), Instant.now()));
+        }
+    }
+
+    private static String withoutExtension(Path path) {
+        String name = path.toString();
+        int dot = name.lastIndexOf('.');
+        return dot > name.lastIndexOf(java.io.File.separatorChar) ? name.substring(0, dot) : name;
+    }
+
+    /** Zu „a.pdf“ die XML-Datei „a.xml“ im selben Verzeichnis (Groß-/Kleinschreibung egal), sonst {@code null}. */
+    private static Path xmlPartner(Path file, List<Path> candidates) {
+        String name = file.getFileName().toString();
+        if (!name.toLowerCase(java.util.Locale.ROOT).endsWith(".pdf")) {
+            return null;
+        }
+        String base = name.substring(0, name.length() - 4);
+        for (Path candidate : candidates) {
+            String other = candidate.getFileName().toString();
+            if (java.util.Objects.equals(candidate.getParent(), file.getParent()) && other.length() == name.length()
+                    && other.toLowerCase(java.util.Locale.ROOT).endsWith(".xml")
+                    && other.substring(0, other.length() - 4).equalsIgnoreCase(base)) {
+                return candidate;
+            }
+        }
+        return null;
     }
 
     private static boolean isCandidate(Path root, Path path) {

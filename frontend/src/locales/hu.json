@@ -1023,9 +1023,12 @@
       "buyer": "Vevő",
       "vatId": "Közösségi adószám",
       "buyerReference": "Vevői hivatkozás",
+      "allowances": "Engedmények",
+      "charges": "Pótdíjak",
       "net": "Nettó",
       "tax": "ÁFA {{rate}}",
       "gross": "Bruttó",
+      "prepaid": "Már kifizetve",
       "reference": "Közlemény",
       "terms": "Fizetési feltételek"
     },

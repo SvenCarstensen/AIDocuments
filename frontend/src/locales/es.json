@@ -1047,9 +1047,12 @@
       "buyer": "Destinatario",
       "vatId": "NIF-IVA",
       "buyerReference": "Referencia del comprador",
+      "allowances": "Descuentos",
+      "charges": "Recargos",
       "net": "Base imponible",
       "tax": "IVA {{rate}}",
       "gross": "Total",
+      "prepaid": "Ya pagado",
       "reference": "Concepto",
       "terms": "Condiciones de pago"
     },

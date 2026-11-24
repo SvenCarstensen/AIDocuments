@@ -1095,9 +1095,12 @@
       "buyer": "Klijent",
       "vatId": "Nru tal-VAT",
       "buyerReference": "Referenza tax-xerrej",
+      "allowances": "Skontijiet",
+      "charges": "Imposti",
       "net": "Nett",
       "tax": "VAT {{rate}}",
       "gross": "Gross",
+      "prepaid": "Diġà mħallas",
       "reference": "Referenza tal-ħlas",
       "terms": "Kundizzjonijiet tal-ħlas"
     },

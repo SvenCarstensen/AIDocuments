@@ -506,17 +506,27 @@ the values are exact to the cent:
   syntaxes, CII (`CrossIndustryInvoice`) and UBL (`Invoice` and `CreditNote`). Credit notes are recognised by their
   type code.
 - **What is read:** invoice number, issue and due date, seller and buyer (name, address, VAT ID), buyer reference,
-  net amount, tax per rate, total, amount due, IBAN, BIC, payment reference, payment terms and up to 500 line items.
+  line total, allowances and charges on the whole invoice, net amount, tax per rate, total, amount already paid, amount
+  due, IBAN, BIC, payment reference, payment terms and up to 500 line items.
 - **Where:** uploads, the import folder and e-mail attachments (`.xml` files are accepted next to PDFs and photos).
 - **What happens:** the document page shows a card with the invoice details (copy buttons for number, IBAN and
-  reference, line items on request, the original XML as a download). Document type, correspondent, document date and –
-  if it still is the file name – the title are taken from the invoice and override what the AI suggested.
+  reference, line items on request, the original XML as a download). Document type (not for credit notes),
+  correspondent, document date and – if it still is the file name – the title are taken from the invoice and override
+  what the AI suggested.
 - **Pure XML invoices** (XRechnung without PDF) are turned into a readable PDF with all details; the original XML is
   embedded in it unchanged and can be downloaded at any time. The labels are in the uploader's language; for e-mail and
   the import folder German when seller or buyer is in Germany, Austria, Switzerland, Liechtenstein or Luxembourg,
   otherwise English.
-- **Duplicates:** an invoice is recognised by seller, number and date. An e-mail with the PDF and the same invoice as
-  XML yields one document; the same XML sent twice is stored once.
+- **PDF and XML together:** when a plain PDF and an XRechnung arrive together – in one e-mail, in one upload, or in
+  the import folder under the same name (`Invoice 4711.pdf` and `Invoice 4711.xml`) – and the PDF mentions the invoice
+  number, they become one document: the seller's PDF with the XML attached to it. The PDF stays byte for byte as it
+  was; the attachment is added behind it. If the PDF does not mention the number (or there are several PDFs or XML
+  files), both are kept as separate documents.
+- **Duplicates:** an invoice is recognised by seller (VAT ID, otherwise name), number and date – in whatever order and
+  form it arrives (ZUGFeRD PDF, XML, or both). The second copy is reported as a duplicate. The check stays within the
+  area the invoice is filed into, so it reveals nothing about other areas.
+- **Editing pages:** when pages are split off an e-invoice, the XML stays with the first part. An e-invoice cannot be
+  appended to another document (its XML would come along); append the other documents to the invoice instead.
 - **Export:** CSV and JSON contain the invoice details in columns of their own (`invoiceNumber`, `invoiceGross`,
   `invoiceAmountDue`, `invoiceIban` …).
 

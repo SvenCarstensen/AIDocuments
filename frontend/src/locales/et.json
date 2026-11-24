@@ -1023,9 +1023,12 @@
       "buyer": "Ostja",
       "vatId": "KMKR nr",
       "buyerReference": "Ostja viide",
+      "allowances": "Allahindlused",
+      "charges": "Lisatasud",
       "net": "Neto",
       "tax": "Käibemaks {{rate}}",
       "gross": "Bruto",
+      "prepaid": "Juba makstud",
       "reference": "Makse selgitus",
       "terms": "Maksetingimused"
     },

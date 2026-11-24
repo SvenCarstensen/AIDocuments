@@ -1023,9 +1023,12 @@
       "buyer": "Ostaja",
       "vatId": "ALV-numero",
       "buyerReference": "Ostajan viite",
+      "allowances": "Alennukset",
+      "charges": "Lisämaksut",
       "net": "Veroton",
       "tax": "ALV {{rate}}",
       "gross": "Verollinen",
+      "prepaid": "Jo maksettu",
       "reference": "Maksun viite",
       "terms": "Maksuehdot"
     },

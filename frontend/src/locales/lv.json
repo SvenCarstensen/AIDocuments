@@ -1047,9 +1047,12 @@
       "buyer": "Pircējs",
       "vatId": "PVN reģ. Nr.",
       "buyerReference": "Pircēja atsauce",
+      "allowances": "Atlaides",
+      "charges": "Piemaksas",
       "net": "Neto",
       "tax": "PVN {{rate}}",
       "gross": "Bruto",
+      "prepaid": "Jau samaksāts",
       "reference": "Maksājuma mērķis",
       "terms": "Apmaksas noteikumi"
     },
