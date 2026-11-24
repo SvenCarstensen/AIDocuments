@@ -702,6 +702,10 @@
         "saved": "Cilësimet u ruajtën.",
         "externalDatabase": "Kopja rezervë automatike është e disponueshme vetëm me bazën e integruar të të dhënave. Me MariaDB, bëj kopje rezervë të bazës së të dhënave me mjetet e saj (p.sh. një mariadb-dump çdo natë) dhe po ashtu të dosjes së të dhënave."
       }
+    },
+    "license": {
+      "title": "Licenca",
+      "navHint": "Lloji i përdorimit dhe kodi i aktivizimit"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Çmimi për njësi",
       "amount": "Shuma"
     }
+  },
+  "license": {
+    "question": "Kush e përdor AIDocuments?",
+    "usage": {
+      "PRIVATE": "Private",
+      "CLUB": "Shoqatë",
+      "AUTHORITY": "Autoritet",
+      "BUSINESS": "Biznes"
+    },
+    "free": "falas",
+    "needsCode": "me kod aktivizimi",
+    "freeFor": "Falas për persona privatë, shoqata dhe autoritete publike.",
+    "businessNeedsCode": "Bizneset e aktivizojnë AIDocuments me një kod aktivizimi.",
+    "intro": "Trego kush e përdor AIDocuments. Bizneset e vendosin këtu kodin e aktivizimit – ai tregon kompaninë për të cilën është lëshuar.",
+    "code": "Kodi i aktivizimit",
+    "codeHint": "Fillon me AIDOCS-. Mund ta vendosësh edhe më vonë te Cilësimet → Licenca; deri atëherë gjithçka mbetet e përdorshme.",
+    "codeLaterHint": "Fillon me AIDOCS-. Pa kod gjithçka mbetet e përdorshme; shfaqet vetëm një njoftim.",
+    "codeKeepHint": "Një kod është ruajtur. Lëre bosh për ta mbajtur, ose vendos një të ri.",
+    "removeCode": "Hiq kodin",
+    "saved": "Licenca u ruajt",
+    "licensedTo": "Aktivizuar për {{name}}",
+    "validUntil": "e vlefshme deri më {{date}}",
+    "unlimited": "e vlefshme pa afat",
+    "number": "Licenca nr. {{id}}",
+    "expired": "Kodi i aktivizimit për {{name}} ka skaduar më {{date}}.",
+    "storedInvalid": "Kodi i aktivizimit i ruajtur nuk është i vlefshëm. Vendose përsëri.",
+    "missing": "AIDocuments përdoret këtu nga një biznes, por nuk është aktivizuar ende. Vendos një kod aktivizimi.",
+    "missingUser": "Ky instalim nuk është aktivizuar ende për përdorim biznesi. Kontakto administratorin.",
+    "freeState": "Përdorim falas – {{usage}}.",
+    "unset": "Trego kush e përdor AIDocuments – është falas për persona privatë, shoqata dhe autoritete publike.",
+    "action": "Hap licencën",
+    "sidebarFree": "Përdoret falas · {{usage}}",
+    "sidebarUnlicensed": "Ende pa aktivizuar"
   }
 }

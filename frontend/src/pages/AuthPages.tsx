@@ -3,8 +3,9 @@ import { type FormEvent, type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
 import { TwoFactorSetupFlow } from '../components/TwoFactorDialog'
-import { Alert, Button, Field, Input, Logo } from '../components/ui'
-import { api, errorMessage, type User } from '../lib/api'
+import { FreeForNote, UsageChoice } from '../components/License'
+import { Alert, Button, Field, Input, Logo, Textarea } from '../components/ui'
+import { api, errorMessage, type LicenseUsage, type User } from '../lib/api'
 import { getPasskey, isCancelled, passkeysSupported } from '../lib/passkey'
 
 function AuthLayout({ title, subtitle, children, aside }: { title: string; subtitle: string; children: ReactNode; aside?: ReactNode }) {
@@ -88,7 +89,7 @@ export function LoginPage({ onDone }: { onDone: (user: User) => void }) {
   }
 
   return (
-    <AuthLayout title={t('auth.login.title')} subtitle={t('auth.login.subtitle')}>
+    <AuthLayout title={t('auth.login.title')} subtitle={t('auth.login.subtitle')} aside={<FreeForNote className="mt-5 px-2" />}>
       <form onSubmit={submit} className="flex flex-col gap-4">
         {error && <Alert tone="danger">{error}</Alert>}
         <Field label={t('common.username')}>
@@ -194,6 +195,8 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
   const [password, setPassword] = useState('')
   const [repeat, setRepeat] = useState('')
   const [setupCode, setSetupCode] = useState('')
+  const [usage, setUsage] = useState<LicenseUsage | null>(null)
+  const [licenseCode, setLicenseCode] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -201,11 +204,11 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
 
   async function submit(event: FormEvent) {
     event.preventDefault()
-    if (password !== repeat) return
+    if (password !== repeat || !usage) return
     setBusy(true)
     setError(null)
     try {
-      onDone(await api.setup(username, password, setupCode))
+      onDone(await api.setup(username, password, setupCode, usage, usage === 'BUSINESS' ? licenseCode.trim() : ''))
     } catch (e) {
       setError(errorMessage(e))
       setBusy(false)
@@ -223,6 +226,7 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
       title={t('auth.setup.title')}
       subtitle={t('auth.setup.subtitle')}
       aside={
+        <>
         <ul className="mt-6 flex flex-col gap-2.5 px-2 text-[13px] text-muted">
           {features.map((feature) => (
             <li key={feature.text} className="flex items-center gap-2.5">
@@ -233,6 +237,8 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
             </li>
           ))}
         </ul>
+        <FreeForNote className="mt-5 px-2" />
+        </>
       }
     >
       <form onSubmit={submit} className="flex flex-col gap-4">
@@ -295,6 +301,27 @@ export function SetupPage({ onDone }: { onDone: (user: User) => void }) {
             />
           )}
         </Field>
+        <div className="mt-1 border-t border-line pt-4">
+          <UsageChoice value={usage} onChange={setUsage} required />
+        </div>
+        {usage === 'BUSINESS' && (
+          <Field label={t('license.code')} hint={t('license.codeHint')}>
+            {(id) => (
+              <Textarea
+                id={id}
+                value={licenseCode}
+                onChange={(e) => setLicenseCode(e.target.value)}
+                rows={3}
+                spellCheck={false}
+                autoCapitalize="characters"
+                autoComplete="off"
+                placeholder="AIDOCS-XXXXX-XXXXX-…"
+                className="font-mono text-xs tracking-wide"
+                maxLength={1000}
+              />
+            )}
+          </Field>
+        )}
         <Button type="submit" variant="primary" loading={busy} disabled={mismatch} className="mt-1 w-full">
           {t('auth.setup.submit')}
         </Button>

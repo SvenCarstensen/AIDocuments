@@ -702,6 +702,10 @@
         "saved": "Seaded salvestatud.",
         "externalDatabase": "Automaatne varundus on saadaval ainult sisseehitatud andmebaasiga. MariaDB puhul varunda andmebaas selle enda tööriistadega (nt igal ööl käivitatava mariadb-dump-käsuga) ja lisaks andmekaust."
       }
+    },
+    "license": {
+      "title": "Litsents",
+      "navHint": "Kasutusviis ja aktiveerimiskood"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Ühiku hind",
       "amount": "Summa"
     }
+  },
+  "license": {
+    "question": "Kes kasutab AIDocuments’i?",
+    "usage": {
+      "PRIVATE": "Era",
+      "CLUB": "Ühing",
+      "AUTHORITY": "Asutus",
+      "BUSINESS": "Ettevõte"
+    },
+    "free": "tasuta",
+    "needsCode": "aktiveerimiskoodiga",
+    "freeFor": "Tasuta eraisikutele, ühingutele ja avalikele asutustele.",
+    "businessNeedsCode": "Ettevõtted aktiveerivad AIDocuments’i aktiveerimiskoodiga.",
+    "intro": "Anna meile teada, kes AIDocuments’i kasutab. Ettevõtted sisestavad siia oma aktiveerimiskoodi – see nimetab ettevõtte, kellele see on välja antud.",
+    "code": "Aktiveerimiskood",
+    "codeHint": "Algab AIDOCS-iga. Võid selle sisestada ka hiljem jaotises Seaded → Litsents; seni on kõik kasutatav.",
+    "codeLaterHint": "Algab AIDOCS-iga. Ilma koodita on kõik kasutatav; kuvatakse vaid teade.",
+    "codeKeepHint": "Kood on salvestatud. Jäta väli tühjaks, et see alles jätta, või sisesta uus.",
+    "removeCode": "Eemalda kood",
+    "saved": "Litsents salvestatud",
+    "licensedTo": "Litsentsi omanik: {{name}}",
+    "validUntil": "kehtib kuni {{date}}",
+    "unlimited": "kehtib tähtajatult",
+    "number": "Litsents nr {{id}}",
+    "expired": "Ettevõtte {{name}} aktiveerimiskood aegus {{date}}.",
+    "storedInvalid": "Salvestatud aktiveerimiskood ei kehti. Sisesta see uuesti.",
+    "missing": "AIDocuments’i kasutab siin ettevõte, kuid see pole veel aktiveeritud. Sisesta aktiveerimiskood.",
+    "missingUser": "See paigaldus pole veel äriliseks kasutuseks aktiveeritud. Pöördu oma administraatori poole.",
+    "freeState": "Tasuta kasutus – {{usage}}.",
+    "unset": "Anna meile teada, kes AIDocuments’i kasutab – see on tasuta eraisikutele, ühingutele ja avalikele asutustele.",
+    "action": "Ava litsents",
+    "sidebarFree": "Tasuta kasutus · {{usage}}",
+    "sidebarUnlicensed": "Pole veel aktiveeritud"
   }
 }

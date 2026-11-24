@@ -720,6 +720,10 @@
         "saved": "Iestatījumi saglabāti.",
         "externalDatabase": "Automātiskā rezerves kopēšana ir pieejama tikai ar iebūvēto datubāzi. Ja izmantojat MariaDB, veidojiet datubāzes rezerves kopiju ar tās rīkiem (piemēram, katru nakti ar mariadb-dump) un papildus arī datu mapes rezerves kopiju."
       }
+    },
+    "license": {
+      "title": "Licence",
+      "navHint": "Izmantošanas veids un atbloķēšanas kods"
     }
   },
   "history": {
@@ -1066,5 +1070,38 @@
       "unitPrice": "Vienības cena",
       "amount": "Summa"
     }
+  },
+  "license": {
+    "question": "Kas izmanto AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privāti",
+      "CLUB": "Biedrība",
+      "AUTHORITY": "Iestāde",
+      "BUSINESS": "Uzņēmums"
+    },
+    "free": "bez maksas",
+    "needsCode": "ar atbloķēšanas kodu",
+    "freeFor": "Bez maksas privātpersonām, biedrībām un iestādēm.",
+    "businessNeedsCode": "Uzņēmumi AIDocuments atbloķē ar atbloķēšanas kodu.",
+    "intro": "Norādiet, kas izmanto AIDocuments. Uzņēmumi šeit ievada savu atbloķēšanas kodu – tajā ir minēts uzņēmums, kuram tas izsniegts.",
+    "code": "Atbloķēšanas kods",
+    "codeHint": "Sākas ar AIDOCS-. To var ievadīt arī vēlāk sadaļā Iestatījumi → Licence; līdz tam viss ir izmantojams.",
+    "codeLaterHint": "Sākas ar AIDOCS-. Bez koda viss ir izmantojams, tiek rādīts tikai paziņojums.",
+    "codeKeepHint": "Kods ir saglabāts. Atstājiet tukšu, lai to paturētu, vai ievadiet jaunu.",
+    "removeCode": "Noņemt kodu",
+    "saved": "Licence saglabāta",
+    "licensedTo": "Licencēts: {{name}}",
+    "validUntil": "derīga līdz {{date}}",
+    "unlimited": "derīga neierobežoti",
+    "number": "Licences nr. {{id}}",
+    "expired": "Atbloķēšanas kods uzņēmumam {{name}} beidzās {{date}}.",
+    "storedInvalid": "Saglabātais atbloķēšanas kods nav derīgs. Lūdzu, ievadiet to vēlreiz.",
+    "missing": "AIDocuments šeit izmanto uzņēmums, bet tas vēl nav atbloķēts. Lūdzu, ievadiet atbloķēšanas kodu.",
+    "missingUser": "Šī instalācija vēl nav atbloķēta izmantošanai uzņēmumā. Lūdzu, sazinieties ar administratoru.",
+    "freeState": "Bezmaksas izmantošana – {{usage}}.",
+    "unset": "Lūdzu, norādiet, kas izmanto AIDocuments – privātpersonām, biedrībām un iestādēm tas ir bez maksas.",
+    "action": "Atvērt licenci",
+    "sidebarFree": "Izmanto bez maksas · {{usage}}",
+    "sidebarUnlicensed": "Vēl nav atbloķēts"
   }
 }

@@ -478,6 +478,21 @@ export interface SystemInfo {
   failingMailboxes: string[]
   /** nur für Admins: zu lange nicht gesichert oder die automatische Sicherung schlug fehl */
   backup: BackupNotice | null
+  /** Nutzungsart und Freischaltung – für alle sichtbar (der Code selbst nie) */
+  license: LicenseStatus
+}
+/** Kostenlos: PRIVATE, CLUB, AUTHORITY. Unternehmen (BUSINESS) brauchen einen Freischaltcode. */
+export type LicenseUsage = 'PRIVATE' | 'CLUB' | 'AUTHORITY' | 'BUSINESS'
+/** UNSET: noch nicht angegeben · FREE: kostenlos · LICENSED/EXPIRED/UNLICENSED: Unternehmen mit/abgelaufenem/ohne Code */
+export type LicenseState = 'UNSET' | 'FREE' | 'LICENSED' | 'EXPIRED' | 'UNLICENSED'
+export interface LicenseStatus {
+  usage: LicenseUsage | null
+  state: LicenseState
+  licensee: string | null
+  validUntil: string | null
+  licenseId: string | null
+  /** ein Code ist gespeichert (auch wenn er nicht mehr gilt) */
+  codeStored: boolean
 }
 export type ReminderStatus = 'OPEN' | 'DONE'
 /** Ein Termin (Wiedervorlage) an einem Dokument. */
@@ -701,8 +716,8 @@ export const MAX_PAGE_SIZE = 100
 
 export const api = {
   authStatus: () => request<AuthStatus>('/api/auth/status'),
-  setup: (username: string, password: string, setupCode: string) =>
-    request<User>('/api/auth/setup', json('POST', { username, password, setupCode })),
+  setup: (username: string, password: string, setupCode: string, usage: LicenseUsage, licenseCode: string) =>
+    request<User>('/api/auth/setup', json('POST', { username, password, setupCode, usage, licenseCode })),
   login: (username: string, password: string) =>
     request<LoginResult>('/api/auth/login', json('POST', { username, password })),
   passkeyLoginOptions: () => request<RequestOptionsJson>('/api/auth/passkey/options', { method: 'POST' }),
@@ -849,6 +864,10 @@ export const api = {
     (await request<Contract | undefined>(`/api/documents/${id}/contract`)) ?? null,
   saveContract: (id: string, body: ContractInput) => request<Contract>(`/api/documents/${id}/contract`, json('PUT', body)),
   deleteContract: (id: string) => request<void>(`/api/documents/${id}/contract`, { method: 'DELETE' }),
+  licenseSettings: () => request<LicenseStatus>('/api/settings/license'),
+  /** code: undefined = den gespeicherten behalten, '' = entfernen */
+  updateLicense: (usage: LicenseUsage, code?: string) =>
+    request<LicenseStatus>('/api/settings/license', json('PUT', { usage, code })),
   mailOutSettings: () => request<MailOutSettings>('/api/settings/mail-out'),
   updateMailOutSettings: (body: MailOutInput) => request<MailOutSettings>('/api/settings/mail-out', json('PUT', body)),
   testMailOut: () => request<TestResult>('/api/settings/mail-out/test', { method: 'POST' }),

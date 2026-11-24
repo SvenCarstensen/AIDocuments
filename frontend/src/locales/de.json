@@ -702,6 +702,10 @@
         "saved": "Einstellungen gespeichert.",
         "externalDatabase": "Die automatische Sicherung gibt es nur mit der eingebauten Datenbank. Mit MariaDB sicherst du die Datenbank mit deren Werkzeugen (etwa ein nächtliches mariadb-dump) und dazu das Datenverzeichnis."
       }
+    },
+    "license": {
+      "title": "Lizenz",
+      "navHint": "Nutzungsart und Freischaltcode"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Einzelpreis",
       "amount": "Betrag"
     }
+  },
+  "license": {
+    "question": "Wer nutzt AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privat",
+      "CLUB": "Verein",
+      "AUTHORITY": "Behörde",
+      "BUSINESS": "Unternehmen"
+    },
+    "free": "kostenlos",
+    "needsCode": "mit Freischaltcode",
+    "freeFor": "Kostenlos für Privatpersonen, Vereine und Behörden.",
+    "businessNeedsCode": "Unternehmen schalten AIDocuments mit einem Freischaltcode frei.",
+    "intro": "Gib an, wer AIDocuments nutzt. Unternehmen tragen hier ihren Freischaltcode ein – er nennt die Firma, für die er ausgestellt ist.",
+    "code": "Freischaltcode",
+    "codeHint": "Beginnt mit AIDOCS-. Du kannst ihn auch später unter Einstellungen → Lizenz eintragen; bis dahin lässt sich alles nutzen.",
+    "codeLaterHint": "Beginnt mit AIDOCS-. Ohne Code lässt sich alles nutzen, es erscheint nur ein Hinweis.",
+    "codeKeepHint": "Ein Code ist gespeichert. Leer lassen, um ihn zu behalten, oder einen neuen eintragen.",
+    "removeCode": "Code entfernen",
+    "saved": "Lizenz gespeichert",
+    "licensedTo": "Freigeschaltet für {{name}}",
+    "validUntil": "gültig bis {{date}}",
+    "unlimited": "unbefristet gültig",
+    "number": "Lizenz-Nr. {{id}}",
+    "expired": "Der Freischaltcode für {{name}} ist am {{date}} abgelaufen.",
+    "storedInvalid": "Der gespeicherte Freischaltcode ist nicht gültig. Bitte trage ihn erneut ein.",
+    "missing": "AIDocuments wird hier von einem Unternehmen genutzt, ist aber noch nicht freigeschaltet. Bitte trage einen Freischaltcode ein.",
+    "missingUser": "Diese Installation ist für die Nutzung im Unternehmen noch nicht freigeschaltet. Bitte wende dich an die Administration.",
+    "freeState": "Kostenlose Nutzung – {{usage}}.",
+    "unset": "Bitte gib an, wer AIDocuments nutzt – für Privatpersonen, Vereine und Behörden ist es kostenlos.",
+    "action": "Lizenz öffnen",
+    "sidebarFree": "Kostenlos genutzt · {{usage}}",
+    "sidebarUnlicensed": "Noch nicht freigeschaltet"
   }
 }

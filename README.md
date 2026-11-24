@@ -222,6 +222,8 @@ can no longer be decrypted.
 As long as no account exists, the application prints a one-time **setup code** to its log
 (`docker compose logs aidocuments`). The setup page asks for it along with the administrator account – without
 the code nobody can take over an instance that is already reachable from the internet before you set it up.
+It also asks who uses AIDocuments (private, club, authority or business) and, for businesses, takes an optional
+[unlock code](#free-use-and-unlock-codes).
 
 ### Behind a reverse proxy (HTTPS)
 
@@ -702,6 +704,37 @@ Adding another language: create both files – it is detected without any code c
 language selection. Norwegian is called `nb.json` in the user interface and `messages_no.properties` on the
 server.
 
+## Free use and unlock codes
+
+AIDocuments is **free for private individuals, clubs and public authorities**. Businesses unlock it with an unlock
+code. The type of use is chosen during the first start and can be changed later under Settings → License; the sign-in
+page states the rule as well.
+
+Without a code nothing is restricted – a business installation only shows a notice in the document list (with a
+link to the license settings for administrators). With a valid code the sidebar and the settings show whom the
+installation is licensed to, the license number and how long it is valid. A code is not bound to one installation.
+
+**How a code works.** An unlock code (`AIDOCS-XXXXX-XXXXX-…`) contains the license number, the issue date, an
+optional expiry date and the company name, plus an **Ed25519 signature** over all of it. The application only holds
+the *public* key (`backend/src/main/resources/license/public-key.txt`): it can check a code, but nobody can create
+one from it. This is why the code is signed rather than encrypted – an encrypted code would need the decryption key
+inside the application, and anyone extracting it could make their own codes. Changing a single character (company,
+date) breaks the signature. The text form uses Crockford Base32 in groups of five, so case, spaces, line breaks from
+e-mails and the confusion of O/0 or I/L/1 do not matter. The stored code is verified again on every request.
+
+**Issuing codes** (needs only Java 21, nothing is built):
+
+```bash
+java tools/lizenz/Lizenz.java schluessel                                   # once: create the key pair
+java tools/lizenz/Lizenz.java ausstellen --firma "Example Ltd" --bis 2027-12-31   # --bis is optional
+java tools/lizenz/Lizenz.java pruefen AIDOCS-XXXXX-…
+```
+
+`schluessel` writes the private key to `~/.aidocuments-lizenz/privat.pem` (readable only by you) and prints the public
+key line that belongs into `public-key.txt`. **The private key never goes into the repository** – whoever has it can
+issue codes; keep a second copy in a safe place, because a new key pair invalidates all codes issued so far. Every
+issued code is recorded in `ausgestellt.csv` next to it.
+
 ## Project structure
 
 ```
@@ -720,8 +753,10 @@ backend/     Spring Boot application
     backup/     backup ZIP
     settings/   AI and schedule settings
     security/   access control, encryption of stored secrets
+    license/    type of use and unlock codes (signature check)
 frontend/    React user interface
 docker/      start script of the container
+tools/lizenz/  issuing and checking unlock codes
 ```
 
 ## License
@@ -729,7 +764,8 @@ docker/      start script of the container
 AIDocuments is **source-available**, not open source in the OSI sense: it is licensed under the
 [PolyForm Noncommercial License 1.0.0](LICENSE.md). You may use, change and share it for any noncommercial
 purpose – personal use, and use by charities, educational and research institutions and public authorities.
-Commercial use requires a separate license; please get in touch via the issue tracker.
+Commercial use requires a separate license – an [unlock code](#free-use-and-unlock-codes); please get in touch via
+the issue tracker.
 
 Contributions are welcome under the [contributor agreement](CONTRIBUTING.md#contributor-agreement). Please report security problems privately as described in [SECURITY.md](SECURITY.md), never in a public issue.
 

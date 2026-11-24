@@ -738,6 +738,10 @@
         "saved": "Nastavitve so shranjene.",
         "externalDatabase": "Samodejno varnostno kopiranje je na voljo samo z vgrajeno bazo podatkov. Pri MariaDB bazo podatkov varnostno kopirajte z njenimi orodji (npr. vsako noč z mariadb-dump), poleg tega pa še podatkovni imenik."
       }
+    },
+    "license": {
+      "title": "Licenca",
+      "navHint": "Vrsta uporabe in aktivacijska koda"
     }
   },
   "history": {
@@ -1091,5 +1095,38 @@
       "unitPrice": "Cena na enoto",
       "amount": "Znesek"
     }
+  },
+  "license": {
+    "question": "Kdo uporablja AIDocuments?",
+    "usage": {
+      "PRIVATE": "Zasebno",
+      "CLUB": "Društvo",
+      "AUTHORITY": "Organ",
+      "BUSINESS": "Podjetje"
+    },
+    "free": "brezplačno",
+    "needsCode": "z aktivacijsko kodo",
+    "freeFor": "Brezplačno za posameznike, društva in javne organe.",
+    "businessNeedsCode": "Podjetja AIDocuments odklenejo z aktivacijsko kodo.",
+    "intro": "Navedite, kdo uporablja AIDocuments. Podjetja tukaj vnesejo svojo aktivacijsko kodo – ta navaja podjetje, za katero je bila izdana.",
+    "code": "Aktivacijska koda",
+    "codeHint": "Se začne z AIDOCS-. Vnesete jo lahko tudi pozneje v Nastavitve → Licenca; do takrat je vse uporabno.",
+    "codeLaterHint": "Se začne z AIDOCS-. Brez kode je vse uporabno, prikaže se le obvestilo.",
+    "codeKeepHint": "Koda je shranjena. Pustite prazno, če jo želite obdržati, ali vnesite novo.",
+    "removeCode": "Odstrani kodo",
+    "saved": "Licenca shranjena",
+    "licensedTo": "Aktivirano za {{name}}",
+    "validUntil": "velja do {{date}}",
+    "unlimited": "velja brez časovne omejitve",
+    "number": "Licenca št. {{id}}",
+    "expired": "Aktivacijska koda za {{name}} je potekla {{date}}.",
+    "storedInvalid": "Shranjena aktivacijska koda ni veljavna. Vnesite jo znova.",
+    "missing": "AIDocuments tu uporablja podjetje, vendar še ni aktiviran. Vnesite aktivacijsko kodo.",
+    "missingUser": "Ta namestitev še ni aktivirana za poslovno uporabo. Obrnite se na skrbnika.",
+    "freeState": "Brezplačna uporaba – {{usage}}.",
+    "unset": "Navedite, kdo uporablja AIDocuments – za posameznike, društva in javne organe je brezplačen.",
+    "action": "Odpri licenco",
+    "sidebarFree": "Brezplačna uporaba · {{usage}}",
+    "sidebarUnlicensed": "Še ni aktivirano"
   }
 }

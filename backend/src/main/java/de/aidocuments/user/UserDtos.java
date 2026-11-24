@@ -60,7 +60,11 @@ public final class UserDtos {
     public record SetupRequest(
             @NotBlank(message = NOT_BLANK) @Pattern(regexp = USERNAME_PATTERN, message = USERNAME_MESSAGE) String username,
             @NotBlank(message = NOT_BLANK) @Size(min = 8, max = 200, message = PASSWORD_MESSAGE) String password,
-            @NotBlank(message = NOT_BLANK) @Size(max = 100, message = SIZE) String setupCode) {
+            @NotBlank(message = NOT_BLANK) @Size(max = 100, message = SIZE) String setupCode,
+            /* Nutzungsart; fehlt sie, fragt die Oberfläche später danach */
+            de.aidocuments.license.LicenseService.Usage usage,
+            /* Freischaltcode für Unternehmen – auch später in den Einstellungen möglich */
+            @Size(max = de.aidocuments.license.LicenseCode.MAX_TEXT, message = SIZE) String licenseCode) {
     }
 
     public record LoginRequest(@NotBlank(message = NOT_BLANK) @Size(max = 200, message = SIZE) String username,

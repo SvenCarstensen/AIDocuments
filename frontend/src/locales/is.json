@@ -702,6 +702,10 @@
         "saved": "Stillingar vistaðar.",
         "externalDatabase": "Sjálfvirk afritun er aðeins í boði með innbyggða gagnagrunninum. Með MariaDB afritarðu gagnagrunninn með hans eigin verkfærum (t.d. mariadb-dump á hverri nóttu) og auk þess gagnamöppuna."
       }
+    },
+    "license": {
+      "title": "Leyfi",
+      "navHint": "Tegund notkunar og opnunarkóði"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Einingarverð",
       "amount": "Upphæð"
     }
+  },
+  "license": {
+    "question": "Hver notar AIDocuments?",
+    "usage": {
+      "PRIVATE": "Einkanotkun",
+      "CLUB": "Félag",
+      "AUTHORITY": "Opinber stofnun",
+      "BUSINESS": "Fyrirtæki"
+    },
+    "free": "ókeypis",
+    "needsCode": "með opnunarkóða",
+    "freeFor": "Ókeypis fyrir einstaklinga, félög og opinberar stofnanir.",
+    "businessNeedsCode": "Fyrirtæki opna AIDocuments með opnunarkóða.",
+    "intro": "Segðu okkur hver notar AIDocuments. Fyrirtæki slá inn opnunarkóðann sinn hér – hann tilgreinir fyrirtækið sem hann var gefinn út fyrir.",
+    "code": "Opnunarkóði",
+    "codeHint": "Byrjar á AIDOCS-. Þú getur líka slegið hann inn síðar undir Stillingar → Leyfi; þangað til er allt nothæft.",
+    "codeLaterHint": "Byrjar á AIDOCS-. Án kóða er allt nothæft; aðeins birtist tilkynning.",
+    "codeKeepHint": "Kóði er vistaður. Skildu reitinn eftir auðan til að halda honum eða sláðu inn nýjan.",
+    "removeCode": "Fjarlægja kóða",
+    "saved": "Leyfi vistað",
+    "licensedTo": "Leyfi fyrir {{name}}",
+    "validUntil": "í gildi til {{date}}",
+    "unlimited": "í gildi um óákveðinn tíma",
+    "number": "Leyfisnúmer {{id}}",
+    "expired": "Opnunarkóðinn fyrir {{name}} rann út {{date}}.",
+    "storedInvalid": "Vistaði opnunarkóðinn er ógildur. Sláðu hann inn aftur.",
+    "missing": "Fyrirtæki notar AIDocuments hér en það hefur ekki enn verið opnað. Sláðu inn opnunarkóða.",
+    "missingUser": "Þessi uppsetning hefur ekki enn verið opnuð fyrir notkun í fyrirtæki. Hafðu samband við kerfisstjóra.",
+    "freeState": "Ókeypis notkun – {{usage}}.",
+    "unset": "Segðu okkur hver notar AIDocuments – það er ókeypis fyrir einstaklinga, félög og opinberar stofnanir.",
+    "action": "Opna leyfi",
+    "sidebarFree": "Ókeypis notkun · {{usage}}",
+    "sidebarUnlicensed": "Ekki enn opnað"
   }
 }

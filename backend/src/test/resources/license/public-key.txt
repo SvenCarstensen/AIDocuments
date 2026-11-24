@@ -1,0 +1,2 @@
+# NUR FÜR TESTS – passt zu test-private-key.pem; nie in der Anwendung verwenden
+MCowBQYDK2VwAyEAMfEeXHygaldNSnmqWkDXJY0QvaLIFQjIHKBdD0HLQhg=

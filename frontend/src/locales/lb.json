@@ -702,6 +702,10 @@
         "saved": "Astellunge gespäichert.",
         "externalDatabase": "Déi automatesch Sécherung gëtt et nëmme mat der agebauter Datebank. Mat MariaDB séchert Dir d’Datebank mat hiren eegenen Tools (z. B. en nuetleche mariadb-dump) an dozou d’Dateverzeechnes."
       }
+    },
+    "license": {
+      "title": "Lizenz",
+      "navHint": "Notzungsart a Fräischaltcode"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Eenzelpräis",
       "amount": "Betrag"
     }
+  },
+  "license": {
+    "question": "Wien notzt AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privat",
+      "CLUB": "Veräin",
+      "AUTHORITY": "Administratioun",
+      "BUSINESS": "Entreprise"
+    },
+    "free": "gratis",
+    "needsCode": "mat Fräischaltcode",
+    "freeFor": "Gratis fir Privatpersounen, Veräiner an Administratiounen.",
+    "businessNeedsCode": "Entreprisen schalten AIDocuments mat engem Fräischaltcode fräi.",
+    "intro": "Gitt un, wien AIDocuments notzt. Entreprisen droen hei hire Fräischaltcode an – en nennt d’Firma, fir déi en ausgestallt ass.",
+    "code": "Fräischaltcode",
+    "codeHint": "Fänkt mat AIDOCS- un. Dir kënnt en och méi spéit ënner Astellungen → Lizenz aginn; bis dohin léisst sech alles notzen.",
+    "codeLaterHint": "Fänkt mat AIDOCS- un. Ouni Code léisst sech alles notzen, et gëtt just en Hiweis ugewisen.",
+    "codeKeepHint": "E Code ass gespäichert. Loosst d’Feld eidel, fir en ze behalen, oder gitt en neien an.",
+    "removeCode": "Code ewechhuelen",
+    "saved": "Lizenz gespäichert",
+    "licensedTo": "Fräigeschalt fir {{name}}",
+    "validUntil": "gëlteg bis {{date}}",
+    "unlimited": "onbefrist gëlteg",
+    "number": "Lizenz-Nr. {{id}}",
+    "expired": "De Fräischaltcode fir {{name}} ass den {{date}} ofgelaf.",
+    "storedInvalid": "De gespäicherte Fräischaltcode ass net gëlteg. Gitt en w.e.g. nach eng Kéier an.",
+    "missing": "AIDocuments gëtt hei vun enger Entreprise benotzt, ass awer nach net fräigeschalt. Gitt w.e.g. e Fräischaltcode an.",
+    "missingUser": "Dës Installatioun ass nach net fir de Gebrauch an enger Entreprise fräigeschalt. Wannt Iech w.e.g. un Ären Administrateur.",
+    "freeState": "Gratis Notzung – {{usage}}.",
+    "unset": "Gitt w.e.g. un, wien AIDocuments notzt – fir Privatpersounen, Veräiner an Administratiounen ass et gratis.",
+    "action": "Lizenz opmaachen",
+    "sidebarFree": "Gratis benotzt · {{usage}}",
+    "sidebarUnlicensed": "Nach net fräigeschalt"
   }
 }

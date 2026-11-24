@@ -1,0 +1,4 @@
+# Öffentlicher Schlüssel, mit dem AIDocuments Freischaltcodes prüft (Ed25519, X.509 SubjectPublicKeyInfo, Base64).
+# Erzeugen: java tools/lizenz/Lizenz.java schluessel – dann die ausgegebene Zeile hier eintragen.
+# Den geheimen Schlüssel nie ins Repository legen.
+MCowBQYDK2VwAyEA2Ad4IgZW6hqUhkyjRtY2WnWngKcKQmjxCgu+j6+DVWI=

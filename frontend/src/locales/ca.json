@@ -720,6 +720,10 @@
         "saved": "Configuració desada.",
         "externalDatabase": "La còpia de seguretat automàtica només està disponible amb la base de dades integrada. Amb MariaDB, fes la còpia de la base de dades amb les seves pròpies eines (com ara un mariadb-dump cada nit) i, a més, del directori de dades."
       }
+    },
+    "license": {
+      "title": "Llicència",
+      "navHint": "Tipus d’ús i codi de desbloqueig"
     }
   },
   "history": {
@@ -1066,5 +1070,38 @@
       "unitPrice": "Preu unitari",
       "amount": "Import"
     }
+  },
+  "license": {
+    "question": "Qui fa servir AIDocuments?",
+    "usage": {
+      "PRIVATE": "Particular",
+      "CLUB": "Associació",
+      "AUTHORITY": "Administració",
+      "BUSINESS": "Empresa"
+    },
+    "free": "gratuït",
+    "needsCode": "amb codi de desbloqueig",
+    "freeFor": "Gratuït per a particulars, associacions i administracions públiques.",
+    "businessNeedsCode": "Les empreses desbloquegen AIDocuments amb un codi de desbloqueig.",
+    "intro": "Digue’ns qui fa servir AIDocuments. Les empreses hi introdueixen el seu codi de desbloqueig – hi consta l’empresa a la qual s’ha emès.",
+    "code": "Codi de desbloqueig",
+    "codeHint": "Comença per AIDOCS-. També el pots introduir més tard a Configuració → Llicència; fins aleshores tot continua sent utilitzable.",
+    "codeLaterHint": "Comença per AIDOCS-. Sense codi tot continua sent utilitzable; només es mostra un avís.",
+    "codeKeepHint": "Hi ha un codi desat. Deixa el camp buit per mantenir-lo o introdueix-ne un de nou.",
+    "removeCode": "Elimina el codi",
+    "saved": "Llicència desada",
+    "licensedTo": "Llicència a nom de {{name}}",
+    "validUntil": "vàlida fins al {{date}}",
+    "unlimited": "vàlida indefinidament",
+    "number": "Llicència núm. {{id}}",
+    "expired": "El codi de desbloqueig de {{name}} va caducar el {{date}}.",
+    "storedInvalid": "El codi de desbloqueig desat no és vàlid. Torna’l a introduir.",
+    "missing": "Aquí una empresa fa servir AIDocuments, però encara no està desbloquejat. Introdueix un codi de desbloqueig.",
+    "missingUser": "Aquesta instal·lació encara no està desbloquejada per a ús empresarial. Posa’t en contacte amb el teu administrador.",
+    "freeState": "Ús gratuït – {{usage}}.",
+    "unset": "Digue’ns qui fa servir AIDocuments – és gratuït per a particulars, associacions i administracions públiques.",
+    "action": "Obre la llicència",
+    "sidebarFree": "Ús gratuït · {{usage}}",
+    "sidebarUnlicensed": "Encara no desbloquejat"
   }
 }

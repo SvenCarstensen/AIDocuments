@@ -720,6 +720,10 @@
         "saved": "Setări salvate.",
         "externalDatabase": "Backupul automat este disponibil doar cu baza de date integrată. Cu MariaDB, salvați baza de date cu instrumentele proprii ale acesteia (de ex. un mariadb-dump în fiecare noapte) și, în plus, directorul de date."
       }
+    },
+    "license": {
+      "title": "Licență",
+      "navHint": "Tip de utilizare și cod de activare"
     }
   },
   "history": {
@@ -1066,5 +1070,38 @@
       "unitPrice": "Preț unitar",
       "amount": "Valoare"
     }
+  },
+  "license": {
+    "question": "Cine folosește AIDocuments?",
+    "usage": {
+      "PRIVATE": "Persoană privată",
+      "CLUB": "Asociație",
+      "AUTHORITY": "Autoritate publică",
+      "BUSINESS": "Companie"
+    },
+    "free": "gratuit",
+    "needsCode": "cu cod de activare",
+    "freeFor": "Gratuit pentru persoane private, asociații și autorități publice.",
+    "businessNeedsCode": "Companiile activează AIDocuments cu un cod de activare.",
+    "intro": "Spuneți-ne cine folosește AIDocuments. Companiile introduc aici codul de activare – acesta indică firma pentru care a fost emis.",
+    "code": "Cod de activare",
+    "codeHint": "Începe cu AIDOCS-. Îl puteți introduce și mai târziu în Setări → Licență; până atunci totul rămâne utilizabil.",
+    "codeLaterHint": "Începe cu AIDOCS-. Fără cod, totul rămâne utilizabil; se afișează doar o notificare.",
+    "codeKeepHint": "Un cod este salvat. Lăsați gol pentru a-l păstra sau introduceți unul nou.",
+    "removeCode": "Elimină codul",
+    "saved": "Licență salvată",
+    "licensedTo": "Activat pentru {{name}}",
+    "validUntil": "valabilă până la {{date}}",
+    "unlimited": "valabilă nelimitat",
+    "number": "Licență nr. {{id}}",
+    "expired": "Codul de activare pentru {{name}} a expirat la {{date}}.",
+    "storedInvalid": "Codul de activare salvat nu este valid. Introduceți-l din nou.",
+    "missing": "AIDocuments este folosit aici de o companie, dar nu a fost încă activat. Introduceți un cod de activare.",
+    "missingUser": "Această instalare nu este încă activată pentru uz comercial. Contactați administratorul.",
+    "freeState": "Utilizare gratuită – {{usage}}.",
+    "unset": "Spuneți-ne cine folosește AIDocuments – este gratuit pentru persoane private, asociații și autorități publice.",
+    "action": "Deschide licența",
+    "sidebarFree": "Utilizare gratuită · {{usage}}",
+    "sidebarUnlicensed": "Încă neactivat"
   }
 }

@@ -738,6 +738,10 @@
         "saved": "Nustatymai išsaugoti.",
         "externalDatabase": "Automatinė atsarginė kopija galima tik su įtaisytąja duomenų baze. Naudodami MariaDB, duomenų bazės atsarginę kopiją darykite jos įrankiais (pvz., kas naktį paleisdami mariadb-dump) ir kartu išsaugokite duomenų aplanką."
       }
+    },
+    "license": {
+      "title": "Licencija",
+      "navHint": "Naudojimo tipas ir atrakinimo kodas"
     }
   },
   "history": {
@@ -1091,5 +1095,38 @@
       "unitPrice": "Vieneto kaina",
       "amount": "Suma"
     }
+  },
+  "license": {
+    "question": "Kas naudoja AIDocuments?",
+    "usage": {
+      "PRIVATE": "Asmeninis",
+      "CLUB": "Asociacija",
+      "AUTHORITY": "Institucija",
+      "BUSINESS": "Verslas"
+    },
+    "free": "nemokamai",
+    "needsCode": "su atrakinimo kodu",
+    "freeFor": "Nemokama privatiems asmenims, asociacijoms ir valdžios institucijoms.",
+    "businessNeedsCode": "Įmonės AIDocuments atrakina atrakinimo kodu.",
+    "intro": "Nurodykite, kas naudoja AIDocuments. Įmonės čia įveda savo atrakinimo kodą – jame nurodyta įmonė, kuriai jis išduotas.",
+    "code": "Atrakinimo kodas",
+    "codeHint": "Prasideda AIDOCS-. Galite jį įvesti ir vėliau skiltyje Nustatymai → Licencija; iki tol viskas veikia.",
+    "codeLaterHint": "Prasideda AIDOCS-. Be kodo viskas veikia, tik rodomas pranešimas.",
+    "codeKeepHint": "Kodas išsaugotas. Palikite tuščią, kad jį paliktumėte, arba įveskite naują.",
+    "removeCode": "Pašalinti kodą",
+    "saved": "Licencija išsaugota",
+    "licensedTo": "Licencijos turėtojas: {{name}}",
+    "validUntil": "galioja iki {{date}}",
+    "unlimited": "galioja neterminuotai",
+    "number": "Licencijos Nr. {{id}}",
+    "expired": "Atrakinimo kodo, skirto {{name}}, galiojimas pasibaigė {{date}}.",
+    "storedInvalid": "Išsaugotas atrakinimo kodas negalioja. Įveskite jį iš naujo.",
+    "missing": "Čia AIDocuments naudoja įmonė, bet jis dar neatrakintas. Įveskite atrakinimo kodą.",
+    "missingUser": "Ši įdiegtis dar neatrakinta verslo naudojimui. Kreipkitės į administratorių.",
+    "freeState": "Nemokamas naudojimas – {{usage}}.",
+    "unset": "Nurodykite, kas naudoja AIDocuments – privatiems asmenims, asociacijoms ir valdžios institucijoms jis nemokamas.",
+    "action": "Atidaryti licenciją",
+    "sidebarFree": "Naudojama nemokamai · {{usage}}",
+    "sidebarUnlicensed": "Dar neatrakinta"
   }
 }

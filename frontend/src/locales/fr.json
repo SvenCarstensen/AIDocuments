@@ -720,6 +720,10 @@
         "saved": "Paramètres enregistrés.",
         "externalDatabase": "La sauvegarde automatique n’est disponible qu’avec la base de données intégrée. Avec MariaDB, sauvegardez la base de données avec ses propres outils (par exemple un mariadb-dump chaque nuit), ainsi que le répertoire de données."
       }
+    },
+    "license": {
+      "title": "Licence",
+      "navHint": "Type d’usage et code d’activation"
     }
   },
   "history": {
@@ -1066,5 +1070,38 @@
       "unitPrice": "Prix unitaire",
       "amount": "Montant"
     }
+  },
+  "license": {
+    "question": "Qui utilise AIDocuments ?",
+    "usage": {
+      "PRIVATE": "Particulier",
+      "CLUB": "Association",
+      "AUTHORITY": "Administration",
+      "BUSINESS": "Entreprise"
+    },
+    "free": "gratuit",
+    "needsCode": "avec code d’activation",
+    "freeFor": "Gratuit pour les particuliers, les associations et les administrations publiques.",
+    "businessNeedsCode": "Les entreprises activent AIDocuments avec un code d’activation.",
+    "intro": "Indiquez-nous qui utilise AIDocuments. Les entreprises saisissent ici leur code d’activation – il mentionne l’entreprise à laquelle il a été délivré.",
+    "code": "Code d’activation",
+    "codeHint": "Commence par AIDOCS-. Vous pouvez aussi le saisir plus tard sous Paramètres → Licence ; d’ici là, tout reste utilisable.",
+    "codeLaterHint": "Commence par AIDOCS-. Sans code, tout reste utilisable ; seul un avis s’affiche.",
+    "codeKeepHint": "Un code est enregistré. Laissez le champ vide pour le conserver ou saisissez-en un nouveau.",
+    "removeCode": "Supprimer le code",
+    "saved": "Licence enregistrée",
+    "licensedTo": "Licence délivrée à {{name}}",
+    "validUntil": "valable jusqu’au {{date}}",
+    "unlimited": "valable sans limite de durée",
+    "number": "Licence n° {{id}}",
+    "expired": "Le code d’activation de {{name}} a expiré le {{date}}.",
+    "storedInvalid": "Le code d’activation enregistré n’est pas valide. Veuillez le saisir à nouveau.",
+    "missing": "AIDocuments est utilisé ici par une entreprise, mais n’est pas encore activé. Veuillez saisir un code d’activation.",
+    "missingUser": "Cette installation n’est pas encore activée pour un usage professionnel. Veuillez contacter votre administrateur.",
+    "freeState": "Usage gratuit – {{usage}}.",
+    "unset": "Indiquez-nous qui utilise AIDocuments – il est gratuit pour les particuliers, les associations et les administrations publiques.",
+    "action": "Ouvrir la licence",
+    "sidebarFree": "Usage gratuit · {{usage}}",
+    "sidebarUnlicensed": "Pas encore activé"
   }
 }

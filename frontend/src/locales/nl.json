@@ -702,6 +702,10 @@
         "saved": "Instellingen opgeslagen.",
         "externalDatabase": "Automatische back-ups zijn alleen mogelijk met de ingebouwde database. Met MariaDB maak je een back-up van de database met de tools van MariaDB zelf (bijvoorbeeld een nachtelijke mariadb-dump) en daarnaast van de gegevensmap."
       }
+    },
+    "license": {
+      "title": "Licentie",
+      "navHint": "Soort gebruik en activeringscode"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Stukprijs",
       "amount": "Bedrag"
     }
+  },
+  "license": {
+    "question": "Wie gebruikt AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privé",
+      "CLUB": "Vereniging",
+      "AUTHORITY": "Overheid",
+      "BUSINESS": "Bedrijf"
+    },
+    "free": "gratis",
+    "needsCode": "met activeringscode",
+    "freeFor": "Gratis voor particulieren, verenigingen en overheidsinstanties.",
+    "businessNeedsCode": "Bedrijven activeren AIDocuments met een activeringscode.",
+    "intro": "Geef aan wie AIDocuments gebruikt. Bedrijven voeren hier hun activeringscode in – daarin staat het bedrijf waarvoor de code is uitgegeven.",
+    "code": "Activeringscode",
+    "codeHint": "Begint met AIDOCS-. Je kunt de code ook later invoeren onder Instellingen → Licentie; tot die tijd blijft alles bruikbaar.",
+    "codeLaterHint": "Begint met AIDOCS-. Zonder code blijft alles bruikbaar; er wordt alleen een melding getoond.",
+    "codeKeepHint": "Er is een code opgeslagen. Laat dit veld leeg om hem te behouden, of voer een nieuwe in.",
+    "removeCode": "Code verwijderen",
+    "saved": "Licentie opgeslagen",
+    "licensedTo": "Geactiveerd voor {{name}}",
+    "validUntil": "geldig tot {{date}}",
+    "unlimited": "onbeperkt geldig",
+    "number": "Licentienr. {{id}}",
+    "expired": "De activeringscode voor {{name}} is verlopen op {{date}}.",
+    "storedInvalid": "De opgeslagen activeringscode is niet geldig. Voer hem opnieuw in.",
+    "missing": "AIDocuments wordt hier door een bedrijf gebruikt, maar is nog niet geactiveerd. Voer een activeringscode in.",
+    "missingUser": "Deze installatie is nog niet geactiveerd voor zakelijk gebruik. Neem contact op met je beheerder.",
+    "freeState": "Gratis gebruik – {{usage}}.",
+    "unset": "Geef aan wie AIDocuments gebruikt – voor particulieren, verenigingen en overheidsinstanties is het gratis.",
+    "action": "Licentie openen",
+    "sidebarFree": "Gratis in gebruik · {{usage}}",
+    "sidebarUnlicensed": "Nog niet geactiveerd"
   }
 }

@@ -756,6 +756,10 @@
         "saved": "Is-settings ġew issejvjati.",
         "externalDatabase": "Il-backup awtomatiku huwa disponibbli biss bid-database integrata. B’MariaDB, agħmel backup tad-database bl-għodod tagħha stess (pereżempju mariadb-dump kull lejl) flimkien mad-direttorju tad-data."
       }
+    },
+    "license": {
+      "title": "Liċenzja",
+      "navHint": "Tip ta’ użu u kodiċi ta’ ftuħ"
     }
   },
   "history": {
@@ -1116,5 +1120,38 @@
       "unitPrice": "Prezz unitarju",
       "amount": "Ammont"
     }
+  },
+  "license": {
+    "question": "Min juża AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privat",
+      "CLUB": "Klabb",
+      "AUTHORITY": "Awtorità",
+      "BUSINESS": "Negozju"
+    },
+    "free": "b’xejn",
+    "needsCode": "b’kodiċi ta’ ftuħ",
+    "freeFor": "B’xejn għal individwi privati, klabbs u awtoritajiet pubbliċi.",
+    "businessNeedsCode": "In-negozji jiftħu AIDocuments b’kodiċi ta’ ftuħ.",
+    "intro": "Għidilna min juża AIDocuments. In-negozji jdaħħlu hawn il-kodiċi ta’ ftuħ tagħhom – jsemmi l-kumpanija li għaliha ngħata.",
+    "code": "Kodiċi ta’ ftuħ",
+    "codeHint": "Jibda b’AIDOCS-. Tista’ tdaħħlu wkoll aktar tard taħt Settings → Liċenzja; sa dakinhar kollox jibqa’ jintuża.",
+    "codeLaterHint": "Jibda b’AIDOCS-. Mingħajr kodiċi kollox jibqa’ jintuża; tidher biss avviż.",
+    "codeKeepHint": "Kodiċi huwa maħżun. Ħallih vojt biex iżommu, jew daħħal wieħed ġdid.",
+    "removeCode": "Neħħi l-kodiċi",
+    "saved": "Il-liċenzja nħażnet",
+    "licensedTo": "Liċenzjat lil {{name}}",
+    "validUntil": "validu sa {{date}}",
+    "unlimited": "validu għal żmien indefinit",
+    "number": "Liċenzja nru {{id}}",
+    "expired": "Il-kodiċi ta’ ftuħ għal {{name}} skada fi {{date}}.",
+    "storedInvalid": "Il-kodiċi ta’ ftuħ maħżun mhuwiex validu. Daħħlu mill-ġdid.",
+    "missing": "AIDocuments qed jintuża hawn minn negozju iżda għadu mhux miftuħ. Daħħal kodiċi ta’ ftuħ.",
+    "missingUser": "Din l-installazzjoni għadha mhux miftuħa għal użu kummerċjali. Ikkuntattja lill-amministratur tiegħek.",
+    "freeState": "Użu b’xejn – {{usage}}.",
+    "unset": "Għidilna min juża AIDocuments – huwa b’xejn għal individwi privati, klabbs u awtoritajiet pubbliċi.",
+    "action": "Iftaħ il-liċenzja",
+    "sidebarFree": "Użat b’xejn · {{usage}}",
+    "sidebarUnlicensed": "Għadu mhux miftuħ"
   }
 }

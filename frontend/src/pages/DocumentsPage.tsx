@@ -6,10 +6,11 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { isBusy, metaLine, Snippet, StatusBadge, TagChip, Thumbnail } from '../components/documents'
 import { Alert, Badge, Button, EmptyState, IconButton, Input, Modal, Select, Spinner } from '../components/ui'
-import { api, type Area, type Doc, type DocumentQuery, errorMessage, type Facets, MAX_PAGE_SIZE, type SortOrder } from '../lib/api'
+import { api, type Area, type Doc, type DocumentQuery, errorMessage, type Facets, type LicenseStatus, MAX_PAGE_SIZE, type SortOrder } from '../lib/api'
 import { areaName, areaNameById, useAreas } from '../lib/areas'
 import { useAuth } from '../lib/auth'
 import { cx, formatDate, formatFinishTime, formatRelative, formatRemaining } from '../lib/format'
+import { licenseSummary } from '../lib/license'
 import { documentTypeLabel } from '../lib/documentTypes'
 
 type View = 'grid' | 'list'
@@ -183,7 +184,7 @@ export function DocumentsPage() {
         {/* Filter oben (eigener Bildlauf), der Menüpunkt Historie immer unten in der Leiste */}
         <div className="sticky top-22 -ml-2 flex h-[calc(100dvh-7rem)] flex-col">
           <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pr-1 pb-4 pl-2">{filterPanel}</div>
-          <SideLinks />
+          <SideLinks license={system.data?.license} />
         </div>
       </aside>
 
@@ -239,6 +240,8 @@ export function DocumentsPage() {
                 : t('documents.backupNotice.never')}
           </Alert>
         )}
+
+        {system.data && <LicenseNotice status={system.data.license} isAdmin={isAdmin} />}
 
         {aiQuestion && (
           <Alert tone="brand" className="mb-4">
@@ -398,7 +401,7 @@ export function DocumentsPage() {
       <Modal open={filtersOpen} onClose={() => setFiltersOpen(false)} title={t('documents.filters.title')} footer={<Button variant="primary" onClick={() => setFiltersOpen(false)}>{t('documents.filters.apply')}</Button>}>
         {filterPanel}
         <div className="mt-6">
-          <SideLinks />
+          <SideLinks license={system.data?.license} />
         </div>
       </Modal>
     </div>
@@ -612,9 +615,39 @@ function useSectionOpen(name: string | undefined): [boolean, (open: boolean) => 
 }
 
 /** Menüpunkte Verträge und Historie, unten in der linken Leiste. */
-function SideLinks() {
+/** Hinweis, solange die Nutzungsart fehlt oder ein Unternehmen keinen gültigen Freischaltcode hat – sonst nichts. */
+function LicenseNotice({ status, isAdmin }: { status: LicenseStatus; isAdmin: boolean }) {
+  const { t } = useTranslation()
+  if (status.state === 'FREE' || status.state === 'LICENSED' || (status.state === 'UNSET' && !isAdmin)) return null
+  const text =
+    status.state === 'UNSET'
+      ? t('license.unset')
+      : !isAdmin
+        ? t('license.missingUser')
+        : status.state === 'EXPIRED'
+          ? t('license.expired', { name: status.licensee, date: formatDate(status.validUntil) })
+          : t('license.missing')
+  return (
+    <Alert
+      tone={status.state === 'UNSET' ? 'brand' : 'warn'}
+      className="mb-5"
+      action={
+        isAdmin && (
+          <Link to="/settings/license" className="shrink-0 font-semibold underline underline-offset-2">
+            {t('license.action')}
+          </Link>
+        )
+      }
+    >
+      {text}
+    </Alert>
+  )
+}
+
+function SideLinks({ license }: { license?: LicenseStatus }) {
   const { t } = useTranslation()
   const link = 'flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-muted hover:bg-raised hover:text-ink'
+  const summary = license ? licenseSummary(license, t) : null
   return (
     <div className="flex shrink-0 flex-col border-t border-line py-1.5">
       <Link to="/contracts" className={link}>
@@ -625,6 +658,11 @@ function SideLinks() {
         <History className="size-4" aria-hidden />
         {t('history.nav')}
       </Link>
+      {summary && (
+        <p className={cx('mt-1 truncate px-2 text-xs', license?.state === 'FREE' || license?.state === 'LICENSED' ? 'text-subtle' : 'text-warn')} title={summary}>
+          {summary}
+        </p>
+      )}
     </div>
   )
 }

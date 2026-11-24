@@ -702,6 +702,10 @@
         "saved": "Inställningarna har sparats.",
         "externalDatabase": "Automatisk säkerhetskopiering finns bara med den inbyggda databasen. Med MariaDB säkerhetskopierar du databasen med dess egna verktyg (till exempel en nattlig mariadb-dump) och dessutom datamappen."
       }
+    },
+    "license": {
+      "title": "Licens",
+      "navHint": "Användningstyp och aktiveringskod"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "À-pris",
       "amount": "Belopp"
     }
+  },
+  "license": {
+    "question": "Vem använder AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privat",
+      "CLUB": "Förening",
+      "AUTHORITY": "Myndighet",
+      "BUSINESS": "Företag"
+    },
+    "free": "gratis",
+    "needsCode": "med aktiveringskod",
+    "freeFor": "Gratis för privatpersoner, föreningar och myndigheter.",
+    "businessNeedsCode": "Företag aktiverar AIDocuments med en aktiveringskod.",
+    "intro": "Ange vem som använder AIDocuments. Företag anger sin aktiveringskod här – den anger vilket företag den är utfärdad till.",
+    "code": "Aktiveringskod",
+    "codeHint": "Börjar med AIDOCS-. Du kan också ange den senare under Inställningar → Licens; till dess går allt att använda.",
+    "codeLaterHint": "Börjar med AIDOCS-. Utan kod går allt att använda, bara ett meddelande visas.",
+    "codeKeepHint": "En kod är sparad. Lämna tomt för att behålla den, eller ange en ny.",
+    "removeCode": "Ta bort kod",
+    "saved": "Licensen sparad",
+    "licensedTo": "Aktiverad för {{name}}",
+    "validUntil": "giltig till {{date}}",
+    "unlimited": "giltig utan tidsgräns",
+    "number": "Licensnr {{id}}",
+    "expired": "Aktiveringskoden för {{name}} gick ut den {{date}}.",
+    "storedInvalid": "Den sparade aktiveringskoden är inte giltig. Ange den igen.",
+    "missing": "AIDocuments används här av ett företag men är ännu inte aktiverat. Ange en aktiveringskod.",
+    "missingUser": "Den här installationen är ännu inte aktiverad för företagsbruk. Kontakta din administratör.",
+    "freeState": "Gratis användning – {{usage}}.",
+    "unset": "Ange vem som använder AIDocuments – det är gratis för privatpersoner, föreningar och myndigheter.",
+    "action": "Öppna licens",
+    "sidebarFree": "Används gratis · {{usage}}",
+    "sidebarUnlicensed": "Ännu inte aktiverat"
   }
 }

@@ -738,6 +738,10 @@
         "saved": "Ustawienia zostały zapisane.",
         "externalDatabase": "Automatyczna kopia zapasowa jest dostępna tylko z wbudowaną bazą danych. W przypadku MariaDB utwórz kopię zapasową bazy danych jej własnymi narzędziami (np. za pomocą mariadb-dump uruchamianego co noc), a do tego także katalogu danych."
       }
+    },
+    "license": {
+      "title": "Licencja",
+      "navHint": "Rodzaj użycia i kod aktywacyjny"
     }
   },
   "history": {
@@ -1091,5 +1095,38 @@
       "unitPrice": "Cena jednostkowa",
       "amount": "Wartość"
     }
+  },
+  "license": {
+    "question": "Kto używa AIDocuments?",
+    "usage": {
+      "PRIVATE": "Prywatnie",
+      "CLUB": "Stowarzyszenie",
+      "AUTHORITY": "Urząd",
+      "BUSINESS": "Firma"
+    },
+    "free": "bezpłatnie",
+    "needsCode": "z kodem aktywacyjnym",
+    "freeFor": "Bezpłatnie dla osób prywatnych, stowarzyszeń i urzędów.",
+    "businessNeedsCode": "Firmy aktywują AIDocuments za pomocą kodu aktywacyjnego.",
+    "intro": "Podaj, kto używa AIDocuments. Firmy wpisują tutaj swój kod aktywacyjny – wskazuje on firmę, dla której został wystawiony.",
+    "code": "Kod aktywacyjny",
+    "codeHint": "Zaczyna się od AIDOCS-. Możesz go wpisać także później w Ustawienia → Licencja; do tego czasu wszystko działa.",
+    "codeLaterHint": "Zaczyna się od AIDOCS-. Bez kodu wszystko działa, wyświetlane jest tylko powiadomienie.",
+    "codeKeepHint": "Kod jest zapisany. Zostaw to pole puste, aby go zachować, albo wpisz nowy.",
+    "removeCode": "Usuń kod",
+    "saved": "Licencja zapisana",
+    "licensedTo": "Aktywowano dla: {{name}}",
+    "validUntil": "ważna do {{date}}",
+    "unlimited": "ważna bezterminowo",
+    "number": "Nr licencji {{id}}",
+    "expired": "Kod aktywacyjny dla {{name}} wygasł {{date}}.",
+    "storedInvalid": "Zapisany kod aktywacyjny jest nieprawidłowy. Wpisz go ponownie.",
+    "missing": "AIDocuments jest tutaj używany przez firmę, ale nie został jeszcze aktywowany. Wpisz kod aktywacyjny.",
+    "missingUser": "Ta instalacja nie została jeszcze aktywowana do użytku firmowego. Skontaktuj się z administratorem.",
+    "freeState": "Bezpłatne użycie – {{usage}}.",
+    "unset": "Podaj, kto używa AIDocuments – dla osób prywatnych, stowarzyszeń i urzędów jest bezpłatny.",
+    "action": "Otwórz licencję",
+    "sidebarFree": "Używany bezpłatnie · {{usage}}",
+    "sidebarUnlicensed": "Jeszcze nieaktywowany"
   }
 }

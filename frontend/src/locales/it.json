@@ -720,6 +720,10 @@
         "saved": "Impostazioni salvate.",
         "externalDatabase": "Il backup automatico è disponibile solo con il database integrato. Con MariaDB esegui il backup del database con i suoi strumenti (ad es. un mariadb-dump ogni notte) e, in aggiunta, della cartella dati."
       }
+    },
+    "license": {
+      "title": "Licenza",
+      "navHint": "Tipo di utilizzo e codice di sblocco"
     }
   },
   "history": {
@@ -1066,5 +1070,38 @@
       "unitPrice": "Prezzo unitario",
       "amount": "Importo"
     }
+  },
+  "license": {
+    "question": "Chi usa AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privato",
+      "CLUB": "Associazione",
+      "AUTHORITY": "Ente pubblico",
+      "BUSINESS": "Azienda"
+    },
+    "free": "gratis",
+    "needsCode": "con codice di sblocco",
+    "freeFor": "Gratis per privati, associazioni ed enti pubblici.",
+    "businessNeedsCode": "Le aziende sbloccano AIDocuments con un codice di sblocco.",
+    "intro": "Indica chi usa AIDocuments. Le aziende inseriscono qui il proprio codice di sblocco – riporta l’azienda per cui è stato emesso.",
+    "code": "Codice di sblocco",
+    "codeHint": "Inizia con AIDOCS-. Puoi inserirlo anche più tardi in Impostazioni → Licenza; fino ad allora tutto resta utilizzabile.",
+    "codeLaterHint": "Inizia con AIDOCS-. Senza codice tutto resta utilizzabile; viene mostrato solo un avviso.",
+    "codeKeepHint": "Un codice è memorizzato. Lascia vuoto per mantenerlo, oppure inseriscine uno nuovo.",
+    "removeCode": "Rimuovi codice",
+    "saved": "Licenza salvata",
+    "licensedTo": "Concessa in licenza a {{name}}",
+    "validUntil": "valida fino al {{date}}",
+    "unlimited": "valida a tempo indeterminato",
+    "number": "Licenza n. {{id}}",
+    "expired": "Il codice di sblocco per {{name}} è scaduto il {{date}}.",
+    "storedInvalid": "Il codice di sblocco memorizzato non è valido. Inseriscilo di nuovo.",
+    "missing": "Qui AIDocuments è usato da un’azienda ma non è ancora sbloccato. Inserisci un codice di sblocco.",
+    "missingUser": "Questa installazione non è ancora sbloccata per l’uso aziendale. Rivolgiti al tuo amministratore.",
+    "freeState": "Uso gratuito – {{usage}}.",
+    "unset": "Indica chi usa AIDocuments – è gratuito per privati, associazioni ed enti pubblici.",
+    "action": "Apri licenza",
+    "sidebarFree": "Uso gratuito · {{usage}}",
+    "sidebarUnlicensed": "Non ancora sbloccato"
   }
 }

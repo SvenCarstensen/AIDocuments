@@ -32,7 +32,9 @@ public class SystemController {
                             /* nur für Admins: Postfächer, die sich wiederholt nicht abrufen lassen */
                             List<String> failingMailboxes,
                             /* nur für Admins: zu lange nicht gesichert oder die automatische Sicherung schlug fehl */
-                            de.aidocuments.backup.AutoBackup.Notice backup) {
+                            de.aidocuments.backup.AutoBackup.Notice backup,
+                            /* Nutzungsart und Freischaltung – für alle sichtbar (Hinweis, „lizenziert für …“) */
+                            de.aidocuments.license.LicenseService.Status license) {
     }
 
     private final DocumentRepository documents;
@@ -42,11 +44,14 @@ public class SystemController {
     private final de.aidocuments.area.AreaAccess access;
     private final de.aidocuments.mail.MailAccountRepository mailAccounts;
     private final de.aidocuments.backup.AutoBackup autoBackup;
+    private final de.aidocuments.license.LicenseService license;
 
     public SystemController(DocumentRepository documents, AiSettingsService aiSettings, BuiltinOcrService builtinOcr,
                             de.aidocuments.area.AreaAccess access,
                             de.aidocuments.mail.MailAccountRepository mailAccounts,
-                            de.aidocuments.backup.AutoBackup autoBackup) {
+                            de.aidocuments.backup.AutoBackup autoBackup,
+                            de.aidocuments.license.LicenseService license) {
+        this.license = license;
         this.autoBackup = autoBackup;
         this.access = access;
         this.mailAccounts = mailAccounts;
@@ -76,6 +81,7 @@ public class SystemController {
                 // alles sichtbar heißt hier: Admin
                 areas == null ? mailAccounts.failingNames(de.aidocuments.mail.MailSyncService.FAILURES_BEFORE_NOTICE)
                         : List.of(),
-                areas == null ? autoBackup.notice(visible) : null);
+                areas == null ? autoBackup.notice(visible) : null,
+                license.status());
     }
 }

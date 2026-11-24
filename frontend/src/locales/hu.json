@@ -702,6 +702,10 @@
         "saved": "Beállítások mentve.",
         "externalDatabase": "Az automatikus biztonsági mentés csak a beépített adatbázissal érhető el. MariaDB esetén az adatbázist annak saját eszközeivel (például éjszakánként futtatott mariadb-dump paranccsal) mentsd, és mellé az adatkönyvtárat is."
       }
+    },
+    "license": {
+      "title": "Licenc",
+      "navHint": "Használat típusa és feloldó kód"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Egységár",
       "amount": "Összeg"
     }
+  },
+  "license": {
+    "question": "Ki használja az AIDocuments alkalmazást?",
+    "usage": {
+      "PRIVATE": "Magánhasználat",
+      "CLUB": "Egyesület",
+      "AUTHORITY": "Hatóság",
+      "BUSINESS": "Vállalkozás"
+    },
+    "free": "ingyenes",
+    "needsCode": "feloldó kóddal",
+    "freeFor": "Ingyenes magánszemélyeknek, egyesületeknek és hatóságoknak.",
+    "businessNeedsCode": "A vállalkozások feloldó kóddal oldják fel az AIDocuments alkalmazást.",
+    "intro": "Add meg, ki használja az AIDocuments alkalmazást. A vállalkozások itt adják meg a feloldó kódjukat – ez megnevezi a céget, amelynek kiállították.",
+    "code": "Feloldó kód",
+    "codeHint": "AIDOCS- előtaggal kezdődik. Később is megadhatod a Beállítások → Licenc menüpontban; addig minden használható.",
+    "codeLaterHint": "AIDOCS- előtaggal kezdődik. Kód nélkül is minden használható, csak egy értesítés jelenik meg.",
+    "codeKeepHint": "Van tárolt kód. Hagyd üresen a megtartásához, vagy adj meg újat.",
+    "removeCode": "Kód eltávolítása",
+    "saved": "Licenc mentve",
+    "licensedTo": "Licenctulajdonos: {{name}}",
+    "validUntil": "érvényes eddig: {{date}}",
+    "unlimited": "határozatlan ideig érvényes",
+    "number": "Licencszám: {{id}}",
+    "expired": "A(z) {{name}} feloldó kódja lejárt ekkor: {{date}}.",
+    "storedInvalid": "A tárolt feloldó kód érvénytelen. Add meg újra.",
+    "missing": "Az AIDocuments alkalmazást itt egy vállalkozás használja, de még nincs feloldva. Add meg a feloldó kódot.",
+    "missingUser": "Ez a telepítés még nincs feloldva vállalati használatra. Fordulj a rendszergazdához.",
+    "freeState": "Ingyenes használat – {{usage}}.",
+    "unset": "Add meg, ki használja az AIDocuments alkalmazást – magánszemélyeknek, egyesületeknek és hatóságoknak ingyenes.",
+    "action": "Licenc megnyitása",
+    "sidebarFree": "Ingyenes használat · {{usage}}",
+    "sidebarUnlicensed": "Még nincs feloldva"
   }
 }

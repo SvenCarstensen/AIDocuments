@@ -49,10 +49,12 @@ public class AuthController {
     private final CsrfTokenRepository csrfTokens;
     private final TwoFactorService twoFactor;
     private final PasskeyService passkeys;
+    private final de.aidocuments.license.LicenseService license;
 
     public AuthController(UserService userService, AuthenticationManager authenticationManager,
                           LoginThrottle throttle, CsrfTokenRepository csrfTokens, TwoFactorService twoFactor,
-                          PasskeyService passkeys) {
+                          PasskeyService passkeys, de.aidocuments.license.LicenseService license) {
+        this.license = license;
         this.passkeys = passkeys;
         this.twoFactor = twoFactor;
         this.csrfTokens = csrfTokens;
@@ -77,6 +79,10 @@ public class AuthController {
                          HttpServletResponse response) {
         LoginThrottle.Attempt attempt = begin(null, request);
         try {
+            // erst den Freischaltcode prüfen: Ein falscher soll nicht ein halb eingerichtetes System hinterlassen
+            if (body.usage() == de.aidocuments.license.LicenseService.Usage.BUSINESS) {
+                license.check(body.licenseCode());
+            }
             userService.createInitialAdmin(body.username(), body.password(), body.setupCode());
         } catch (ApiException e) {
             if (e.getStatus() != HttpStatus.UNAUTHORIZED) {
@@ -85,6 +91,9 @@ public class AuthController {
             throw e;
         }
         attempt.succeeded();
+        if (body.usage() != null) {
+            license.update(body.usage(), body.licenseCode() == null ? "" : body.licenseCode(), body.username());
+        }
         return authenticate(body.username(), body.password(), request, response);
     }
 

@@ -738,6 +738,10 @@
         "saved": "Nastavenia boli uložené.",
         "externalDatabase": "Automatická záloha je k dispozícii iba so vstavanou databázou. Pri MariaDB zálohujte databázu jej vlastnými nástrojmi (napr. nočným spustením mariadb-dump) a k tomu aj dátový adresár."
       }
+    },
+    "license": {
+      "title": "Licencia",
+      "navHint": "Druh používania a aktivačný kód"
     }
   },
   "history": {
@@ -1091,5 +1095,38 @@
       "unitPrice": "Jednotková cena",
       "amount": "Suma"
     }
+  },
+  "license": {
+    "question": "Kto používa AIDocuments?",
+    "usage": {
+      "PRIVATE": "Súkromne",
+      "CLUB": "Spolok",
+      "AUTHORITY": "Úrad",
+      "BUSINESS": "Firma"
+    },
+    "free": "zadarmo",
+    "needsCode": "s aktivačným kódom",
+    "freeFor": "Zadarmo pre súkromné osoby, spolky a úrady.",
+    "businessNeedsCode": "Firmy aktivujú AIDocuments aktivačným kódom.",
+    "intro": "Uveďte, kto používa AIDocuments. Firmy tu zadávajú svoj aktivačný kód – uvádza firmu, pre ktorú bol vydaný.",
+    "code": "Aktivačný kód",
+    "codeHint": "Začína sa na AIDOCS-. Môžete ho zadať aj neskôr v Nastavenia → Licencia; dovtedy zostáva všetko použiteľné.",
+    "codeLaterHint": "Začína sa na AIDOCS-. Bez kódu zostáva všetko použiteľné, zobrazí sa len upozornenie.",
+    "codeKeepHint": "Kód je uložený. Ak ho chcete ponechať, nechajte pole prázdne, alebo zadajte nový.",
+    "removeCode": "Odstrániť kód",
+    "saved": "Licencia uložená",
+    "licensedTo": "Aktivované pre {{name}}",
+    "validUntil": "platná do {{date}}",
+    "unlimited": "platná bez časového obmedzenia",
+    "number": "Licencia č. {{id}}",
+    "expired": "Platnosť aktivačného kódu pre {{name}} skončila {{date}}.",
+    "storedInvalid": "Uložený aktivačný kód nie je platný. Zadajte ho znova.",
+    "missing": "AIDocuments tu používa firma, ale ešte nie je aktivovaný. Zadajte aktivačný kód.",
+    "missingUser": "Táto inštalácia ešte nie je aktivovaná na firemné použitie. Obráťte sa na správcu.",
+    "freeState": "Bezplatné používanie – {{usage}}.",
+    "unset": "Uveďte, kto používa AIDocuments – pre súkromné osoby, spolky a úrady je zadarmo.",
+    "action": "Otvoriť licenciu",
+    "sidebarFree": "Používané zadarmo · {{usage}}",
+    "sidebarUnlicensed": "Ešte neaktivované"
   }
 }

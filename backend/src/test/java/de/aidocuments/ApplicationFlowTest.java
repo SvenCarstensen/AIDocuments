@@ -209,6 +209,13 @@ class ApplicationFlowTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"angreifer\",\"password\":\"test-Passwort-9\",\"setupCode\":\"AAAA-BBBB-CCCC\"}"))
                 .andExpect(status().isUnauthorized());
+        // ein falscher Freischaltcode richtet nichts halb ein
+        mvc.perform(post("/api/auth/setup").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"Chef\",\"password\":\"test-Passwort-1\",\"setupCode\":\"" + code
+                                + "\",\"usage\":\"BUSINESS\",\"licenseCode\":\"AIDOCS-12345-67890\"}"))
+                .andExpect(status().isBadRequest());
+        assertThat(userService.setupRequired()).isTrue();
         mvc.perform(post("/api/auth/setup").with(csrf()).session(adminSession)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"Chef\",\"password\":\"test-Passwort-1\",\"setupCode\":\""
@@ -2927,6 +2934,98 @@ class ApplicationFlowTest {
     private static long jsonNumber(MvcResult result, String path) throws Exception {
         Number value = com.jayway.jsonpath.JsonPath.read(result.getResponse().getContentAsString(), path);
         return value.longValue();
+    }
+
+    @Test
+    @Order(32)
+    void businessesUnlockWithASignedCodeEveryoneElseUsesItForFree() throws Exception {
+        mvc.perform(post("/api/users").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"lena\",\"password\":\"test-Passwort-32\",\"role\":\"USER\"}"))
+                .andExpect(status().isCreated());
+        MockHttpSession lena = new MockHttpSession();
+        mvc.perform(post("/api/auth/login").with(csrf()).session(lena).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"lena\",\"password\":\"test-Passwort-32\"}"))
+                .andExpect(status().isOk());
+        // noch nicht angegeben (die Ersteinrichtung in Order 1 lief ohne Nutzungsart)
+        mvc.perform(get("/api/system").session(lena))
+                .andExpect(jsonPath("$.license.state").value("UNSET"));
+        mvc.perform(put("/api/settings/license").with(csrf()).session(lena)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"usage\":\"PRIVATE\"}"))
+                .andExpect(status().isForbidden());
+        mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest());
+
+        // Unternehmen ohne Code: alles nutzbar, nur der Hinweis
+        mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"usage\":\"BUSINESS\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.state").value("UNLICENSED"))
+                .andExpect(jsonPath("$.codeStored").value(false));
+        mvc.perform(get("/api/documents").session(lena)).andExpect(status().isOk());
+
+        // ausgedacht, mit fremdem Schlüssel oder abgelaufen: abgelehnt, nichts gespeichert
+        java.security.PrivateKey foreign = java.security.KeyPairGenerator.getInstance("Ed25519").generateKeyPair()
+                .getPrivate();
+        String forged = de.aidocuments.license.LicenseCodeTest.issue(new de.aidocuments.license.LicenseCode.License(
+                "12345678", "Fremd GmbH", java.time.LocalDate.of(2026, 1, 1), null), foreign);
+        String expired = de.aidocuments.license.LicenseCodeTest.issueWithTestKey(
+                new de.aidocuments.license.LicenseCode.License("0badc0de", "Alt GmbH",
+                        java.time.LocalDate.of(2025, 1, 1), java.time.LocalDate.of(2025, 12, 31)));
+        for (String bad : java.util.List.of("AIDOCS-HALLO-WELT", forged)) {
+            mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                            .header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"usage\":\"BUSINESS\",\"code\":\"" + bad + "\"}"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value(containsString("Freischaltcode")));
+        }
+        mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "de")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"usage\":\"BUSINESS\",\"code\":\"" + expired + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value(containsString("2025")));
+        mvc.perform(get("/api/settings/license").session(adminSession))
+                .andExpect(jsonPath("$.state").value("UNLICENSED"))
+                .andExpect(jsonPath("$.codeStored").value(false));
+
+        // gültiger Code, auch klein geschrieben und umbrochen eingegeben
+        String code = de.aidocuments.license.LicenseCodeTest.issueWithTestKey(
+                new de.aidocuments.license.LicenseCode.License("c0ffee42", "Beispiel & Söhne GmbH",
+                        java.time.LocalDate.of(2026, 11, 1), java.time.LocalDate.of(2030, 12, 31)));
+        mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"usage\":\"BUSINESS\",\"code\":\"" + code.toLowerCase().replace("-", "\\n") + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.state").value("LICENSED"))
+                .andExpect(jsonPath("$.licensee").value("Beispiel & Söhne GmbH"))
+                .andExpect(jsonPath("$.validUntil").value("2030-12-31"))
+                .andExpect(jsonPath("$.licenseId").value("c0ffee42"));
+        // alle sehen, für wen freigeschaltet ist – den Code selbst bekommt niemand zurück
+        String system = mvc.perform(get("/api/system").session(lena))
+                .andExpect(jsonPath("$.license.state").value("LICENSED"))
+                .andExpect(jsonPath("$.license.licensee").value("Beispiel & Söhne GmbH"))
+                .andReturn().getResponse().getContentAsString();
+        assertThat(system.toUpperCase()).doesNotContain(code.substring(20, 40));
+
+        // ohne Code gespeichert: der bisherige bleibt
+        mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"usage\":\"BUSINESS\"}"))
+                .andExpect(jsonPath("$.state").value("LICENSED"));
+        // Verein: kostenlos, der Code wird verworfen
+        mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"usage\":\"CLUB\",\"code\":\"" + code + "\"}"))
+                .andExpect(jsonPath("$.state").value("FREE"))
+                .andExpect(jsonPath("$.usage").value("CLUB"))
+                .andExpect(jsonPath("$.codeStored").value(false));
+        mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"usage\":\"BUSINESS\"}"))
+                .andExpect(jsonPath("$.state").value("UNLICENSED"));
+        mvc.perform(put("/api/settings/license").with(csrf()).session(adminSession)
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"usage\":\"PRIVATE\"}"))
+                .andExpect(jsonPath("$.state").value("FREE"));
     }
 
     private static String jsonValue(MvcResult result, String path) throws Exception {

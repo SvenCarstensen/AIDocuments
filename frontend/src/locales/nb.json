@@ -702,6 +702,10 @@
         "saved": "Innstillingene er lagret.",
         "externalDatabase": "Automatisk sikkerhetskopiering finnes bare med den innebygde databasen. Med MariaDB sikkerhetskopierer du databasen med dens egne verktøy (for eksempel en nattlig mariadb-dump) og i tillegg datamappen."
       }
+    },
+    "license": {
+      "title": "Lisens",
+      "navHint": "Bruksmåte og opplåsingskode"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Enhetspris",
       "amount": "Beløp"
     }
+  },
+  "license": {
+    "question": "Hvem bruker AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privat",
+      "CLUB": "Forening",
+      "AUTHORITY": "Myndighet",
+      "BUSINESS": "Bedrift"
+    },
+    "free": "gratis",
+    "needsCode": "med opplåsingskode",
+    "freeFor": "Gratis for privatpersoner, foreninger og offentlige myndigheter.",
+    "businessNeedsCode": "Bedrifter låser opp AIDocuments med en opplåsingskode.",
+    "intro": "Si fra hvem som bruker AIDocuments. Bedrifter skriver inn opplåsingskoden sin her – den oppgir firmaet den er utstedt til.",
+    "code": "Opplåsingskode",
+    "codeHint": "Starter med AIDOCS-. Du kan også skrive den inn senere under Innstillinger → Lisens; til da kan alt brukes.",
+    "codeLaterHint": "Starter med AIDOCS-. Uten kode kan alt brukes; det vises bare et varsel.",
+    "codeKeepHint": "En kode er lagret. La feltet stå tomt for å beholde den, eller skriv inn en ny.",
+    "removeCode": "Fjern kode",
+    "saved": "Lisens lagret",
+    "licensedTo": "Lisensiert til {{name}}",
+    "validUntil": "gyldig til {{date}}",
+    "unlimited": "gyldig på ubestemt tid",
+    "number": "Lisensnr. {{id}}",
+    "expired": "Opplåsingskoden for {{name}} utløp {{date}}.",
+    "storedInvalid": "Den lagrede opplåsingskoden er ikke gyldig. Skriv den inn på nytt.",
+    "missing": "AIDocuments brukes her av en bedrift, men er ikke låst opp ennå. Skriv inn en opplåsingskode.",
+    "missingUser": "Denne installasjonen er ikke låst opp for bruk i bedrift ennå. Ta kontakt med administratoren din.",
+    "freeState": "Gratis bruk – {{usage}}.",
+    "unset": "Si fra hvem som bruker AIDocuments – det er gratis for privatpersoner, foreninger og offentlige myndigheter.",
+    "action": "Åpne lisens",
+    "sidebarFree": "Brukes gratis · {{usage}}",
+    "sidebarUnlicensed": "Ikke låst opp ennå"
   }
 }

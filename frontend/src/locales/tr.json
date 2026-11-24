@@ -702,6 +702,10 @@
         "saved": "Ayarlar kaydedildi.",
         "externalDatabase": "Otomatik yedekleme yalnızca yerleşik veritabanıyla kullanılabilir. MariaDB kullanıyorsanız veritabanını kendi araçlarıyla (ör. her gece çalışan bir mariadb-dump ile) yedekleyin, veri dizinini de ayrıca yedekleyin."
       }
+    },
+    "license": {
+      "title": "Lisans",
+      "navHint": "Kullanım türü ve etkinleştirme kodu"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Birim fiyat",
       "amount": "Tutar"
     }
+  },
+  "license": {
+    "question": "AIDocuments’ı kim kullanıyor?",
+    "usage": {
+      "PRIVATE": "Bireysel",
+      "CLUB": "Dernek",
+      "AUTHORITY": "Kamu kurumu",
+      "BUSINESS": "Şirket"
+    },
+    "free": "ücretsiz",
+    "needsCode": "etkinleştirme koduyla",
+    "freeFor": "Bireyler, dernekler ve kamu kurumları için ücretsizdir.",
+    "businessNeedsCode": "Şirketler AIDocuments’ı bir etkinleştirme koduyla etkinleştirir.",
+    "intro": "AIDocuments’ı kimin kullandığını belirtin. Şirketler etkinleştirme kodunu buraya girer – kodda, düzenlendiği şirketin adı yer alır.",
+    "code": "Etkinleştirme kodu",
+    "codeHint": "AIDOCS- ile başlar. Kodu daha sonra Ayarlar → Lisans bölümünden de girebilirsiniz; o zamana kadar her şey kullanılabilir kalır.",
+    "codeLaterHint": "AIDOCS- ile başlar. Kod olmadan her şey kullanılabilir kalır; yalnızca bir bildirim gösterilir.",
+    "codeKeepHint": "Kayıtlı bir kod var. Korumak için boş bırakın ya da yeni bir kod girin.",
+    "removeCode": "Kodu kaldır",
+    "saved": "Lisans kaydedildi",
+    "licensedTo": "{{name}} için etkinleştirildi",
+    "validUntil": "{{date}} tarihine kadar geçerli",
+    "unlimited": "süresiz geçerli",
+    "number": "Lisans no. {{id}}",
+    "expired": "{{name}} için etkinleştirme kodunun süresi {{date}} tarihinde doldu.",
+    "storedInvalid": "Kayıtlı etkinleştirme kodu geçerli değil. Lütfen yeniden girin.",
+    "missing": "AIDocuments burada bir şirket tarafından kullanılıyor ancak henüz etkinleştirilmedi. Lütfen bir etkinleştirme kodu girin.",
+    "missingUser": "Bu kurulum henüz şirket kullanımı için etkinleştirilmedi. Lütfen yöneticinizle iletişime geçin.",
+    "freeState": "Ücretsiz kullanım – {{usage}}.",
+    "unset": "AIDocuments’ı kimin kullandığını belirtin – bireyler, dernekler ve kamu kurumları için ücretsizdir.",
+    "action": "Lisansı aç",
+    "sidebarFree": "Ücretsiz kullanılıyor · {{usage}}",
+    "sidebarUnlicensed": "Henüz etkinleştirilmedi"
   }
 }

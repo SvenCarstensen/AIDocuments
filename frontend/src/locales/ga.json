@@ -756,6 +756,10 @@
         "saved": "Sábháladh na socruithe.",
         "externalDatabase": "Níl an cúltaca uathoibríoch ar fáil ach leis an mbunachar sonraí ionsuite. Le MariaDB, déan cúltaca den bhunachar sonraí lena uirlisí féin (mar shampla mariadb-dump gach oíche) agus den eolaire sonraí chomh maith."
       }
+    },
+    "license": {
+      "title": "Ceadúnas",
+      "navHint": "Cineál úsáide agus cód díghlasála"
     }
   },
   "history": {
@@ -1116,5 +1120,38 @@
       "unitPrice": "Praghas aonaid",
       "amount": "Méid"
     }
+  },
+  "license": {
+    "question": "Cé a úsáideann AIDocuments?",
+    "usage": {
+      "PRIVATE": "Príobháideach",
+      "CLUB": "Club",
+      "AUTHORITY": "Údarás poiblí",
+      "BUSINESS": "Gnó"
+    },
+    "free": "saor in aisce",
+    "needsCode": "le cód díghlasála",
+    "freeFor": "Saor in aisce do dhaoine príobháideacha, clubanna agus údaráis phoiblí.",
+    "businessNeedsCode": "Díghlasálann gnóthais AIDocuments le cód díghlasála.",
+    "intro": "Inis dúinn cé a úsáideann AIDocuments. Cuireann gnóthais a gcód díghlasála isteach anseo – luann sé an chuideachta ar eisíodh dó é.",
+    "code": "Cód díghlasála",
+    "codeHint": "Tosaíonn sé le AIDOCS-. Is féidir leat é a chur isteach níos déanaí freisin faoi Socruithe → Ceadúnas; go dtí sin, tá gach rud inúsáidte.",
+    "codeLaterHint": "Tosaíonn sé le AIDOCS-. Gan cód, tá gach rud inúsáidte; ní thaispeántar ach fógra.",
+    "codeKeepHint": "Tá cód stóráilte. Fág folamh é chun é a choinneáil, nó cuir isteach cód nua.",
+    "removeCode": "Bain an cód",
+    "saved": "Ceadúnas sábháilte",
+    "licensedTo": "Ceadúnaithe do {{name}}",
+    "validUntil": "bailí go dtí {{date}}",
+    "unlimited": "bailí gan teorainn ama",
+    "number": "Ceadúnas uimh. {{id}}",
+    "expired": "Chuaigh an cód díghlasála do {{name}} in éag an {{date}}.",
+    "storedInvalid": "Níl an cód díghlasála stóráilte bailí. Cuir isteach arís é.",
+    "missing": "Úsáideann gnó AIDocuments anseo ach níl sé díghlasáilte go fóill. Cuir isteach cód díghlasála.",
+    "missingUser": "Níl an suiteáil seo díghlasáilte go fóill le húsáid i ngnó. Téigh i dteagmháil le do riarthóir.",
+    "freeState": "Úsáid saor in aisce – {{usage}}.",
+    "unset": "Inis dúinn cé a úsáideann AIDocuments – tá sé saor in aisce do dhaoine príobháideacha, clubanna agus údaráis phoiblí.",
+    "action": "Oscail an ceadúnas",
+    "sidebarFree": "Á úsáid saor in aisce · {{usage}}",
+    "sidebarUnlicensed": "Gan díghlasáil go fóill"
   }
 }

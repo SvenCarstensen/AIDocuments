@@ -702,6 +702,10 @@
         "saved": "Settings saved.",
         "externalDatabase": "Automatic backup is only available with the built-in database. With MariaDB, back up the database with its own tools (for example a nightly mariadb-dump) together with the data directory."
       }
+    },
+    "license": {
+      "title": "License",
+      "navHint": "Type of use and unlock code"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Unit price",
       "amount": "Amount"
     }
+  },
+  "license": {
+    "question": "Who uses AIDocuments?",
+    "usage": {
+      "PRIVATE": "Private",
+      "CLUB": "Club",
+      "AUTHORITY": "Authority",
+      "BUSINESS": "Business"
+    },
+    "free": "free",
+    "needsCode": "with unlock code",
+    "freeFor": "Free for private individuals, clubs and public authorities.",
+    "businessNeedsCode": "Businesses unlock AIDocuments with an unlock code.",
+    "intro": "Tell us who uses AIDocuments. Businesses enter their unlock code here – it names the company it was issued to.",
+    "code": "Unlock code",
+    "codeHint": "Starts with AIDOCS-. You can also enter it later under Settings → License; until then everything stays usable.",
+    "codeLaterHint": "Starts with AIDOCS-. Without a code everything stays usable; only a notice is shown.",
+    "codeKeepHint": "A code is stored. Leave this empty to keep it, or enter a new one.",
+    "removeCode": "Remove code",
+    "saved": "License saved",
+    "licensedTo": "Licensed to {{name}}",
+    "validUntil": "valid until {{date}}",
+    "unlimited": "valid indefinitely",
+    "number": "License no. {{id}}",
+    "expired": "The unlock code for {{name}} expired on {{date}}.",
+    "storedInvalid": "The stored unlock code is not valid. Please enter it again.",
+    "missing": "AIDocuments is used by a business here but is not unlocked yet. Please enter an unlock code.",
+    "missingUser": "This installation is not yet unlocked for business use. Please contact your administrator.",
+    "freeState": "Free use – {{usage}}.",
+    "unset": "Please tell us who uses AIDocuments – it is free for private individuals, clubs and public authorities.",
+    "action": "Open license",
+    "sidebarFree": "Used for free · {{usage}}",
+    "sidebarUnlicensed": "Not unlocked yet"
   }
 }

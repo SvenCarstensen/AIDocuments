@@ -720,6 +720,10 @@
         "saved": "Postavke su spremljene.",
         "externalDatabase": "Automatska sigurnosna kopija dostupna je samo s ugrađenom bazom podataka. Uz MariaDB bazu podataka kopirajte njezinim vlastitim alatima (npr. svake noći pomoću mariadb-dump), a uz to i direktorij podataka."
       }
+    },
+    "license": {
+      "title": "Licenca",
+      "navHint": "Vrsta korištenja i kod za otključavanje"
     }
   },
   "history": {
@@ -1066,5 +1070,38 @@
       "unitPrice": "Jedinična cijena",
       "amount": "Iznos"
     }
+  },
+  "license": {
+    "question": "Tko koristi AIDocuments?",
+    "usage": {
+      "PRIVATE": "Privatno",
+      "CLUB": "Udruga",
+      "AUTHORITY": "Tijelo vlasti",
+      "BUSINESS": "Tvrtka"
+    },
+    "free": "besplatno",
+    "needsCode": "uz kod za otključavanje",
+    "freeFor": "Besplatno za privatne osobe, udruge i tijela javne vlasti.",
+    "businessNeedsCode": "Tvrtke otključavaju AIDocuments kodom za otključavanje.",
+    "intro": "Recite nam tko koristi AIDocuments. Tvrtke ovdje unose svoj kod za otključavanje – u njemu je navedena tvrtka za koju je izdan.",
+    "code": "Kod za otključavanje",
+    "codeHint": "Počinje s AIDOCS-. Možete ga unijeti i kasnije u Postavke → Licenca; do tada se sve može koristiti.",
+    "codeLaterHint": "Počinje s AIDOCS-. Bez koda sve se može koristiti; prikazuje se samo obavijest.",
+    "codeKeepHint": "Kod je spremljen. Ostavite prazno da ga zadržite ili unesite novi.",
+    "removeCode": "Ukloni kod",
+    "saved": "Licenca je spremljena",
+    "licensedTo": "Licencirano za: {{name}}",
+    "validUntil": "vrijedi do {{date}}",
+    "unlimited": "vrijedi neograničeno",
+    "number": "Licenca br. {{id}}",
+    "expired": "Kod za otključavanje za {{name}} istekao je {{date}}.",
+    "storedInvalid": "Spremljeni kod za otključavanje nije valjan. Unesite ga ponovno.",
+    "missing": "AIDocuments ovdje koristi tvrtka, ali još nije otključan. Unesite kod za otključavanje.",
+    "missingUser": "Ova instalacija još nije otključana za poslovnu upotrebu. Obratite se administratoru.",
+    "freeState": "Besplatno korištenje – {{usage}}.",
+    "unset": "Recite nam tko koristi AIDocuments – besplatan je za privatne osobe, udruge i tijela javne vlasti.",
+    "action": "Otvori licencu",
+    "sidebarFree": "Besplatno korištenje · {{usage}}",
+    "sidebarUnlicensed": "Još nije otključano"
   }
 }

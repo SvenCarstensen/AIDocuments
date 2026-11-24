@@ -702,6 +702,10 @@
         "saved": "Asetukset tallennettu.",
         "externalDatabase": "Automaattinen varmuuskopiointi on käytettävissä vain sisäänrakennetun tietokannan kanssa. Jos käytät MariaDB:tä, varmuuskopioi tietokanta sen omilla työkaluilla (esim. joka yö ajettavalla mariadb-dump-komennolla) ja lisäksi datahakemisto."
       }
+    },
+    "license": {
+      "title": "Lisenssi",
+      "navHint": "Käyttötapa ja aktivointikoodi"
     }
   },
   "history": {
@@ -1041,5 +1045,38 @@
       "unitPrice": "Yksikköhinta",
       "amount": "Summa"
     }
+  },
+  "license": {
+    "question": "Kuka käyttää AIDocumentsia?",
+    "usage": {
+      "PRIVATE": "Yksityinen",
+      "CLUB": "Yhdistys",
+      "AUTHORITY": "Viranomainen",
+      "BUSINESS": "Yritys"
+    },
+    "free": "ilmainen",
+    "needsCode": "aktivointikoodilla",
+    "freeFor": "Ilmainen yksityishenkilöille, yhdistyksille ja viranomaisille.",
+    "businessNeedsCode": "Yritykset avaavat AIDocumentsin aktivointikoodilla.",
+    "intro": "Kerro, kuka käyttää AIDocumentsia. Yritykset syöttävät tähän aktivointikoodinsa – siinä mainitaan yritys, jolle se on myönnetty.",
+    "code": "Aktivointikoodi",
+    "codeHint": "Alkaa tunnuksella AIDOCS-. Voit syöttää sen myös myöhemmin kohdassa Asetukset → Lisenssi; siihen asti kaikki on käytettävissä.",
+    "codeLaterHint": "Alkaa tunnuksella AIDOCS-. Ilman koodia kaikki on käytettävissä; vain ilmoitus näytetään.",
+    "codeKeepHint": "Koodi on tallennettu. Jätä kenttä tyhjäksi säilyttääksesi sen tai syötä uusi.",
+    "removeCode": "Poista koodi",
+    "saved": "Lisenssi tallennettu",
+    "licensedTo": "Lisenssin haltija: {{name}}",
+    "validUntil": "voimassa {{date}} asti",
+    "unlimited": "voimassa toistaiseksi",
+    "number": "Lisenssi nro {{id}}",
+    "expired": "Yrityksen {{name}} aktivointikoodi vanheni {{date}}.",
+    "storedInvalid": "Tallennettu aktivointikoodi ei kelpaa. Syötä se uudelleen.",
+    "missing": "Yritys käyttää täällä AIDocumentsia, mutta sitä ei ole vielä aktivoitu. Syötä aktivointikoodi.",
+    "missingUser": "Tätä asennusta ei ole vielä aktivoitu yrityskäyttöön. Ota yhteyttä ylläpitäjääsi.",
+    "freeState": "Ilmainen käyttö – {{usage}}.",
+    "unset": "Kerro, kuka käyttää AIDocumentsia – se on ilmainen yksityishenkilöille, yhdistyksille ja viranomaisille.",
+    "action": "Avaa lisenssi",
+    "sidebarFree": "Ilmainen käyttö · {{usage}}",
+    "sidebarUnlicensed": "Ei vielä aktivoitu"
   }
 }

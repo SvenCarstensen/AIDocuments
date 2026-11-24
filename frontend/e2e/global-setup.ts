@@ -32,7 +32,7 @@ async function seed(base: string, setupCode: string): Promise<E2eState> {
     passkey: { username: 'e2e-passkey', password: password() },
   }
   const admin = new Client(base)
-  await admin.call('POST', '/api/auth/setup', { ...users.admin, setupCode })
+  await admin.call('POST', '/api/auth/setup', { ...users.admin, setupCode, usage: 'PRIVATE' })
   // Admins brauchen die Zwei-Faktor-Anmeldung; der erste Code richtet sie ein und gilt als Bestätigung
   const { secret } = await admin.call<{ secret: string }>('POST', '/api/auth/two-factor/setup')
   users.admin.totpSecret = secret
