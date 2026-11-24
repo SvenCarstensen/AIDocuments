@@ -322,9 +322,11 @@ How the document reaches the model:
 - **All others** (the OpenAI interface, and the Anthropic interface in *compatibility mode* for self-hosted
   servers): the document goes to the model as extracted text or – for scans – as page images, and the result
   comes back as a tool call. The model therefore has to support tool calls (tool use / function calling) and,
-  for scans, image input. Limits: of very long texts the AI evaluates only the beginning, of scans the first
-  8 pages; the application notes this on the document. For text documents the full-text search still covers
-  the entire text.
+  for scans, image input. Scans with up to 8 pages go to the model in one request; longer scans are transcribed
+  in blocks of 8 pages first, and the document is then evaluated from the text of all pages (plus the image of the
+  first page) – no page is skipped. Of very long texts (over 150,000 characters) the AI evaluates only the
+  beginning and the application notes this on the document; the full-text search still covers the entire text.
+  A scan too large to send as a PDF to the Claude API is read the same way, as page images.
 
 Every answer is checked (title, summary, document type, tags, date, and for scans the full text). If it cannot
 be processed, the application asks exactly once more and tells the model what was missing. Documents go to the
@@ -354,8 +356,8 @@ is set up, it reads every PDF that consists of images only (scans without a text
 full-text searchable as well. It only provides the text – title, summary and tags still need an AI. As soon as
 an AI is set up, that AI takes over text recognition.
 
-Pages are rendered at 300 dpi and read one after another – a few seconds per page. At most the first 50 pages of
-a document are read; the application notes on the document if there are more.
+Pages are rendered at 300 dpi and read one after another – a few seconds per page. All pages of a document are
+read.
 
 | Variable | Meaning | Default |
 |---|---|---|

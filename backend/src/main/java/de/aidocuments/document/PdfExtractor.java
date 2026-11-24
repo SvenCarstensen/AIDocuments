@@ -102,11 +102,16 @@ public class PdfExtractor {
      * Rendert die ersten Seiten als JPEG – für KI-Server, die kein PDF annehmen, aber Bilder lesen können.
      */
     public List<byte[]> renderPagesAsJpeg(Path file, int maxPages, float widthPx) throws IOException {
+        return renderPagesAsJpeg(file, 0, maxPages, widthPx);
+    }
+
+    /** Wie oben, ab Seite {@code first} (ab 0) – für lange Scans, die blockweise gelesen werden. */
+    public List<byte[]> renderPagesAsJpeg(Path file, int first, int maxPages, float widthPx) throws IOException {
         List<byte[]> images = new ArrayList<>();
         try (PDDocument pdf = load(file)) {
             PDFRenderer renderer = new PDFRenderer(pdf);
-            int pages = Math.min(maxPages, pdf.getNumberOfPages());
-            for (int page = 0; page < pages; page++) {
+            int pages = Math.min(first + maxPages, pdf.getNumberOfPages());
+            for (int page = Math.max(0, first); page < pages; page++) {
                 float pageWidth = pdf.getPage(page).getCropBox().getWidth();
                 float scale = pageWidth > 0 ? Math.min(widthPx / pageWidth, 4f) : 1f;
                 BufferedImage image = renderer.renderImage(page, safeScale(pdf.getPage(page), scale), ImageType.RGB);

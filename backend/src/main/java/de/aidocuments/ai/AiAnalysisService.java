@@ -32,6 +32,7 @@ import com.anthropic.models.messages.Tool;
 import com.anthropic.models.messages.ToolChoiceAuto;
 import com.anthropic.models.messages.ToolUseBlock;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.aidocuments.document.PdfExtractor;
 import de.aidocuments.i18n.Msg;
@@ -312,6 +313,12 @@ public class AiAnalysisService {
 
     private Result analyzeNative(Effective config, Request request) throws AiException {
         boolean sendPdf = request.sizeBytes() <= MAX_PDF_BYTES && request.pageCount() <= MAX_PDF_PAGES;
+        if (!sendPdf && request.textIsSparse()) {
+            // Scan, zu groß für ein PDF in der Anfrage: dann Seite für Seite als Bilder, damit keine fehlt
+            log.info("{} ist als PDF zu groß für die Anfrage ({} Seiten) – lese die Seiten als Bilder",
+                    request.filename(), request.pageCount());
+            return analyzeCompatible(config, request, this::requestAnthropicTool);
+        }
         if (!sendPdf && request.extractedText().isBlank()) {
             throw new AiException(Msg.of("ai.error.tooLarge"));
         }
@@ -396,9 +403,24 @@ public class AiAnalysisService {
     /** Stellt eine Anfrage über die jeweilige Schnittstelle und liefert die Antwort des Modells, noch ungeprüft. */
     @FunctionalInterface
     private interface Transport {
-        ModelReply request(Effective config, List<OpenAiChatClient.Part> document, String task, long maxTokens)
-                throws AiException;
+        ModelReply request(Effective config, List<OpenAiChatClient.Part> document, String task, long maxTokens,
+                           ToolSpec tool) throws AiException;
     }
+
+    /** Das Werkzeug, über das das Modell sein Ergebnis abliefert. */
+    private record ToolSpec(String name, String description, Map<String, Object> schema) {
+    }
+
+    private static final ToolSpec RESULT_SPEC = new ToolSpec(RESULT_TOOL, RESULT_TOOL_DESCRIPTION, resultSchema());
+
+    /** Abschrift eines Teils der Seiten eines langen Scans – nur der Text, keine Erschließung. */
+    private static final ToolSpec TRANSCRIPTION_SPEC = new ToolSpec("seiten_abschreiben",
+            "Liefert den wortgetreuen Text der gezeigten Seiten an die Dokumentenverwaltung.",
+            Map.of("type", "object",
+                    "properties", Map.of("text", Map.of("type", "string", "description",
+                            "Der vollständige Text der gezeigten Seiten in Lesereihenfolge, Seite für Seite")),
+                    "required", List.of("text"),
+                    "additionalProperties", false));
 
     /**
      * Was das Modell geliefert hat.
@@ -432,8 +454,11 @@ public class AiAnalysisService {
         String hint;
         boolean transcribe = false;
 
+        if (request.textIsSparse() && request.pageCount() > COMPAT_MAX_PAGE_IMAGES) {
+            return analyzeLongScan(config, request, transport);
+        }
         if (request.textIsSparse()) {
-            // Scan: Das Modell muss die Seiten sehen. Mehr als ein paar Bilder passen nicht in den Kontext.
+            // Scan: Das Modell muss die Seiten sehen – bei wenigen Seiten alle auf einmal.
             List<byte[]> pages;
             try {
                 pages = pdfExtractor.renderPagesAsJpeg(request.file(), COMPAT_MAX_PAGE_IMAGES, COMPAT_PAGE_WIDTH_PX);
@@ -446,10 +471,7 @@ public class AiAnalysisService {
             pages.forEach(page -> document.add(OpenAiChatClient.Part.image(page)));
             hint = pages.size() == 1
                     ? "Das Dokument ist ein Scan; du siehst seine Seite als Bild."
-                    : "Das Dokument ist ein Scan; du siehst seine ersten " + pages.size() + " Seiten als Bilder.";
-            if (request.pageCount() > pages.size()) {
-                notes.add(Msg.of("ai.note.partialScan", pages.size(), request.pageCount()));
-            }
+                    : "Das Dokument ist ein Scan; du siehst alle " + pages.size() + " Seiten als Bilder.";
             transcribe = config.ocr();
         } else {
             String text = request.extractedText();
@@ -481,6 +503,190 @@ public class AiAnalysisService {
                 throw new AiException(Msg.of("ai.error.truncated"));
             }
         }
+    }
+
+    /**
+     * Ein Scan mit mehr Seiten, als auf einmal in eine Anfrage passen: Erst werden alle Seiten in Blöcken abgeschrieben,
+     * dann wird das Dokument anhand dieses Texts (und des Bildes der ersten Seite) erschlossen. So sieht die KI jede
+     * Seite – nicht nur den Anfang. Die Abschrift wird zum Volltext, wenn das Transkribieren eingeschaltet ist.
+     */
+    private Result analyzeLongScan(Effective config, Request request, Transport transport) throws AiException {
+        int total = request.pageCount();
+        List<Msg> notes = new ArrayList<>();
+        StringBuilder text = new StringBuilder();
+        byte[] firstPage = null;
+        boolean incomplete = false;
+        for (int from = 0; from < total; from += COMPAT_MAX_PAGE_IMAGES) {
+            List<byte[]> pages;
+            try {
+                pages = pdfExtractor.renderPagesAsJpeg(request.file(), from, COMPAT_MAX_PAGE_IMAGES,
+                        COMPAT_PAGE_WIDTH_PX);
+            } catch (IOException e) {
+                throw new AiException(Msg.of("ai.error.renderFailed"), e);
+            }
+            if (pages.isEmpty()) {
+                break;
+            }
+            if (firstPage == null) {
+                firstPage = pages.getFirst();
+            }
+            Transcript part = transcribe(config, request, pages, from, total, transport);
+            incomplete |= part.incomplete();
+            if (!part.text().isBlank()) {
+                if (!text.isEmpty()) {
+                    text.append("\n\n");
+                }
+                text.append(part.text().strip());
+            }
+        }
+        if (firstPage == null) {
+            throw new AiException(Msg.of("ai.error.emptyPdf"));
+        }
+        log.info("{}: alle {} Seiten in Blöcken zu {} abgeschrieben, {} Zeichen", request.filename(), total,
+                COMPAT_MAX_PAGE_IMAGES, text.length());
+        if (incomplete) {
+            notes.add(Msg.of("ai.note.scanTooLarge"));
+        }
+
+        String forAnalysis = text.toString();
+        if (forAnalysis.length() > COMPAT_MAX_CHARS) {
+            forAnalysis = forAnalysis.substring(0, COMPAT_MAX_CHARS);
+            notes.add(Msg.of("ai.note.longDocument"));
+        }
+        List<OpenAiChatClient.Part> document = List.of(OpenAiChatClient.Part.image(firstPage),
+                OpenAiChatClient.Part.text("<dokument>\n" + forAnalysis + "\n</dokument>"));
+        String hint = "Das Dokument ist ein Scan mit " + total + " Seiten. Du siehst die erste Seite als Bild; "
+                + "zwischen <dokument> und </dokument> steht der aus allen Seiten abgeschriebene Text.";
+        DocumentAnalysis analysis;
+        try {
+            analysis = callCompatible(config, request, document, hint, false, true, transport).analysis();
+        } catch (TruncatedResponseException e) {
+            throw new AiException(Msg.of("ai.error.truncated"));
+        }
+        boolean transcribed = config.ocr() && !text.isEmpty();
+        if (transcribed) {
+            analysis = new DocumentAnalysis(analysis.title(), analysis.summary(), analysis.category(),
+                    analysis.correspondent(), analysis.documentDate(), analysis.language(), analysis.tags(),
+                    analysis.keyFacts(), text.toString());
+        }
+        return new Result(analysis, transcribed, List.copyOf(notes));
+    }
+
+    /** Abschrift eines Seitenblocks; {@code incomplete}: mindestens eine Seite ließ sich nicht ganz abschreiben. */
+    private record Transcript(String text, boolean incomplete) {
+    }
+
+    /**
+     * Schreibt die Seiten eines Blocks ab. Passt die Abschrift nicht in die Antwort, wird der Block geteilt – bis
+     * hinunter zur einzelnen Seite; von der bleibt dann, was ankam.
+     *
+     * @param first Nummer der ersten Seite des Blocks (ab 0)
+     */
+    private Transcript transcribe(Effective config, Request request, List<byte[]> pages, int first, int total,
+                                  Transport transport) throws AiException {
+        List<OpenAiChatClient.Part> document = pages.stream().map(OpenAiChatClient.Part::image).toList();
+        String range = pages.size() == 1 ? "Seite " + (first + 1)
+                : "Seiten " + (first + 1) + " bis " + (first + pages.size());
+        String task = "Du siehst " + range + " von " + total + " des gescannten Dokuments „" + request.filename()
+                + "“. Schreibe den Text dieser Seiten wortgetreu in der Originalsprache ab, Seite für Seite in "
+                + "Lesereihenfolge – er wird für die Erschließung und die Volltextsuche gebraucht. Stempel, "
+                + "Handschriftliches und Tabelleninhalte gehören dazu; Unleserliches lässt du aus, leere Seiten "
+                + "auch. Nichts zusammenfassen, nichts erklären.\n\nAntworte ausschließlich mit genau einem Aufruf "
+                + "des Werkzeugs " + TRANSCRIPTION_SPEC.name() + "; den Text gibst du im Feld text an.";
+        ModelReply reply = transport.request(config, document, task, maxTokens(true), TRANSCRIPTION_SPEC);
+        if (!reply.truncated()) {
+            String text = transcriptOf(reply.toolJson(), reply.text());
+            if (text != null) {
+                return new Transcript(text, false);
+            }
+            log.info("Abschrift von {} ({}) ohne verwertbaren Text – {}", request.filename(), range,
+                    pages.size() > 1 ? "teile den Block" : "Seite bleibt leer");
+            if (pages.size() == 1) {
+                return new Transcript("", true);
+            }
+        } else {
+            log.info("Abschrift von {} ({}) am Limit abgeschnitten ({})", request.filename(), range,
+                    reply.sizeForLog());
+            if (pages.size() == 1) {
+                String partial = partialTranscript(reply.toolJson());
+                return new Transcript(partial, true);
+            }
+        }
+        int half = pages.size() / 2;
+        Transcript head = transcribe(config, request, pages.subList(0, half), first, total, transport);
+        Transcript tail = transcribe(config, request, pages.subList(half, pages.size()), first + half, total,
+                transport);
+        String joined = head.text().isBlank() ? tail.text()
+                : tail.text().isBlank() ? head.text() : head.text().strip() + "\n\n" + tail.text().strip();
+        return new Transcript(joined, head.incomplete() || tail.incomplete());
+    }
+
+    /**
+     * Der Text aus einer vollständigen Antwort: aus dem Werkzeugaufruf, sonst aus JSON im Text, sonst der Text selbst
+     * (manche Modelle antworten auf die Bitte um eine Abschrift einfach mit ihr).
+     *
+     * @return {@code null}, wenn nichts Verwertbares kam
+     */
+    static String transcriptOf(String toolJson, String text) {
+        for (String candidate : new String[] {toolJson, text}) {
+            if (candidate == null || !candidate.strip().startsWith("{")) {
+                continue;
+            }
+            try {
+                JsonNode node = JSON.readTree(candidate.strip());
+                if (node.path("text").isTextual()) {
+                    return node.path("text").asText();
+                }
+            } catch (JsonProcessingException e) {
+                // weiter mit dem nächsten Kandidaten
+            }
+        }
+        if (toolJson == null && text != null && !text.isBlank() && !text.strip().startsWith("{")) {
+            return text.strip();
+        }
+        return null;
+    }
+
+    /** Aus einem mittendrin abgebrochenen {@code {"text": "…}} der Teil, der ankam. */
+    static String partialTranscript(String cutOffJson) {
+        if (cutOffJson == null) {
+            return "";
+        }
+        java.util.regex.Matcher start = java.util.regex.Pattern.compile("\"text\"\\s*:\\s*\"").matcher(cutOffJson);
+        if (!start.find()) {
+            return "";
+        }
+        StringBuilder out = new StringBuilder();
+        String rest = cutOffJson.substring(start.end());
+        for (int i = 0; i < rest.length(); i++) {
+            char c = rest.charAt(i);
+            if (c == '"') {
+                break;
+            }
+            if (c != '\\') {
+                out.append(c);
+                continue;
+            }
+            if (++i >= rest.length()) {
+                break;
+            }
+            char escaped = rest.charAt(i);
+            switch (escaped) {
+                case 'n' -> out.append('\n');
+                case 't' -> out.append('\t');
+                case 'r' -> { }
+                case 'u' -> {
+                    try {
+                        out.append((char) Integer.parseInt(rest.substring(i + 1, i + 5), 16));
+                        i += 4;
+                    } catch (IndexOutOfBoundsException | NumberFormatException e) {
+                        i = rest.length(); // abgeschnitten mitten in der Angabe
+                    }
+                }
+                default -> out.append(escaped);
+            }
+        }
+        return out.toString().strip();
     }
 
     /**
@@ -531,7 +737,7 @@ public class AiAnalysisService {
                         String task, boolean transcribe, boolean mayGrow)
             throws AiException, TruncatedResponseException {
         long limit = maxTokens(transcribe);
-        ModelReply reply = transport.request(config, document, task, limit);
+        ModelReply reply = transport.request(config, document, task, limit, RESULT_SPEC);
         if (!reply.truncated()) {
             return attemptOf(reply, transcribe);
         }
@@ -574,7 +780,7 @@ public class AiAnalysisService {
                                                   List<OpenAiChatClient.Part> document, String task, long maxTokens)
             throws AiException {
         try {
-            return transport.request(config, document, task, maxTokens);
+            return transport.request(config, document, task, maxTokens, RESULT_SPEC);
         } catch (OpenAiChatClient.StatusException e) {
             if (e.status() != 400 && e.status() != 413 && e.status() != 422) {
                 throw e;
@@ -646,6 +852,7 @@ public class AiAnalysisService {
 
     /** Liest beim Streamen mit, was das Modell liefert – auch dann verwertbar, wenn die Antwort mittendrin abbricht. */
     private static final class StreamedAnswer {
+        private final String toolName;
         private final Set<Long> resultBlocks = new HashSet<>();
         private final StringBuilder toolJson = new StringBuilder();
         private final StringBuilder text = new StringBuilder();
@@ -653,9 +860,13 @@ public class AiAnalysisService {
         private long outputTokens = -1;
         private int reasoningChars;
 
+        StreamedAnswer(String toolName) {
+            this.toolName = toolName;
+        }
+
         void accept(RawMessageStreamEvent event) {
             event.contentBlockStart().ifPresent(start -> start.contentBlock().toolUse()
-                    .filter(tool -> RESULT_TOOL.equals(tool.name()))
+                    .filter(tool -> toolName.equals(tool.name()))
                     .ifPresent(tool -> resultBlocks.add(start.index())));
             event.contentBlockDelta().ifPresent(delta -> {
                 delta.delta().text().ifPresent(part -> text.append(part.text()));
@@ -678,7 +889,7 @@ public class AiAnalysisService {
 
     /** Anthropic Messages API ohne strukturierte Ausgabe: Ergebnis als Werkzeugaufruf, gestreamt. */
     private ModelReply requestAnthropicTool(Effective config, List<OpenAiChatClient.Part> document, String task,
-                                            long maxTokens) throws AiException {
+                                            long maxTokens, ToolSpec tool) throws AiException {
         List<ContentBlockParam> content = new ArrayList<>();
         for (OpenAiChatClient.Part part : document) {
             content.add(part.jpeg() != null
@@ -695,14 +906,14 @@ public class AiAnalysisService {
                 .maxTokens(maxTokens)
                 .system(SYSTEM_PROMPT)
                 .addUserMessageOfContentBlockParams(content)
-                .addTool(resultTool())
+                .addTool(tool == RESULT_SPEC ? resultTool() : toolFrom(tool.name(), tool.description(), tool.schema()))
                 .toolChoice(ToolChoiceAuto.builder().build())
                 .build();
 
         // Zweimal mitgelesen: Der Sammler des SDK baut die fertige Nachricht, kann an einem mittendrin abgebrochenen
         // Werkzeugaufruf aber scheitern. Die eigene Mitschrift behält auch dann, was bis dahin ankam.
         MessageAccumulator accumulator = MessageAccumulator.create();
-        StreamedAnswer streamed = new StreamedAnswer();
+        StreamedAnswer streamed = new StreamedAnswer(tool.name());
         RuntimeException[] accumulatorFailure = new RuntimeException[1];
         try (StreamResponse<RawMessageStreamEvent> stream = clientFor(config).messages().createStreaming(params)) {
             stream.stream().forEach(event -> {
@@ -734,7 +945,7 @@ public class AiAnalysisService {
         ModelReply reply = streamed.reply(false);
         Optional<ToolUseBlock> toolCall = message.content().stream()
                 .flatMap(block -> block.toolUse().stream())
-                .filter(block -> RESULT_TOOL.equals(block.name()))
+                .filter(block -> tool.name().equals(block.name()))
                 .findFirst();
         if (reply.toolJson() == null && toolCall.isPresent()) {
             // Server, der die Argumente nicht stückweise streamt, sondern gleich mit dem Block liefert
@@ -751,7 +962,7 @@ public class AiAnalysisService {
 
     /** OpenAI Chat Completions: Ergebnis als Funktionsaufruf. */
     private ModelReply requestOpenAi(Effective config, List<OpenAiChatClient.Part> document, String task,
-                                     long maxTokens) throws AiException {
+                                     long maxTokens, ToolSpec tool) throws AiException {
         List<OpenAiChatClient.Part> content = new ArrayList<>(document);
         content.add(OpenAiChatClient.Part.text(task));
         // OpenAI selbst nimmt bei seinen aktuellen Modellen nur noch "max_completion_tokens" an,
@@ -759,7 +970,7 @@ public class AiAnalysisService {
         String limitField = config.provider() == LlmProvider.OPENAI ? "max_completion_tokens" : "max_tokens";
 
         OpenAiChatClient.Reply reply = new OpenAiChatClient(config.baseUrl(), config.apiKey()).complete(
-                config.model(), SYSTEM_PROMPT, content, RESULT_TOOL, RESULT_TOOL_DESCRIPTION, resultSchema(),
+                config.model(), SYSTEM_PROMPT, content, tool.name(), tool.description(), tool.schema(),
                 maxTokens, limitField, ANALYSIS_TIMEOUT);
         if (reply.refusal() != null && !reply.refusal().isBlank()) {
             throw new AiException(Msg.of("ai.error.refusedWithReason", reply.refusal()));

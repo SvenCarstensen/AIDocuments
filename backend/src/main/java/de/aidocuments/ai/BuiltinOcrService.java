@@ -63,7 +63,7 @@ public class BuiltinOcrService {
         Instant started = Instant.now();
         int pages;
         try (PdfExtractor.PageImages images = pdfExtractor.openPageImages(pdf, config.dpi())) {
-            pages = Math.min(config.maxPages(), images.pageCount());
+            pages = config.maxPages() > 0 ? Math.min(config.maxPages(), images.pageCount()) : images.pageCount();
             if (pages == 0) {
                 throw new AiException(Msg.of("ai.error.emptyPdf"));
             }

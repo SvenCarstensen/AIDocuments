@@ -70,7 +70,8 @@ public record AppProperties(
      * @param enabled     aus = nie; an = sobald Tesseract gefunden wird
      * @param command     Aufruf von Tesseract (Name im Suchpfad oder vollständiger Pfad)
      * @param languages   Sprachen der Dokumente als Tesseract-Kürzel, mit „+“ verbunden, z. B. deu+eng
-     * @param maxPages    höchstens so viele Seiten je Dokument; der Rest bleibt ungelesen (vermerkt am Dokument)
+     * @param maxPages    höchstens so viele Seiten je Dokument (der Rest bleibt ungelesen, vermerkt am Dokument);
+     *                    0 = alle Seiten
      * @param dpi         Auflösung, mit der eine Seite gerendert wird – Tesseract arbeitet am besten mit 300 dpi
      * @param pageTimeout Zeitgrenze je Seite
      */
@@ -78,7 +79,7 @@ public record AppProperties(
             @DefaultValue("true") boolean enabled,
             @DefaultValue("tesseract") String command,
             @DefaultValue("deu+eng") String languages,
-            @DefaultValue("50") int maxPages,
+            @DefaultValue("0") int maxPages,
             @DefaultValue("300") int dpi,
             @DefaultValue("5m") Duration pageTimeout) {
     }
